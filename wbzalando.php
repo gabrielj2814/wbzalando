@@ -1,4 +1,8 @@
 <?php
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -21,11 +25,11 @@ class WbZalando extends Module{
 
     public function install(){
         
-        return (parent::install() && Configuration::updateValue("WB_ZALANDO_API_KEY","Sin api key"));
+        return (parent::install() && Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
     }
 
     public function uninstall(){
-        return (parent::uninstall() && Configuration::deleteByName("WB_ZALANDO_API_KEY"));
+        return (parent::uninstall() && Configuration::deleteByName("WB_ZALANDO_END_POINT")  && Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
     }
 
     private function installTab()
@@ -72,7 +76,8 @@ class WbZalando extends Module{
 
         $helper->submit_action = $this->name;
         
-        $helper->fields_value["apiKeyZalando"]=Configuration::get("WB_ZALANDO_API_KEY");
+        $helper->fields_value["rutaZolando"]=Configuration::get("WB_ZALANDO_END_POINT");
+        $helper->fields_value["tokenZolando"]=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
 
         $this->form[0]=[
             "form" => [
@@ -82,12 +87,29 @@ class WbZalando extends Module{
                 "input" =>[
                     [
                         "type" => "text",
-                        "label" => $this->l("Api Key"),
-                        "desc" => $this->l("Api Key de acceso ha Zalando"),
+                        "label" => $this->l("Ruta de acceso"),
+                        "desc" => $this->l("Ruta de acceso ha Zalando"),
                         'hint' => $this->l(''),
-                        'name' => 'apiKeyZalando',
+                        'name' => 'rutaZolando',
                         'required'  => true
                         // 'lang' => trues
+                    ],
+                    [
+                        "type" => "text",
+                        "label" => $this->l("Token de acceso"),
+                        "desc" => $this->l("Token de acceso ha Zalando"),
+                        'hint' => $this->l(''),
+                        'name' => 'tokenZolando',
+                        'required'  => true
+                        // 'lang' => trues
+                    ],
+                    [
+                        "type" => "html",
+                        "html_content" => '<buttom id="botonVerificarToken" class="btn btn-primary">Verificar Token</buttom>'
+                    ],
+                    [
+                        "type" => "html",
+                        "html_content" => '<script src="'.$this->_path.'views/js/wbzalando.js" type="text/javascript"></script>'
                     ],
                 ],
                 "submit" => [
@@ -103,16 +125,40 @@ class WbZalando extends Module{
 
     public function procesarFormulario(){
         $salida="";
-        if(Tools::getValue("apiKeyZalando")){
-            $salida=$this->displayConfirmation($this->l(Tools::getValue("apiKeyZalando")));
+        if(Tools::getValue("rutaZolando")){
+            $rutaEndPoint=Tools::getValue("rutaZolando");
+            $token=Tools::getValue("tokenZolando");
+            Configuration::updateValue("WB_ZALANDO_END_POINT",$rutaEndPoint);
+            Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$token);
+
+            // $url = $rutaEndPoint.'/auth/me';
+
+            // $header = array('Authorization: '.'Bearer '.$token);
+
+            // $curl = curl_init();
+
+            // // curl_setopt($curl, CURLOPT_URL, "https://jsonplaceholder.typicode.com/posts");
+            // curl_setopt($curl, CURLOPT_URL, $url);
+            // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);                                                                     
+            // curl_setopt($curl, CURLOPT_POST, 1);
+            // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            // curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+
+            // $response = curl_exec($curl);
+            // $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            // curl_close($curl);
+
+            // http_response_code($status);
+            // echo $response;
+
+            return $salida;
         }
-        
-        return $salida;
+            
+            
+            
     }
-
-
-
-}
-
-
+    
+} 
+        
 ?>
