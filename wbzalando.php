@@ -25,11 +25,11 @@ class WbZalando extends Module{
 
     public function install(){
         
-        return (parent::install() && Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
+        return (parent::install() && Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
     }
 
     public function uninstall(){
-        return (parent::uninstall() && Configuration::deleteByName("WB_ZALANDO_END_POINT")  && Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
+        return (parent::uninstall() && Configuration::deleteByName("WB_ZALANDO_END_POINT")  && Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
     }
 
     private function installTab()
@@ -76,8 +76,10 @@ class WbZalando extends Module{
 
         $helper->submit_action = $this->name;
         
+        $helper->fields_value["clienteIdZolando"]=Configuration::get("WB_ZALANDO_CLIENTE_ID");
+        $helper->fields_value["clienteSecretZolando"]=Configuration::get("WB_ZALANDO_CLIENTE_SECRET");
         $helper->fields_value["rutaZolando"]=Configuration::get("WB_ZALANDO_END_POINT");
-        $helper->fields_value["tokenZolando"]=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        // $helper->fields_value["tokenZolando"]=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
 
         $this->form[0]=[
             "form" => [
@@ -87,30 +89,31 @@ class WbZalando extends Module{
                 "input" =>[
                     [
                         "type" => "text",
+                        "label" => $this->l("Cliente ID"),
+                        "desc" => $this->l(""),
+                        'hint' => $this->l(''),
+                        'name' => 'clienteIdZolando',
+                        'required'  => true
+                        // 'lang' => trues
+                    ],
+                    [
+                        "type" => "text",
+                        "label" => $this->l("Cliente Secret"),
+                        "desc" => $this->l(""),
+                        'hint' => $this->l(''),
+                        'name' => 'clienteSecretZolando',
+                        'required'  => true
+                        // 'lang' => trues
+                    ],
+                    [
+                        "type" => "text",
                         "label" => $this->l("Ruta de acceso"),
                         "desc" => $this->l("Ruta de acceso ha Zalando"),
                         'hint' => $this->l(''),
                         'name' => 'rutaZolando',
                         'required'  => true
                         // 'lang' => trues
-                    ],
-                    [
-                        "type" => "text",
-                        "label" => $this->l("Token de acceso"),
-                        "desc" => $this->l("Token de acceso ha Zalando"),
-                        'hint' => $this->l(''),
-                        'name' => 'tokenZolando',
-                        'required'  => true
-                        // 'lang' => trues
-                    ],
-                    [
-                        "type" => "html",
-                        "html_content" => '<buttom id="botonVerificarToken" class="btn btn-primary">Verificar Token</buttom>'
-                    ],
-                    [
-                        "type" => "html",
-                        "html_content" => '<script src="'.$this->_path.'views/js/wbzalando.js" type="text/javascript"></script>'
-                    ],
+                    ]
                 ],
                 "submit" => [
                     "title" => $this->l("Guardar")
@@ -126,32 +129,44 @@ class WbZalando extends Module{
     public function procesarFormulario(){
         $salida="";
         if(Tools::getValue("rutaZolando")){
+            $clienteIdZolando=Tools::getValue("clienteIdZolando");
+            $clienteSecretZolando=Tools::getValue("clienteSecretZolando");
             $rutaEndPoint=Tools::getValue("rutaZolando");
-            $token=Tools::getValue("tokenZolando");
+            Configuration::updateValue("WB_ZALANDO_CLIENTE_ID",$clienteIdZolando);
+            Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET",$clienteSecretZolando);
             Configuration::updateValue("WB_ZALANDO_END_POINT",$rutaEndPoint);
-            Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$token);
+            
+            $header = array('Authorization: '.'Basic '. base64_encode($clienteIdZolando.':'.$clienteSecretZolando));
 
-            // $url = $rutaEndPoint.'/auth/me';
+            $curl = curl_init();
 
-            // $header = array('Authorization: '.'Bearer '.$token);
+            $fields = array(
+                "grant_type" => "client_credentials"
+            );
 
-            // $curl = curl_init();
+            $fields_string = http_build_query($fields);;   
+            
+            curl_setopt($curl, CURLOPT_URL, $rutaEndPoint."/auth/token");
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);                                                                     
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS,$fields_string);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 
-            // // curl_setopt($curl, CURLOPT_URL, "https://jsonplaceholder.typicode.com/posts");
-            // curl_setopt($curl, CURLOPT_URL, $url);
-            // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);                                                                     
-            // curl_setopt($curl, CURLOPT_POST, 1);
-            // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            // curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+            $response = curl_exec($curl);
+            $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-            // $response = curl_exec($curl);
-            // $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
 
-            // curl_close($curl);
-
-            // http_response_code($status);
-            // echo $response;
-
+            // print(http_response_code($status));
+            $tokenInfo=(object)json_decode($response);
+            if(property_exists($tokenInfo,"access_token")){
+                Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$tokenInfo->access_token);
+                $salida=$this->displayConfirmation($this->l("La sesion con Zalando ha sido creada con éxito"));
+            }
+            else{
+                $salida=$this->displayError($this->l("Zalnado ha tardado en responde porfavor intente de nuevo"));
+            }
             return $salida;
         }
             
