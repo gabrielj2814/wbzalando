@@ -25,22 +25,34 @@ class WbZalando extends Module{
 
     public function install(){
         
-        return (parent::install() && Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
+        return (
+            parent::install() && 
+            $this->installTab() && 
+            Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
+            Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
+            Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && 
+            Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
     }
 
     public function uninstall(){
-        return (parent::uninstall() && Configuration::deleteByName("WB_ZALANDO_END_POINT")  && Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
+        return (
+            parent::uninstall() && 
+            $this->uninstallTab() && 
+            Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
+            Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
+            Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && 
+            Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
     }
 
     private function installTab()
     {
         $lang = Language::getLanguages(); 
         $tab = new Tab();
-        $tab->class_name = 'Demo'; 
-        $tab->module = 'customfieldmini';
-        $tab->id_parent = (int) Tab::getIdFromClassName('ShopParameters'); 
+        $tab->class_name = 'Pais'; 
+        $tab->module = 'wbzalando';
+        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
         foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Zalando'); 
+            $tab->name[$l['id_lang']] = $this->l('Pais'); 
         }
 
         return $tab->save();
@@ -48,7 +60,7 @@ class WbZalando extends Module{
 
     private function uninstallTab()
     {
-        $tabId = (int) Tab::getIdFromClassName('ZalandoController'); 
+        $tabId = (int) Tab::getIdFromClassName('MainController'); 
         if (!$tabId) {
             return true;
         }
