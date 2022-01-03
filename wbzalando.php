@@ -82,6 +82,7 @@ class WbZalando extends Module{
             sales_channel_id varchar(255) UNIQUE NOT NULL,
             nombre_pais varchar(255) NOT NULL,
             codigo_pais varchar(1) NOT NULL,
+            por_defecto varchar(1) NOT NULL,
             PRIMARY KEY (`id_Pais`)
         ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
 
