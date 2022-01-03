@@ -28,6 +28,7 @@ class WbZalando extends Module{
         return (
             parent::install() && 
             $this->installTab() && 
+            $this->installDB() && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && 
@@ -38,6 +39,7 @@ class WbZalando extends Module{
         return (
             parent::uninstall() && 
             $this->uninstallTab() && 
+            $this->uninstallDB() && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && 
@@ -68,6 +70,27 @@ class WbZalando extends Module{
         $tab = new Tab($tabId);
 
         return $tab->delete(); 
+    }
+
+    public function installDB(){
+        // string table sql
+        $sqlTablaPais="
+        CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."tpais(
+            id_pais int(11) NOT NULL AUTO_INCREMENT,
+            sales_channel_id varchar(255) UNIQUE NOT NULL,
+            nombre_pais varchar(255) NOT NULL,
+            codigo_pais varchar(1) NOT NULL,
+            PRIMARY KEY (`id_Pais`)
+        ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
+
+        $tablaPais=Db::getInstance()->execute($sqlTablaPais);
+        return $tablaPais;
+        
+    }
+    
+    public function uninstallDB(){
+        $tablaPais=Db::getInstance()->execute("DROP TABLE IF EXISTS "._DB_PREFIX_."tpais;");
+        return $tablaPais;
     }
 
     public function getContent(){
