@@ -1,8 +1,8 @@
 <?php
 
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 class PaisController extends ModuleAdminController{
-
 
     public function init(){
         parent::init();
@@ -12,15 +12,6 @@ class PaisController extends ModuleAdminController{
         parent::initContent();
         $this->setTemplate('pais.tpl');
     }
-
-    // public function setMedia($isNewTheme = false)
-    // {
-
-    // }
-    
-
-
-
 
 }
 

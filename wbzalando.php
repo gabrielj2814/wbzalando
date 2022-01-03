@@ -98,7 +98,8 @@ class WbZalando extends Module{
     public function hookDisplayBackOfficeHeader()
     {
         $this->context->controller->addCSS(array(
-            $this->_path.'/views/css/bootstrap4/bootstrap.min.css'
+            $this->_path.'/views/css/pais.css',
+            $this->_path.'/views/css/generico.css'
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/header.tpl');
