@@ -10,6 +10,7 @@
             <th scope="col">#</th>
             <th scope="col">Pais</th>
             <th scope="col">Codigo Zalando</th>
+            <th scope="col">Por Defecto</th>
             <th scope="col"></th>
             <th scope="col"></th>
             </tr>
@@ -19,6 +20,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>SI</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -43,6 +45,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -63,6 +66,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -83,6 +87,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -103,6 +108,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -123,6 +129,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -143,6 +150,7 @@
             <td scope="row">1</td>
             <td>España</td>
             <td>EÑ</td>
+            <td>NO</td>
             <td style="width:50px;">
                 <botton class="boton-icon boton-icon-editar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
