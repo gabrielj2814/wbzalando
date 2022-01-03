@@ -29,6 +29,7 @@ class WbZalando extends Module{
             parent::install() && 
             $this->installTab() && 
             $this->installDB() && 
+            $this->registerHook("displayBackOfficeHeader") && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && 
@@ -40,6 +41,7 @@ class WbZalando extends Module{
             parent::uninstall() && 
             $this->uninstallTab() && 
             $this->uninstallDB() && 
+            $this->unregisterHook("displayBackOfficeHeader") && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && 
@@ -91,6 +93,15 @@ class WbZalando extends Module{
     public function uninstallDB(){
         $tablaPais=Db::getInstance()->execute("DROP TABLE IF EXISTS "._DB_PREFIX_."tpais;");
         return $tablaPais;
+    }
+
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->context->controller->addCSS(array(
+            $this->_path.'/views/css/bootstrap4/bootstrap.min.css'
+        ));
+
+        return $this->display(__FILE__, 'views/templates/admin/header.tpl');
     }
 
     public function getContent(){

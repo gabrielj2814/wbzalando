@@ -12,6 +12,11 @@ class PaisController extends ModuleAdminController{
         parent::initContent();
         $this->setTemplate('pais.tpl');
     }
+
+    // public function setMedia($isNewTheme = false)
+    // {
+
+    // }
     
 
 

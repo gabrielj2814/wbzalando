@@ -1,6 +1,6 @@
 <div>
 
-    <h1>hola vista configuracion paises</h1>
+    <button class="btn btn-outline-primary">Registrar</button>
 
 
 </div>
