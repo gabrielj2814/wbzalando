@@ -28,7 +28,8 @@ class ProductoController extends ModuleAdminController{
         if(array_key_exists("vista",$_GET)){
             if($_GET["vista"]==="formulario"){
                 $variablesSmarty["productos"]=$this->consultarProductoPrestashop();
-                // print_r($variablesSmarty["productos"]);
+                $variablesSmarty["categoriasProductos"]=$this->consultarCategoriasPrestashop();
+                // print_r($variablesSmarty["categoriasProductos"]);
                 $variablesSmarty["productos"]=$this->generarUrlProducto($variablesSmarty["productos"]);
                 $this->context->smarty->assign($variablesSmarty);
                 $this->setTemplate('/producto/formulario.tpl');
@@ -47,6 +48,10 @@ class ProductoController extends ModuleAdminController{
 
     public function consultarProductoPrestashop(){
         return Db::getInstance()->executeS("SELECT ps_product_lang.name,ps_product.id_product,ps_product.ean13 FROM ps_product_lang,ps_product,ps_lang WHERE ps_product_lang.id_lang=2 AND ps_product_lang.id_lang=ps_lang.id_lang AND ps_product_lang.id_product=ps_product.id_product;");
+    }
+    
+    public function consultarCategoriasPrestashop(){
+        return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=2 AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
     }
 
     private function generarUrlProducto($arrayProductos){

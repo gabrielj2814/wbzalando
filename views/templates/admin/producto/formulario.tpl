@@ -7,7 +7,17 @@
 
    <form>
    
-   
+        <div class="row">
+            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <label>Categoria</label>
+                    <select id="categoriaProducto" name="categoriaProducto">
+                        <option value="null">Seleccione Una Categoria</option>
+                        {foreach $categoriasProductos as $categoria}
+                            <option value="{$categoria["id_category"]}">{$categoria["name"]}</option>
+                        {/foreach}
+                    </select>
+            </div>
+        </div>
         <table class="table">
             <thead>
                 <tr>
