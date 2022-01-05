@@ -7,7 +7,7 @@
     </form>
 
 
-    <table class="table table-paises">
+    <table class="table" style="display:none;">
         <thead>
             <tr>
             <th scope="col">#</th>

@@ -28,7 +28,6 @@ class WbZalando extends Module{
         return (
             parent::install() && 
             $this->installTab() && 
-            $this->installDB() && 
             $this->registerHook("displayBackOfficeHeader") && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
@@ -40,7 +39,6 @@ class WbZalando extends Module{
         return (
             parent::uninstall() && 
             $this->uninstallTab() && 
-            $this->uninstallDB() && 
             $this->unregisterHook("displayBackOfficeHeader") && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
@@ -52,11 +50,11 @@ class WbZalando extends Module{
     {
         $lang = Language::getLanguages(); 
         $tab = new Tab();
-        $tab->class_name = 'Pais'; 
+        $tab->class_name = 'Producto'; 
         $tab->module = 'wbzalando';
         $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
         foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Pais'); 
+            $tab->name[$l['id_lang']] = $this->l('Productos'); 
         }
 
         return $tab->save();
@@ -64,7 +62,7 @@ class WbZalando extends Module{
 
     private function uninstallTab()
     {
-        $tabId = (int) Tab::getIdFromClassName('MainController'); 
+        $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
         if (!$tabId) {
             return true;
         }
@@ -74,34 +72,16 @@ class WbZalando extends Module{
         return $tab->delete(); 
     }
 
-    public function installDB(){
-        // string table sql
-        $sqlTablaPais="
-        CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."tpais(
-            id_pais int(11) NOT NULL AUTO_INCREMENT,
-            sales_channel_id varchar(255) UNIQUE NOT NULL,
-            nombre_pais varchar(255) NOT NULL,
-            codigo_pais varchar(1) NOT NULL,
-            por_defecto varchar(1) NOT NULL,
-            PRIMARY KEY (`id_Pais`)
-        ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
-
-        $tablaPais=Db::getInstance()->execute($sqlTablaPais);
-        return $tablaPais;
-        
-    }
+    // public function installDB(){        }
     
-    public function uninstallDB(){
-        $tablaPais=Db::getInstance()->execute("DROP TABLE IF EXISTS "._DB_PREFIX_."tpais;");
-        return $tablaPais;
-    }
+    // public function uninstallDB(){}
 
     public function hookDisplayBackOfficeHeader()
     {
-        $this->context->controller->addCSS(array(
-            $this->_path.'/views/css/pais.css',
-            $this->_path.'/views/css/generico.css'
-        ));
+        // $this->context->controller->addCSS(array(
+        //     $this->_path.'/views/css/pais.css',
+        //     $this->_path.'/views/css/generico.css'
+        // ));
         $shop = new Shop((int)$this->context->shop->id);
         $base_url = $shop->getBaseURL();
         $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');
@@ -133,7 +113,6 @@ class WbZalando extends Module{
         $helper->fields_value["clienteIdZolando"]=Configuration::get("WB_ZALANDO_CLIENTE_ID");
         $helper->fields_value["clienteSecretZolando"]=Configuration::get("WB_ZALANDO_CLIENTE_SECRET");
         $helper->fields_value["rutaZolando"]=Configuration::get("WB_ZALANDO_END_POINT");
-        // $helper->fields_value["tokenZolando"]=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
 
         $this->form[0]=[
             "form" => [
@@ -239,11 +218,10 @@ class WbZalando extends Module{
     }
 
     public function autenticarSesionZalando(){
-        $clienteIdZolando=Configuration::get("WB_ZALANDO_CLIENTE_ID");
-        $clienteSecretZolando=Configuration::get("WB_ZALANDO_CLIENTE_SECRET");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
         $rutaEndPoint=Configuration::get("WB_ZALANDO_END_POINT");
         
-        $header = array('Authorization: '.'Bearer '. base64_encode($clienteIdZolando.':'.$clienteSecretZolando));
+        $header = array('Authorization: '.'Bearer '. $token);
 
         $curl = curl_init();
         
@@ -256,8 +234,10 @@ class WbZalando extends Module{
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
-        print($status);
+        // print($status);
         $tokenInfo=(object)json_decode($response);
+        // print_r($tokenInfo->bpids);
+        return $tokenInfo;
 
     }
     

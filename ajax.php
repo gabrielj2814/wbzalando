@@ -20,7 +20,7 @@ if ($module->active) {
     // }
     // $pais=new PaisController();
     // print($pais->mensaje());
-    print($module->autenticarSesionZalando());
+    print(json_encode($module->autenticarSesionZalando()));
 }
 
 ?>

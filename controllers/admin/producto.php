@@ -2,7 +2,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
 
-class PaisController extends ModuleAdminController{
+class ProductoController extends ModuleAdminController{
 
     public function __construct()
     {
@@ -22,14 +22,8 @@ class PaisController extends ModuleAdminController{
         //     'msj' => "holamundo"
         // ]);
         // print(ToolsCore::getValue("nombrePais"));
-        $this->setTemplate('pais.tpl');
+        $this->setTemplate('producto.tpl');
     }
-
-    public function mensaje(){
-        return "HOLA MUNDO";
-    }
-
-
     
 
 }
