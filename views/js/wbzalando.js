@@ -3,7 +3,7 @@ let $botonVerificarToken=document.getElementById("botonVerificarToken")
 function verificarToken(e){
     e.preventDefault();
     // alert(url_ajax)
-    // alert(datoFormulario.get("rutaZolando"))
+    // alert(datoFormulario.get("rutaZolando"))git
     $.ajax({
         url: url_ajax,
         type  :"GET",
