@@ -1,8 +1,7 @@
 <div class="inicioModulo">
+        <a href="{$linkControlador}{"&vista=formulario"}" class="btn btn-primary mb-3">Registrar</a>
     <form method="post">
-        
-        <button class="btn btn-primary mb-3">Registrar</button>
-    <input type="text" class="input-text campo-de-buqueda-pais" id="nombrePais" name="nombrePais" placeholder="Ingresar nombre de pais o codigo"/>
+        <input type="text" class="input-text campo-de-buqueda-pais" id="nombrePais" name="nombrePais" placeholder="Ingresar nombre de pais o codigo"/>
     
     </form>
 
@@ -46,9 +45,3 @@
 
 </div>
 
-<div class="formulario" style="display:none;">
-
-    <h1>vista modulo pais formualrio</h1>
-
-
-</div>

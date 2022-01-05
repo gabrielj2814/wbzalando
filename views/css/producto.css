@@ -1,0 +1,19 @@
+.nobootstrap{
+    padding-right: 80px !important;
+    padding-left: 80px !important;
+}
+
+.mb-15{
+    margin-bottom: 15px !important;
+}
+
+.producto_tabla_td_pdd_tb{
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+}
+
+.producto_centrar_checkbox_tabla_celda{
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}

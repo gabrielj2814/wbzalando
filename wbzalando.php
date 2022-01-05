@@ -78,10 +78,9 @@ class WbZalando extends Module{
 
     public function hookDisplayBackOfficeHeader()
     {
-        // $this->context->controller->addCSS(array(
-        //     $this->_path.'/views/css/pais.css',
-        //     $this->_path.'/views/css/generico.css'
-        // ));
+        $this->context->controller->addCSS(array(
+            $this->_path.'/views/css/producto.css'
+        ));
         $shop = new Shop((int)$this->context->shop->id);
         $base_url = $shop->getBaseURL();
         $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');
