@@ -102,6 +102,12 @@ class WbZalando extends Module{
             $this->_path.'/views/css/pais.css',
             $this->_path.'/views/css/generico.css'
         ));
+        $shop = new Shop((int)$this->context->shop->id);
+        $base_url = $shop->getBaseURL();
+        $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');
+        $this->context->smarty->assign(array(
+            'url_ajax' => $ajax
+        ));
 
         return $this->display(__FILE__, 'views/templates/admin/header.tpl');
     }
@@ -161,6 +167,16 @@ class WbZalando extends Module{
                         'name' => 'rutaZolando',
                         'required'  => true
                         // 'lang' => trues
+                    ],
+                    [
+                        "type" => "html",
+                        "html_content" => '
+                            <button id="botonVerificarToken" class="btn btn-primary">Autenticar sesion</button>'
+                    ],
+                    // script
+                    [
+                        "type" => "html",
+                        "html_content" => '<script type="text/javascript" src="'.$this->_path.'views/js/wbzalando.js"></script>'
                     ]
                 ],
                 "submit" => [
@@ -192,7 +208,7 @@ class WbZalando extends Module{
                 "grant_type" => "client_credentials"
             );
 
-            $fields_string = http_build_query($fields);;   
+            $fields_string = http_build_query($fields);   
             
             curl_setopt($curl, CURLOPT_URL, $rutaEndPoint."/auth/token");
             curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);                                                                     
@@ -220,6 +236,29 @@ class WbZalando extends Module{
             
             
             
+    }
+
+    public function autenticarSesionZalando(){
+        $clienteIdZolando=Configuration::get("WB_ZALANDO_CLIENTE_ID");
+        $clienteSecretZolando=Configuration::get("WB_ZALANDO_CLIENTE_SECRET");
+        $rutaEndPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        
+        $header = array('Authorization: '.'Bearer '. base64_encode($clienteIdZolando.':'.$clienteSecretZolando));
+
+        $curl = curl_init();
+        
+        curl_setopt($curl, CURLOPT_URL, $rutaEndPoint."/auth/me");
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+
+        $response = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+        print($status);
+        $tokenInfo=(object)json_decode($response);
+
     }
     
 } 
