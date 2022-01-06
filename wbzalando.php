@@ -72,15 +72,13 @@ class WbZalando extends Module{
         return $tab->delete(); 
     }
 
-    // public function installDB(){        }
-    
-    // public function uninstallDB(){}
-
     public function hookDisplayBackOfficeHeader()
     {
-        $this->context->controller->addCSS(array(
-            $this->_path.'/views/css/producto.css'
-        ));
+        if(Tools::getValue("controller")==="Producto"){
+            $this->context->controller->addCSS(array(
+                $this->_path.'/views/css/producto.css'
+            ));
+        }
         $shop = new Shop((int)$this->context->shop->id);
         $base_url = $shop->getBaseURL();
         $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');

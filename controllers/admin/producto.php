@@ -19,7 +19,7 @@ class ProductoController extends ModuleAdminController{
 
     public function initContent(){
         parent::initContent();
-        $linkDeControlador=$this->context->link->getAdminLink("Producto");
+        $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador
         ];
@@ -27,8 +27,8 @@ class ProductoController extends ModuleAdminController{
         // $vista=ToolsCore::getValue("vista");
         if(array_key_exists("vista",$_GET)){
             if($_GET["vista"]==="formulario"){
-                $variablesSmarty["productos"]=$this->consultarProductoPrestashop();
                 $variablesSmarty["categoriasProductos"]=$this->consultarCategoriasPrestashop();
+                $variablesSmarty["productos"]=$this->consultarProductoPrestashop();
                 // print_r($variablesSmarty["categoriasProductos"]);
                 $variablesSmarty["productos"]=$this->generarUrlProducto($variablesSmarty["productos"]);
                 $this->context->smarty->assign($variablesSmarty);
@@ -40,7 +40,6 @@ class ProductoController extends ModuleAdminController{
             }
         }
         else{
-
             $this->context->smarty->assign($variablesSmarty);
             $this->setTemplate('/producto/inicio.tpl');
         }
@@ -52,6 +51,10 @@ class ProductoController extends ModuleAdminController{
     
     public function consultarCategoriasPrestashop(){
         return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=2 AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
+    }
+
+    public function consultarProductoConFiltrosPrestashop($categoria){
+
     }
 
     private function generarUrlProducto($arrayProductos){
@@ -67,6 +70,10 @@ class ProductoController extends ModuleAdminController{
         }
         return $lista;
         // print_r($lista);
+    }
+
+    public function ajaxProcessMensaje(){
+        echo json_encode("hola mundo");
     }
     
 
