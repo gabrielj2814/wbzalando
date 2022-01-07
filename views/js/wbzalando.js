@@ -9,7 +9,8 @@ function verificarToken(e){
         type  :"GET",
         success: (respuesta) => {
             alert("OK")
-            console.log(respuesta)
+            let json=JSON.parse(respuesta)
+            console.log(json)
         },
         error: () => {
             alert("error al conectar con el servidor")

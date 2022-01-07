@@ -3,13 +3,10 @@ use PrestaShop\PrestaShop\Adapter\Entity\Context;
 
 class ProductoController extends ModuleAdminController{
 
-    private $productoModel;
-
     public function __construct()
     {
         parent::__construct();
         $this->bootstrap = true;
-        // $this->productoModel=new zalando\modelos\ProductoModel();
     }
 
     public function init()
@@ -96,6 +93,9 @@ class ProductoController extends ModuleAdminController{
         if($_POST["marcaProducto"]!="null"){
             $fracmetoConsulta[]="ps_product.id_manufacturer=".$_POST["marcaProducto"];
         }
+        if($_POST["nombreProducto"]!=""){
+            $fracmetoConsulta[]="ps_product_lang.name LIKE '%".$_POST["nombreProducto"]."%'";
+        }
         $condicion="";
         if(count($fracmetoConsulta)>1){
             $condicion=join(" AND ",$fracmetoConsulta)." AND ";
@@ -142,6 +142,11 @@ class ProductoController extends ModuleAdminController{
         $listaDeProductos=$this->generarUrlProducto($listaDeProductos);
         print(json_encode(["datos" => $listaDeProductos]));
     }
+
+    public function ajaxProcessGetconsultarPaisesZalando(){
+
+    }
+    
 
 
 }

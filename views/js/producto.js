@@ -1,5 +1,8 @@
+let listaProductos=[]
+
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
+let obtenerProductos=document.getElementById("obtenerProductos") 
 
 
 function filtrarProductos(e){
@@ -7,6 +10,7 @@ function filtrarProductos(e){
     const linkControlador=document.getElementById("linkControlador").value;
     let categoriaProducto=document.getElementById("categoriaProducto").value;
     let marcaProducto=document.getElementById("marcaProducto").value;
+    let nombreProducto=document.getElementById("nombreProducto").value;
     // alert(datosFiltro.get("categoriaProducto"))
     $.ajax({
         type: 'POST',
@@ -17,63 +21,19 @@ function filtrarProductos(e){
             ajax: true,
             action: 'getconsultarproductoconfiltros',
             categoriaProducto,
-            marcaProducto
+            marcaProducto,
+            nombreProducto
         },
         success: (respuesta) => {
-            console.log(respuesta);
-            let datos=respuesta.datos
+            // console.log(respuesta);
+            listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
+            let datos=JSON.parse(JSON.stringify(respuesta.datos))
             insertarDatosTablaProducto(datos);
         },
         error: () => {
             alert("error al conectar con el servidor");
         }
     });
-}
-
-function filtrarProductosPorNombre(e){
-    alert("hola")
-    // const linkControlador=document.getElementById("linkControlador").value;
-    // let categoriaProducto=document.getElementById("categoriaProducto");
-    // let marcaProducto=document.getElementById("marcaProducto");
-    // categoriaProducto.setAttribute("disable",true)
-    // marcaProducto.setAttribute("disable",true)
-    // alert(datosFiltro.get("categoriaProducto"))
-    // $.ajax({
-    //     type: 'POST',
-    //     cache: false,
-    //     dataType: 'json',
-    //     url: linkControlador, 
-    //     data: {
-    //         ajax: true,
-    //         action: 'getconsultarproductoconfiltros',
-    //         categoriaProducto,
-    //         marcaProducto
-    //     },
-    //     success: (respuesta) => {
-    //         console.log(respuesta);
-    //         let datos=respuesta.datos
-    //         insertarDatosTablaProducto(datos);
-    //     },
-    //     error: () => {
-    //         alert("error al conectar con el servidor");
-    //     }
-    // });
-}
-
-function bloquearFiltros(){
-    console.log("bloqueando filtros")
-    let categoriaProducto=document.getElementById("categoriaProducto");
-    let marcaProducto=document.getElementById("marcaProducto");
-    categoriaProducto.setAttribute("readonly",true)
-    marcaProducto.setAttribute("readonly",true)
-}
-
-function desbloquearFiltros(){
-    console.log("desbloqueando filtros")
-    let categoriaProducto=document.getElementById("categoriaProducto");
-    let marcaProducto=document.getElementById("marcaProducto");
-    categoriaProducto.removeAttribute("readonly")
-    marcaProducto.removeAttribute("readonly")
 }
 
 function consultarProductos(){
@@ -90,7 +50,8 @@ function consultarProductos(){
         },
         success: (respuesta) => {
             // console.log(respuesta);
-            let datos=respuesta.datos
+            listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
+            let datos=JSON.parse(JSON.stringify(respuesta.datos))
             insertarDatosTablaProducto(datos);
         },
         error: () => {
@@ -122,9 +83,26 @@ function insertarDatosTablaProducto(datos){
     tabla.innerHTML=filasTablas;
 }
 
-botonFiltroProducto.addEventListener("click", filtrarProductos)
-// nombreProducto.addEventListener("keyup", filtrarProductosPorNombre)
-nombreProducto.addEventListener("focus", bloquearFiltros)
-nombreProducto.addEventListener("blur", desbloquearFiltros)
+function obtenerProductosSeleccionados(){
+    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
+    console.log(mostrarDatosFormData(datosFormularioTabla))
+    console.log(listaProductos)
+}
 
+function mostrarDatosFormData(formData){
+    // let json={}
+    let json=[]
+    let iterador = formData.entries()
+    let next= iterador.next();
+    while(!next.done){
+        // json[next.value[0]]=next.value[1]
+        json.push({name:next.value[0],value:next.value[1]})
+        next=iterador.next()
+    }
+    return json 
+}
+
+botonFiltroProducto.addEventListener("click", filtrarProductos)
+nombreProducto.addEventListener("keyup", filtrarProductos)
+obtenerProductos.addEventListener("click", obtenerProductosSeleccionados)
 consultarProductos();
