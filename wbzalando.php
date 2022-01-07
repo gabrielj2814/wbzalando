@@ -30,6 +30,7 @@ class WbZalando extends Module{
             $this->installTab() && 
             $this->registerHook("displayBackOfficeHeader") && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
+            Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE","NULL") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_SECRET","Sin cliente secret") && 
             Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO","Sin token"));
@@ -41,6 +42,7 @@ class WbZalando extends Module{
             $this->uninstallTab() && 
             $this->unregisterHook("displayBackOfficeHeader") && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
+            Configuration::deleteByName("WB_ZALANDO_ID_COMERCIANTE")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && 
             Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
@@ -144,11 +146,11 @@ class WbZalando extends Module{
                         'required'  => true
                         // 'lang' => trues
                     ],
-                    [
-                        "type" => "html",
-                        "html_content" => '
-                            <button id="botonVerificarToken" class="btn btn-primary">Autenticar sesion</button>'
-                    ],
+                    // [
+                    //     "type" => "html",
+                    //     "html_content" => '
+                    //         <button id="botonVerificarToken" class="btn btn-primary">Autenticar sesion</button>'
+                    // ],
                     // script
                     [
                         "type" => "html",
@@ -202,10 +204,11 @@ class WbZalando extends Module{
             $tokenInfo=(object)json_decode($response);
             if(property_exists($tokenInfo,"access_token")){
                 Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$tokenInfo->access_token);
-                $salida=$this->displayConfirmation($this->l("La sesion con Zalando ha sido creada con éxito"));
+                $salida=$this->displayConfirmation($this->l("Sean guardado las credenciales y el punto de acceso de la api con exito"));
+                $this->autenticarSesionZalando();
             }
             else{
-                $salida=$this->displayError($this->l("Zalnado ha tardado en responde porfavor intente de nuevo"));
+                $salida=$this->displayError($this->l("Zalando ha tardado en responde porfavor intente de nuevo"));
             }
             return $salida;
         }
@@ -234,6 +237,7 @@ class WbZalando extends Module{
         // print($status);
         $tokenInfo=(object)json_decode($response);
         // print_r($tokenInfo->bpids);
+        Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE",$tokenInfo->bpids[0]);
         return $tokenInfo;
 
     }

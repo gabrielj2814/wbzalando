@@ -2,7 +2,6 @@
         <a href="{$linkControlador}{"&vista=formulario"}" class="btn btn-primary mb-3">Registrar</a>
     <form method="post">
         <input type="text" class="input-text campo-de-buqueda-pais" id="nombrePais" name="nombrePais" placeholder="Ingresar nombre de pais o codigo"/>
-    
     </form>
 
 

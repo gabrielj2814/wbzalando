@@ -3,10 +3,16 @@ use PrestaShop\PrestaShop\Adapter\Entity\Context;
 
 class ProductoController extends ModuleAdminController{
 
+    private $id_idioma;
+
     public function __construct()
     {
+        // global $cookie;
         parent::__construct();
         $this->bootstrap = true;
+        // $this->id_idioma = $cookie->id_lang;
+        $this->id_idioma = $this->context->language->id;
+        
     }
 
     public function init()
@@ -53,17 +59,17 @@ class ProductoController extends ModuleAdminController{
         ps_product.ean13 
         FROM ps_product_lang,ps_product,ps_lang
         WHERE
-        ps_product_lang.id_lang=2 AND
+        ps_product_lang.id_lang=".$this->id_idioma." AND
         ps_product_lang.id_lang=ps_lang.id_lang AND
         ps_product_lang.id_product=ps_product.id_product");
     }
 
     public function consultarCategoriasPrestashop(){
-        return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=2 AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
+        return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=".$this->id_idioma." AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
     }
     
     public function consultarMarcasPrestashop(){
-        return Db::getInstance()->executeS("SELECT ps_manufacturer.id_manufacturer,ps_manufacturer.name  FROM ps_manufacturer,ps_manufacturer_lang,ps_lang WHERE ps_manufacturer_lang.id_lang=2 AND ps_manufacturer_lang.id_manufacturer=ps_manufacturer.id_manufacturer AND ps_manufacturer_lang.id_lang=ps_lang.id_lang");
+        return Db::getInstance()->executeS("SELECT ps_manufacturer.id_manufacturer,ps_manufacturer.name  FROM ps_manufacturer,ps_manufacturer_lang,ps_lang WHERE ps_manufacturer_lang.id_lang=".$this->id_idioma." AND ps_manufacturer_lang.id_manufacturer=ps_manufacturer.id_manufacturer AND ps_manufacturer_lang.id_lang=ps_lang.id_lang");
     }
 
 
@@ -113,7 +119,7 @@ class ProductoController extends ModuleAdminController{
             FROM ps_category_product,ps_product_lang,ps_product,ps_lang
             WHERE
             ".$condicion."
-            ps_product_lang.id_lang=2 AND
+            ps_product_lang.id_lang=".$this->id_idioma." AND
             ps_product.id_product=ps_category_product.id_product AND
             ps_product_lang.id_lang=ps_lang.id_lang AND
             ps_product_lang.id_product=ps_product.id_product";
@@ -127,7 +133,7 @@ class ProductoController extends ModuleAdminController{
             FROM ps_product_lang,ps_product,ps_lang
             WHERE
             ".$condicion."
-            ps_product_lang.id_lang=2 AND
+            ps_product_lang.id_lang=".$this->id_idioma." AND
             ps_product_lang.id_lang=ps_lang.id_lang AND
             ps_product_lang.id_product=ps_product.id_product";
             

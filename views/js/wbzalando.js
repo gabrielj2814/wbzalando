@@ -1,14 +1,10 @@
 let $botonVerificarToken=document.getElementById("botonVerificarToken")
 
-function verificarToken(e){
-    e.preventDefault();
-    // alert(url_ajax)
-    // alert(datoFormulario.get("rutaZolando"))git
+function verificarToken(){
     $.ajax({
         url: url_ajax,
         type  :"GET",
         success: (respuesta) => {
-            alert("OK")
             let json=JSON.parse(respuesta)
             console.log(json)
         },
@@ -19,6 +15,6 @@ function verificarToken(e){
 }
 
 
-
-$botonVerificarToken.addEventListener("click",verificarToken)
+// verificarToken()
+// $botonVerificarToken.addEventListener("click",verificarToken)
 
