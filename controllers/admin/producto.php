@@ -23,8 +23,6 @@ class ProductoController extends ModuleAdminController{
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador
         ];
-        // $context=ContextCore::getContext();
-        // $vista=ToolsCore::getValue("vista");
         if(array_key_exists("vista",$_GET)){
             if($_GET["vista"]==="formulario"){
                 $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
@@ -71,8 +69,8 @@ class ProductoController extends ModuleAdminController{
         ps_product.ean13 
         FROM ps_product_lang,ps_product,ps_lang
         WHERE
-        ps_product_lang.id_lang=2 AND
         ps_product.id_product=".$idProducto." AND
+        ps_product_lang.id_lang=2 AND
         ps_product_lang.id_lang=ps_lang.id_lang AND
         ps_product_lang.id_product=ps_product.id_product");
     }
@@ -85,12 +83,43 @@ class ProductoController extends ModuleAdminController{
         ps_product.ean13
         FROM ps_product_lang,ps_product,ps_lang
         WHERE
-        ps_product_lang.id_lang=2 AND
         ps_product.id_manufacturer=".$idMarca." AND
+        ps_product_lang.id_lang=2 AND
         ps_product_lang.id_lang=ps_lang.id_lang AND
         ps_product_lang.id_product=ps_product.id_product");
     }
     
+    public function consultarProductosPorCategoria($idCategoria){
+        return Db::getInstance()->executeS("
+        SELECT 
+        ps_product_lang.name,
+        ps_product.id_product,
+        ps_product.ean13
+        FROM ps_category_product,ps_product_lang,ps_product,ps_lang
+        WHERE
+        ps_category_product.id_category=".$idCategoria." AND
+        ps_product_lang.id_lang=2 AND
+        ps_product.id_product=ps_category_product.id_product AND
+        ps_product_lang.id_lang=ps_lang.id_lang AND
+        ps_product_lang.id_product=ps_product.id_product");
+    }
+    
+    public function consultarProductosPorCategoriaYMarca($idCategoria,$idMarca){
+        return Db::getInstance()->executeS("
+        SELECT 
+        ps_product_lang.name,
+        ps_product.id_product,
+        ps_product.ean13
+        FROM ps_category_product,ps_product_lang,ps_product,ps_lang
+        WHERE
+        ps_category_product.id_category=".$idCategoria." AND
+        ps_product.id_manufacturer=".$idMarca." AND
+        ps_product_lang.id_lang=2 AND
+        ps_product.id_product=ps_category_product.id_product AND
+        ps_product_lang.id_lang=ps_lang.id_lang AND
+        ps_product_lang.id_product=ps_product.id_product");
+    }
+
     public function consultarProductoPorMarca($idProducto,$idMarca){
         return Db::getInstance()->executeS("
         SELECT 
@@ -99,9 +128,9 @@ class ProductoController extends ModuleAdminController{
         ps_product.ean13
         FROM ps_product_lang,ps_product,ps_lang
         WHERE
-        ps_product_lang.id_lang=2 AND
         ps_product.id_product=".$idProducto." AND
         ps_product.id_manufacturer=".$idMarca." AND
+        ps_product_lang.id_lang=2 AND
         ps_product_lang.id_lang=ps_lang.id_lang AND
         ps_product_lang.id_product=ps_product.id_product");
     }
@@ -129,45 +158,73 @@ class ProductoController extends ModuleAdminController{
             }
         }
         return $lista;
-        // print_r($lista);
     }
 
     public function ajaxProcessGetConsultarProductoConFiltros(){
         $SQL="";
         $productos=[];
-        if($_POST["categoriaProducto"]!="null" AND $_POST["marcaProducto"]!="null"){
-            $SQL="SELECT * FROM ps_category_product WHERE ps_category_product.id_category=".$_POST["categoriaProducto"];
-            $respuesta_1=$this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-            if(count($respuesta_1)>0){
-                foreach($respuesta_1 as $categoria){
-                    $respuesta_2=$this->validarRespuestaBD($this->consultarProductoPorMarca($categoria["id_product"],$_POST["marcaProducto"]));
-                    if(count($respuesta_2)>0){
-                        $productos[]=$respuesta_2[0];
-                    }
-                }
-                $productos=$this->generarUrlProducto($productos);
-            }
+        // if($_POST["categoriaProducto"]!="null" AND $_POST["marcaProducto"]!="null"){
+        //     $productos=$this->validarRespuestaBD($this->consultarProductosPorCategoriaYMarca($_POST["categoriaProducto"],$_POST["marcaProducto"]));
+        //     $productos=$this->generarUrlProducto($productos);
+        // }
+        // else if($_POST["categoriaProducto"]!="null"){
+        //     $productos=$this->validarRespuestaBD($this->consultarProductosPorCategoria($_POST["categoriaProducto"]));
+        //     $productos=$this->generarUrlProducto($productos);
+        // }
+        // else if($_POST["marcaProducto"]!="null"){
+        //     $productos=$this->validarRespuestaBD($this->consultarProductosPorMarca($_POST["marcaProducto"]));
+        //     $productos=$this->generarUrlProducto($productos);
+        // }
+        // else{
+        //     $productos=$this->validarRespuestaBD($this->consultarProductosPrestashop());
+        //     $productos=$this->generarUrlProducto($productos);
+        // }
+        $fracmetoConsulta=[];
+        if($_POST["categoriaProducto"]!="null"){
+            $fracmetoConsulta[]="ps_category_product.id_category=".$_POST["categoriaProducto"];
         }
-        else if($_POST["categoriaProducto"]!="null"){
-            $SQL="SELECT * FROM ps_category_product WHERE ps_category_product.id_category=".$_POST["categoriaProducto"];
-            $respuesta_1=$this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-            if(count($respuesta_1)>0){
-                foreach($respuesta_1 as $categoria){
-                    $respuesta_2=$this->validarRespuestaBD($this->consultarProducto($categoria["id_product"]))[0];
-                    $productos[]=$respuesta_2;
-                }
-                $productos=$this->generarUrlProducto($productos);
-            }
+        if($_POST["marcaProducto"]!="null"){
+            $fracmetoConsulta[]="ps_product.id_manufacturer=".$_POST["marcaProducto"];
         }
-        else if($_POST["marcaProducto"]!="null"){
-            $productos=$this->consultarProductosPorMarca($_POST["marcaProducto"]);
-            $productos=$this->generarUrlProducto($productos);
+        $condicion="";
+        if(count($fracmetoConsulta)>1){
+            $condicion=join(" AND ",$fracmetoConsulta)." AND ";
+        }
+        else if(count($fracmetoConsulta)===1){
+            $condicion= "(".$fracmetoConsulta[0].") AND ";
+        }
+
+        if($_POST["categoriaProducto"]!="null"){
+            $SQL="
+            SELECT 
+            ps_product_lang.name,
+            ps_product.id_product,
+            ps_product.ean13
+            FROM ps_category_product,ps_product_lang,ps_product,ps_lang
+            WHERE
+            ".$condicion."
+            ps_product_lang.id_lang=2 AND
+            ps_product.id_product=ps_category_product.id_product AND
+            ps_product_lang.id_lang=ps_lang.id_lang AND
+            ps_product_lang.id_product=ps_product.id_product";
         }
         else{
-            $productos=$this->validarRespuestaBD($this->consultarProductosPrestashop());
-            $productos=$this->generarUrlProducto($productos);
+            $SQL="
+            SELECT 
+            ps_product_lang.name,
+            ps_product.id_product,
+            ps_product.ean13
+            FROM ps_product_lang,ps_product,ps_lang
+            WHERE
+            ".$condicion."
+            ps_product_lang.id_lang=2 AND
+            ps_product_lang.id_lang=ps_lang.id_lang AND
+            ps_product_lang.id_product=ps_product.id_product";
+            
         }
-        print(json_encode(["datos" => $productos]));
+        $productos=Db::getInstance()->executeS($SQL);
+        $productos=$this->generarUrlProducto($productos);
+        print(json_encode(["datos" =>  $productos]));
     }
     
     public function ajaxProcessGetConsultarProductos(){
@@ -175,6 +232,7 @@ class ProductoController extends ModuleAdminController{
         $listaDeProductos=$this->generarUrlProducto($listaDeProductos);
         print(json_encode(["datos" => $listaDeProductos]));
     }
+
 
 }
 
