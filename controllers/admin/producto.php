@@ -1,5 +1,7 @@
 <?php
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
+include("curlController.php");
+use Clases\CurlController;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ProductoController extends ModuleAdminController{
 
@@ -7,10 +9,8 @@ class ProductoController extends ModuleAdminController{
 
     public function __construct()
     {
-        // global $cookie;
         parent::__construct();
         $this->bootstrap = true;
-        // $this->id_idioma = $cookie->id_lang;
         $this->id_idioma = $this->context->language->id;
         
     }
@@ -149,13 +149,32 @@ class ProductoController extends ModuleAdminController{
         print(json_encode(["datos" => $listaDeProductos]));
     }
 
-    public function ajaxProcessGetconsultarPaisesZalando(){
-
+    public function ajaxProcessGetConsultarPaisesZalando(){
+        $respuesta_servidor=["respuestaServidor" => [], "estadoRespuesta" => false];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $url=$endPoint."/sales-channels";
+        $curlController=new CurlController($url);
+        $datosGet=[
+            "merchant_ids" => $idComerciante
+        ];
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $header = array('Authorization: '.'Bearer '. $token);
+        $curlController->setDatosPeticion($datosGet);
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get");
+        $Paises=(Object)$respuesta;
+        if(property_exists($Paises,"items")){
+            $respuesta_servidor["respuestaServidor"]= $respuesta;
+            $respuesta_servidor["estadoRespuesta"]= true;
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]= $respuesta;
+        }
+        print(json_encode($respuesta_servidor));
     }
-    
-
-
 }
+
 
 
 

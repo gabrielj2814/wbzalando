@@ -16,6 +16,7 @@
     display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    cursor: pointer;
 }
 
 .centrar-columnas{
@@ -29,4 +30,79 @@
     flex-direction: row !important;
     flex-wrap: wrap !important;
     justify-content: end;
+}
+.formulario{
+    position: relative;
+    min-height: 100%;
+}
+
+
+.contenedorModalSubirProductos{
+    position: absolute;
+    top:0;
+    /* background-color: rgba(29, 28, 28, 0.479); */
+    width: 100%;
+    height: 100%;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .5s ease-out;
+    
+}
+
+.contenedorModalSubirProductos label,
+.contenedorModalSubirProductos span ,
+.contenedorModalSubirProductos h2 
+{
+    color:#FFF;
+}
+
+.mostrarModal{
+    opacity:1;
+}
+
+.modalSubirProductos{
+    width: 70%;
+    height: 450px;
+    background-color: #363a41;
+    position: fixed;
+    padding-top: 70px;
+    border-radius: 20px;
+}
+
+
+.icon-x-modal-subir-producto{
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+
+.icon-x-modal-subir-producto{
+    cursor: pointer;
+    color:#FFF;
+}
+
+.icon-x-modal-subir-producto:hover{
+     color:red;
+}
+
+.icon-x-modal-subir-producto > svg{
+    width: 25px;
+    height: 25px;
+    
+
+}
+
+.select-paises-modal{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.centrar-texto{
+    text-align: center;
 }

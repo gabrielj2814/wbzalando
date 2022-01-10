@@ -1,5 +1,7 @@
 <?php
 
+namespace Clases;
+
 class CurlController{
     private $datosPeticion;
     private $datosCabezera;
@@ -8,10 +10,12 @@ class CurlController{
     public function __construct($url)
     {
         $this->url=$url;
+        $this->datosPeticion=[];
+        $this->datosCabezera=[];
         
     }
     
-    public function setDatosPeticion($datosPeticion,$datosCabezera){
+    public function setDatosPeticion($datosPeticion){
         $this->datosPeticion=$datosPeticion;
     }
     
@@ -21,12 +25,15 @@ class CurlController{
 
     public function ejecutarPeticion($tipo){
         $curl = curl_init();   
-        curl_setopt($curl, CURLOPT_URL,$this->url);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);        
         if($tipo==="post"){
             curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS,$this->construirHttpQuery());
         }
-        curl_setopt($curl, CURLOPT_POSTFIELDS,$this->construirHttpQuery());
+        else if($tipo==="get"){
+            // print($this->url.$this->construirHttpQuery());
+            curl_setopt($curl, CURLOPT_URL,$this->url."?".$this->construirHttpQuery());
+        }
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);        
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->crearCabezera());
 
@@ -34,13 +41,14 @@ class CurlController{
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
+        return json_decode($response);
     }
 
     public function construirHttpQuery(){
         // formato array [ ["nombre" => "nombre de la propiedad", "valor" => "valor de la propiedad"] ]
         $listaPropiedades=[];
-        foreach($this->datosPeticion as $propiedad){
-            $listaPropiedades[$propiedad["nombre"]]=$propiedad["valor"];
+        foreach($this->datosPeticion as $key => $valor){
+            $listaPropiedades[$key]=$valor;
         }
         return http_build_query($listaPropiedades);
     }
@@ -53,6 +61,8 @@ class CurlController{
         return $listaEncabezado;
     }
 }
-
+// print("hola");
+// $peticion=new CurlController("https://jsonplaceholder.typicode.com/posts");
+// print(json_encode($peticion->ejecutarPeticion("get")));
 
 ?>

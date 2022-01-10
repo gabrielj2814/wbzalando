@@ -52,8 +52,29 @@
             </button>
         </div>
     </div>
-
    
+
+    <div id="contenedorModalSubirProductos" class="contenedorModalSubirProductos" style="pointer-events: none;">
+        
+        <div class="modalSubirProductos">
+            <div class="icon-x-modal-subir-producto" onClick="cerrarModalSubirProducto()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                </svg>
+            </div>
+
+            <div class="select-paises-modal">
+                <label>Paises</label>
+                <select multiple id="paisesProducto" name="paisesProducto" style="height: 45px;margin-bottom:10px;">
+                </select>
+                <span>precione Ctrl + shift</span>
+            </div>
+            <h2 class="centrar-texto">Lista de productos seleccionados</h2>
+        
+        </div>
+
+    </div>
 
    <form id="formTablaProductos">
    
@@ -74,5 +95,6 @@
    
    </form>
 
-<script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
 </div>
+
+<script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>

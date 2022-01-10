@@ -1,5 +1,6 @@
+// variables globales
 let listaProductos=[]
-
+let paisesZalando=[]
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
 let obtenerProductos=document.getElementById("obtenerProductos") 
@@ -11,7 +12,6 @@ function filtrarProductos(e){
     let categoriaProducto=document.getElementById("categoriaProducto").value;
     let marcaProducto=document.getElementById("marcaProducto").value;
     let nombreProducto=document.getElementById("nombreProducto").value;
-    // alert(datosFiltro.get("categoriaProducto"))
     $.ajax({
         type: 'POST',
         cache: false,
@@ -31,14 +31,12 @@ function filtrarProductos(e){
             insertarDatosTablaProducto(datos);
         },
         error: () => {
-            alert("error al conectar con el servidor");
         }
     });
 }
 
 function consultarProductos(){
     const linkControlador=document.getElementById("linkControlador").value;
-    // alert(datosFiltro.get("categoriaProducto"))
     $.ajax({
         type: 'GET',
         cache: false,
@@ -49,15 +47,53 @@ function consultarProductos(){
             action: 'getconsultarproductos'
         },
         success: (respuesta) => {
-            // console.log(respuesta);
             listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
             let datos=JSON.parse(JSON.stringify(respuesta.datos))
             insertarDatosTablaProducto(datos);
+            consultarPaisesZalando();
         },
         error: () => {
-            alert("error al conectar con el servidor");
         }
     });
+}
+
+function consultarPaisesZalando(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpaiseszalando'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            if(datos.respuestaServidor.items){
+                paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
+                console.log("todos los paises zalando =>>> ",paisesZalando)
+                insertarPaisesSelectFormulario(datos.respuestaServidor.items)
+            }
+            else{
+                alert("error al cargar los paises")
+            }
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+}
+
+function insertarPaisesSelectFormulario(paises){
+    let paisesProducto=document.getElementById("paisesProducto")
+    paisesProducto.innerHTML="";
+    for(let pais of paises){
+        let html="\
+        <option value='"+pais.sales_channel_id+"'>"+pais.country_name+"</option>\
+        "
+        paisesProducto.innerHTML+=html
+    }
 }
 
 function insertarDatosTablaProducto(datos){
@@ -83,12 +119,6 @@ function insertarDatosTablaProducto(datos){
     tabla.innerHTML=filasTablas;
 }
 
-function obtenerProductosSeleccionados(){
-    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
-    console.log(mostrarDatosFormData(datosFormularioTabla))
-    console.log(listaProductos)
-}
-
 function mostrarDatosFormData(formData){
     // let json={}
     let json=[]
@@ -102,7 +132,24 @@ function mostrarDatosFormData(formData){
     return json 
 }
 
+function mostrarModalSubirProductos(){
+    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
+    let modal=document.getElementById("contenedorModalSubirProductos")
+    console.log("pruductos seleccionados =>>>",mostrarDatosFormData(datosFormularioTabla))
+    console.log("todos los productos =>>> ",listaProductos)
+    modal.classList.toggle("mostrarModal")
+    modal.style.pointerEvents=""
+}
+
+function cerrarModalSubirProducto(){
+    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
+    let modal=document.getElementById("contenedorModalSubirProductos")
+    modal.classList.toggle("mostrarModal")
+    modal.style.pointerEvents="none"
+}
+
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
-obtenerProductos.addEventListener("click", obtenerProductosSeleccionados)
+obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 consultarProductos();
+
