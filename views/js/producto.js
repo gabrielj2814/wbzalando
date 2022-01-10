@@ -4,6 +4,7 @@ let paisesZalando=[]
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
 let obtenerProductos=document.getElementById("obtenerProductos") 
+let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto") 
 
 
 function filtrarProductos(e){
@@ -134,22 +135,25 @@ function mostrarDatosFormData(formData){
 
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
-    let modal=document.getElementById("contenedorModalSubirProductos")
-    console.log("pruductos seleccionados =>>>",mostrarDatosFormData(datosFormularioTabla))
-    console.log("todos los productos =>>> ",listaProductos)
-    modal.classList.toggle("mostrarModal")
-    modal.style.pointerEvents=""
+    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
+    let vistaFormulario=document.querySelector(".formulario")
+    // console.log("pruductos seleccionados =>>>",mostrarDatosFormData(datosFormularioTabla))
+    // console.log("todos los productos =>>> ",listaProductos)
+    formularioSubirProducto.classList.toggle("mostrarVista")
+    vistaFormulario.classList.toggle("ocultar")
 }
 
 function cerrarModalSubirProducto(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
-    let modal=document.getElementById("contenedorModalSubirProductos")
-    modal.classList.toggle("mostrarModal")
-    modal.style.pointerEvents="none"
+    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
+    let vistaFormulario=document.querySelector(".formulario")
+    formularioSubirProducto.classList.toggle("mostrarVista")
+    vistaFormulario.classList.toggle("ocultar")
 }
 
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
 obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
+botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 consultarProductos();
 

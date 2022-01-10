@@ -37,34 +37,20 @@
 }
 
 
-.contenedorModalSubirProductos{
-    position: absolute;
-    top:0;
+.contenedorVistaSubirProductos{
     /* background-color: rgba(29, 28, 28, 0.479); */
-    width: 100%;
-    height: 100%;
-    padding-top: 30px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity .5s ease-out;
-    
+    display: none;
 }
 
-.contenedorModalSubirProductos label,
-.contenedorModalSubirProductos span ,
-.contenedorModalSubirProductos h2 
-{
-    color:#FFF;
+.mostrarVista{
+   display: block ;
 }
 
-.mostrarModal{
-    opacity:1;
+.ocultar{
+    display: none;
 }
 
-.modalSubirProductos{
+.vistaSubirProductos{
     width: 70%;
     height: 450px;
     background-color: #363a41;

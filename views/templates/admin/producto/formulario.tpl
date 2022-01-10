@@ -1,4 +1,4 @@
-<div class="formulario">
+<div class="formulario id="formulario">
     <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
     <a href="{$linkControlador}{"&vista=inicio"}" class="btn btn-primary" style="margin-bottom: 30px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -52,29 +52,6 @@
             </button>
         </div>
     </div>
-   
-
-    <div id="contenedorModalSubirProductos" class="contenedorModalSubirProductos" style="pointer-events: none;">
-        
-        <div class="modalSubirProductos">
-            <div class="icon-x-modal-subir-producto" onClick="cerrarModalSubirProducto()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                </svg>
-            </div>
-
-            <div class="select-paises-modal">
-                <label>Paises</label>
-                <select multiple id="paisesProducto" name="paisesProducto" style="height: 45px;margin-bottom:10px;">
-                </select>
-                <span>precione Ctrl + shift</span>
-            </div>
-            <h2 class="centrar-texto">Lista de productos seleccionados</h2>
-        
-        </div>
-
-    </div>
 
    <form id="formTablaProductos">
    
@@ -94,6 +71,25 @@
         </table>
    
    </form>
+
+</div>
+
+<div id="contenedorVistaSubirProductos" class="contenedorVistaSubirProductos">
+    <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonSalirVistaSubirProducto">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+    </button>
+    
+    <div class="centrar-columnas">
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-bottom: 30px;">
+            <label>Paises</label>
+                <select multiple id="paisesProducto" name="paisesProducto" style="height: 45px;margin-bottom:10px;">
+            </select>
+            <span>precione Ctrl + shift</span>
+        </div>
+    </div>
+    <h2 class="centrar-texto">Lista de productos seleccionados</h2>
 
 </div>
 
