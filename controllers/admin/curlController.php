@@ -23,11 +23,19 @@ class CurlController{
         $this->datosCabezera=$datosCabezera;
     }
 
-    public function ejecutarPeticion($tipo){
+    public function ejecutarPeticion($tipo,$requestJson){
         $curl = curl_init();   
         if($tipo==="post"){
+            curl_setopt($curl, CURLOPT_URL,$this->url);
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS,$this->construirHttpQuery());
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            // curl_setopt($curl, CURLOPT_POSTFIELDS,$this->construirHttpQuery());
+            if($requestJson){
+                curl_setopt($curl, CURLOPT_POSTFIELDS,json_encode($this->datosPeticion));
+            }
+            else{
+                curl_setopt($curl, CURLOPT_POSTFIELDS,$this->construirHttpQuery());
+            }
         }
         else if($tipo==="get"){
             // print($this->url.$this->construirHttpQuery());

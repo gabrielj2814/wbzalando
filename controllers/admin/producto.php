@@ -63,6 +63,20 @@ class ProductoController extends ModuleAdminController{
         ps_product_lang.id_lang=ps_lang.id_lang AND
         ps_product_lang.id_product=ps_product.id_product");
     }
+    
+    public function consultarProductoPrestashop($idProducto){
+        return Db::getInstance()->executeS("
+        SELECT 
+        ps_product_lang.name,
+        ps_product.id_product,
+        ps_product.ean13 
+        FROM ps_product_lang,ps_product,ps_lang
+        WHERE
+        ps_product.id_product=".$idProducto." AND
+        ps_product_lang.id_lang=".$this->id_idioma." AND
+        ps_product_lang.id_lang=ps_lang.id_lang AND
+        ps_product_lang.id_product=ps_product.id_product");
+    }
 
     public function consultarCategoriasPrestashop(){
         return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=".$this->id_idioma." AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
@@ -162,7 +176,7 @@ class ProductoController extends ModuleAdminController{
         $header = array('Authorization: '.'Bearer '. $token);
         $curlController->setDatosPeticion($datosGet);
         $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("get");
+        $respuesta=$curlController->ejecutarPeticion("get",false);
         $Paises=(Object)$respuesta;
         if(property_exists($Paises,"items")){
             $respuesta_servidor["respuestaServidor"]= $respuesta;
@@ -173,6 +187,103 @@ class ProductoController extends ModuleAdminController{
         }
         print(json_encode($respuesta_servidor));
     }
+
+    public function ajaxProcessPostEnviarProductos(){
+        $respuesta_servidor=["respuestaServidor" => [], "estadoRespuesta" => false];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        // $datosProductosHaEnviar=[];
+        // foreach($_POST["productos"] as $productos){
+        //     $datosProducto=[];
+        //     $datosProducto["outline"]="testLine";
+        //     $datosProducto["product_model"]=[];
+        //     $datosProducto["product_model"]["merchant_product_model_id"]=$productos["id_product"];
+        //     $datosProducto["product_model"]["product_model_attributes"]=[];
+        //     $datosProducto["product_model"]["product_model_attributes"]["name"]="nombre test";
+        //     $datosProducto["product_model"]["product_model_attributes"]["brand_code"]="5FX";
+        //     $datosProducto["product_model"]["product_configs"]=[];
+        //     $datosProducto["product_model"]["product_configs"][]=[
+        //         "merchant_product_config_id"=> 11111,
+        //         "product_config_attributes" => [
+        //             "color_code" => "802",
+        //             "season_code" => "",
+        //             "media" => []
+        //         ],
+        //         "product_simples" => [
+        //             [
+        //                 "product_simple_attributes" => [
+        //                     "ean" => $productos["ean"],
+        //                     "size_codes" => []
+        //                 ]
+        //             ]
+        //         ]
+        //     ];
+        //     $datosProductosHaEnviar[]=$datosProducto;
+        // }
+        $productoTest='
+        {
+            "outline": "trousers",
+            "product_model": {
+              "merchant_product_model_id": "47812AAS",
+              "product_model_attributes": {
+                "name": "New Fancy Product 2.0",
+                "brand_code": "5FX",
+                "size_group": {
+                  "size": "2MAE000A2A"
+                },
+                "target_age_groups": [
+                  "target_age_group_kid",
+                  "target_age_group_baby"
+                ],
+                "target_genders": [
+                  "target_gender_female",
+                  "target_gender_male"
+                ]
+              },
+              "product_configs": [
+                {
+                  "merchant_product_config_id": "411212",
+                  "product_config_attributes": {
+                    "color_code": "802",
+                    "season_code": "fs18",
+                    "media": [
+                      {
+                        "url": "https://zalando.com/1667531.jpg",
+                        "sort_key": 1
+                      }
+                    ]
+                  },
+                  "product_simples": [
+                    {
+                      "merchant_product_simple_id": "WTC741-XL",
+                      "product_simple_attributes": {
+                        "ean": "4038671015234",
+                        "size_codes": {
+                          "size": "XL"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ';
+
+        $url=$endPoint."/merchants/".$idComerciante."/product-submissions";
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token,
+            'Content-Type: application/json'
+        );
+        $curlController->setDatosPeticion($productoTest);
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("post",true);
+        print(json_encode(["respuesta" => $respuesta]));
+    }
+
+    
 }
 
 

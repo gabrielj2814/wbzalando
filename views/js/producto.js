@@ -1,11 +1,28 @@
 // variables globales
 let listaProductos=[]
 let paisesZalando=[]
+
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
 let obtenerProductos=document.getElementById("obtenerProductos") 
-let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto") 
+let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto")
+let botonTestEnvio=document.getElementById("botonTestEnvio")
 
+function mostrarModalSubirProductos(){
+    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
+    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
+    let vistaInicial=document.querySelector(".vistaInicial")
+    formularioSubirProducto.classList.toggle("mostrarVista")
+    vistaInicial.classList.toggle("ocultar")
+}
+
+function cerrarModalSubirProducto(){
+    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
+    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
+    let vistaInicial=document.querySelector(".vistaInicial")
+    formularioSubirProducto.classList.toggle("mostrarVista")
+    vistaInicial.classList.toggle("ocultar")
+}
 
 function filtrarProductos(e){
     e.preventDefault();
@@ -133,27 +150,103 @@ function mostrarDatosFormData(formData){
     return json 
 }
 
-function mostrarModalSubirProductos(){
-    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
-    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
-    let vistaFormulario=document.querySelector(".formulario")
-    // console.log("pruductos seleccionados =>>>",mostrarDatosFormData(datosFormularioTabla))
-    // console.log("todos los productos =>>> ",listaProductos)
-    formularioSubirProducto.classList.toggle("mostrarVista")
-    vistaFormulario.classList.toggle("ocultar")
+function enviarProductos(){
+    // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
+    // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
+    const linkControlador=document.getElementById("linkControlador").value;
+    let productos=[
+        {
+            ean:"978020137962",
+            id_product:"1",
+            sales_channel:[
+                {
+                    sales_channel_id:"733af55a-4133-4d7c-b5f3-d64d42c135fe",
+                    quantity:"12",
+                    regular_price: {
+                        amount: 89.95,
+                        currency: "FR"
+                    },
+                    promotional_price: {
+                        amount: 89.95,
+                        currency: "FR"
+                    },
+                    ignore_warnings: true
+                },
+                {
+                    sales_channel_id:"01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                    quantity:"100",
+                    regular_price: {
+                        amount: 89.95,
+                        currency: "EUR"
+                    },
+                    promotional_price: {
+                        amount: 89.95,
+                        currency: "EUR"
+                    },
+                    ignore_warnings: true
+                }
+            ]
+        },
+        {
+            ean:"278020137962",
+            id_product:"1",
+            sales_channel:[
+                {
+                    sales_channel_id:"733af55a-4133-4d7c-b5f3-d64d42c135fe",
+                    quantity:"12",
+                    regular_price: {
+                        amount: 89.95,
+                        currency: "FR"
+                    },
+                    promotional_price: {
+                        amount: 89.95,
+                        currency: "FR"
+                    },
+                    ignore_warnings: true
+                },
+                {
+                    sales_channel_id:"01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                    quantity:"100",
+                    regular_price: {
+                        amount: 89.95,
+                        currency: "EUR"
+                    },
+                    promotional_price: {
+                        amount: 89.95,
+                        currency: "EUR"
+                    },
+                    ignore_warnings: true
+                }
+            ]
+        }
+            
+    ]
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'postenviarproductos',
+            productos
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            console.log("datos envio =>>>>>>",datos);
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
 }
 
-function cerrarModalSubirProducto(){
-    let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
-    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
-    let vistaFormulario=document.querySelector(".formulario")
-    formularioSubirProducto.classList.toggle("mostrarVista")
-    vistaFormulario.classList.toggle("ocultar")
-}
+
 
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
 obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
+botonTestEnvio.addEventListener("click", enviarProductos)
 consultarProductos();
 

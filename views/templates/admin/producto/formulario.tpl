@@ -1,4 +1,4 @@
-<div class="formulario id="formulario">
+<div class="vistaInicial id="vistaInicial">
     <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
     <a href="{$linkControlador}{"&vista=inicio"}" class="btn btn-primary" style="margin-bottom: 30px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -90,6 +90,9 @@
         </div>
     </div>
     <h2 class="centrar-texto">Lista de productos seleccionados</h2>
+    <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
+        probar envio
+    </button>
 
 </div>
 

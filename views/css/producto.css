@@ -31,7 +31,7 @@
     flex-wrap: wrap !important;
     justify-content: end;
 }
-.formulario{
+.vistaInicial{
     position: relative;
     min-height: 100%;
 }
