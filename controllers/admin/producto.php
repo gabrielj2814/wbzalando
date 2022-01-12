@@ -1,7 +1,8 @@
 <?php
 include("curlController.php");
+include("logger.php");
 use Clases\CurlController;
-use PhpParser\Node\Expr\Cast\Object_;
+// $d=1/0;
 
 class ProductoController extends ModuleAdminController{
 
@@ -12,7 +13,6 @@ class ProductoController extends ModuleAdminController{
         parent::__construct();
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
-        
     }
 
     public function init()
@@ -177,9 +177,9 @@ class ProductoController extends ModuleAdminController{
         $curlController->setDatosPeticion($datosGet);
         $curlController->setdatosCabezera($header);
         $respuesta=$curlController->ejecutarPeticion("get",false);
-        $Paises=(Object)$respuesta;
+        $Paises=(Object)$respuesta["response"];
         if(property_exists($Paises,"items")){
-            $respuesta_servidor["respuestaServidor"]= $respuesta;
+            $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
             $respuesta_servidor["estadoRespuesta"]= true;
         }
         else{
@@ -193,18 +193,24 @@ class ProductoController extends ModuleAdminController{
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        // $datosProductosHaEnviar=[];
+        $datosProductosHaEnviar=[];
         // foreach($_POST["productos"] as $productos){
         //     $datosProducto=[];
-        //     $datosProducto["outline"]="testLine";
+        //     $datosProducto["outline"]="bag";
         //     $datosProducto["product_model"]=[];
-        //     $datosProducto["product_model"]["merchant_product_model_id"]=$productos["id_product"];
+        //     $datosProducto["product_model"]["merchant_product_model_id"]="modelo_producto_".$productos["id_product"];
         //     $datosProducto["product_model"]["product_model_attributes"]=[];
         //     $datosProducto["product_model"]["product_model_attributes"]["name"]="nombre test";
         //     $datosProducto["product_model"]["product_model_attributes"]["brand_code"]="5FX";
+        //     $datosProducto["product_model"]["product_model_attributes"]["size_group"]=[];
+        //     $datosProducto["product_model"]["product_model_attributes"]["size_group"]["size"]="2MAE000A2A";
+        //     $datosProducto["product_model"]["product_model_attributes"]["target_genders"]=[];
+        //     $datosProducto["product_model"]["product_model_attributes"]["target_genders"][]="target_gender_female";
+        //     $datosProducto["product_model"]["product_model_attributes"]["target_age_groups"]=[];
+        //     $datosProducto["product_model"]["product_model_attributes"]["target_age_groups"][]="target_age_group_kid";
         //     $datosProducto["product_model"]["product_configs"]=[];
         //     $datosProducto["product_model"]["product_configs"][]=[
-        //         "merchant_product_config_id"=> 11111,
+        //         "merchant_product_config_id"=> "11111",
         //         "product_config_attributes" => [
         //             "color_code" => "802",
         //             "season_code" => "",
@@ -212,6 +218,7 @@ class ProductoController extends ModuleAdminController{
         //         ],
         //         "product_simples" => [
         //             [
+        //                 "merchant_product_simple_id"=> "1",
         //                 "product_simple_attributes" => [
         //                     "ean" => $productos["ean"],
         //                     "size_codes" => []
@@ -221,66 +228,25 @@ class ProductoController extends ModuleAdminController{
         //     ];
         //     $datosProductosHaEnviar[]=$datosProducto;
         // }
-        $productoTest='
-        {
-            "outline": "trousers",
-            "product_model": {
-              "merchant_product_model_id": "47812AAS",
-              "product_model_attributes": {
-                "name": "New Fancy Product 2.0",
-                "brand_code": "5FX",
-                "size_group": {
-                  "size": "2MAE000A2A"
-                },
-                "target_age_groups": [
-                  "target_age_group_kid",
-                  "target_age_group_baby"
-                ],
-                "target_genders": [
-                  "target_gender_female",
-                  "target_gender_male"
-                ]
-              },
-              "product_configs": [
-                {
-                  "merchant_product_config_id": "411212",
-                  "product_config_attributes": {
-                    "color_code": "802",
-                    "season_code": "fs18",
-                    "media": [
-                      {
-                        "url": "https://zalando.com/1667531.jpg",
-                        "sort_key": 1
-                      }
-                    ]
-                  },
-                  "product_simples": [
-                    {
-                      "merchant_product_simple_id": "WTC741-XL",
-                      "product_simple_attributes": {
-                        "ean": "4038671015234",
-                        "size_codes": {
-                          "size": "XL"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ';
 
         $url=$endPoint."/merchants/".$idComerciante."/product-submissions";
         $curlController=new CurlController($url);
         $header = array(
-            'Authorization: '.'Bearer '. $token,
-            'Content-Type: application/json'
+            'Content-Type: application/json',
+            'Authorization: '.'Bearer '. $token
         );
-        $curlController->setDatosPeticion($productoTest);
-        $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("post",true);
-        print(json_encode(["respuesta" => $respuesta]));
+        $respuesta=null;
+        $estadoDeprodcutos=[];
+        // $_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+        foreach($_POST["productos"] as $producto ){
+            $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            $curlController->setDatosPeticion($producto);
+            $curlController->setdatosCabezera($header);
+            $respuesta=$curlController->ejecutarPeticion("post",true);
+            $estadoDeprodcutos["codigo_estado"]=$respuesta["estado"];
+            $estadoDeprodcutos["datos_producto"]=$producto;
+        }
+        print(json_encode(["respuesta" =>  $respuesta]));
     }
 
     

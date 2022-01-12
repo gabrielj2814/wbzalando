@@ -49,7 +49,7 @@ class CurlController{
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
-        return json_decode($response);
+        return ["response"=> json_decode($response), "estado" => $status];
     }
 
     public function construirHttpQuery(){
