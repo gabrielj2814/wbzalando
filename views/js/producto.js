@@ -307,7 +307,7 @@ function consultarEsquemasDeProductosZalando(){
             action: 'getconsultaresquemasproducto'
         },
         success: (respuesta) => {
-            alert("hola")
+            // alert("hola")
             let datos=JSON.parse(JSON.stringify(respuesta))
             // console.log("esquemas consultados =>>>>>>",datos);
             let listaEsquemaProducto=[]
@@ -318,6 +318,31 @@ function consultarEsquemasDeProductosZalando(){
             }
             // console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
             esquemasDeProducto=listaEsquemaProducto;
+            consultarEsquemaDeProductoZalando()
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+    
+}
+
+function consultarEsquemaDeProductoZalando(esquema="bag"){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultaresquemaproducto',
+            esquema
+        },
+        success: (respuesta) => {
+            alert("hola")
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            console.log("esquema seleccionado =>>>> ",datos)
         },
         error: () => {
             // alert("error al conectar con el servidor");

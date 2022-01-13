@@ -274,7 +274,34 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarEsquemaProducto(){
-
+        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/outlines/".$_POST["esquema"];
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        // $respuesta["response"]->tiers->model->mandatory_types
+        $respuesta_servidor["respuestaServidor"]=[
+            "model"=> [
+                "mandatory_types" =>$respuesta["response"]->tiers->model->mandatory_types,
+                "optional_types" =>$respuesta["response"]->tiers->model->optional_types
+            ],
+            "config"=> [
+                "mandatory_types" =>$respuesta["response"]->tiers->config->mandatory_types,
+                "optional_types" =>$respuesta["response"]->tiers->config->optional_types
+            ],
+            "simple"=> [
+                "mandatory_types" =>$respuesta["response"]->tiers->simple->mandatory_types,
+                "optional_types" =>$respuesta["response"]->tiers->simple->optional_types
+            ]
+        ];
+        $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
+        print(json_encode($respuesta_servidor));
     }
     
 }
