@@ -2,7 +2,6 @@
 include("curlController.php");
 include("logger.php");
 use Clases\CurlController;
-// $d=1/0;
 
 class ProductoController extends ModuleAdminController{
 
@@ -164,7 +163,7 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarPaisesZalando(){
-        $respuesta_servidor=["respuestaServidor" => [], "estadoRespuesta" => false];
+        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $url=$endPoint."/sales-channels";
@@ -178,9 +177,10 @@ class ProductoController extends ModuleAdminController{
         $curlController->setdatosCabezera($header);
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $Paises=(Object)$respuesta["response"];
+        error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
         if(property_exists($Paises,"items")){
             $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
-            $respuesta_servidor["estadoRespuesta"]= true;
+            $respuesta_servidor["estadoRespuesta"]= $respuesta["estado"];
         }
         else{
             $respuesta_servidor["respuestaServidor"]= $respuesta;
@@ -189,7 +189,7 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessPostEnviarProductos(){
-        $respuesta_servidor=["respuestaServidor" => [], "estadoRespuesta" => false];
+        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -236,19 +236,46 @@ class ProductoController extends ModuleAdminController{
             'Authorization: '.'Bearer '. $token
         );
         $respuesta=null;
-        $estadoDeprodcutos=[];
+        $estadoDeProductos=[];
         // $_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
         foreach($_POST["productos"] as $producto ){
             $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
-            $estadoDeprodcutos["codigo_estado"]=$respuesta["estado"];
-            $estadoDeprodcutos["datos_producto"]=$producto;
+            $estadoDeProductos["codigo_estado"]=$respuesta["estado"];
+            $estadoDeProductos["datos_producto_enviado"]=$producto;
+            $estadoDeProductos["respuesta_zalando"]=$respuesta;
+            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
         }
-        print(json_encode(["respuesta" =>  $respuesta]));
+        print(json_encode(["respuesta" =>  $estadoDeProductos]));
     }
 
+    public function ajaxProcessGetConsultarEsquemasProducto(){
+        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/outlines";
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $outline =[];
+        error_log("respuesta al consultar los esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
+        foreach($respuesta["response"]->items as $esquema){
+            $outline[]=$esquema->name->en."-".$esquema->label;
+        }
+        $respuesta_servidor["respuestaServidor"]=$outline;
+        $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
+        print json_encode($respuesta_servidor);
+    }
+
+    public function ajaxProcessGetConsultarEsquemaProducto(){
+
+    }
     
 }
 

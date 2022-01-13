@@ -1,13 +1,21 @@
 // variables globales
 let listaProductos=[]
 let paisesZalando=[]
-
+let esquemasDeProducto=[];
+let datosEsquemaDeProducto={
+    bag:{
+        model:{},
+        config:[],
+        simple:[]
+    }
+}
+// ------ referencia a elementos html
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
 let obtenerProductos=document.getElementById("obtenerProductos") 
 let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto")
 let botonTestEnvio=document.getElementById("botonTestEnvio")
-
+// functiones
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
     let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos")
@@ -75,6 +83,29 @@ function consultarProductos(){
     });
 }
 
+function insertarDatosTablaProducto(datos){
+    let tabla=document.getElementById("tablaProductos");
+    tabla.innerHTML="";
+    let filasTablas=""
+    for(let producto of datos){
+        let html="\
+            <tr >\
+                <td class='producto_tabla_td_pdd_tb'><input type='checkbox' class='form-check-input producto_centrar_checkbox_tabla_celda' name='array_productos[]' value='"+producto.id_product+"'/></td>\
+                <td class='producto_tabla_td_pdd_tb'>"+producto.id_product+"</td>\
+                <td class='producto_tabla_td_pdd_tb'><img style='width: 45px;height: 45px;display: inline-block;margin-right: 15px;' src='"+producto.urlImagen+"'/>"+producto.name+"</td>\
+                <td class='producto_tabla_td_pdd_tb'>"+producto.ean13+"</td>\
+            </tr>";
+        filasTablas+=html;
+    }
+    if(datos.length===0){
+        filasTablas="\
+            <tr >\
+                <td colspan='4' class='producto_tabla_td_pdd_tb'><center>Sin resultados</center></td>\
+            </tr>";
+    }
+    tabla.innerHTML=filasTablas;
+}
+
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
@@ -90,8 +121,9 @@ function consultarPaisesZalando(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
-                console.log("todos los paises zalando =>>> ",paisesZalando)
+                // console.log("todos los paises zalando =>>> ",paisesZalando)
                 insertarPaisesSelectFormulario(datos.respuestaServidor.items)
+                consultarEsquemasDeProductosZalando();
             }
             else{
                 alert("error al cargar los paises")
@@ -112,42 +144,6 @@ function insertarPaisesSelectFormulario(paises){
         "
         paisesProducto.innerHTML+=html
     }
-}
-
-function insertarDatosTablaProducto(datos){
-    let tabla=document.getElementById("tablaProductos");
-    tabla.innerHTML="";
-    let filasTablas=""
-    for(let producto of datos){
-        let html="\
-            <tr >\
-                <td class='producto_tabla_td_pdd_tb'><input type='checkbox' class='form-check-input producto_centrar_checkbox_tabla_celda' name='array_productos[]' value='"+producto.id_product+"'/></td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.id_product+"</td>\
-                <td class='producto_tabla_td_pdd_tb'><img style='width: 45px;height: 45px;display: inline-block;margin-right: 15px;' src='"+producto.urlImagen+"'/>"+producto.name+"</td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.ean13+"</td>\
-            </tr>";
-        filasTablas+=html;
-    }
-    if(datos.length===0){
-        filasTablas="\
-             <tr >\
-                <td colspan='4' class='producto_tabla_td_pdd_tb'><center>Sin resultados</center></td>\
-            </tr>";
-    }
-    tabla.innerHTML=filasTablas;
-}
-
-function mostrarDatosFormData(formData){
-    // let json={}
-    let json=[]
-    let iterador = formData.entries()
-    let next= iterador.next();
-    while(!next.done){
-        // json[next.value[0]]=next.value[1]
-        json.push({name:next.value[0],value:next.value[1]})
-        next=iterador.next()
-    }
-    return json 
 }
 
 function enviarProductos(){
@@ -299,12 +295,56 @@ function enviarProductos(){
     });
 }
 
+function consultarEsquemasDeProductosZalando(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultaresquemasproducto'
+        },
+        success: (respuesta) => {
+            alert("hola")
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            // console.log("esquemas consultados =>>>>>>",datos);
+            let listaEsquemaProducto=[]
+            for(let esquemasString of datos.respuestaServidor){
+                let nombre=esquemasString.split("-")[0]
+                let label=esquemasString.split("-")[1]
+                listaEsquemaProducto.push({nombre,label})
+            }
+            // console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
+            esquemasDeProducto=listaEsquemaProducto;
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+    
+}
 
-
+// asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
 obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
+// ejecuciones de funciones al cargar el archivo
 consultarProductos();
+
+// function mostrarDatosFormData(formData){
+//     // let json={}
+//     let json=[]
+//     let iterador = formData.entries()
+//     let next= iterador.next();
+//     while(!next.done){
+//         // json[next.value[0]]=next.value[1]
+//         json.push({name:next.value[0],value:next.value[1]})
+//         next=iterador.next()
+//     }
+//     return json 
+// }
 
