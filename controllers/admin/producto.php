@@ -285,7 +285,6 @@ class ProductoController extends ModuleAdminController{
         );
         $curlController->setdatosCabezera($header);
         $respuesta=$curlController->ejecutarPeticion("get",false);
-        // $respuesta["response"]->tiers->model->mandatory_types
         $respuesta_servidor["respuestaServidor"]=[
             "model"=> [
                 "mandatory_types" =>$respuesta["response"]->tiers->model->mandatory_types,
@@ -300,6 +299,7 @@ class ProductoController extends ModuleAdminController{
                 "optional_types" =>$respuesta["response"]->tiers->simple->optional_types
             ]
         ];
+        error_log("respuesta al consultar un esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
         $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
         print(json_encode($respuesta_servidor));
     }
