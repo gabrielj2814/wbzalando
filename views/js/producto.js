@@ -2,13 +2,7 @@
 let listaProductos=[]
 let paisesZalando=[]
 let esquemasDeProducto=[];
-let datosEsquemaDeProducto={
-    bag:{
-        model:{},
-        config:[],
-        simple:[]
-    }
-}
+let datosEsquemaDeProducto={}
 // ------ referencia a elementos html
 let botonFiltroProducto=document.getElementById("botonFiltroProducto") 
 let nombreProducto=document.getElementById("nombreProducto") 
@@ -121,7 +115,6 @@ function consultarPaisesZalando(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
-                // console.log("todos los paises zalando =>>> ",paisesZalando)
                 insertarPaisesSelectFormulario(datos.respuestaServidor.items)
                 consultarEsquemasDeProductosZalando();
             }
@@ -316,7 +309,7 @@ function consultarEsquemasDeProductosZalando(){
                 let label=esquemasString.split("-")[1]
                 listaEsquemaProducto.push({nombre,label})
             }
-            // console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
+            console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
             esquemasDeProducto=listaEsquemaProducto;
             consultarEsquemaDeProductoZalando()
         },
@@ -329,25 +322,36 @@ function consultarEsquemasDeProductosZalando(){
 
 function consultarEsquemaDeProductoZalando(esquema="bag"){
     const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultaresquemaproducto',
-            esquema
-        },
-        success: (respuesta) => {
-            alert("hola")
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            console.log("esquema seleccionado =>>>> ",datos)
-        },
-        error: () => {
-            // alert("error al conectar con el servidor");
-        }
-    });
+    if(datosEsquemaDeProducto[esquema]){
+        console.log("ya lo tengo =>>>> ",datosEsquemaDeProducto[esquema])
+    }
+    else{
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'getconsultaresquemaproducto',
+                esquema
+            },
+            success: (respuesta) => {
+                // alert("hola")
+                let datos=JSON.parse(JSON.stringify(respuesta))
+                console.log("esquema seleccionado =>>>> ",datos)
+                datosEsquemaDeProducto[esquema]={
+                    model:datos.respuestaServidor.model,
+                    config:datos.respuestaServidor.config,
+                    simple:datos.respuestaServidor.simple
+                }
+            },
+            error: () => {
+                // alert("error al conectar con el servidor");
+            }
+        });
+    }
+    
     
 }
 

@@ -25,22 +25,10 @@ class ProductoController extends ModuleAdminController{
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador
         ];
-        if(array_key_exists("vista",$_GET)){
-            if($_GET["vista"]==="formulario"){
-                $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
-                $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
-                $this->context->smarty->assign($variablesSmarty);
-                $this->setTemplate('/producto/formulario.tpl');
-            }
-            else if($_GET["vista"]==="inicio"){
-                $this->context->smarty->assign($variablesSmarty);
-                $this->setTemplate('/producto/inicio.tpl');
-            }
-        }
-        else{
-            $this->context->smarty->assign($variablesSmarty);
-            $this->setTemplate('/producto/inicio.tpl');
-        }
+        $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
+        $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
+        $this->context->smarty->assign($variablesSmarty);
+        $this->setTemplate('/producto/formulario.tpl');
     }
 
     public function validarRespuestaBD($respuesta){

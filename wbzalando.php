@@ -4,6 +4,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+include_once("controllers/admin/curlController.php");
+use Clases\CurlController;
 class WbZalando extends Module{
 
     public function __construct(){
@@ -25,6 +27,7 @@ class WbZalando extends Module{
         return (
             parent::install() && 
             $this->installTab() && 
+            $this->instalarTablas() && 
             $this->registerHook("displayBackOfficeHeader") && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
             Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE","NULL") && 
@@ -37,12 +40,29 @@ class WbZalando extends Module{
         return (
             parent::uninstall() && 
             $this->uninstallTab() && 
+            $this->desintalarTablas() && 
             $this->unregisterHook("displayBackOfficeHeader") && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
             Configuration::deleteByName("WB_ZALANDO_ID_COMERCIANTE")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_SECRET")  && 
             Configuration::deleteByName("WB_ZALANDO_TOKEN_ACCESO"));
+    }
+
+    public function instalarTablas(){
+        $SQL='CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
+            id int(11) NOT NULL AUTO_INCREMENT,
+            fecha_registro date NOT NULL,
+            esquemas_name_label JSON NOT NULL,
+            esquemas_full JSON NOT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+        return Db::getInstance()->execute($SQL);
+    }
+
+    public function desintalarTablas(){
+        $SQL='DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas';
+        return Db::getInstance()->execute($SQL);
     }
 
     private function installTab()
@@ -123,7 +143,6 @@ class WbZalando extends Module{
                         'hint' => $this->l(''),
                         'name' => 'clienteIdZolando',
                         'required'  => true
-                        // 'lang' => trues
                     ],
                     [
                         "type" => "text",
@@ -132,7 +151,6 @@ class WbZalando extends Module{
                         'hint' => $this->l(''),
                         'name' => 'clienteSecretZolando',
                         'required'  => true
-                        // 'lang' => trues
                     ],
                     [
                         "type" => "text",
@@ -143,11 +161,6 @@ class WbZalando extends Module{
                         'required'  => true
                         // 'lang' => trues
                     ],
-                    // [
-                    //     "type" => "html",
-                    //     "html_content" => '
-                    //         <button id="botonVerificarToken" class="btn btn-primary">Autenticar sesion</button>'
-                    // ],
                     // script
                     [
                         "type" => "html",
@@ -196,8 +209,6 @@ class WbZalando extends Module{
             $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
-
-            // print(http_response_code($status));
             $tokenInfo=(object)json_decode($response);
             if(property_exists($tokenInfo,"access_token")){
                 Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$tokenInfo->access_token);
@@ -209,8 +220,6 @@ class WbZalando extends Module{
             }
             return $salida;
         }
-            
-            
             
     }
 
