@@ -259,55 +259,69 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarEsquemasProducto(){
-        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
-        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
-        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        $url=$endPoint."/merchants/".$idComerciante."/outlines";
-        $curlController=new CurlController($url);
-        $header = array(
-            'Authorization: '.'Bearer '. $token
-        );
-        $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("get",false);
-        $outline =[];
-        error_log("respuesta al consultar los esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
-        foreach($respuesta["response"]->items as $esquema){
-            $outline[]=$esquema->name->en."-".$esquema->label;
-        }
-        $respuesta_servidor["respuestaServidor"]=$outline;
-        $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
-        print json_encode($respuesta_servidor);
+        $respuesta_servidor=["respuestaServidor" => []];
+        $resultEsquemas=$this->chequearEsquemasDeHoyDB();
+        $respuesta_servidor["respuestaServidor"]=$resultEsquemas[0]["esquemas_name_label"];
+        print(json_encode($respuesta_servidor));
+
     }
 
     public function ajaxProcessGetConsultarEsquemaProducto(){
-        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
-        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
-        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        $url=$endPoint."/merchants/".$idComerciante."/outlines/".$_POST["esquema"];
-        $curlController=new CurlController($url);
-        $header = array(
-            'Authorization: '.'Bearer '. $token
-        );
-        $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("get",false);
-        $respuesta_servidor["respuestaServidor"]=[
-            "model"=> [
-                "mandatory_types" =>$respuesta["response"]->tiers->model->mandatory_types,
-                "optional_types" =>$respuesta["response"]->tiers->model->optional_types
-            ],
-            "config"=> [
-                "mandatory_types" =>$respuesta["response"]->tiers->config->mandatory_types,
-                "optional_types" =>$respuesta["response"]->tiers->config->optional_types
-            ],
-            "simple"=> [
-                "mandatory_types" =>$respuesta["response"]->tiers->simple->mandatory_types,
-                "optional_types" =>$respuesta["response"]->tiers->simple->optional_types
-            ]
-        ];
-        error_log("respuesta al consultar un esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
-        $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
+        // $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
+        // $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        // $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        // $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        // $url=$endPoint."/merchants/".$idComerciante."/outlines/".$_POST["esquema"];
+        // $curlController=new CurlController($url);
+        // $header = array(
+        //     'Authorization: '.'Bearer '. $token
+        // );
+        // $curlController->setdatosCabezera($header);
+        // $respuesta=$curlController->ejecutarPeticion("get",false);
+        // $respuesta_servidor["respuestaServidor"]=[
+        //     "model"=> [
+        //         "mandatory_types" =>$respuesta["response"]->tiers->model->mandatory_types,
+        //         "optional_types" =>$respuesta["response"]->tiers->model->optional_types
+        //     ],
+        //     "config"=> [
+        //         "mandatory_types" =>$respuesta["response"]->tiers->config->mandatory_types,
+        //         "optional_types" =>$respuesta["response"]->tiers->config->optional_types
+        //     ],
+        //     "simple"=> [
+        //         "mandatory_types" =>$respuesta["response"]->tiers->simple->mandatory_types,
+        //         "optional_types" =>$respuesta["response"]->tiers->simple->optional_types
+        //     ]
+        // ];
+        // error_log("respuesta al consultar un esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
+        // $respuesta_servidor["codigo_respuesta"]=$respuesta["estado"];
+        // print(json_encode($respuesta_servidor));
+        $respuesta_servidor=["respuestaServidor" => []];
+        $resultEsquemas=$this->chequearEsquemasDeHoyDB();
+        $resultEsquemas[0]["esquemas_full"]=json_decode($resultEsquemas[0]["esquemas_full"]);
+        // $_POST["esquema"]
+        $datosEsquemaProducto=[];
+        foreach($resultEsquemas[0]["esquemas_full"] as $esquema){
+            $esquema=(object)$esquema;
+            if($_POST["esquema"]===$esquema->label){
+                $datosEsquemaProducto=[
+                    "label" => $esquema->label,
+                    "model"=> [
+                        "mandatory_types" =>$esquema->tiers->model->mandatory_types,
+                        "optional_types" =>$esquema->tiers->model->optional_types
+                    ],
+                    "config"=> [
+                        "mandatory_types" =>$esquema->tiers->config->mandatory_types,
+                        "optional_types" =>$esquema->tiers->config->optional_types
+                    ],
+                    "simple"=> [
+                        "mandatory_types" =>$esquema->tiers->simple->mandatory_types,
+                        "optional_types" =>$esquema->tiers->simple->optional_types
+                    ]
+                ];
+                break;
+            }
+        }
+        $respuesta_servidor["respuestaServidor"]= $datosEsquemaProducto;
         print(json_encode($respuesta_servidor));
     }
     

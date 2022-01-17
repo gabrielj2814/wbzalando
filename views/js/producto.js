@@ -46,7 +46,6 @@ function filtrarProductos(e){
         },
         success: (respuesta) => {
             // console.log(respuesta);
-            listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
             let datos=JSON.parse(JSON.stringify(respuesta.datos))
             console.log("productos filtrados =>>> ",datos)
             insertarDatosTablaProducto(datos);
@@ -68,7 +67,6 @@ function consultarProductos(){
             action: 'getconsultarproductos'
         },
         success: (respuesta) => {
-            listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
             let datos=JSON.parse(JSON.stringify(respuesta.datos))
             console.log("datos producto prestashop =>>> ",datos)
             insertarDatosTablaProducto(datos);
@@ -116,10 +114,10 @@ function consultarPaisesZalando(){
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
-                paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
-                console.log("paises zalando =>>> ",paisesZalando)
+                // paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
+                console.log("paises zalando =>>> ",datos)
                 // insertarPaisesSelectFormulario(datos.respuestaServidor.items)
-                // consultarEsquemasDeProductosZalando();
+                consultarEsquemasDeProductosZalando();
             }
             else{
                 alert("error al cargar los paises")
@@ -303,17 +301,16 @@ function consultarEsquemasDeProductosZalando(){
             action: 'getconsultaresquemasproducto'
         },
         success: (respuesta) => {
-            // alert("hola")
             let datos=JSON.parse(JSON.stringify(respuesta))
-            // console.log("esquemas consultados =>>>>>>",datos);
+            let jsonDatosEsquemas=JSON.parse(datos.respuestaServidor)
+            console.log("esquemas consultados =>>>>>>",jsonDatosEsquemas);
             let listaEsquemaProducto=[]
-            for(let esquemasString of datos.respuestaServidor){
+            for(let esquemasString of jsonDatosEsquemas){
                 let nombre=esquemasString.split("-")[0]
                 let label=esquemasString.split("-")[1]
                 listaEsquemaProducto.push({nombre,label})
             }
             console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
-            esquemasDeProducto=listaEsquemaProducto;
             consultarEsquemaDeProductoZalando()
         },
         error: () => {
@@ -325,35 +322,24 @@ function consultarEsquemasDeProductosZalando(){
 
 function consultarEsquemaDeProductoZalando(esquema="bag"){
     const linkControlador=document.getElementById("linkControlador").value;
-    if(datosEsquemaDeProducto[esquema]){
-        console.log("ya lo tengo =>>>> ",datosEsquemaDeProducto[esquema])
-    }
-    else{
-        $.ajax({
-            type: 'POST',
-            cache: false,
-            dataType: 'json',
-            url: linkControlador, 
-            data: {
-                ajax: true,
-                action: 'getconsultaresquemaproducto',
-                esquema
-            },
-            success: (respuesta) => {
-                // alert("hola")
-                let datos=JSON.parse(JSON.stringify(respuesta))
-                console.log("esquema seleccionado =>>>> ",datos)
-                datosEsquemaDeProducto[esquema]={
-                    model:datos.respuestaServidor.model,
-                    config:datos.respuestaServidor.config,
-                    simple:datos.respuestaServidor.simple
-                }
-            },
-            error: () => {
-                // alert("error al conectar con el servidor");
-            }
-        });
-    }
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultaresquemaproducto',
+            esquema
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            console.log("esquema seleccionado =>>>> ",datos)
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
     
     
 }
