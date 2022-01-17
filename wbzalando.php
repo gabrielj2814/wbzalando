@@ -226,26 +226,18 @@ class WbZalando extends Module{
     public function autenticarSesionZalando(){
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
         $rutaEndPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        
         $header = array('Authorization: '.'Bearer '. $token);
-
         $curl = curl_init();
-        
         curl_setopt($curl, CURLOPT_URL, $rutaEndPoint."/auth/me");
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-
         $response = curl_exec($curl);
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
         curl_close($curl);
-        // print($status);
         $tokenInfo=(object)json_decode($response);
-        // print_r($tokenInfo->bpids);
         Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE",$tokenInfo->bpids[0]);
         return $tokenInfo;
-
     }
     
 } 

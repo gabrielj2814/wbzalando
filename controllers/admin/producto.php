@@ -6,12 +6,14 @@ use Clases\CurlController;
 class ProductoController extends ModuleAdminController{
 
     private $id_idioma;
+    private $nombreTabla;
 
     public function __construct()
     {
         parent::__construct();
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
+        $this->nombreTabla="ps_wbzalando_esquemas";
     }
 
     public function init()
@@ -21,6 +23,12 @@ class ProductoController extends ModuleAdminController{
 
     public function initContent(){
         parent::initContent();
+        $esquemasDB=$this->chequearEsquemasDeHoyDB();
+        if(count($esquemasDB)===0){
+            print("no hay datos, hay que consultar");
+            $datosEsquemas=$this->consultarEsqeumasDeProducto();
+            $respuestaResgistro=$this->registrarEsquemasDB($datosEsquemas);
+        }
         $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador
@@ -181,42 +189,6 @@ class ProductoController extends ModuleAdminController{
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        $datosProductosHaEnviar=[];
-        // foreach($_POST["productos"] as $productos){
-        //     $datosProducto=[];
-        //     $datosProducto["outline"]="bag";
-        //     $datosProducto["product_model"]=[];
-        //     $datosProducto["product_model"]["merchant_product_model_id"]="modelo_producto_".$productos["id_product"];
-        //     $datosProducto["product_model"]["product_model_attributes"]=[];
-        //     $datosProducto["product_model"]["product_model_attributes"]["name"]="nombre test";
-        //     $datosProducto["product_model"]["product_model_attributes"]["brand_code"]="5FX";
-        //     $datosProducto["product_model"]["product_model_attributes"]["size_group"]=[];
-        //     $datosProducto["product_model"]["product_model_attributes"]["size_group"]["size"]="2MAE000A2A";
-        //     $datosProducto["product_model"]["product_model_attributes"]["target_genders"]=[];
-        //     $datosProducto["product_model"]["product_model_attributes"]["target_genders"][]="target_gender_female";
-        //     $datosProducto["product_model"]["product_model_attributes"]["target_age_groups"]=[];
-        //     $datosProducto["product_model"]["product_model_attributes"]["target_age_groups"][]="target_age_group_kid";
-        //     $datosProducto["product_model"]["product_configs"]=[];
-        //     $datosProducto["product_model"]["product_configs"][]=[
-        //         "merchant_product_config_id"=> "11111",
-        //         "product_config_attributes" => [
-        //             "color_code" => "802",
-        //             "season_code" => "",
-        //             "media" => []
-        //         ],
-        //         "product_simples" => [
-        //             [
-        //                 "merchant_product_simple_id"=> "1",
-        //                 "product_simple_attributes" => [
-        //                     "ean" => $productos["ean"],
-        //                     "size_codes" => []
-        //                 ]
-        //             ]
-        //         ]
-        //     ];
-        //     $datosProductosHaEnviar[]=$datosProducto;
-        // }
-
         $url=$endPoint."/merchants/".$idComerciante."/product-submissions";
         $curlController=new CurlController($url);
         $header = array(
@@ -237,6 +209,53 @@ class ProductoController extends ModuleAdminController{
             error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
         }
         print(json_encode(["respuesta" =>  $estadoDeProductos]));
+    }
+
+    public function chequearEsquemasDeHoyDB(){
+        $fechaHoy=date("Y-m-d");
+        $SQL="SELECT * FROM ".$this->nombreTabla." WHERE fecha_registro='$fechaHoy'";
+        return Db::getInstance()->executeS($SQL);
+    }
+
+    public function consultarEsqeumasDeProducto(){
+        $respuestaZalando=["esquemas_name_label"=>[],"esquemas_full" => []];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/outlines";
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $outline =[];
+        error_log("respuesta al consultar los esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
+        foreach($respuesta["response"]->items as $esquema){
+            $outline[]=$esquema->name->en."-".$esquema->label;
+        }
+        if(count($outline)>0){
+            $respuestaZalando["esquemas_name_label"] = $outline;
+            $respuestaZalando["esquemas_full"] = $respuesta["response"]->items;
+        }
+        return $respuestaZalando;
+    }
+
+    public function registrarEsquemasDB($datos){
+        $fechaHoy=date("Y-m-d");
+        $jsonEsquemasNameLabel=json_encode($datos["esquemas_name_label"]);
+        $jsonEsquemasFull=json_encode($datos["esquemas_full"]);
+        $SQL="INSERT INTO ".$this->nombreTabla."(
+            fecha_registro,
+            esquemas_name_label,
+            esquemas_full
+            )
+            VALUES(
+                '".$fechaHoy."',
+                '".$jsonEsquemasNameLabel."',
+                '".$jsonEsquemasFull."'
+            );";
+        return Db::getInstance()->execute($SQL);
     }
 
     public function ajaxProcessGetConsultarEsquemasProducto(){

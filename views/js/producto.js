@@ -48,6 +48,7 @@ function filtrarProductos(e){
             // console.log(respuesta);
             listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
             let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            console.log("productos filtrados =>>> ",datos)
             insertarDatosTablaProducto(datos);
         },
         error: () => {
@@ -69,6 +70,7 @@ function consultarProductos(){
         success: (respuesta) => {
             listaProductos=JSON.parse(JSON.stringify(respuesta.datos))
             let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            console.log("datos producto prestashop =>>> ",datos)
             insertarDatosTablaProducto(datos);
             consultarPaisesZalando();
         },
@@ -115,8 +117,9 @@ function consultarPaisesZalando(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
-                insertarPaisesSelectFormulario(datos.respuestaServidor.items)
-                consultarEsquemasDeProductosZalando();
+                console.log("paises zalando =>>> ",paisesZalando)
+                // insertarPaisesSelectFormulario(datos.respuestaServidor.items)
+                // consultarEsquemasDeProductosZalando();
             }
             else{
                 alert("error al cargar los paises")
@@ -363,17 +366,4 @@ botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
-
-// function mostrarDatosFormData(formData){
-//     // let json={}
-//     let json=[]
-//     let iterador = formData.entries()
-//     let next= iterador.next();
-//     while(!next.done){
-//         // json[next.value[0]]=next.value[1]
-//         json.push({name:next.value[0],value:next.value[1]})
-//         next=iterador.next()
-//     }
-//     return json 
-// }
 
