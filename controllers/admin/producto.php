@@ -25,7 +25,7 @@ class ProductoController extends ModuleAdminController{
         parent::initContent();
         $esquemasDB=$this->chequearEsquemasDeHoyDB();
         if(count($esquemasDB)===0){
-            $datosEsquemas=$this->consultarEsqeumasDeProducto();
+            $datosEsquemas=$this->consultarEsquemasDeProducto();
             $respuestaResgistro=$this->registrarEsquemasDB($datosEsquemas);
         }
         $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
@@ -73,11 +73,27 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function consultarCategoriasPrestashop(){
-        return Db::getInstance()->executeS("SELECT ps_category.id_category,ps_category_lang.name  FROM ps_category,ps_category_lang,ps_lang WHERE ps_category_lang.id_lang=".$this->id_idioma." AND ps_category_lang.id_category=ps_category.id_category AND ps_category_lang.id_lang=ps_lang.id_lang");
+        return Db::getInstance()->executeS("
+        SELECT 
+        ps_category.id_category,
+        ps_category_lang.name  FROM ps_category,
+        ps_category_lang,
+        ps_lang 
+        WHERE ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang");
     }
     
     public function consultarMarcasPrestashop(){
-        return Db::getInstance()->executeS("SELECT ps_manufacturer.id_manufacturer,ps_manufacturer.name  FROM ps_manufacturer,ps_manufacturer_lang,ps_lang WHERE ps_manufacturer_lang.id_lang=".$this->id_idioma." AND ps_manufacturer_lang.id_manufacturer=ps_manufacturer.id_manufacturer AND ps_manufacturer_lang.id_lang=ps_lang.id_lang");
+        return Db::getInstance()->executeS("
+        SELECT ps_manufacturer.id_manufacturer,
+        ps_manufacturer.name  FROM ps_manufacturer,
+        ps_manufacturer_lang,
+        ps_lang 
+        WHERE 
+        ps_manufacturer_lang.id_lang=".$this->id_idioma." AND 
+        ps_manufacturer_lang.id_manufacturer=ps_manufacturer.id_manufacturer AND 
+        ps_manufacturer_lang.id_lang=ps_lang.id_lang");
     }
 
 
@@ -200,8 +216,9 @@ class ProductoController extends ModuleAdminController{
         );
         $respuesta=null;
         $estadoDeProductos=[];
-        // $_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+        $estadoDeProductos["productos_guardados_db"]=[];
         foreach($productos as $producto ){
+            // enviar productos a zalando
             $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
@@ -210,6 +227,11 @@ class ProductoController extends ModuleAdminController{
             $estadoDeProductos["datos_producto_enviado"]=$producto;
             $estadoDeProductos["respuesta_zalando"]=$respuesta;
             error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            // guardar productos en la base de datos
+            $producto=$this->destructurarModeloDeProductoZalando($producto);
+
+
+            $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
         return $estadoDeProductos;
     }
@@ -226,13 +248,54 @@ class ProductoController extends ModuleAdminController{
 
     // }
 
+    public function destructurarModeloDeProductoZalando($modeloProducto){
+        $merchant_product_model_id=null;
+        $datosProducto=[
+            "outline"=> null,
+            "merchant_product_model_id"=> null,
+            "product_model" => [],
+            "product_configs" => [],
+            "product_simples" => [] 
+        ];
+        $merchant_product_model_id=$modeloProducto["product_model"]["merchant_product_model_id"];
+        $datosProducto["outline"]=$modeloProducto["outline"];
+        $datosProducto["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
+        $datosProducto["product_model"]["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
+        $datosProducto["product_model"]["product_model_attributes"]=$modeloProducto["product_model"]["product_model_attributes"];
+        foreach($modeloProducto["product_model"]["product_configs"] as $datosModeloProductoNivel3){
+            $configModelo=[];
+            foreach($datosModeloProductoNivel3 as $key2 => $datosModeloProductoNivel4){
+                if($key2!=="product_simples"){
+                    $configModelo[$key2]=$datosModeloProductoNivel3[$key2];
+                }
+                else{
+                    foreach($datosModeloProductoNivel3["product_simples"] as $datosModeloProductoNivel5){
+                        $simpleConfig=[];
+                        foreach($datosModeloProductoNivel5 as $key3 => $datosModeloProductoNivel6){
+                            $simpleConfig[$key3]=$datosModeloProductoNivel5[$key3];
+                        }
+                        $datosProducto["product_simples"][]=[
+                            "merchant_product_config_id" => $datosModeloProductoNivel3["merchant_product_config_id"],
+                            "datos_product_simples" => $simpleConfig
+                        ];
+                    }
+                }
+            }
+            $datosProducto["product_configs"][]=[
+                "merchant_product_model_id" => $merchant_product_model_id,
+                "datos_product_configs" => $configModelo
+            ];
+        }
+        return $datosProducto;
+    }
+
     public function chequearEsquemasDeHoyDB(){
         $fechaHoy=date("Y-m-d");
         $SQL="SELECT * FROM ".$this->nombreTabla." WHERE fecha_registro='$fechaHoy'";
         return Db::getInstance()->executeS($SQL);
     }
 
-    public function consultarEsqeumasDeProducto(){
+    public function consultarEsquemasDeProducto(){
         $respuestaZalando=["esquemas_name_label"=>[],"esquemas_full" => []];
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
@@ -246,14 +309,16 @@ class ProductoController extends ModuleAdminController{
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $outline =[];
         error_log("respuesta al consultar los esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
-        if(property_exists($respuesta["response"],"items")){
-            foreach($respuesta["response"]->items as $esquema){
-                $outline[]=$esquema->name->en."-".$esquema->label;
+        if(is_object($respuesta["response"])){
+            if(property_exists($respuesta["response"],"items")){
+                foreach($respuesta["response"]->items as $esquema){
+                    $outline[]=$esquema->name->en."-".$esquema->label;
+                }
             }
-        }
-        if(count($outline)>0){
-            $respuestaZalando["esquemas_name_label"] = $outline;
-            $respuestaZalando["esquemas_full"] = $respuesta["response"]->items;
+            if(count($outline)>0){
+                $respuestaZalando["esquemas_name_label"] = $outline;
+                $respuestaZalando["esquemas_full"] = $respuesta["response"]->items;
+            }
         }
         return $respuestaZalando;
     }
