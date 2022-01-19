@@ -110,6 +110,8 @@ class WbZalando extends Module{
 
     public function desintalarTablas(){
         $tablas=[
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_stock',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_precio',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_simple_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_configuracion_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_modelo_producto',
