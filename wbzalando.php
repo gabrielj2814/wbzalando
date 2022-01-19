@@ -50,19 +50,74 @@ class WbZalando extends Module{
     }
 
     public function instalarTablas(){
-        $SQL='CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
-            id int(11) NOT NULL AUTO_INCREMENT,
-            fecha_registro date NOT NULL,
-            esquemas_name_label JSON NOT NULL,
-            esquemas_full JSON NOT NULL,
-            PRIMARY KEY (`id`)
-        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
-        return Db::getInstance()->execute($SQL);
+        $tablas=[
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
+                id int(11) NOT NULL AUTO_INCREMENT,
+                fecha_registro date NOT NULL,
+                esquemas_name_label JSON NOT NULL,
+                esquemas_full JSON NOT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_modelo_producto(
+                id_modelo_producto VARCHAR(150) NOT NULL,
+                outline VARCHAR(150) NOT NULL,
+                json_modelo_producto JSON NOT NULL,
+                PRIMARY KEY (`id_modelo_producto`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_configuracion_producto(
+                id_configuracion_producto VARCHAR(150) NOT NULL,
+                id_modelo_producto VARCHAR(150) NOT NULL,
+                json_configuracion_producto JSON NOT NULL,
+                PRIMARY KEY (`id_configuracion_producto`),
+                CONSTRAINT `FK_id_modelo_producto` FOREIGN KEY (id_modelo_producto) REFERENCES '.$this->tablaModulo.'_modelo_producto(id_modelo_producto) ON UPDATE CASCADE ON DELETE CASCADE
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_simple_producto(
+                id_simple_producto VARCHAR(150) NOT NULL,
+                id_configuracion_producto VARCHAR(150) NOT NULL,
+                json_simple_producto JSON NOT NULL,
+                PRIMARY KEY (`id_simple_producto`),
+                CONSTRAINT `FK_id_configuracion_producto` FOREIGN KEY (id_configuracion_producto) REFERENCES '.$this->tablaModulo.'_configuracion_producto(id_configuracion_producto) ON UPDATE CASCADE ON DELETE CASCADE
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'
+        ];
+        $estado=true;
+        foreach($tablas as $tabla){
+            if(!Db::getInstance()->execute($tabla)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+
+        // $SQL='CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
+        //     id int(11) NOT NULL AUTO_INCREMENT,
+        //     fecha_registro date NOT NULL,
+        //     esquemas_name_label JSON NOT NULL,
+        //     esquemas_full JSON NOT NULL,
+        //     PRIMARY KEY (`id`)
+        // ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+        // return Db::getInstance()->execute($SQL);
     }
 
     public function desintalarTablas(){
-        $SQL='DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas';
-        return Db::getInstance()->execute($SQL);
+        $tablas=[
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_simple_producto',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_configuracion_producto',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_modelo_producto',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas'
+        ];
+        $estado=true;
+        foreach($tablas as $tabla){
+            if(!Db::getInstance()->execute($tabla)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+        // $SQL='DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas';
+        // return Db::getInstance()->execute($SQL);
     }
 
     private function installTab()

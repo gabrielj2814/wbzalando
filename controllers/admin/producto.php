@@ -25,7 +25,6 @@ class ProductoController extends ModuleAdminController{
         parent::initContent();
         $esquemasDB=$this->chequearEsquemasDeHoyDB();
         if(count($esquemasDB)===0){
-            print("no hay datos, hay que consultar");
             $datosEsquemas=$this->consultarEsqeumasDeProducto();
             $respuestaResgistro=$this->registrarEsquemasDB($datosEsquemas);
         }
@@ -185,7 +184,11 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessPostEnviarProductos(){
-        $respuesta_servidor=["respuestaServidor" => [], "codigo_respuesta" => 0];
+       print(json_encode( $this->enviarProducto($_POST["productos"])));
+    }
+
+
+    public function enviarProducto($productos){
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -198,7 +201,7 @@ class ProductoController extends ModuleAdminController{
         $respuesta=null;
         $estadoDeProductos=[];
         // $_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$_POST["productos"][0]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
-        foreach($_POST["productos"] as $producto ){
+        foreach($productos as $producto ){
             $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
@@ -208,8 +211,20 @@ class ProductoController extends ModuleAdminController{
             $estadoDeProductos["respuesta_zalando"]=$respuesta;
             error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
         }
-        print(json_encode(["respuesta" =>  $estadoDeProductos]));
+        return $estadoDeProductos;
     }
+    
+    // public function verificarExistenciaProducto($producto){
+        
+    // }
+
+    // public function subirStock($producto){
+        
+    // }
+    
+    // public function subirPrecio($producto){
+
+    // }
 
     public function chequearEsquemasDeHoyDB(){
         $fechaHoy=date("Y-m-d");
@@ -231,8 +246,10 @@ class ProductoController extends ModuleAdminController{
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $outline =[];
         error_log("respuesta al consultar los esquema de producto zalando =>>>>  " . var_export($respuesta["response"], true));
-        foreach($respuesta["response"]->items as $esquema){
-            $outline[]=$esquema->name->en."-".$esquema->label;
+        if(property_exists($respuesta["response"],"items")){
+            foreach($respuesta["response"]->items as $esquema){
+                $outline[]=$esquema->name->en."-".$esquema->label;
+            }
         }
         if(count($outline)>0){
             $respuestaZalando["esquemas_name_label"] = $outline;

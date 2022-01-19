@@ -236,7 +236,7 @@ function enviarProductos(){
               },
               product_configs: [
                 {
-                    merchant_product_config_id: "411212",
+                    merchant_product_config_id: "333666",
                     product_config_attributes: {
                         color_code: "802",
                         season_code: "fs18",
@@ -257,7 +257,8 @@ function enviarProductos(){
                     {
                         merchant_product_simple_id: "WTC741-XL",
                         product_simple_attributes: {
-                            ean: "4038671015234",
+                            // ean: "4038671015234",
+                            ean: "4038671015222",
                             size_codes: {
                                 size: "XL"
                         }
