@@ -219,17 +219,19 @@ class ProductoController extends ModuleAdminController{
         $estadoDeProductos["productos_guardados_db"]=[];
         foreach($productos as $producto ){
             // enviar productos a zalando
-            $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
-            $curlController->setDatosPeticion($producto);
-            $curlController->setdatosCabezera($header);
-            $respuesta=$curlController->ejecutarPeticion("post",true);
-            $estadoDeProductos["codigo_estado"]=$respuesta["estado"];
-            $estadoDeProductos["datos_producto_enviado"]=$producto;
-            $estadoDeProductos["respuesta_zalando"]=$respuesta;
-            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            // $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            // $curlController->setDatosPeticion($producto);
+            // $curlController->setdatosCabezera($header);
+            // $respuesta=$curlController->ejecutarPeticion("post",true);
+            // $estadoDeProductos["codigo_estado"]=$respuesta["estado"];
+            // $estadoDeProductos["datos_producto_enviado"]=$producto;
+            // $estadoDeProductos["respuesta_zalando"]=$respuesta;
+            // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
             // guardar productos en la base de datos
             $producto=$this->destructurarModeloDeProductoZalando($producto);
-
+            $respuestaModelo=$this->guardarModeloProducto($producto);
+            $respuestaConfig=$this->guardarConfigProducto($producto);
+            $respuestaSimple=$this->guardarSimpleProducto($producto);
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
@@ -247,6 +249,68 @@ class ProductoController extends ModuleAdminController{
     // public function subirPrecio($producto){
 
     // }
+
+    public function guardarModeloProducto($producto){
+        $SQL="
+            INSERT INTO ps_wbzalando_modelo_producto(
+                id_modelo_producto, 
+                outline, 
+                json_modelo_producto
+                ) 
+            VALUES (
+                '".$producto["merchant_product_model_id"]."',
+                '".$producto["outline"]."',
+                '".json_encode($producto["product_model"])."'
+            );
+        ";
+        return Db::getInstance()->execute($SQL);
+    }
+    
+    public function guardarConfigProducto($producto){
+        $estado=true;
+        foreach($producto["product_configs"] as $configuracionProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_configuracion_producto(
+                    id_configuracion_producto,
+                    id_modelo_producto,
+                    json_configuracion_producto
+                    ) 
+                VALUES (
+                    '". $configuracionProducto["datos_product_configs"]["merchant_product_config_id"]."',
+                    '". $configuracionProducto["merchant_product_model_id"]."',
+                    '".json_encode($configuracionProducto["datos_product_configs"])."'
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
+    
+    public function guardarSimpleProducto($producto){
+        $estado=true;
+        foreach($producto["product_simples"] as $simpleProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_simple_producto(
+                id_simple_producto,
+                id_configuracion_producto,
+                json_simple_producto
+                    ) 
+                VALUES (
+                    '". $simpleProducto["datos_product_simples"]["merchant_product_simple_id"]."',
+                    '". $simpleProducto["merchant_product_config_id"]."',
+                    '".json_encode($simpleProducto["datos_product_simples"])."'
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
 
     public function destructurarModeloDeProductoZalando($modeloProducto){
         $merchant_product_model_id=null;

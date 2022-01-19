@@ -265,6 +265,122 @@ function enviarProductos(){
                       }
                     }
                   ]
+                },
+                {
+                    merchant_product_config_id: "333777",
+                    product_config_attributes: {
+                        color_code: "802",
+                        season_code: "fs18",
+                        "color_code.primary": "fff",
+                        description: {
+                            etc:"hola"
+                        },
+                        "supplier_color": "hola que tal 2",
+                        media: [
+                            {
+                                media_path: "https://zalando.com/1667531.jpg",
+                                url: "https://zalando.com/1667531.jpg",
+                                media_sort_key: 222
+                            }
+                        ]
+                  },
+                  product_simples: [
+                    {
+                        merchant_product_simple_id: "WTC741-XLZZZ",
+                        product_simple_attributes: {
+                            // ean: "4038671015234",
+                            ean: "4038671015999",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+        {
+            outline: "bag",
+            product_model: {
+                merchant_product_model_id: "modelo_producto_2",
+                product_model_attributes: {
+                    name: "New Fancy Product 2.0",
+                    brand_code: "5FX",
+                    size_group: {
+                        size: "2MAE000A2A"
+                    },
+                    target_age_groups: [
+                        "target_age_group_kid",
+                        "target_age_group_baby"
+                    ],
+                    target_genders: [
+                        "target_gender_female",
+                        "target_gender_male"
+                    ]
+              },
+              product_configs: [
+                {
+                    merchant_product_config_id: "333666222",
+                    product_config_attributes: {
+                        color_code: "802",
+                        season_code: "fs18",
+                        "color_code.primary": "fff",
+                        description: {
+                            etc:"hola"
+                        },
+                        "supplier_color": "hola que tal 2",
+                        media: [
+                            {
+                                media_path: "https://zalando.com/1667531.jpg",
+                                url: "https://zalando.com/1667531.jpg",
+                                media_sort_key: 222
+                            }
+                        ]
+                  },
+                  product_simples: [
+                    {
+                        merchant_product_simple_id: "WTC741-XL222",
+                        product_simple_attributes: {
+                            // ean: "4038671015234",
+                            ean: "4038671015222",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                    merchant_product_config_id: "333777222",
+                    product_config_attributes: {
+                        color_code: "802",
+                        season_code: "fs18",
+                        "color_code.primary": "fff",
+                        description: {
+                            etc:"hola"
+                        },
+                        "supplier_color": "hola que tal 2",
+                        media: [
+                            {
+                                media_path: "https://zalando.com/1667531.jpg",
+                                url: "https://zalando.com/1667531.jpg",
+                                media_sort_key: 222
+                            }
+                        ]
+                  },
+                  product_simples: [
+                    {
+                        merchant_product_simple_id: "WTC741-XLZZZ222",
+                        product_simple_attributes: {
+                            // ean: "4038671015234",
+                            ean: "4038671015999222",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             }

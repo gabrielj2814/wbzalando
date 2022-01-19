@@ -80,6 +80,22 @@ class WbZalando extends Module{
                 json_simple_producto JSON NOT NULL,
                 PRIMARY KEY (`id_simple_producto`),
                 CONSTRAINT `FK_id_configuracion_producto` FOREIGN KEY (id_configuracion_producto) REFERENCES '.$this->tablaModulo.'_configuracion_producto(id_configuracion_producto) ON UPDATE CASCADE ON DELETE CASCADE
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_stock(
+                id_stock VARCHAR(150) NOT NULL,
+                ean VARCHAR(150) NOT NULL,
+                sales_channel_id VARCHAR(150) NOT NULL,
+                quantity float(9,2) NOT NULL,
+                PRIMARY KEY (`id_stock`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_precio(
+                id_precio VARCHAR(150) NOT NULL,
+                ean VARCHAR(150) NOT NULL,
+                sales_channel_id VARCHAR(150) NOT NULL,
+                json_precio JSON NOT NULL,
+                PRIMARY KEY (`id_precio`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'
         ];
         $estado=true;
