@@ -90,15 +90,6 @@ class WbZalando extends Module{
             }
         }
         return $estado;
-
-        // $SQL='CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
-        //     id int(11) NOT NULL AUTO_INCREMENT,
-        //     fecha_registro date NOT NULL,
-        //     esquemas_name_label JSON NOT NULL,
-        //     esquemas_full JSON NOT NULL,
-        //     PRIMARY KEY (`id`)
-        // ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
-        // return Db::getInstance()->execute($SQL);
     }
 
     public function desintalarTablas(){
@@ -116,8 +107,6 @@ class WbZalando extends Module{
             }
         }
         return $estado;
-        // $SQL='DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas';
-        // return Db::getInstance()->execute($SQL);
     }
 
     private function installTab()
