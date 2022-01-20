@@ -239,8 +239,9 @@ class ProductoController extends ModuleAdminController{
             $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["product_model"]["merchant_product_model_id"]);
             $producto=$this->destructurarModeloDeProductoZalando($producto);
             if(count($respuestaExistenciaProducto)===1){
-                // "precios"
-                // "stocks"
+                // este codigo se encargar de cuando un producto ya existe 
+                // lo que haces es que actualiza los precios de los productos
+                // o en caso de que alla nuevos precios o stocks los agrega a la base de datos 
                 $datosNuevos=["stocks" =>[], "precios" =>[]];
                 foreach($producto["stocks"] as $stockProducto){
                     if(count($this->consultarStockProducto($stockProducto["ean"]))){
