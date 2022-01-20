@@ -144,75 +144,6 @@ function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
     // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
     const linkControlador=document.getElementById("linkControlador").value;
-    // let productos=[
-    //     {
-    //         outline: "trousers",
-    //         ean:"978020137962",
-    //         id_product:"1",
-    //         product_model:{},
-    //         sales_channel:[
-    //             {
-    //                 sales_channel_id:"733af55a-4133-4d7c-b5f3-d64d42c135fe",
-    //                 quantity:"12",
-    //                 regular_price: {
-    //                     amount: 89.95,
-    //                     currency: "FR"
-    //                 },
-    //                 promotional_price: {
-    //                     amount: 89.95,
-    //                     currency: "FR"
-    //                 },
-    //                 ignore_warnings: true
-    //             },
-    //             {
-    //                 sales_channel_id:"01924c48-49bb-40c2-9c32-ab582e6db6f4",
-    //                 quantity:"100",
-    //                 regular_price: {
-    //                     amount: 89.95,
-    //                     currency: "EUR"
-    //                 },
-    //                 promotional_price: {
-    //                     amount: 89.95,
-    //                     currency: "EUR"
-    //                 },
-    //                 ignore_warnings: true
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         ean:"278020137962",
-    //         id_product:"1",
-    //         sales_channel:[
-    //             {
-    //                 sales_channel_id:"733af55a-4133-4d7c-b5f3-d64d42c135fe",
-    //                 quantity:"12",
-    //                 regular_price: {
-    //                     amount: 89.95,
-    //                     currency: "FR"
-    //                 },
-    //                 promotional_price: {
-    //                     amount: 89.95,
-    //                     currency: "FR"
-    //                 },
-    //                 ignore_warnings: true
-    //             },
-    //             {
-    //                 sales_channel_id:"01924c48-49bb-40c2-9c32-ab582e6db6f4",
-    //                 quantity:"100",
-    //                 regular_price: {
-    //                     amount: 89.95,
-    //                     currency: "EUR"
-    //                 },
-    //                 promotional_price: {
-    //                     amount: 89.95,
-    //                     currency: "EUR"
-    //                 },
-    //                 ignore_warnings: true
-    //             }
-    //         ]
-    //     }
-            
-    // ]
 
     let productos=[
         {
@@ -265,124 +196,48 @@ function enviarProductos(){
                       }
                     }
                   ]
-                },
-                {
-                    merchant_product_config_id: "333777",
-                    product_config_attributes: {
-                        color_code: "802",
-                        season_code: "fs18",
-                        "color_code.primary": "fff",
-                        description: {
-                            etc:"hola"
-                        },
-                        "supplier_color": "hola que tal 2",
-                        media: [
-                            {
-                                media_path: "https://zalando.com/1667531.jpg",
-                                url: "https://zalando.com/1667531.jpg",
-                                media_sort_key: 222
-                            }
-                        ]
-                  },
-                  product_simples: [
-                    {
-                        merchant_product_simple_id: "WTC741-XLZZZ",
-                        product_simple_attributes: {
-                            // ean: "4038671015234",
-                            ean: "4038671015999",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
-                    }
-                  ]
                 }
               ]
-            }
-          },
-        {
-            outline: "bag",
-            product_model: {
-                merchant_product_model_id: "modelo_producto_2",
-                product_model_attributes: {
-                    name: "New Fancy Product 2.0",
-                    brand_code: "5FX",
-                    size_group: {
-                        size: "2MAE000A2A"
-                    },
-                    target_age_groups: [
-                        "target_age_group_kid",
-                        "target_age_group_baby"
-                    ],
-                    target_genders: [
-                        "target_gender_female",
-                        "target_gender_male"
-                    ]
-              },
-              product_configs: [
-                {
-                    merchant_product_config_id: "333666222",
-                    product_config_attributes: {
-                        color_code: "802",
-                        season_code: "fs18",
-                        "color_code.primary": "fff",
-                        description: {
-                            etc:"hola"
-                        },
-                        "supplier_color": "hola que tal 2",
-                        media: [
-                            {
-                                media_path: "https://zalando.com/1667531.jpg",
-                                url: "https://zalando.com/1667531.jpg",
-                                media_sort_key: 222
-                            }
-                        ]
-                  },
-                  product_simples: [
+            },
+            precio:{
+                "product_prices": [
                     {
-                        merchant_product_simple_id: "WTC741-XL222",
-                        product_simple_attributes: {
-                            // ean: "4038671015234",
-                            ean: "4038671015222",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
+                        "ean": "4038671015222",
+                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "regular_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "promotional_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "promotional_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2020-05-30T00:00:00.00Z",
+                                "end_time": "2020-05-30T00:00:00.00Z"
+                            }
+                        ],
+                        "ignore_warnings": true
                     }
                   ]
-                },
-                {
-                    merchant_product_config_id: "333777222",
-                    product_config_attributes: {
-                        color_code: "802",
-                        season_code: "fs18",
-                        "color_code.primary": "fff",
-                        description: {
-                            etc:"hola"
-                        },
-                        "supplier_color": "hola que tal 2",
-                        media: [
-                            {
-                                media_path: "https://zalando.com/1667531.jpg",
-                                url: "https://zalando.com/1667531.jpg",
-                                media_sort_key: 222
-                            }
-                        ]
-                  },
-                  product_simples: [
+            },
+            stock:{
+                items: [
                     {
-                        merchant_product_simple_id: "WTC741-XLZZZ222",
-                        product_simple_attributes: {
-                            // ean: "4038671015234",
-                            ean: "4038671015999222",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
+                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "ean": "4038671015222",
+                        "quantity": 25
                     }
                   ]
-                }
-              ]
             }
           }
     ]

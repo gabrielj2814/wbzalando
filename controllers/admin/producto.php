@@ -232,6 +232,8 @@ class ProductoController extends ModuleAdminController{
             $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);
+            $respuestaPrecio=$this->guardarPrecioProducto($producto);
+            $respuestaStock=$this->guardarStockProducto($producto);
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
@@ -312,6 +314,52 @@ class ProductoController extends ModuleAdminController{
         return $estado;
     }
 
+    public function guardarPrecioProducto($producto){
+        $estado=true;
+        foreach($producto["precios"] as $precioProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_precio(
+                ean,
+                sales_channel_id,
+                json_precio
+                    ) 
+                VALUES (
+                    '". $precioProducto["ean"]."',
+                    '". $precioProducto["sales_channel_id"]."',
+                    '".json_encode($precioProducto)."'
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
+
+    public function guardarStockProducto($producto){
+        $estado=true;
+        foreach($producto["stocks"] as $stockProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_stock(
+                ean,
+                sales_channel_id,
+                quantity
+                ) 
+                VALUES (
+                    '". $stockProducto["ean"]."',
+                    '". $stockProducto["sales_channel_id"]."',
+                    ". $stockProducto["quantity"]."
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
+
     public function destructurarModeloDeProductoZalando($modeloProducto){
         $merchant_product_model_id=null;
         $datosProducto=[
@@ -319,13 +367,17 @@ class ProductoController extends ModuleAdminController{
             "merchant_product_model_id"=> null,
             "product_model" => [],
             "product_configs" => [],
-            "product_simples" => [] 
+            "product_simples" => [],
+            "precios" => [],
+            "stocks" => []
         ];
         $merchant_product_model_id=$modeloProducto["product_model"]["merchant_product_model_id"];
         $datosProducto["outline"]=$modeloProducto["outline"];
         $datosProducto["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
         $datosProducto["product_model"]["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
         $datosProducto["product_model"]["product_model_attributes"]=$modeloProducto["product_model"]["product_model_attributes"];
+        $datosProducto["precios"]=$modeloProducto["precio"]["product_prices"];
+        $datosProducto["stocks"]=$modeloProducto["stock"]["items"];
         foreach($modeloProducto["product_model"]["product_configs"] as $datosModeloProductoNivel3){
             $configModelo=[];
             foreach($datosModeloProductoNivel3 as $key2 => $datosModeloProductoNivel4){
