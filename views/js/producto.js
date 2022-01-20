@@ -9,6 +9,7 @@ let nombreProducto=document.getElementById("nombreProducto")
 let obtenerProductos=document.getElementById("obtenerProductos") 
 let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto")
 let botonTestEnvio=document.getElementById("botonTestEnvio")
+let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
 // functiones
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
@@ -119,8 +120,8 @@ function consultarPaisesZalando(){
                 // insertarPaisesSelectFormulario(datos.respuestaServidor.items)
                 consultarEsquemasDeProductosZalando();
             }
-            else{
-                alert("error al cargar los paises")
+            if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
+                console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor)
             }
         },
         error: () => {
@@ -316,12 +317,35 @@ function consultarEsquemaDeProductoZalando(esquema="bag"){
     
 }
 
+function coonsultarPedidos(e){
+    e.preventDefault();
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpedidoszalando'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            // console.log("pedidos consultados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
 // asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
 obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
+botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
 

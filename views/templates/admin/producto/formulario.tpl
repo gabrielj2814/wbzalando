@@ -87,6 +87,9 @@
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
         probar envio
     </button>
+    <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonConsultarPedidos"">
+        consultar pedidos
+    </button>
 
 </div>
 
