@@ -86,7 +86,7 @@ class WbZalando extends Module{
                 id_stock int(11) NOT NULL AUTO_INCREMENT,
                 ean VARCHAR(150) NOT NULL,
                 sales_channel_id VARCHAR(150) NOT NULL,
-                quantity float(9,2) NOT NULL,
+                quantity int(11) NOT NULL,
                 PRIMARY KEY (`id_stock`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 

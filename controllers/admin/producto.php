@@ -230,39 +230,54 @@ class ProductoController extends ModuleAdminController{
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
-            // $estadoDeProductos["codigo_estado"]=$respuesta["estado"];
-            // $estadoDeProductos["datos_producto_enviado"]=$producto;
-            // $estadoDeProductos["respuestaServidor"]=$respuesta;
             $estadoDeProductos["productos_enviados"][]=[
                 "respuestaServidor" => $respuesta,
-                "datosProductoEnviado" => $producto,
+                // "datosProductoEnviado" => $producto,
                 "estatuRespuestaApi" => $respuesta["estado"],
             ];
             error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-            // guardar productos en la base de datos
+            $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["product_model"]["merchant_product_model_id"]);
             $producto=$this->destructurarModeloDeProductoZalando($producto);
-            $respuestaModelo=$this->guardarModeloProducto($producto);
-            $respuestaConfig=$this->guardarConfigProducto($producto);
-            $respuestaSimple=$this->guardarSimpleProducto($producto);
-            $respuestaPrecio=$this->guardarPrecioProducto($producto);
-            $respuestaStock=$this->guardarStockProducto($producto);
+            if(count($respuestaExistenciaProducto)===1){
+                // "precios"
+                // "stocks"
+                $datosNuevos=["stocks" =>[], "precios" =>[]];
+                foreach($producto["stocks"] as $stockProducto){
+                    if(count($this->consultarStockProducto($stockProducto["ean"]))){
+                        $this->actualizarStockProducto($stockProducto);
+                    }
+                    else{
+                        $datosNuevos["stocks"][]=$stockProducto;
+                    }
+                }
+                foreach($producto["precios"] as $precioProducto){
+                    if(count($this->consultarPrecioProducto($precioProducto["ean"]))){
+                        $this->actualizarPrecioProducto($precioProducto);
+                    }
+                    else{
+                        $datosNuevos["precios"][]=$precioProducto;
+                    }
+                }
+                $respuestaStock=$this->guardarStockProducto($datosNuevos);
+                $respuestaPrecio=$this->guardarPrecioProducto($datosNuevos);
+            }
+            else{
+                // guardar productos en la base de datos
+                $respuestaModelo=$this->guardarModeloProducto($producto);
+                $respuestaConfig=$this->guardarConfigProducto($producto);
+                $respuestaSimple=$this->guardarSimpleProducto($producto);
+                $respuestaPrecio=$this->guardarPrecioProducto($producto);
+                $respuestaStock=$this->guardarStockProducto($producto);
+            }
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
         return $estadoDeProductos;
     }
     
-    // public function verificarExistenciaProducto($producto){
-        
-    // }
-
-    // public function subirStock($producto){
-        
-    // }
-    
-    // public function subirPrecio($producto){
-
-    // }
+    // public function verificarExistenciaProducto($producto){}
+    // public function subirStock($producto){}
+    // public function subirPrecio($producto){}
 
     public function guardarModeloProducto($producto){
         $SQL="
@@ -278,6 +293,12 @@ class ProductoController extends ModuleAdminController{
             );
         ";
         return Db::getInstance()->execute($SQL);
+    }
+
+    public function consultarModeloProductoDB($idModeloProducto){
+        $SQL="SELECT * FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto='".$idModeloProducto."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+
     }
     
     public function guardarConfigProducto($producto){
@@ -372,6 +393,32 @@ class ProductoController extends ModuleAdminController{
         return $estado;
     }
 
+    public function consultarStockProducto($ean){
+        $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    public function consultarPrecioProducto($ean){
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    public function actualizarStockProducto($producto){
+        $SQL="UPDATE ps_wbzalando_stock SET 
+            sales_channel_id='".$producto["sales_channel_id"]."',
+            quantity=".$producto["quantity"]."  
+            WHERE ean='".$producto["ean"]."';";
+        return Db::getInstance()->execute($SQL);
+    }
+
+    public function actualizarPrecioProducto($producto){
+        $SQL="UPDATE ps_wbzalando_precio SET 
+            sales_channel_id='".$producto["sales_channel_id"]."',
+            json_precio='".json_encode($producto)."'  
+            WHERE ean='".$producto["ean"]."';";
+        return Db::getInstance()->execute($SQL);
+    }
+
     public function destructurarModeloDeProductoZalando($modeloProducto){
         $merchant_product_model_id=null;
         $datosProducto=[
@@ -420,7 +467,7 @@ class ProductoController extends ModuleAdminController{
     public function chequearEsquemasDeHoyDB(){
         $fechaHoy=date("Y-m-d");
         $SQL="SELECT * FROM ".$this->nombreTabla." WHERE fecha_registro='$fechaHoy'";
-        return Db::getInstance()->executeS($SQL);
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function consultarEsquemasDeProducto(){
@@ -475,7 +522,9 @@ class ProductoController extends ModuleAdminController{
     public function ajaxProcessGetConsultarEsquemasProducto(){
         $respuesta_servidor=["respuestaServidor" => []];
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
-        $respuesta_servidor["respuestaServidor"]=$resultEsquemas[0]["esquemas_name_label"];
+        if(count($resultEsquemas)>0){
+            $respuesta_servidor["respuestaServidor"]=$resultEsquemas[0]["esquemas_name_label"];
+        }
         print(json_encode($respuesta_servidor));
 
     }
@@ -483,30 +532,32 @@ class ProductoController extends ModuleAdminController{
     public function ajaxProcessGetConsultarEsquemaProducto(){
         $respuesta_servidor=["respuestaServidor" => []];
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
-        $resultEsquemas[0]["esquemas_full"]=json_decode($resultEsquemas[0]["esquemas_full"]);
-        $datosEsquemaProducto=[];
-        foreach($resultEsquemas[0]["esquemas_full"] as $esquema){
-            $esquema=(object)$esquema;
-            if($_POST["esquema"]===$esquema->label){
-                $datosEsquemaProducto=[
-                    "label" => $esquema->label,
-                    "model"=> [
-                        "mandatory_types" =>$esquema->tiers->model->mandatory_types,
-                        "optional_types" =>$esquema->tiers->model->optional_types
-                    ],
-                    "config"=> [
-                        "mandatory_types" =>$esquema->tiers->config->mandatory_types,
-                        "optional_types" =>$esquema->tiers->config->optional_types
-                    ],
-                    "simple"=> [
-                        "mandatory_types" =>$esquema->tiers->simple->mandatory_types,
-                        "optional_types" =>$esquema->tiers->simple->optional_types
-                    ]
-                ];
-                break;
+        if(count($resultEsquemas)>0){
+            $resultEsquemas[0]["esquemas_full"]=json_decode($resultEsquemas[0]["esquemas_full"]);
+            $datosEsquemaProducto=[];
+            foreach($resultEsquemas[0]["esquemas_full"] as $esquema){
+                $esquema=(object)$esquema;
+                if($_POST["esquema"]===$esquema->label){
+                    $datosEsquemaProducto=[
+                        "label" => $esquema->label,
+                        "model"=> [
+                            "mandatory_types" =>$esquema->tiers->model->mandatory_types,
+                            "optional_types" =>$esquema->tiers->model->optional_types
+                        ],
+                        "config"=> [
+                            "mandatory_types" =>$esquema->tiers->config->mandatory_types,
+                            "optional_types" =>$esquema->tiers->config->optional_types
+                        ],
+                        "simple"=> [
+                            "mandatory_types" =>$esquema->tiers->simple->mandatory_types,
+                            "optional_types" =>$esquema->tiers->simple->optional_types
+                        ]
+                    ];
+                    break;
+                }
             }
+            $respuesta_servidor["respuestaServidor"]= $datosEsquemaProducto;
         }
-        $respuesta_servidor["respuestaServidor"]= $datosEsquemaProducto;
         print(json_encode($respuesta_servidor));
         // print(json_encode(["ESQUEMA"=>$_POST["esquema"]]));
     }
