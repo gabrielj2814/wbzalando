@@ -37,8 +37,8 @@ class WbZalandoCronTokenModuleFrontController extends ModuleFrontController
             $tokenInfo=(object)$respuesta["response"];
             if(property_exists($tokenInfo,"access_token")){
                 Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$tokenInfo->access_token);
+                $this->autenticarSesionZalando();
                 $this->ajaxRender("Token de acceso creado existosamente ");
-                // $this->autenticarSesionZalando();
             }
     }
 
@@ -52,7 +52,6 @@ class WbZalandoCronTokenModuleFrontController extends ModuleFrontController
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $tokenInfo=(object)$respuesta["response"];
         Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE",$tokenInfo->bpids[0]);
-        $this->ajaxRender("id de comerciante creado existosamente");
         return $tokenInfo;
     }
 }
