@@ -176,10 +176,16 @@ class WbZalando extends Module{
 
     public function alertasCron(){
         $alertas="";
-        $linkModuloCronEsquema=$this->context->link->getModuleLink("wbzalando","cron_esquema.php");
-        $linkModuloCronToken=$this->context->link->getModuleLink("wbzalando","cron_token.php");
+        $http="";
+        if (array_key_exists("HTTPS",$_SERVER)) {
+            $http="https://";
+        } else {
+            $http="http://";
+        }
+        $linkModuloCronEsquema=$http.$_SERVER["HTTP_HOST"]."/modules/".$this->name."/cron_esquema.php";
+        $linkModuloCronToken=$http.$_SERVER["HTTP_HOST"]."/modules/".$this->name."/cron_token.php";
         $textoAlertaCronEsquema="Puedes establecer una tarea programada que consultara los esquema de producto utilizando la siguiente URL: </br>"."<b>".$linkModuloCronEsquema."</b>";
-        $textoAlertaCronToken="Puedes establecer una tarea programada que actualizara el token de sesion con zalando utilizando la siguiente URL: </br>"."<b>".$linkModuloCronToken."</b>";
+        $textoAlertaCronToken="Puedes establecer una tarea programada que actualizara el token de sesion de zalando utilizando la siguiente URL: </br>"."<b>".$linkModuloCronToken."</b>";
         $alertas.=$this->displayInformation($textoAlertaCronEsquema);
         $alertas.=$this->displayInformation($textoAlertaCronToken);
         return $alertas;
