@@ -467,7 +467,7 @@ class ProductoController extends ModuleAdminController{
 
     public function chequearEsquemasDeHoyDB(){
         $fechaHoy=date("Y-m-d");
-        $SQL="SELECT * FROM ".$this->nombreTabla." WHERE fecha_registro='$fechaHoy'";
+        $SQL="SELECT * FROM ps_wbzalando_esquemas WHERE fecha_registro='$fechaHoy'";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
@@ -507,7 +507,7 @@ class ProductoController extends ModuleAdminController{
         $fechaHoy=date("Y-m-d");
         $jsonEsquemasNameLabel=json_encode($datos["esquemas_name_label"]);
         $jsonEsquemasFull=json_encode($datos["esquemas_full"]);
-        $SQL="INSERT INTO ".$this->nombreTabla."(
+        $SQL="INSERT INTO ps_wbzalando_esquemas(
             fecha_registro,
             esquemas_name_label,
             esquemas_full
