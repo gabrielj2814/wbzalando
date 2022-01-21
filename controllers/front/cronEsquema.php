@@ -18,8 +18,6 @@ class WbZalandoCronEsquemaModuleFrontController extends ModuleFrontController
         if (php_sapi_name() !== 'cli') {
             $this->ajaxRender('Forbidden call.');
         }
-
-        // Additional token checks
         $esquemasDB=$this->chequearEsquemasDeHoyDB();
         if(count($esquemasDB)===0){
             $datosEsquemas=$this->consultarEsquemasDeProducto();
@@ -28,8 +26,6 @@ class WbZalandoCronEsquemaModuleFrontController extends ModuleFrontController
             }
             // $this->ajaxRender(json_encode($datosEsquemas));
         }
-        // ...
-
         $this->ajaxRender("Cron de Esquemas ejecutado\n");
     }
 
