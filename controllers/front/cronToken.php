@@ -36,9 +36,9 @@ class WbZalandoCronTokenModuleFrontController extends ModuleFrontController
             $respuesta=$curlController->ejecutarPeticion("post",false);
             $tokenInfo=(object)$respuesta["response"];
             if(property_exists($tokenInfo,"access_token")){
-                $this->ajaxRender("Token de acceso creado existosamente ");
                 Configuration::updateValue("WB_ZALANDO_TOKEN_ACCESO",$tokenInfo->access_token);
-                $this->autenticarSesionZalando();
+                $this->ajaxRender("Token de acceso creado existosamente ");
+                // $this->autenticarSesionZalando();
             }
     }
 
