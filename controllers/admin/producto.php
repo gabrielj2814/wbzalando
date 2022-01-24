@@ -317,6 +317,7 @@ class ProductoController extends ModuleAdminController{
                 $curlController->setDatosPeticion($items);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
+                error_log("respuesta de zalando al subir el stock =>>>>  " . var_export($respuesta, true));
                 $respuestasSubidaStocks[]=$respuesta;
             }
             else{
@@ -351,6 +352,7 @@ class ProductoController extends ModuleAdminController{
                 $curlController->setDatosPeticion($product_precio);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
+                error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
                 $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
             }
             else{
