@@ -195,6 +195,16 @@ function enviarProductos(){
                                 size: "XL"
                         }
                       }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC741-XL1",
+                        product_simple_attributes: {
+                            // ean: "4038671015234",
+                            ean: "4038671015111",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
                     }
                   ]
                 }
@@ -206,38 +216,38 @@ function enviarProductos(){
                         "ean": "4038671015222",
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
                         "regular_price": {
-                            "amount": 899.95,
+                            "amount": 89.95,
                             "currency": "EUR"
                         },
                         "promotional_price": {
-                            "amount": 89.95,
+                            "amount": 80.95,
                             "currency": "EUR"
                         },
                         "scheduled_prices": [
                             {
                                 "regular_price": {
-                                    "amount": 899.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
                                     "amount": 89.95,
                                     "currency": "EUR"
                                 },
-                                "start_time": "2020-05-30T00:00:00.00Z",
-                                "end_time": "2020-05-30T00:00:00.00Z"
+                                "promotional_price": {
+                                    "amount": 80.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
                             }
                         ],
                         "ignore_warnings": true
                     },
                     {
                         "ean": "4038671015111",
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
                         "regular_price": {
-                            "amount": 22.95,
+                            "amount": 89.95,
                             "currency": "EUR"
                         },
                         "promotional_price": {
-                            "amount": 89.95,
+                            "amount": 80.95,
                             "currency": "EUR"
                         },
                         "scheduled_prices": [
@@ -247,11 +257,11 @@ function enviarProductos(){
                                     "currency": "EUR"
                                 },
                                 "promotional_price": {
-                                    "amount": 89.95,
+                                    "amount": 80.95,
                                     "currency": "EUR"
                                 },
-                                "start_time": "2020-05-30T00:00:00.00Z",
-                                "end_time": "2020-05-30T00:00:00.00Z"
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
                             }
                         ],
                         "ignore_warnings": true
@@ -266,7 +276,7 @@ function enviarProductos(){
                         "quantity": 25
                     },
                     {
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
                         "ean": "4038671015111",
                         "quantity": 25
                     }
@@ -274,6 +284,7 @@ function enviarProductos(){
             }
           }
     ]
+    console.log("datos de productos a enviar =>>>> ",productos)
     $.ajax({
         type: 'POST',
         cache: false,

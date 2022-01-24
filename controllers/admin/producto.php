@@ -230,18 +230,25 @@ class ProductoController extends ModuleAdminController{
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
+            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            $producto=$this->destructurarModeloDeProductoZalando($producto);
+            // subir stocks de producto
+            $stocksSubidos=$this->subirStock($producto["stocks"]);
+            // subir precios de producto
+            $preciosSubidos=$this->subirPrecio($producto["precios"]);
+            // captura de respuestas de la api de zalandos 
             $estadoDeProductos["productos_enviados"][]=[
                 "respuestaServidor" => $respuesta,
-                // "datosProductoEnviado" => $producto,
                 "estatuRespuestaApi" => $respuesta["estado"],
+                "stocksSubidos" => $stocksSubidos,
+                "preciosSubidos" => $preciosSubidos
             ];
-            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-            $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["product_model"]["merchant_product_model_id"]);
-            $producto=$this->destructurarModeloDeProductoZalando($producto);
+            // verificando existencia de producto en la base de datos
+            $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["merchant_product_model_id"]);
             if(count($respuestaExistenciaProducto)===1){
-                // este codigo se encargar de cuando un producto ya existe 
-                // lo que haces es que actualiza los precios de los productos
-                // o en caso de que alla nuevos precios o stocks los agrega a la base de datos 
+                // este codigo se encargar de cuando un producto ya exista 
+                // lo que haces es que actualiza los precios del producto
+                // o en caso de que sean precios o stocks nuevos los agrega a la base de datos 
                 $datosNuevos=["stocks" =>[], "precios" =>[]];
                 foreach($producto["stocks"] as $stockProducto){
                     if(count($this->consultarStockProducto($stockProducto["ean"]))){
@@ -263,7 +270,7 @@ class ProductoController extends ModuleAdminController{
                 $respuestaPrecio=$this->guardarPrecioProducto($datosNuevos);
             }
             else{
-                // guardar productos en la base de datos
+                // guardar el producto en la base de datos
                 $respuestaModelo=$this->guardarModeloProducto($producto);
                 $respuestaConfig=$this->guardarConfigProducto($producto);
                 $respuestaSimple=$this->guardarSimpleProducto($producto);
@@ -276,9 +283,82 @@ class ProductoController extends ModuleAdminController{
         return $estadoDeProductos;
     }
     
-    // public function verificarExistenciaProducto($producto){}
-    // public function subirStock($producto){}
-    // public function subirPrecio($producto){}
+    public function verificarExistenciaProducto($ean){
+        // verificar existencia de producto mediante el ean
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/products/identifiers/".$ean;
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $respuesta=null;
+        $curlController->setdatosCabezera($header);
+        return $curlController->ejecutarPeticion("get",false);
+    }
+    
+    public function subirStock($stocks){
+        $respuestasSubidaStocks=[];
+        foreach($stocks as $stock){
+            $respuestaExistencia= $this->verificarExistenciaProducto($stock["ean"]);
+            if($respuestaExistencia["estado"]===200){
+                $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+                $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+                $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+                $url=$endPoint."/merchants/".$idComerciante."/stocks";
+                $curlController=new CurlController($url);
+                $header = array(
+                    'Content-Type: application/json',
+                    'Authorization: '.'Bearer '. $token
+                );
+                $items=["items" => []];
+                $items["items"][]=$stock;
+                $curlController->setDatosPeticion($items);
+                $curlController->setdatosCabezera($header);
+                $respuesta=$curlController->ejecutarPeticion("post",true);
+                $respuestasSubidaStocks[]=$respuesta;
+            }
+            else{
+                $respuestasSubidaStocks[$stock["ean"]]=false;
+            }
+        }
+        return $respuestasSubidaStocks;
+        
+    }
+    public function subirPrecio($precios){
+        $respuestasSubidaPrecio=[];
+        foreach($precios as $precio){
+            $respuestaExistencia= $this->verificarExistenciaProducto($precio["ean"]);
+            if($respuestaExistencia["estado"]===200){
+                $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+                $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+                $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+                $url=$endPoint."/merchants/".$idComerciante."/prices";
+                $curlController=new CurlController($url);
+                $header = array(
+                    'Content-Type: application/json',
+                    'Authorization: '.'Bearer '. $token
+                );
+                if($precio["ignore_warnings"]==="true"){
+                    $precio["ignore_warnings"]=true;
+                }
+                else if($precio["ignore_warnings"]==="false"){
+                    $precio["ignore_warnings"]=false;
+                }
+                $product_precio=["product_prices" => []];
+                $product_precio["product_prices"][]=$precio;
+                $curlController->setDatosPeticion($product_precio);
+                $curlController->setdatosCabezera($header);
+                $respuesta=$curlController->ejecutarPeticion("post",true);
+                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
+            }
+            else{
+                $respuestasSubidaPrecio[$precio["ean"]]=false;
+            }
+        }
+        return $respuestasSubidaPrecio;
+    }
 
     public function guardarModeloProducto($producto){
         $SQL="
