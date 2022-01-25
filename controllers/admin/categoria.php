@@ -102,13 +102,17 @@ class CategoriaController extends ModuleAdminController{
 
     public function ajaxProcessPostGuardarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
+        $datosEsquema=$this->consultarEsquema($_POST["asociacion"]["outline"]);
+        $modeloProducto=$this->creacionDeModelo($datosEsquema,$_POST["asociacion"]["outline"]);
         $jsonFake=["msj" => "hola mundo"];
-        $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$jsonFake);
-        if($repuestaDB){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "registro completado",
-                "estado" => 200
-            ];
+        // $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$jsonFake);
+        if(true){
+            // $respuesta_servidor["respuestaServidor"]=[
+            //     "mensaje" => "registro completado",
+            //     "modeloProducto" => $modeloProducto,
+            //     "estado" => 200
+            // ];
+            $respuesta_servidor["respuestaServidor"]=$modeloProducto;
         }
         else{
             $respuesta_servidor["respuestaServidor"]=[
@@ -134,6 +138,86 @@ class CategoriaController extends ModuleAdminController{
             '".json_encode($modeloJson)."'
         )";
         return Db::getInstance()->execute($SQL);
+    }
+
+
+    public function consultarEsquema($outline){
+        $capturaEsquema=null;
+        $resultEsquemas=$this->chequearEsquemasDeHoyDB();
+        if(count($resultEsquemas)>0){
+            $resultEsquemas[0]["esquemas_full"]=json_decode($resultEsquemas[0]["esquemas_full"]);
+            foreach($resultEsquemas[0]["esquemas_full"] as $esquema){
+                $esquema=(object)$esquema;
+                if($outline===$esquema->label){
+                    $capturaEsquema=[
+                        "label" => $esquema->label,
+                        "model"=> [
+                            "mandatory_types" =>$esquema->tiers->model->mandatory_types,
+                            "optional_types" =>$esquema->tiers->model->optional_types
+                        ],
+                        "config"=> [
+                            "mandatory_types" =>$esquema->tiers->config->mandatory_types,
+                            "optional_types" =>$esquema->tiers->config->optional_types
+                        ],
+                        "simple"=> [
+                            "mandatory_types" =>$esquema->tiers->simple->mandatory_types,
+                            "optional_types" =>$esquema->tiers->simple->optional_types
+                        ]
+                    ];
+                    break;
+
+                }
+            }
+        }
+        return $capturaEsquema;
+    }
+
+    public function creacionDeModelo($esquema,$label_outline){
+        $modeloBase=[
+            "outline" => $label_outline,
+            "product_model" =>[
+                "merchant_product_model_id" => "null",
+                "product_model_attributes" => [],
+                "product_configs" => [
+                    [
+                        "merchant_product_config_id" => "null",
+                        "product_config_attributes" => [
+                        ],
+                        "product_simples" => [
+                            [
+                                "merchant_product_simple_id" => "null",
+                                "product_simple_attributes" => [
+                                ]
+                            ]
+                        ]
+
+                    ]
+                ],
+            ],
+        ];
+        // modelo
+        foreach($esquema["model"]["mandatory_types"] as $propiedades_obligatorias_modelo){
+            $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]="";
+        }
+        foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
+            $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]="";
+        }
+        // config
+        foreach($esquema["config"]["mandatory_types"] as $propiedades_obligatorias_config){
+            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]="";
+        }
+        foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
+            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]="";
+        }
+        // simple
+        foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
+            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]="";
+        }
+        foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
+            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]="";
+        }
+        return $modeloBase;
+
     }
 
     public function ajaxProcessGetConsultarTodo(){
