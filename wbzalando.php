@@ -55,7 +55,8 @@ class WbZalando extends Module{
                 id_categoria_asociacion int(11) NOT NULL AUTO_INCREMENT,
                 id_category INTEGER NOT NULL,
                 outline VARCHAR(150) NOT NULL,
-                esquema JSON NOT NULL,
+                outline_name VARCHAR(150) NOT NULL,
+                modelo JSON NOT NULL,
                 PRIMARY KEY (`id_categoria_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 

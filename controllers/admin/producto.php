@@ -98,7 +98,6 @@ class ProductoController extends ModuleAdminController{
         ps_manufacturer_lang.id_lang=ps_lang.id_lang");
     }
 
-
     private function generarUrlProducto($arrayProductos){
         $lista=[];
         foreach($arrayProductos as $producto){
@@ -191,14 +190,6 @@ class ProductoController extends ModuleAdminController{
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $Paises=(Object)$respuesta["response"];
         error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
-        // if(property_exists($Paises,"items")){
-        //     $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
-        //     $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
-        // }
-        // else{
-        //     $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
-        //     $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
-        // }
         $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
         $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
         print(json_encode($respuesta_servidor));
@@ -207,7 +198,6 @@ class ProductoController extends ModuleAdminController{
     public function ajaxProcessPostEnviarProductos(){
        print(json_encode( $this->enviarProducto($_POST["productos"])));
     }
-
 
     public function enviarProducto($productos){
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
@@ -642,7 +632,6 @@ class ProductoController extends ModuleAdminController{
             $respuesta_servidor["respuestaServidor"]= $datosEsquemaProducto;
         }
         print(json_encode($respuesta_servidor));
-        // print(json_encode(["ESQUEMA"=>$_POST["esquema"]]));
     }
 
     public function ajaxProcessGetConsultarPedidosZalando(){
@@ -660,14 +649,8 @@ class ProductoController extends ModuleAdminController{
         $respuesta_servidor["respuestaServidor"]=$respuesta["response"];
         $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
         print(json_encode($respuesta));
-        // print(json_encode(["msj" => "hola"]));
-
     }
     
 }
-
-
-
-
 
 ?>
