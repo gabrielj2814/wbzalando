@@ -104,15 +104,14 @@ class CategoriaController extends ModuleAdminController{
         $respuesta_servidor=["respuestaServidor" => []];
         $datosEsquema=$this->consultarEsquema($_POST["asociacion"]["outline"]);
         $modeloProducto=$this->creacionDeModelo($datosEsquema,$_POST["asociacion"]["outline"]);
-        $jsonFake=["msj" => "hola mundo"];
-        // $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$jsonFake);
-        if(true){
-            // $respuesta_servidor["respuestaServidor"]=[
-            //     "mensaje" => "registro completado",
-            //     "modeloProducto" => $modeloProducto,
-            //     "estado" => 200
-            // ];
-            $respuesta_servidor["respuestaServidor"]=$modeloProducto;
+        // $jsonFake=["msj" => "hola mundo"];
+        $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$modeloProducto);
+        if( $repuestaDB){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "registro completado",
+                "estado" => 200
+            ];
+            // $respuesta_servidor["respuestaServidor"]=$modeloProducto;
         }
         else{
             $respuesta_servidor["respuestaServidor"]=[
@@ -197,28 +196,65 @@ class CategoriaController extends ModuleAdminController{
         ];
         // modelo
         foreach($esquema["model"]["mandatory_types"] as $propiedades_obligatorias_modelo){
-            $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
+            $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]=$respuesta;
         }
         foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
-            $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
+            $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]= $respuesta;
         }
         // config
         foreach($esquema["config"]["mandatory_types"] as $propiedades_obligatorias_config){
-            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
+            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]=$respuesta;
         }
         foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
-            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
         }
         // simple
         foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
-            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
+            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]=$respuesta;
         }
         foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
-            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]="";
+            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
+            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]=$respuesta;
         }
         return $modeloBase;
 
     }
+
+    public function validarTipoDeDatoModelo($propiedad){
+        $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
+        $datos=null;
+        if($respuesta["response"]->definition->type==="StructuredDefinition"){
+            $datos=[];
+            foreach($respuesta["response"]->definition->types as $subPropiedades){
+                $datos[$subPropiedades->label]="";
+            }
+        }
+        // LocalizedStringDefinition, StringDefinition
+        if($respuesta["response"]->definition->type==="StringDefinition" || $respuesta["response"]->definition->type==="LocalizedStringDefinition"){
+            $datos="";
+        }
+        return $datos;
+    }
+
+    public function consultarTipoDeDatoModeloZalando($propiedad){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad;
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        return $curlController->ejecutarPeticion("get",false);
+    }
+    // public function consultarTipoDeDatoConfigZalando($propiedadConfig){}
 
     public function ajaxProcessGetConsultarTodo(){
         $respuesta_servidor=["respuestaServidor" => []];
