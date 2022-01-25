@@ -1,5 +1,5 @@
+<input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <div class="vistaInicial id="vistaInicial">
-    <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
     <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
         <div class="col-11 col-sm-11 col-md-11 col-lg-6 col-xl-6" style="margin-left:auto;margin-right:auto;">
             <input  type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Buscar por nombre de producto"/>

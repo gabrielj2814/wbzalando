@@ -28,7 +28,7 @@ class CategoriaController extends ModuleAdminController{
                 $respuestaResgistro=$this->registrarEsquemasDB($datosEsquemas);
             }
         }
-        $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
+        $linkDeControlador=$this->context->link->getAdminLink("Categoria",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador
         ];
@@ -103,7 +103,7 @@ class CategoriaController extends ModuleAdminController{
     public function ajaxProcessPostGuardarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
         $jsonFake=["msj" => "hola mundo"];
-        $repuestaDB=$this->registrar($_POST["id_category"],$_POST["outline"],$_POST["outline_name"],$jsonFake);
+        $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$jsonFake);
         if($repuestaDB){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "registro completado",
@@ -131,7 +131,7 @@ class CategoriaController extends ModuleAdminController{
             ".$idCategoria.",
             '".$outline."',
             '".$outline_name."',
-            '".$modeloJson."'
+            '".json_encode($modeloJson)."'
         )";
         return Db::getInstance()->execute($SQL);
     }
@@ -142,6 +142,7 @@ class CategoriaController extends ModuleAdminController{
         if(count($repuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
+                "datos" => $repuestaDB,
                 "estado" => 200
             ];
         }
@@ -165,6 +166,7 @@ class CategoriaController extends ModuleAdminController{
         if(count($repuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
+                "datos" => $repuestaDB,
                 "estado" => 200
             ];
         }
@@ -208,7 +210,7 @@ class CategoriaController extends ModuleAdminController{
     public function ajaxProcessPostActualizarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
         $jsonFake=["msj" => "hola mundo"];
-        $repuestaDB=$this->actualizar($_POST["id_categoria_asociacion"],$_POST["id_category"],$_POST["outline"],$_POST["outline_name"],$jsonFake);
+        $repuestaDB=$this->actualizar($_POST["asociacion"]["id_categoria_asociacion"],$_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$jsonFake);
         if($repuestaDB){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "actualización completada",
@@ -230,7 +232,7 @@ class CategoriaController extends ModuleAdminController{
             id_category=".$idCategoria.",
             outline='".$outline."',
             outline_name='".$outline_name."',
-            modelo='".$modeloJson."'
+            modelo='".json_encode($modeloJson)."'
             WHERE id_categoria_asociacion=".$idAsocicaionCategoria.";";
         return Db::getInstance()->execute($SQL);
     }
