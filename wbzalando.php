@@ -138,12 +138,32 @@ class WbZalando extends Module{
             $tab->name[$l['id_lang']] = $this->l('Productos'); 
         }
 
+        $tab->save();
+
+        $lang = Language::getLanguages(); 
+        $tab = new Tab();
+        $tab->class_name = 'categoria'; 
+        $tab->module = 'wbzalando';
+        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+        foreach ($lang as $l) {
+            $tab->name[$l['id_lang']] = $this->l('Cetegorias'); 
+        }
+
         return $tab->save();
     }
 
     private function uninstallTab()
     {
         $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+
+        $tab->delete(); 
+        
+        $tabId = (int) Tab::getIdFromClassName('CategoriaController'); 
         if (!$tabId) {
             return true;
         }
