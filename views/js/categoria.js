@@ -66,7 +66,7 @@ function consultar(){
         data: {
             ajax: true,
             action: 'getconsultar',
-            id_categoria_asociacion:2
+            id_categoria_asociacion:1
 
         },
         success: (respuesta) => {

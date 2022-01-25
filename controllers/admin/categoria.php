@@ -156,7 +156,24 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function consultarTodo(){
-        $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria;";
+        // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria;";
+        $SQL="
+        SELECT 
+        ps_wbzalando_asociacion_categoria.outline_name,
+        ps_wbzalando_asociacion_categoria.id_category,
+        ps_wbzalando_asociacion_categoria.outline,
+        ps_category_lang.name
+        FROM 
+        ps_wbzalando_asociacion_categoria,
+        ps_category,
+        ps_category_lang,
+        ps_lang
+        WHERE 
+        ps_category_lang.id_category=ps_wbzalando_asociacion_categoria.id_category AND 
+        ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang
+        ";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
@@ -180,7 +197,24 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function consultar($id){
-        $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria WHERE id_categoria_asociacion=".$id.";";
+        // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria WHERE id_categoria_asociacion=".$id.";";
+        $SQL="
+        SELECT 
+        ps_wbzalando_asociacion_categoria.outline_name,
+        ps_wbzalando_asociacion_categoria.id_category,
+        ps_wbzalando_asociacion_categoria.outline,
+        ps_category_lang.name
+        FROM 
+        ps_wbzalando_asociacion_categoria,
+        ps_category,
+        ps_category_lang,
+        ps_lang
+        WHERE 
+        ps_wbzalando_asociacion_categoria.id_categoria_asociacion=".$id." AND 
+        ps_category_lang.id_category=ps_wbzalando_asociacion_categoria.id_category AND 
+        ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang ;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
