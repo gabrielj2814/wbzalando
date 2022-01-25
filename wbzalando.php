@@ -51,6 +51,14 @@ class WbZalando extends Module{
 
     public function instalarTablas(){
         $tablas=[
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_asociacion_categoria(
+                id_categoria_asociacion int(11) NOT NULL AUTO_INCREMENT,
+                id_category INTEGER NOT NULL,
+                outline VARCHAR(150) NOT NULL,
+                esquema JSON NOT NULL,
+                PRIMARY KEY (`id_categoria_asociacion`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
                 id int(11) NOT NULL AUTO_INCREMENT,
                 fecha_registro date NOT NULL,
@@ -115,6 +123,7 @@ class WbZalando extends Module{
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_simple_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_configuracion_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_modelo_producto',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_categoria',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas'
         ];
         $estado=true;
