@@ -29,6 +29,7 @@ class WbZalando extends Module{
             $this->installTab() && 
             $this->instalarTablas() && 
             $this->registerHook("displayBackOfficeHeader") && 
+            Configuration::updateValue("WB_ZALANDO_ID_TALLA_PS","NULL") && 
             Configuration::updateValue("WB_ZALANDO_END_POINT","Sin ruta de acceso") && 
             Configuration::updateValue("WB_ZALANDO_ID_COMERCIANTE","NULL") && 
             Configuration::updateValue("WB_ZALANDO_CLIENTE_ID","Sin cliente id") && 
@@ -42,6 +43,7 @@ class WbZalando extends Module{
             $this->uninstallTab() && 
             $this->desintalarTablas() && 
             $this->unregisterHook("displayBackOfficeHeader") && 
+            Configuration::deleteByName("WB_ZALANDO_ID_TALLA_PS")  && 
             Configuration::deleteByName("WB_ZALANDO_END_POINT")  && 
             Configuration::deleteByName("WB_ZALANDO_ID_COMERCIANTE")  && 
             Configuration::deleteByName("WB_ZALANDO_CLIENTE_ID")  && 
@@ -58,6 +60,14 @@ class WbZalando extends Module{
                 outline_name VARCHAR(150) NOT NULL,
                 modelo JSON NOT NULL,
                 PRIMARY KEY (`id_categoria_asociacion`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_asociacion_talla(
+                id_talla_asociacion int(11) NOT NULL AUTO_INCREMENT,
+                id_attribute INTEGER NOT NULL,
+                codigo_pais VARCHAR(4) NOT NULL,
+                talla_zalando VARCHAR(10) NOT NULL,
+                PRIMARY KEY (`id_talla_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
@@ -125,6 +135,7 @@ class WbZalando extends Module{
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_configuracion_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_modelo_producto',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_categoria',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_talla',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas'
         ];
         $estado=true;
