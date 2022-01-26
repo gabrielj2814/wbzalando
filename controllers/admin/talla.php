@@ -39,7 +39,7 @@ class TallaController extends ModuleAdminController{
     public function ajaxProcessPostGuardarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
         $tallaNoAsociadas=[];
-        foreach($_POST["tallas"] as $talla){
+        foreach($_POST["asociacion"] as $talla){
             $respuestaDB=$this->registrar($talla["id_attribute"],$talla["codigo_pais"],$talla["talla_zalando"]);
             if(!$respuestaDB){
                 $tallaNoAsociadas[]=$talla;
@@ -82,13 +82,13 @@ class TallaController extends ModuleAdminController{
     }
     
     public function consultarTodo(){
-        $SQL="SELECT * FROM ps_wbzalando_asociacion_talla;";
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_talla,ps_attribute_lang WHERE ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND ps_attribute_lang.id_lang=".$this->id_idioma.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
     public function ajaxProcessGetConsultar(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->consultar($_POST["id_talla_asociacion"]);
+        $respuestaDB=$this->consultar($_GET["id_talla_asociacion"]);
         if(count($respuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
@@ -105,7 +105,7 @@ class TallaController extends ModuleAdminController{
     }
     
     public function consultar($id_talla_asociacion){
-        $SQL="SELECT * FROM ps_wbzalando_asociacion_talla WHERE id_talla_asociacion=".$id_talla_asociacion.";";
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_talla,ps_attribute_lang WHERE ps_attribute_lang.id_lang=".$this->id_idioma." AND ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND ps_wbzalando_asociacion_talla.id_talla_asociacion=".$id_talla_asociacion.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
@@ -130,10 +130,10 @@ class TallaController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
 
-    public function ajaxProcessGetActualizar(){
+    public function ajaxProcessPostActualizar(){
         $respuesta_servidor=["respuestaServidor" => []];
         $tallaNoActualizadas=[];
-        foreach($_POST["tallas"] as $talla){
+        foreach($_POST["asociacion"] as $talla){
             $respuestaDB=$this->actualizar($talla["id_talla_asociacion"],$talla["id_attribute"],$talla["codigo_pais"],$talla["talla_zalando"]);
             if(!$respuestaDB){
                 $tallaNoActualizadas[]=$talla;
@@ -147,7 +147,7 @@ class TallaController extends ModuleAdminController{
         $SQL="UPDATE ps_wbzalando_asociacion_talla SET
             id_attribute=".$id_attribute.",
             codigo_pais='".$codigo_pais."',
-            talla_zalando='".$talla_zalando."',
+            talla_zalando='".$talla_zalando."'
             WHERE 
             id_talla_asociacion=".$id_talla_asociacion.";
 
