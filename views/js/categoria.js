@@ -79,6 +79,28 @@ function consultar(){
     });
 }
 
+function consultarEsquemasYCategorias(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultaresquemasycategorias',
+
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
 function actualizar(){
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
@@ -129,7 +151,7 @@ function eliminar(){
         }
     });
 }
-
+consultarEsquemasYCategorias();
 botonRegistrar.addEventListener("click",registrar)
 botonConsultarTodos.addEventListener("click",consultarTodos)
 botonConsultar.addEventListener("click",consultar)

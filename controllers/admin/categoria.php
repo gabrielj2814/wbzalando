@@ -391,4 +391,27 @@ class CategoriaController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
 
+    public function ajaxProcessGetConsultarEsquemasYCategorias(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $resultEsquemas=$this->chequearEsquemasDeHoyDB();
+        $resultCategorias=$this->consultarCategoriasPrestashop();
+        $respuesta_servidor["respuestaServidor"]["esquemas"]=(count($resultEsquemas)===1)?json_decode($resultEsquemas[0]["esquemas_name_label"]):[];
+        $respuesta_servidor["respuestaServidor"]["categorias"]=$resultCategorias;
+        print(json_encode($respuesta_servidor));
+    }
+
+    public function consultarCategoriasPrestashop(){
+        $SQL="
+        SELECT 
+        ps_category.id_category,
+        ps_category_lang.name  FROM ps_category,
+        ps_category_lang,
+        ps_lang 
+        WHERE ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+
 }
