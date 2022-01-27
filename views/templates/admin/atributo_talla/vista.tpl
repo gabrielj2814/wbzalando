@@ -6,4 +6,4 @@
 <button id="botonActualizar">Actualizar</button>
 <button id="botonEliminar">Eliminar</button>
 
-<!-- <script type="text/javascript" src="/modules/wbzalando/views/js/atrituto_talla.js"></script> -->
+<script type="text/javascript" src="/modules/wbzalando/views/js/atributotalla.js"></script>
