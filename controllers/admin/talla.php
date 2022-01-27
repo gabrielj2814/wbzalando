@@ -197,9 +197,44 @@ class TallaController extends ModuleAdminController{
             if(!array_key_exists($item->_meta->dimension->category,$categoria)){
                 $categoria[$item->_meta->dimension->category]=$item->_meta->dimension->category;
             }
-            
         }
         $respuesta_servidor["respuestaServidor"]= $categoria;
+        $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function ajaxProcessGetConsultarTallasZalando(){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/size/attributes";
+        $curlController=new CurlController($url);
+        $datosGet=[
+            "merchant_ids" => $idComerciante
+        ];
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $header = array('Authorization: '.'Bearer '. $token);
+        $curlController->setDatosPeticion($datosGet);
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $Categorias=(Object)$respuesta["response"];
+        // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
+        $tallas=[];
+        $tallas[$_GET["codigo_pais"]]=[];
+        foreach($Categorias->items as $item){
+            if($_GET["categoria"]===$item->_meta->dimension->category){
+                $sizes=$item->_meta->sizes;
+                foreach($sizes as $size){
+                    $conversions=$size->conversions;
+                    foreach($conversions as $conversion){
+                        if($_GET["codigo_pais"]===$conversion->cluster){
+                            $tallas[$_GET["codigo_pais"]][]=$conversion->raw;
+                        }
+                    }
+                }
+            }
+        }
+        $respuesta_servidor["respuestaServidor"]=  $tallas;
         $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
         print(json_encode($respuesta_servidor));
     }
