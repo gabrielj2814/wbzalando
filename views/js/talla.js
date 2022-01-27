@@ -27,6 +27,8 @@ let datosTest=[
 ]
 
 let paises=[];
+let categoriaTallas=[];
+let tallas=[];
 
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
@@ -34,6 +36,7 @@ let botonConsultarTodos=document.getElementById("botonConsultarTodos");
 let botonConsultar=document.getElementById("botonConsultar");
 let botonActualizar=document.getElementById("botonActualizar");
 let botonEliminar=document.getElementById("botonEliminar");
+let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -227,9 +230,34 @@ function consultarCategoriasTalla(){
             action: 'getconsultarcateogriasquetienentallazalando'
         },
         success: (respuesta) => {
-            console.log(respuesta);
-            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
-            // console.log("productos filtrados =>>> ",datos)
+            // console.log(respuesta);
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            categoriaTallas=datos.respuestaServidor
+            console.log("categorias de tallas filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+function traerTallas(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartallaszalando',
+            codigo_pais:paises[2].country_code,
+            categoria:categoriaTallas.Clothing, 
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            categoriaTallas=datos.respuestaServidor
+            console.log("tallas =>>> ",datos)
         },
         error: () => {
         }
@@ -243,3 +271,4 @@ botonConsultarTodos.addEventListener("click",consultarTodos)
 botonConsultar.addEventListener("click",consultar)
 botonActualizar.addEventListener("click",actualizar)
 botonEliminar.addEventListener("click",eliminar)
+botonConsultarTallas.addEventListener("click",traerTallas)
