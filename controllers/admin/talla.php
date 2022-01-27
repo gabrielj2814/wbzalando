@@ -239,4 +239,35 @@ class TallaController extends ModuleAdminController{
         print(json_encode($respuesta_servidor));
     }
 
+    public function ajaxProcessGetConsultarTodoAtributos(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarTodoAtributos();
+        if(count($respuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar",
+                "datos" => []
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function consultarTodoAtributos(){
+        $SQL="SELECT * FROM 
+        ps_wbzalando_atributo_talla,
+        ps_attribute_group,
+        ps_attribute_group_lang 
+        WHERE 
+        ps_wbzalando_atributo_talla.id_attribute=ps_attribute_group.id_attribute_group  AND 
+        ps_attribute_group_lang.id_lang=".$this->id_idioma." AND 
+        ps_attribute_group_lang.id_attribute_group=ps_attribute_group.id_attribute_group 
+        ";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
 }

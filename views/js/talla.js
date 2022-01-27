@@ -80,6 +80,27 @@ function consultarTodos(){
     });
 }
 
+function consultarTodosAtributos(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodoatributos'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
 function consultar(){
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
@@ -234,6 +255,7 @@ function consultarCategoriasTalla(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             categoriaTallas=datos.respuestaServidor
             console.log("categorias de tallas filtrados =>>> ",datos)
+            consultarTodosAtributos();
         },
         error: () => {
         }
@@ -265,6 +287,7 @@ function traerTallas(){
 }
 
 consultarPaises();
+
 // consultarCategoriasTalla();
 botonRegistrar.addEventListener("click",registrar)
 botonConsultarTodos.addEventListener("click",consultarTodos)
