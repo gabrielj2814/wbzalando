@@ -155,4 +155,53 @@ class TallaController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
 
+    public function ajaxProcessGetConsultarPaisesZalando(){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $url=$endPoint."/sales-channels";
+        $curlController=new CurlController($url);
+        $datosGet=[
+            "merchant_ids" => $idComerciante
+        ];
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $header = array('Authorization: '.'Bearer '. $token);
+        $curlController->setDatosPeticion($datosGet);
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $Paises=(Object)$respuesta["response"];
+        error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
+        $respuesta_servidor["respuestaServidor"]= $respuesta["response"];
+        $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function ajaxProcessGetConsultarCateogriasQueTienenTallaZalando(){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/size/attributes";
+        $curlController=new CurlController($url);
+        $datosGet=[
+            "merchant_ids" => $idComerciante
+        ];
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $header = array('Authorization: '.'Bearer '. $token);
+        $curlController->setDatosPeticion($datosGet);
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $Categorias=(Object)$respuesta["response"];
+        // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
+        $categoria=[];
+        foreach($Categorias->items as $item){
+            if(!array_key_exists($item->_meta->dimension->category,$categoria)){
+                $categoria[$item->_meta->dimension->category]=$item->_meta->dimension->category;
+            }
+            
+        }
+        $respuesta_servidor["respuestaServidor"]= $categoria;
+        $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
+        print(json_encode($respuesta_servidor));
+    }
+
 }

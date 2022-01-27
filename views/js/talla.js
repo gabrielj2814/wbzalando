@@ -25,6 +25,9 @@ let datosTest=[
         "talla_zalando":"26.5",
     }
 ]
+
+let paises=[];
+
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
 let botonConsultarTodos=document.getElementById("botonConsultarTodos");
@@ -165,6 +168,76 @@ function eliminar(){
     });
 }
 
+function actualizar(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'postactualizar',
+            asociacion: datosTest
+
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+function consultarPaises(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpaiseszalando'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            // paises=respuesta;
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            paises=datos["respuestaServidor"]["items"]
+            consultarCategoriasTalla();
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+function consultarCategoriasTalla(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarcateogriasquetienentallazalando'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+consultarPaises();
+// consultarCategoriasTalla();
 botonRegistrar.addEventListener("click",registrar)
 botonConsultarTodos.addEventListener("click",consultarTodos)
 botonConsultar.addEventListener("click",consultar)
