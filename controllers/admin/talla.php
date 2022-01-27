@@ -228,7 +228,7 @@ class TallaController extends ModuleAdminController{
                     $conversions=$size->conversions;
                     foreach($conversions as $conversion){
                         if($_GET["codigo_pais"]===$conversion->cluster){
-                            $tallas[$_GET["codigo_pais"]][]=$conversion->raw;
+                            $tallas[$_GET["codigo_pais"]][$conversion->raw]=$conversion->raw;
                         }
                     }
                 }
