@@ -93,6 +93,30 @@ function consultarTodosAtributos(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            consultarConsultarTallaPorAtributoTalla()
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+function consultarConsultarTallaPorAtributoTalla(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartallasprestaporatributoTalla',
+            id_attribute:"2"
+
+        },
+        success: (respuesta) => {
+            console.log("datos atributos =>>>> ",respuesta);
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
