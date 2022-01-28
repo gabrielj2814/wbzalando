@@ -10,6 +10,7 @@ let obtenerProductos=document.getElementById("obtenerProductos")
 let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto")
 let botonTestEnvio=document.getElementById("botonTestEnvio")
 let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
+let botonConsultarCategoriasAso=document.getElementById("botonConsultarCategoriasAso")
 // functiones
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
@@ -118,7 +119,7 @@ function consultarPaisesZalando(){
                 // paisesZalando=JSON.parse(JSON.stringify(datos.respuestaServidor))
                 console.log("paises zalando =>>> ",datos)
                 // insertarPaisesSelectFormulario(datos.respuestaServidor.items)
-                consultarEsquemasDeProductosZalando();
+                // consultarEsquemasDeProductosZalando();
             }
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor)
@@ -382,6 +383,27 @@ function coonsultarPedidos(e){
     });
 }
 
+function coonsultarCategorias(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodocategoriasasociadas'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let json=JSON.parse(JSON.stringify(respuesta))
+            console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
+        },
+        error: () => {
+        }
+    });
+}
+
 // asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
@@ -389,6 +411,7 @@ obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
 botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
+botonConsultarCategoriasAso.addEventListener("click", coonsultarCategorias)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
 

@@ -650,6 +650,48 @@ class ProductoController extends ModuleAdminController{
         $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
         print(json_encode($respuesta));
     }
+
+    public function ajaxProcessGetConsultarTodoCategoriasAsociadas(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $repuestaDB=$this->consultarTodoCategoriasAsociadas();
+        if(count($repuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $repuestaDB,
+                "estado" => 200
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "no hay asociaciones registradas",
+                "estado" => 404
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+
+    public function consultarTodoCategoriasAsociadas(){
+        // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria;";
+        $SQL="
+        SELECT 
+        ps_wbzalando_asociacion_categoria.outline_name,
+        ps_wbzalando_asociacion_categoria.modelo,
+        ps_wbzalando_asociacion_categoria.id_category,
+        ps_wbzalando_asociacion_categoria.outline,
+        ps_category_lang.name
+        FROM 
+        ps_wbzalando_asociacion_categoria,
+        ps_category,
+        ps_category_lang,
+        ps_lang
+        WHERE 
+        ps_category_lang.id_category=ps_wbzalando_asociacion_categoria.id_category AND 
+        ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang
+        ";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
     
 }
 
