@@ -229,15 +229,21 @@ class CategoriaController extends ModuleAdminController{
         $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
         $datos=null;
         if($respuesta["response"]->definition->type==="StructuredDefinition"){
-            $datos=[];
-            foreach($respuesta["response"]->definition->types as $subPropiedades){
-                $datos[$subPropiedades->label]="";
-            }
+            $datos="StructuredDefinition";
+            // $datos=[];
+            // foreach($respuesta["response"]->definition->types as $subPropiedades){
+            //     $datos[$subPropiedades->label]="StructuredDefinition";
+            // }
         }
-        // LocalizedStringDefinition, StringDefinition
-        if($respuesta["response"]->definition->type==="StringDefinition" || $respuesta["response"]->definition->type==="LocalizedStringDefinition"){
-            $datos="";
+        if($respuesta["response"]->definition->type==="StringDefinition"){
+            $datos="StringDefinition";
         }
+        if($respuesta["response"]->definition->type==="LocalizedStringDefinition"){
+            $datos="LocalizedStringDefinition";
+        }
+        // if($respuesta["response"]->definition->type==="StringDefinition" || $respuesta["response"]->definition->type==="LocalizedStringDefinition"){
+        //     $datos="";
+        // }
         return $datos;
     }
 

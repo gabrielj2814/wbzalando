@@ -176,7 +176,7 @@ function enviarProductos(){
                         season_code: "fs18",
                         "color_code.primary": "fff",
                         description: {
-                            etc:"hola"
+                            en:"hello"
                         },
                         "supplier_color": "hola que tal 2",
                         media: [
@@ -191,18 +191,8 @@ function enviarProductos(){
                     {
                         merchant_product_simple_id: "WTC741-XL",
                         product_simple_attributes: {
-                            // ean: "4038671015234",
-                            ean: "4038671015222",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
-                    },
-                    {
-                        merchant_product_simple_id: "WTC741-XL1",
-                        product_simple_attributes: {
-                            // ean: "4038671015234",
-                            ean: "4038671015111",
+                            ean: "1523698745631",
+                            // ean: "152369874563",
                             size_codes: {
                                 size: "XL"
                         }
@@ -215,35 +205,9 @@ function enviarProductos(){
             precio:{
                 "product_prices": [
                     {
-                        "ean": "4038671015222",
+                        "ean": "1523698745631",
+                        // "ean": "152369874563",
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "regular_price": {
-                            "amount": 89.95,
-                            "currency": "EUR"
-                        },
-                        "promotional_price": {
-                            "amount": 80.95,
-                            "currency": "EUR"
-                        },
-                        "scheduled_prices": [
-                            {
-                                "regular_price": {
-                                    "amount": 89.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
-                                    "amount": 80.95,
-                                    "currency": "EUR"
-                                },
-                                "start_time": "2022-01-25T00:00:00.00Z",
-                                "end_time": "2022-01-28T00:00:00.00Z"
-                            }
-                        ],
-                        "ignore_warnings": true
-                    },
-                    {
-                        "ean": "4038671015111",
-                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
                         "regular_price": {
                             "amount": 89.95,
                             "currency": "EUR"
@@ -274,12 +238,8 @@ function enviarProductos(){
                 items: [
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "ean": "4038671015222",
-                        "quantity": 25
-                    },
-                    {
-                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-                        "ean": "4038671015111",
+                        "ean": "1523698745631",
+                        // "ean": "152369874563",
                         "quantity": 25
                     }
                   ]
