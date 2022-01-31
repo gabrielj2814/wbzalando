@@ -11,6 +11,7 @@ let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirPr
 let botonTestEnvio=document.getElementById("botonTestEnvio")
 let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
 let botonConsultarCategoriasAso=document.getElementById("botonConsultarCategoriasAso")
+let botonConsultartallasAsociadas=document.getElementById("botonConsultartallasAsociadas")
 // functiones
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
@@ -404,6 +405,27 @@ function coonsultarCategorias(){
     });
 }
 
+function coonsultarCategoriasTallasAsociadas(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodocategoriasasociadas'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let json=JSON.parse(JSON.stringify(respuesta))
+            console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
+        },
+        error: () => {
+        }
+    });
+}
+
 // asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos)
 nombreProducto.addEventListener("keyup", filtrarProductos)
@@ -412,6 +434,7 @@ botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
 botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 botonConsultarCategoriasAso.addEventListener("click", coonsultarCategorias)
+botonConsultartallasAsociadas.addEventListener("click", coonsultarCategoriasTallasAsociadas)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
 

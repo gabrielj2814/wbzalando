@@ -4,6 +4,11 @@
                 consultar Categorias
             </button>
         </div>
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
+            <button class="btn btn-primary" id="botonConsultartallasAsociadas" data-url-ajax="{$linkControlador}">
+                consultar tallas
+            </button>
+        </div>
 <div class="vistaInicial id="vistaInicial">
     <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
         <div class="col-11 col-sm-11 col-md-11 col-lg-6 col-xl-6" style="margin-left:auto;margin-right:auto;">
