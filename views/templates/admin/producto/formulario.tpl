@@ -4,9 +4,10 @@
                 consultar Categorias
             </button>
         </div>
+
         <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
-            <button class="btn btn-primary" id="botonConsultartallasAsociadas" data-url-ajax="{$linkControlador}">
-                consultar tallas
+            <button class="btn btn-primary" id="botonConsultartallasAsociadasMasPais" data-url-ajax="{$linkControlador}">
+                consultar tallas asociadas + pais
             </button>
         </div>
 <div class="vistaInicial id="vistaInicial">

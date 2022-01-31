@@ -11,7 +11,7 @@ let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirPr
 let botonTestEnvio=document.getElementById("botonTestEnvio")
 let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
 let botonConsultarCategoriasAso=document.getElementById("botonConsultarCategoriasAso")
-let botonConsultartallasAsociadas=document.getElementById("botonConsultartallasAsociadas")
+let botonConsultartallasAsociadasMasPais=document.getElementById("botonConsultartallasAsociadasMasPais")
 // functiones
 function mostrarModalSubirProductos(){
     let datosFormularioTabla=new FormData(document.getElementById("formTablaProductos"))
@@ -397,15 +397,15 @@ function coonsultarCategorias(){
         },
         success: (respuesta) => {
             console.log(respuesta);
-            let json=JSON.parse(JSON.stringify(respuesta))
-            console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
+            // let json=JSON.parse(JSON.stringify(respuesta))
+            // console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
         },
         error: () => {
         }
     });
 }
 
-function coonsultarCategoriasTallasAsociadas(){
+function coonsultarTallasProPais(){
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
         type: 'GET',
@@ -414,12 +414,11 @@ function coonsultarCategoriasTallasAsociadas(){
         url: linkControlador, 
         data: {
             ajax: true,
-            action: 'getconsultartodocategoriasasociadas'
+            action: 'getconsultartodotallasporpais',
+            pais:"fr"
         },
         success: (respuesta) => {
             console.log(respuesta);
-            let json=JSON.parse(JSON.stringify(respuesta))
-            console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
         },
         error: () => {
         }
@@ -434,7 +433,7 @@ botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
 botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 botonConsultarCategoriasAso.addEventListener("click", coonsultarCategorias)
-botonConsultartallasAsociadas.addEventListener("click", coonsultarCategoriasTallasAsociadas)
+botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
 
