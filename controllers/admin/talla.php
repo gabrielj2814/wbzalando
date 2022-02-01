@@ -42,7 +42,7 @@ class TallaController extends ModuleAdminController{
         $respuesta_servidor=["respuestaServidor" => []];
         $tallaNoAsociadas=[];
         foreach($_POST["asociacion"] as $talla){
-            $respuestaDB=$this->registrar($talla["id_attribute"],$talla["codigo_pais"],$talla["talla_zalando"]);
+            $respuestaDB=$this->registrar($talla["id_attribute"],$talla["codigo_size_group"],$talla["codigo_pais"],$talla["talla_zalando"]);
             if(!$respuestaDB){
                 $tallaNoAsociadas[]=$talla;
             }
@@ -51,14 +51,16 @@ class TallaController extends ModuleAdminController{
         print(json_encode($respuesta_servidor));
     }
 
-    public function registrar($id_attribute,$codigo_pais,$talla_zalando){
+    public function registrar($id_attribute,$codigo_size_group,$codigo_pais,$talla_zalando){
         $SQL="INSERT INTO ps_wbzalando_asociacion_talla(
             id_attribute,
+            codigo_size_group,
             codigo_pais,
             talla_zalando
         )
         VALUES(
             ".$id_attribute.",
+            '".$codigo_size_group."',
             '".$codigo_pais."',
             '".$talla_zalando."'
         )";
@@ -194,13 +196,18 @@ class TallaController extends ModuleAdminController{
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $Categorias=(Object)$respuesta["response"];
         // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
-        $categoria=[];
+        $categoriaGrupo=[];
         foreach($Categorias->items as $item){
-            if(!array_key_exists($item->_meta->dimension->category,$categoria)){
-                $categoria[$item->_meta->dimension->category]=$item->_meta->dimension->category;
-            }
+            // $categoriaGrupo[$item->_meta->dimension->category."-".$item->_meta->dimension->group]=[
+            //     "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group,
+            //     "codigo_size_group" => $item->label
+            // ];
+            $categoriaGrupo[]=[
+                "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group,
+                "codigo_size_group" => $item->label
+            ];
         }
-        $respuesta_servidor["respuestaServidor"]= $categoria;
+        $respuesta_servidor["respuestaServidor"]= $categoriaGrupo;
         $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
         print(json_encode($respuesta_servidor));
     }
@@ -224,7 +231,7 @@ class TallaController extends ModuleAdminController{
         $tallas=[];
         $tallas[$_GET["codigo_pais"]]=[];
         foreach($Categorias->items as $item){
-            if($_GET["categoria"]===$item->_meta->dimension->category){
+            if($_GET["codigo_size_group"]===$item->label){
                 $sizes=$item->_meta->sizes;
                 foreach($sizes as $size){
                     $conversions=$size->conversions;

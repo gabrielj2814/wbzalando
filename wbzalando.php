@@ -71,6 +71,7 @@ class WbZalando extends Module{
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_asociacion_talla(
                 id_talla_asociacion int(11) NOT NULL AUTO_INCREMENT,
                 id_attribute INTEGER NOT NULL,
+                codigo_size_group VARCHAR(20) NOT NULL,
                 codigo_pais VARCHAR(4) NOT NULL,
                 talla_zalando VARCHAR(10) NOT NULL,
                 PRIMARY KEY (`id_talla_asociacion`)

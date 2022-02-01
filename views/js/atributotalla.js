@@ -1,13 +1,3 @@
-let datosTest=[
-    {
-        "id_talla_asociacion":"1",
-        "id_attribute":"1",
-        "codigo_pais":"fr",
-        "talla_zalando":"22.5",
-    }
-]
-
-
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
 let botonConsultarTodos=document.getElementById("botonConsultarTodos");
@@ -26,7 +16,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardaratributoTalla',
-            id_attribute:"2"
+            id_attribute:"1"
         },
         success: (respuesta) => {
             console.log(respuesta);

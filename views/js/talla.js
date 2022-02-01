@@ -3,24 +3,28 @@ let datosTest=[
     {
         "id_talla_asociacion":"1",
         "id_attribute":"1",
+        codigo_size_group:"1ME2000E0A", 
         "codigo_pais":"fr",
         "talla_zalando":"22.5",
     },
     {
         "id_talla_asociacion":"2",
         "id_attribute":"2",
+        codigo_size_group:"1ME2000E0A",
         "codigo_pais":"fr",
         "talla_zalando":"24.5",
     },
     {
         "id_talla_asociacion":"3",
         "id_attribute":"3",
+        codigo_size_group:"1ME2000E0A",
         "codigo_pais":"fr",
         "talla_zalando":"25.5",
     },
     {
         "id_talla_asociacion":"4",
         "id_attribute":"4",
+        codigo_size_group:"1ME2000E0A",
         "codigo_pais":"fr",
         "talla_zalando":"26.5",
     }
@@ -80,6 +84,7 @@ function consultarTodos(){
     });
 }
 
+
 function consultarTodosAtributos(){
     const linkDeControladorAtributoTalla=document.getElementById("linkDeControladorAtributoTalla").value;
     $.ajax({
@@ -112,7 +117,7 @@ function consultarConsultarTallaPorAtributoTalla(){
         data: {
             ajax: true,
             action: 'getconsultartallasprestaporatributoTalla',
-            id_attribute:"2"
+            id_attribute:"1"
 
         },
         success: (respuesta) => {
@@ -297,7 +302,7 @@ function traerTallas(){
             ajax: true,
             action: 'getconsultartallaszalando',
             codigo_pais:paises[2].country_code,
-            categoria:categoriaTallas.Clothing, 
+            codigo_size_group:categoriaTallas[4].codigo_size_group, 
         },
         success: (respuesta) => {
             // console.log(respuesta);
