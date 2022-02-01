@@ -196,29 +196,65 @@ class CategoriaController extends ModuleAdminController{
         ];
         // modelo
         foreach($esquema["model"]["mandatory_types"] as $propiedades_obligatorias_modelo){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]=$respuesta;
         }
         foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]= $respuesta;
         }
         // config
         foreach($esquema["config"]["mandatory_types"] as $propiedades_obligatorias_config){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]=$respuesta;
         }
         foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
         }
         // simple
         foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]=$respuesta;
         }
         foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
-            $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
+            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
             $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]=$respuesta;
         }
         return $modeloBase;
@@ -229,17 +265,20 @@ class CategoriaController extends ModuleAdminController{
         $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
         $datos=null;
         if($respuesta["response"]->definition->type==="StructuredDefinition"){
-            $datos="StructuredDefinition";
-            // $datos=[];
-            // foreach($respuesta["response"]->definition->types as $subPropiedades){
-            //     $datos[$subPropiedades->label]="StructuredDefinition";
-            // }
+            // $datos="StructuredDefinition";
+            $datos=[];
+            foreach($respuesta["response"]->definition->types as $subPropiedades){
+                $datos[$subPropiedades->label]="StructuredDefinition";
+            }
         }
         if($respuesta["response"]->definition->type==="StringDefinition"){
             $datos="StringDefinition";
         }
         if($respuesta["response"]->definition->type==="LocalizedStringDefinition"){
             $datos="LocalizedStringDefinition";
+        }
+        if($respuesta["response"]->definition->type==="IntegerDefinition"){
+            $datos="IntegerDefinition";
         }
         // if($respuesta["response"]->definition->type==="StringDefinition" || $respuesta["response"]->definition->type==="LocalizedStringDefinition"){
         //     $datos="";
@@ -260,7 +299,6 @@ class CategoriaController extends ModuleAdminController{
         $curlController->setdatosCabezera($header);
         return $curlController->ejecutarPeticion("get",false);
     }
-    // public function consultarTipoDeDatoConfigZalando($propiedadConfig){}
 
     public function ajaxProcessGetConsultarTodo(){
         $respuesta_servidor=["respuestaServidor" => []];

@@ -267,61 +267,6 @@ function enviarProductos(){
     });
 }
 
-function consultarEsquemasDeProductosZalando(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultaresquemasproducto'
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            let jsonDatosEsquemas=JSON.parse(datos.respuestaServidor)
-            console.log("esquemas consultados =>>>>>>",jsonDatosEsquemas);
-            let listaEsquemaProducto=[]
-            for(let esquemasString of jsonDatosEsquemas){
-                let nombre=esquemasString.split("-")[0]
-                let label=esquemasString.split("-")[1]
-                listaEsquemaProducto.push({nombre,label})
-            }
-            console.log("datos parsiados =>>>>> ", listaEsquemaProducto);
-            consultarEsquemaDeProductoZalando()
-        },
-        error: () => {
-            // alert("error al conectar con el servidor");
-        }
-    });
-    
-}
-
-function consultarEsquemaDeProductoZalando(esquema="bag"){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultaresquemaproducto',
-            esquema
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            console.log("esquema seleccionado =>>>> ",datos)
-        },
-        error: () => {
-            // alert("error al conectar con el servidor");
-        }
-    });
-    
-    
-}
-
 function coonsultarPedidos(e){
     e.preventDefault();
     const linkControlador=document.getElementById("linkControlador").value;
@@ -344,7 +289,8 @@ function coonsultarPedidos(e){
     });
 }
 
-function coonsultarCategorias(){
+function consultarCategorias(){
+    console.clear()
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     $.ajax({
         type: 'GET',
@@ -357,13 +303,55 @@ function coonsultarCategorias(){
         },
         success: (respuesta) => {
             console.log(respuesta);
-            // let json=JSON.parse(JSON.stringify(respuesta))
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            let categoria=json.datos[0]
+            let jsonModeloProductoBase=JSON.parse(categoria.modelo);
+            let jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase));
+            console.log("json de esquema de producto bag 2=>>>>> ",jsonModeloProducto)
+            // generarFormulario(jsonModeloProducto)
             // console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
         },
         error: () => {
         }
     });
 }
+
+async function generarFormulario(jsonModeloProducto){
+    // for(let propiedadModelo in jsonModeloProducto.product_model.product_model_attributes){
+    //     if(jsonModeloProducto.product_model.product_model_attributes[propiedadModelo]==="StructuredDefinition"){
+    //         jsonModeloProducto.product_model.product_model_attributes[propiedadModelo]=await consultarDatosPropiedad(propiedadModelo)
+    //     }
+    // }
+    // console.log("-------",jsonModeloProducto.product_model.product_model_attributes)
+
+}
+
+async function consultarDatosPropiedad(propiedad){
+    alert(propiedad)
+    datosPropiedad=null
+    const linkControlador=document.getElementById("linkControlador").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedadmodelo',
+            propiedad
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            datosPropiedad=datos
+            // console.log("pedidos consultados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+    return datosPropiedad;
+}
+
 
 function coonsultarTallasProPais(){
     const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
@@ -392,7 +380,7 @@ obtenerProductos.addEventListener("click", mostrarModalSubirProductos)
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 botonTestEnvio.addEventListener("click", enviarProductos)
 botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
-botonConsultarCategoriasAso.addEventListener("click", coonsultarCategorias)
+botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();

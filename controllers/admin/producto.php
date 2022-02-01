@@ -606,38 +606,6 @@ class ProductoController extends ModuleAdminController{
 
     }
 
-    public function ajaxProcessGetConsultarEsquemaProducto(){
-        $respuesta_servidor=["respuestaServidor" => []];
-        $resultEsquemas=$this->chequearEsquemasDeHoyDB();
-        if(count($resultEsquemas)>0){
-            $resultEsquemas[0]["esquemas_full"]=json_decode($resultEsquemas[0]["esquemas_full"]);
-            $datosEsquemaProducto=[];
-            foreach($resultEsquemas[0]["esquemas_full"] as $esquema){
-                $esquema=(object)$esquema;
-                if($_POST["esquema"]===$esquema->label){
-                    $datosEsquemaProducto=[
-                        "label" => $esquema->label,
-                        "model"=> [
-                            "mandatory_types" =>$esquema->tiers->model->mandatory_types,
-                            "optional_types" =>$esquema->tiers->model->optional_types
-                        ],
-                        "config"=> [
-                            "mandatory_types" =>$esquema->tiers->config->mandatory_types,
-                            "optional_types" =>$esquema->tiers->config->optional_types
-                        ],
-                        "simple"=> [
-                            "mandatory_types" =>$esquema->tiers->simple->mandatory_types,
-                            "optional_types" =>$esquema->tiers->simple->optional_types
-                        ]
-                    ];
-                    break;
-                }
-            }
-            $respuesta_servidor["respuestaServidor"]= $datosEsquemaProducto;
-        }
-        print(json_encode($respuesta_servidor));
-    }
-
     public function ajaxProcessGetConsultarPedidosZalando(){
         $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
@@ -655,9 +623,48 @@ class ProductoController extends ModuleAdminController{
         print(json_encode($respuesta));
     }
     
-    // public function ajaxProcessGetConsultarTodoTallasPorPais(){
+    public function ajaxProcessGetConsultarDatosPropiedadModelo(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $datos=$this->validarTipoDeDatoModelo($_GET["propiedad"]);
+        if(is_array($datos)){
+            foreach($datos as $key => $valor){
+                $datos[$key]=$this->validarTipoDeDatoModelo($key);
+            }
+        }
+        $respuesta_servidor["respuestaServidor"]=$datos;
+        print(json_encode($respuesta_servidor));
+    }
 
-    // }
+    public function validarTipoDeDatoModelo($propiedad){
+        $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
+        $datos=null;
+        if($respuesta["response"]->definition->type==="StructuredDefinition"){
+            $datos=[];
+            foreach($respuesta["response"]->definition->types as $subPropiedades){
+                $datos[$subPropiedades->label]="StructuredDefinition";
+            }
+        }
+        if($respuesta["response"]->definition->type==="StringDefinition"){
+            $datos="StringDefinition";
+        }
+        if($respuesta["response"]->definition->type==="LocalizedStringDefinition"){
+            $datos="LocalizedStringDefinition";
+        }
+        return $datos;
+    }
+
+    public function consultarTipoDeDatoModeloZalando($propiedad){
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad;
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        return $curlController->ejecutarPeticion("get",false);
+    }
     
 }
 
