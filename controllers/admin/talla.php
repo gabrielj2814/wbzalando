@@ -22,8 +22,10 @@ class TallaController extends ModuleAdminController{
     public function initContent(){
         parent::initContent();
         $linkDeControlador=$this->context->link->getAdminLink("Talla",true);
+        $linkDeControladorAtributoTalla=$this->context->link->getAdminLink("Atributotalla",true);
         $variablesSmarty=[
-            "linkControlador" => $linkDeControlador
+            "linkControlador" => $linkDeControlador,
+            "linkDeControladorAtributoTalla" => $linkDeControladorAtributoTalla
         ];
         $this->context->smarty->assign($variablesSmarty);
         $this->setTemplate('/asociacion_talla/vista.tpl');
@@ -239,37 +241,6 @@ class TallaController extends ModuleAdminController{
         print(json_encode($respuesta_servidor));
     }
 
-    public function ajaxProcessGetConsultarTodoAtributos(){
-        $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->consultarTodoAtributos();
-        if(count($respuestaDB)>0){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "consulta completada",
-                "datos" => $respuestaDB
-            ];
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "error al consultar",
-                "datos" => []
-            ];
-        }
-        print(json_encode($respuesta_servidor));
-    }
-    
-    public function consultarTodoAtributos(){
-        $SQL="SELECT * FROM 
-        ps_wbzalando_atributo_talla,
-        ps_attribute_group,
-        ps_attribute_group_lang 
-        WHERE 
-        ps_wbzalando_atributo_talla.id_attribute=ps_attribute_group.id_attribute_group  AND 
-        ps_attribute_group_lang.id_lang=".$this->id_idioma." AND 
-        ps_attribute_group_lang.id_attribute_group=ps_attribute_group.id_attribute_group 
-        ";
-        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-    }
-
     public function ajaxProcessGetConsultarTallasPrestaPorAtributoTalla(){
         $respuesta_servidor=["respuestaServidor" => []];
         $respuestaDB=$this->consultarTallasPorAtributoTalla($_GET["id_attribute"]);
@@ -295,6 +266,35 @@ class TallaController extends ModuleAdminController{
         WHERE 
         ps_attribute.id_attribute_group = ".$id_attribute." AND
         ps_attribute_lang.id_attribute =ps_attribute.id_attribute AND 
+        ps_attribute_lang.id_lang=".$this->id_idioma.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    public function ajaxProcessGetConsultarTodoTallasPorPais(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarTodoTallasPorPais($_GET["pais"]);
+        if(count($respuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar",
+                "datos" => []
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function consultarTodoTallasPorPais($codigoPais){
+        $SQL="SELECT * FROM 
+        ps_wbzalando_asociacion_talla,
+        ps_attribute_lang 
+        WHERE 
+        ps_wbzalando_asociacion_talla.codigo_pais='".$codigoPais."' AND 
+        ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND 
         ps_attribute_lang.id_lang=".$this->id_idioma.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }

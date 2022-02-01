@@ -286,6 +286,7 @@ class CategoriaController extends ModuleAdminController{
         $SQL="
         SELECT 
         ps_wbzalando_asociacion_categoria.outline_name,
+        ps_wbzalando_asociacion_categoria.modelo,
         ps_wbzalando_asociacion_categoria.id_category,
         ps_wbzalando_asociacion_categoria.outline,
         ps_category_lang.name

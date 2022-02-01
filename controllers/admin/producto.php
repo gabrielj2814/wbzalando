@@ -31,8 +31,12 @@ class ProductoController extends ModuleAdminController{
             }
         }
         $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
+        $linkDeControladorTalla=$this->context->link->getAdminLink("Talla",true);
+        $linkDeControladorCategoria=$this->context->link->getAdminLink("Categoria",true);
         $variablesSmarty=[
-            "linkControlador" => $linkDeControlador
+            "linkControlador" => $linkDeControlador,
+            "linkDeControladorCategoria" => $linkDeControladorCategoria,
+            "linkDeControladorTalla" => $linkDeControladorTalla
         ];
         $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
         $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
@@ -221,12 +225,12 @@ class ProductoController extends ModuleAdminController{
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
             error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-            // $producto=$this->destructurarModeloDeProductoZalando($producto);
+            $producto=$this->destructurarModeloDeProductoZalando($producto);
             // subir stocks de producto
-            // $stocksSubidos=$this->subirStock($producto["stocks"]);
-            // // subir precios de producto
-            // $preciosSubidos=$this->subirPrecio($producto["precios"]);
-            // // captura de respuestas de la api de zalandos 
+            $stocksSubidos=$this->subirStock($producto["stocks"]);
+            // subir precios de producto
+            $preciosSubidos=$this->subirPrecio($producto["precios"]);
+            // captura de respuestas de la api de zalandos 
             $estadoDeProductos["productos_enviados"][]=[
                 "respuestaServidor" => $respuesta,
                 "estatuRespuestaApi" => $respuesta["estado"],
@@ -234,39 +238,39 @@ class ProductoController extends ModuleAdminController{
                 // "preciosSubidos" => $preciosSubidos
             ];
             // verificando existencia de producto en la base de datos
-            // $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["merchant_product_model_id"]);
-            // if(count($respuestaExistenciaProducto)===1){
-            //     // este codigo se encargar de cuando un producto ya exista 
-            //     // lo que haces es que actualiza los precios del producto
-            //     // o en caso de que sean precios o stocks nuevos los agrega a la base de datos 
-            //     $datosNuevos=["stocks" =>[], "precios" =>[]];
-            //     foreach($producto["stocks"] as $stockProducto){
-            //         if(count($this->consultarStockProducto($stockProducto["ean"]))){
-            //             $this->actualizarStockProducto($stockProducto);
-            //         }
-            //         else{
-            //             $datosNuevos["stocks"][]=$stockProducto;
-            //         }
-            //     }
-            //     foreach($producto["precios"] as $precioProducto){
-            //         if(count($this->consultarPrecioProducto($precioProducto["ean"]))){
-            //             $this->actualizarPrecioProducto($precioProducto);
-            //         }
-            //         else{
-            //             $datosNuevos["precios"][]=$precioProducto;
-            //         }
-            //     }
-            //     $respuestaStock=$this->guardarStockProducto($datosNuevos);
-            //     $respuestaPrecio=$this->guardarPrecioProducto($datosNuevos);
-            // }
-            // else{
-            //     // guardar el producto en la base de datos
-            //     $respuestaModelo=$this->guardarModeloProducto($producto);
-            //     $respuestaConfig=$this->guardarConfigProducto($producto);
-            //     $respuestaSimple=$this->guardarSimpleProducto($producto);
-            //     $respuestaPrecio=$this->guardarPrecioProducto($producto);
-            //     $respuestaStock=$this->guardarStockProducto($producto);
-            // }
+            $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["merchant_product_model_id"]);
+            if(count($respuestaExistenciaProducto)===1){
+                // este codigo se encargar de cuando un producto ya exista 
+                // lo que haces es que actualiza los precios del producto
+                // o en caso de que sean precios o stocks nuevos los agrega a la base de datos 
+                $datosNuevos=["stocks" =>[], "precios" =>[]];
+                foreach($producto["stocks"] as $stockProducto){
+                    if(count($this->consultarStockProducto($stockProducto["ean"]))){
+                        $this->actualizarStockProducto($stockProducto);
+                    }
+                    else{
+                        $datosNuevos["stocks"][]=$stockProducto;
+                    }
+                }
+                foreach($producto["precios"] as $precioProducto){
+                    if(count($this->consultarPrecioProducto($precioProducto["ean"]))){
+                        $this->actualizarPrecioProducto($precioProducto);
+                    }
+                    else{
+                        $datosNuevos["precios"][]=$precioProducto;
+                    }
+                }
+                $respuestaStock=$this->guardarStockProducto($datosNuevos);
+                $respuestaPrecio=$this->guardarPrecioProducto($datosNuevos);
+            }
+            else{
+                // guardar el producto en la base de datos
+                $respuestaModelo=$this->guardarModeloProducto($producto);
+                $respuestaConfig=$this->guardarConfigProducto($producto);
+                $respuestaSimple=$this->guardarSimpleProducto($producto);
+                $respuestaPrecio=$this->guardarPrecioProducto($producto);
+                $respuestaStock=$this->guardarStockProducto($producto);
+            }
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
@@ -650,78 +654,7 @@ class ProductoController extends ModuleAdminController{
         $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
         print(json_encode($respuesta));
     }
-
-    public function ajaxProcessGetConsultarTodoCategoriasAsociadas(){
-        $respuesta_servidor=["respuestaServidor" => []];
-        $repuestaDB=$this->consultarTodoCategoriasAsociadas();
-        if(count($repuestaDB)>0){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "consulta completada",
-                "datos" => $repuestaDB,
-                "estado" => 200
-            ];
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "no hay asociaciones registradas",
-                "estado" => 404
-            ];
-        }
-        print(json_encode($respuesta_servidor));
-    }
-
-    public function consultarTodoCategoriasAsociadas(){
-        // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria;";
-        $SQL="
-        SELECT 
-        ps_wbzalando_asociacion_categoria.outline_name,
-        ps_wbzalando_asociacion_categoria.modelo,
-        ps_wbzalando_asociacion_categoria.id_category,
-        ps_wbzalando_asociacion_categoria.outline,
-        ps_category_lang.name
-        FROM 
-        ps_wbzalando_asociacion_categoria,
-        ps_category,
-        ps_category_lang,
-        ps_lang
-        WHERE 
-        ps_category_lang.id_category=ps_wbzalando_asociacion_categoria.id_category AND 
-        ps_category_lang.id_lang=".$this->id_idioma." AND 
-        ps_category_lang.id_category=ps_category.id_category AND 
-        ps_category_lang.id_lang=ps_lang.id_lang
-        ";
-        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-    }
-
-    public function ajaxProcessGetConsultarTodoTallasPorPais(){
-        $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->consultarTodoTallasPorPais($_GET["pais"]);
-        if(count($respuestaDB)>0){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "consulta completada",
-                "datos" => $respuestaDB
-            ];
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "error al consultar",
-                "datos" => []
-            ];
-        }
-        print(json_encode($respuesta_servidor));
-    }
     
-    public function consultarTodoTallasPorPais($codigoPais){
-        $SQL="SELECT * FROM 
-        ps_wbzalando_asociacion_talla,
-        ps_attribute_lang 
-        WHERE 
-        ps_wbzalando_asociacion_talla.codigo_pais='".$codigoPais."' AND 
-        ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND 
-        ps_attribute_lang.id_lang=".$this->id_idioma.";";
-        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-    }
-
     // public function ajaxProcessGetConsultarTodoTallasPorPais(){
 
     // }

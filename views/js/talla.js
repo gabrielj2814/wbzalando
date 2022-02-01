@@ -81,18 +81,18 @@ function consultarTodos(){
 }
 
 function consultarTodosAtributos(){
-    const linkControlador=document.getElementById("linkControlador").value;
+    const linkDeControladorAtributoTalla=document.getElementById("linkDeControladorAtributoTalla").value;
     $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
-        url: linkControlador, 
+        url: linkDeControladorAtributoTalla, 
         data: {
             ajax: true,
-            action: 'getconsultartodoatributos'
+            action: 'getconsultartodo'
         },
         success: (respuesta) => {
-            console.log(respuesta);
+            console.log("datos attributo talla =>>> ",respuesta);
             consultarConsultarTallaPorAtributoTalla()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)

@@ -1,4 +1,6 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
+<input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
+<input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
         <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
             <button class="btn btn-primary" id="botonConsultarCategoriasAso" data-url-ajax="{$linkControlador}">
                 consultar Categorias

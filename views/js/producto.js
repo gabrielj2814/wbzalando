@@ -345,15 +345,15 @@ function coonsultarPedidos(e){
 }
 
 function coonsultarCategorias(){
-    const linkControlador=document.getElementById("linkControlador").value;
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
-        url: linkControlador, 
+        url: linkDeControladorCategoria, 
         data: {
             ajax: true,
-            action: 'getconsultartodocategoriasasociadas'
+            action: 'getconsultartodo'
         },
         success: (respuesta) => {
             console.log(respuesta);
@@ -366,12 +366,12 @@ function coonsultarCategorias(){
 }
 
 function coonsultarTallasProPais(){
-    const linkControlador=document.getElementById("linkControlador").value;
+    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
     $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
-        url: linkControlador, 
+        url: linkDeControladorTalla, 
         data: {
             ajax: true,
             action: 'getconsultartodotallasporpais',
