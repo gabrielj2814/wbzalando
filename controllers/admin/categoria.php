@@ -458,5 +458,36 @@ class CategoriaController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
+    public function ajaxProcessGetConsultarDatosPropiedad(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $repuesta=$this->consultarDatosPropiedad($_GET["propiedad"]);
+        if(is_object($repuesta["response"])){
+            $respuesta_servidor["respuestaServidor"]=[
+                "datos" => $repuesta["response"]->items,
+                "estado" => 200
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error no se ha encontrado el recuros",
+                "estado" => 404
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+
+    public function consultarDatosPropiedad($propiedad){
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad."/attributes";
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        return $curlController->ejecutarPeticion("get",false);
+    }
+
 
 }
