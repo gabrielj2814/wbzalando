@@ -138,7 +138,7 @@ class TallaController extends ModuleAdminController{
         $respuesta_servidor=["respuestaServidor" => []];
         $tallaNoActualizadas=[];
         foreach($_POST["asociacion"] as $talla){
-            $respuestaDB=$this->actualizar($talla["id_talla_asociacion"],$talla["id_attribute"],$talla["codigo_pais"],$talla["talla_zalando"]);
+            $respuestaDB=$this->actualizar($talla["id_talla_asociacion"],$talla["id_attribute"],$talla["codigo_pais"],$talla["codigo_size_group"],$talla["talla_zalando"]);
             if(!$respuestaDB){
                 $tallaNoActualizadas[]=$talla;
             }
@@ -147,9 +147,10 @@ class TallaController extends ModuleAdminController{
         print(json_encode($respuesta_servidor));
     }
     
-    public function actualizar($id_talla_asociacion,$id_attribute,$codigo_pais,$talla_zalando){
+    public function actualizar($id_talla_asociacion,$id_attribute,$codigo_pais,$codigo_size_group,$talla_zalando){
         $SQL="UPDATE ps_wbzalando_asociacion_talla SET
             id_attribute=".$id_attribute.",
+            codigo_size_group='".$codigo_size_group."',
             codigo_pais='".$codigo_pais."',
             talla_zalando='".$talla_zalando."'
             WHERE 

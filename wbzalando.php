@@ -181,6 +181,17 @@ class WbZalando extends Module{
 
         $lang = Language::getLanguages(); 
         $tab = new Tab();
+        $tab->class_name = 'Color'; 
+        $tab->module = 'wbzalando';
+        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+        foreach ($lang as $l) {
+            $tab->name[$l['id_lang']] = $this->l('Color'); 
+        }
+
+        $tab->save();
+
+        $lang = Language::getLanguages(); 
+        $tab = new Tab();
         $tab->class_name = 'Talla'; 
         $tab->module = 'wbzalando';
         $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
@@ -216,6 +227,13 @@ class WbZalando extends Module{
     private function uninstallTab()
     {
         $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+        
+        $tabId = (int) Tab::getIdFromClassName('ColorController'); 
         if (!$tabId) {
             return true;
         }
