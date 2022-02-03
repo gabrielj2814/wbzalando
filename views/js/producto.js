@@ -385,6 +385,7 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                 }
             }
             else{
+                // esto se ejecuta para casos especiales, en el caso de que la propiedad retorne un null en vez de un array vacio
                 if(tipoDeDatoPropiedadModel==="[object Object]"){
                     datosInput.tipoInput="compuesto"
                     datosInput.padre=true
@@ -406,7 +407,6 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                     datosInput.tipoInput="text"
                 }
             }
-            // console.log("fin for nivel 1")
             datosCamposFormulario.push(datosInput);
         
     }
