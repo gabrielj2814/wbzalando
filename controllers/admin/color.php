@@ -207,6 +207,52 @@ class ColorController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
 
+    public function ajaxProcessGetConsultarColoresPrestashop(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarColoresPrestashop($_GET["id_attribute"]);
+        if(count($respuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB,
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar"
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+
+    public function consultarColoresPrestashop($id_attribute){
+        $SQL="SELECT * FROM 
+        ps_attribute,
+        ps_attribute_lang
+        WHERE 
+        ps_attribute.id_attribute_group = ".$id_attribute." AND
+        ps_attribute_lang.id_attribute =ps_attribute.id_attribute AND 
+        ps_attribute_lang.id_lang=".$this->id_idioma.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    public function ajaxProcessGetConsultarAtributosPrestashop(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarAtributosPrestashop();
+        $respuesta_servidor["respuestaServidor"] = $respuestaDB;
+        print(json_encode($respuesta_servidor));
+    }
+
+    public function consultarAtributosPrestashop(){
+        $SQL="SELECT * FROM 
+        ps_attribute_group,
+        ps_attribute_group_lang 
+        WHERE 
+        ps_attribute_group_lang.id_lang=".$this->id_idioma." AND 
+        ps_attribute_group_lang.id_attribute_group=ps_attribute_group.id_attribute_group 
+        ;";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
 }
 
 

@@ -183,7 +183,7 @@ function consultarPaises(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             paises=datos["respuestaServidor"]["items"]
             console.log("paises =>>> ",datos)
-            consultarColoresZalando()
+            consultarAtributosPrestashop()
         },
         error: () => {
         }
@@ -203,17 +203,65 @@ function consultarColoresZalando(){
             codigo_pais:paises[2].country_code
         },
         success: (respuesta) => {
-            console.log(respuesta);
+            // console.log(respuesta);
             // paises=respuesta;
             let datos=JSON.parse(JSON.stringify(respuesta))
             colores=datos["respuestaServidor"]
             console.log("colores filtrados =>>> ",datos)
+            consultarColorPrestashop()
         },
         error: () => {
         }
     });
 }
 
+function consultarColorPrestashop(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarcoloresprestashop',
+            id_attribute:2
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            // paises=respuesta;
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            colores=datos["respuestaServidor"]
+            console.log("colores prestashop filtrados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+function consultarAtributosPrestashop(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultaratributosprestashop'
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            // paises=respuesta;
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            colores=datos["respuestaServidor"]
+            console.log("colores prestashop filtrados =>>> ",datos)
+            consultarColoresZalando()
+        },
+        error: () => {
+        }
+    });
+}
 consultarPaises();
 
 botonRegistrar.addEventListener("click",registrar)
