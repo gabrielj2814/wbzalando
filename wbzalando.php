@@ -76,6 +76,15 @@ class WbZalando extends Module{
                 talla_zalando VARCHAR(10) NOT NULL,
                 PRIMARY KEY (`id_talla_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+            
+            'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_asociacion_color(
+                id_color_asociacion int(11) NOT NULL AUTO_INCREMENT,
+                id_attribute INTEGER NOT NULL,
+                codigo_color VARCHAR(20) NOT NULL,
+                codigo_pais VARCHAR(4) NOT NULL,
+                color_zalando VARCHAR(10) NOT NULL,
+                PRIMARY KEY (`id_color_asociacion`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_esquemas(
                 id int(11) NOT NULL AUTO_INCREMENT,
@@ -144,6 +153,7 @@ class WbZalando extends Module{
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_categoria',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_atributo_talla',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_talla',
+            'DROP TABLE IF EXISTS '.$this->tablaModulo.'_asociacion_color',
             'DROP TABLE IF EXISTS '.$this->tablaModulo.'_esquemas'
         ];
         $estado=true;
