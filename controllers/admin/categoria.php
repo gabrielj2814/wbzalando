@@ -280,10 +280,35 @@ class CategoriaController extends ModuleAdminController{
         if($respuesta["response"]->definition->type==="IntegerDefinition"){
             $datos="IntegerDefinition";
         }
-        // aqui
-        
-
+        // aqui consltar primero existencia de la propiedad si existe
+        // no se guarda pero si no, entoces se consulta y se guarda 
+        if($respuesta["response"]->definition->type!=="StructuredDefinition"){
+            $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
+            if(count($respuestaDB)===0){
+                $datosPropiead=$this->consultarDatosPropiedad($propiedad);
+                if($datosPropiead["estado"]===200){
+                    $respuestaDBInsert=$this->guardarPropidad($propiedad,$datosPropiead);
+                }
+            } 
+        }
         return $datos;
+    }
+
+    public function consultarExistenciaPropidad($propiedad){
+        $SQL="SELECT * FROM ps_wbzalando_datos_propiedad_modelo WHERE nombre_propiedad='".$propiedad."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    public function guardarPropidad($propiedad,$datosPropiead){
+        $SQL="INSERT INTO ps_wbzalando_datos_propiedad_modelo(
+            nombre_propiedad,
+            datos_json_propiedad
+        )
+        VALUES(
+            '".$propiedad."',
+            '".json_encode($datosPropiead["response"])."'
+        );";
+        return Db::getInstance()->execute($SQL);
     }
 
     public function consultarTipoDeDatoModeloZalando($propiedad){
