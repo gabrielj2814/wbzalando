@@ -65,6 +65,7 @@ class WbZalando extends Module{
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_propiedad_modelo(
                 id_propiedad_modelo int(11) NOT NULL AUTO_INCREMENT,
                 nombre_propiedad VARCHAR(150) NOT NULL,
+                tipo_de_dato_propiedad_modelo VARCHAR(150) NOT NULL,
                 PRIMARY KEY (`id_propiedad_modelo`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
             

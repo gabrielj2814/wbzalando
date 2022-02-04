@@ -196,7 +196,6 @@ class CategoriaController extends ModuleAdminController{
         ];
         // modelo
         foreach($esquema["model"]["mandatory_types"] as $propiedades_obligatorias_modelo){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_modelo);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -206,7 +205,6 @@ class CategoriaController extends ModuleAdminController{
             $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]=$respuesta;
         }
         foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -217,7 +215,6 @@ class CategoriaController extends ModuleAdminController{
         }
         // config
         foreach($esquema["config"]["mandatory_types"] as $propiedades_obligatorias_config){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -227,7 +224,6 @@ class CategoriaController extends ModuleAdminController{
             $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]=$respuesta;
         }
         foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -238,7 +234,6 @@ class CategoriaController extends ModuleAdminController{
         }
         // simple
         foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -248,7 +243,6 @@ class CategoriaController extends ModuleAdminController{
             $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]=$respuesta;
         }
         foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
-            // $respuesta =$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
             if(is_array($respuesta)){
                 foreach($respuesta as $key => $valor){
@@ -262,53 +256,87 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function validarTipoDeDatoModelo($propiedad){
-        $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
+        // esta funcion se encarga de retornar el tipo de dato que tiene la propiedad
+        // y guardar la propiedad con su tipo de datos mas todos los datos que se pueden guardar en esa
+        // propiedad en caso de no tener se considera que se puede ingresar de forma libre cualquier dato
         $datos=null;
-        if($respuesta["response"]->definition->type==="StructuredDefinition"){
-            // $datos="StructuredDefinition";
-            $datos=[];
-            foreach($respuesta["response"]->definition->types as $subPropiedades){
-                $datos[$subPropiedades->label]="StructuredDefinition";
+        $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
+        if(count($respuestaDB)===0){
+            $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
+            $tipoDeDato=$respuesta["response"]->definition->type;
+            if($tipoDeDato==="StructuredDefinition"){
+                // $datos="StructuredDefinition";
+                $datos=[];
+                foreach($respuesta["response"]->definition->types as $subPropiedades){
+                    $datos[$subPropiedades->label]="StructuredDefinition";
+                }
+            }
+            if($tipoDeDato==="StringDefinition"){
+                $datos="StringDefinition";
+            }
+            if($tipoDeDato==="LocalizedStringDefinition"){
+                $datos="LocalizedStringDefinition";
+            }
+            if($tipoDeDato==="IntegerDefinition"){
+                $datos="IntegerDefinition";
+            }
+            if($tipoDeDato!=="StructuredDefinition"){
+                $respuestaDB2=$this->consultarExistenciaPropidad($propiedad);
+                if(count($respuestaDB2)===0){
+                    $datosPropiead=$this->consultarDatosPropiedad($propiedad);
+                    if($datosPropiead["estado"]===200){
+                        $respuestaDBInsert=$this->guardarPropidad($propiedad,$tipoDeDato);
+                        $respuestaDB3=$this->consultarExistenciaPropidad($propiedad);
+                        if(count($respuestaDB3)===1 && count($datosPropiead["response"]->items)>0){
+                            $this->guardarDatosPropidad($respuestaDB3[0]["id_propiedad_modelo"],$datosPropiead);
+                        }
+                    }
+                    else{
+                        $respuestaDBInsert=$this->guardarPropidad($propiedad,$tipoDeDato);
+                        $respuestaDB3=$this->consultarExistenciaPropidad($propiedad);
+                        if(count($respuestaDB3)===1 && count($datosPropiead["response"]->items)>0){
+                            $this->guardarDatosPropidad($respuestaDB3[0]["id_propiedad_modelo"],$datosPropiead);
+                        }
+                    }
+                } 
             }
         }
-        if($respuesta["response"]->definition->type==="StringDefinition"){
-            $datos="StringDefinition";
+        else{
+            $datos=$respuestaDB[0]["tipo_de_dato_propiedad_modelo"];
         }
-        if($respuesta["response"]->definition->type==="LocalizedStringDefinition"){
-            $datos="LocalizedStringDefinition";
-        }
-        if($respuesta["response"]->definition->type==="IntegerDefinition"){
-            $datos="IntegerDefinition";
-        }
-        // aqui consltar primero existencia de la propiedad si existe
-        // no se guarda pero si no, entoces se consulta y se guarda 
-        if($respuesta["response"]->definition->type!=="StructuredDefinition"){
-            $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
-            if(count($respuestaDB)===0){
-                $datosPropiead=$this->consultarDatosPropiedad($propiedad);
-                if($datosPropiead["estado"]===200){
-                    $respuestaDBInsert=$this->guardarPropidad($propiedad,$datosPropiead);
-                }
-            } 
-        }
+        
         return $datos;
     }
 
     public function consultarExistenciaPropidad($propiedad){
-        $SQL="SELECT * FROM ps_wbzalando_datos_propiedad_modelo WHERE nombre_propiedad='".$propiedad."';";
+        $SQL="SELECT * FROM ps_wbzalando_propiedad_modelo WHERE nombre_propiedad='".$propiedad."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
-    public function guardarPropidad($propiedad,$datosPropiead){
-        $SQL="INSERT INTO ps_wbzalando_datos_propiedad_modelo(
+    public function guardarPropidad($propiedad,$tipo_de_dato_propiedad_modelo){
+        $SQL="INSERT INTO ps_wbzalando_propiedad_modelo(
             nombre_propiedad,
-            datos_json_propiedad
+            tipo_de_dato_propiedad_modelo
         )
         VALUES(
             '".$propiedad."',
-            '".json_encode($datosPropiead["response"])."'
+            '".$tipo_de_dato_propiedad_modelo."'
         );";
         return Db::getInstance()->execute($SQL);
+    }
+    
+    public function guardarDatosPropidad($id_propiedad_modelo,$datosPropiead){
+        foreach($datosPropiead["response"]->items as $datos){
+            $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
+                id_propiedad_modelo,
+                json_datos_propiedad
+            )
+            VALUES(
+                ".$id_propiedad_modelo.",
+                '".json_encode($datos)."'
+            );";
+            Db::getInstance()->execute($SQL);
+        }
     }
 
     public function consultarTipoDeDatoModeloZalando($propiedad){
