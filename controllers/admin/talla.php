@@ -196,13 +196,9 @@ class TallaController extends ModuleAdminController{
         $curlController->setdatosCabezera($header);
         $respuesta=$curlController->ejecutarPeticion("get",false);
         $Categorias=(Object)$respuesta["response"];
-        // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
+        error_log("respuesta al consultar categorias de tallas zalando =>>>>  " . var_export($respuesta["response"], true));
         $categoriaGrupo=[];
         foreach($Categorias->items as $item){
-            // $categoriaGrupo[$item->_meta->dimension->category."-".$item->_meta->dimension->group]=[
-            //     "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group,
-            //     "codigo_size_group" => $item->label
-            // ];
             $categoriaGrupo[]=[
                 "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group,
                 "codigo_size_group" => $item->label
@@ -227,6 +223,7 @@ class TallaController extends ModuleAdminController{
         $curlController->setDatosPeticion($datosGet);
         $curlController->setdatosCabezera($header);
         $respuesta=$curlController->ejecutarPeticion("get",false);
+        error_log("respuesta al consultar las tallas de zalando =>>>>  " . var_export($respuesta["response"], true));
         $Categorias=(Object)$respuesta["response"];
         // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
         $tallas=[];

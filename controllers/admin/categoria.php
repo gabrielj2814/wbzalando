@@ -280,9 +280,7 @@ class CategoriaController extends ModuleAdminController{
         if($respuesta["response"]->definition->type==="IntegerDefinition"){
             $datos="IntegerDefinition";
         }
-        // if($respuesta["response"]->definition->type==="StringDefinition" || $respuesta["response"]->definition->type==="LocalizedStringDefinition"){
-        //     $datos="";
-        // }
+
         return $datos;
     }
 
@@ -297,7 +295,9 @@ class CategoriaController extends ModuleAdminController{
             'Authorization: '.'Bearer '. $token
         );
         $curlController->setdatosCabezera($header);
-        return $curlController->ejecutarPeticion("get",false);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        error_log("respuesta al consultar el tipo de dato de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
+        return $respuesta;
     }
 
     public function ajaxProcessGetConsultarTodo(){
@@ -486,7 +486,11 @@ class CategoriaController extends ModuleAdminController{
             'Authorization: '.'Bearer '. $token
         );
         $curlController->setdatosCabezera($header);
-        return $curlController->ejecutarPeticion("get",false);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        error_log("respuesta al consultar los datos de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
+        return $respuesta;
+        
+        
     }
 
 
