@@ -280,6 +280,8 @@ class CategoriaController extends ModuleAdminController{
         if($respuesta["response"]->definition->type==="IntegerDefinition"){
             $datos="IntegerDefinition";
         }
+        // aqui
+        
 
         return $datos;
     }
