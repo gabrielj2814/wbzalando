@@ -320,9 +320,9 @@ async function generarFormulario(jsonModeloProducto){
     let datosModeloAtributos=await datosCampoFormulario(jsonModeloProducto.product_model.product_model_attributes,"product_model_attributes")
     let datosModeloConfig=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_config_attributes,"product_config_attributes-0")
     let datosModeloConfigSimple=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_simples[0].product_simple_attributes,"product_simple_attributes-0")
-    console.log("datos del modelo =>>>> ",datosModeloAtributos)
-    console.log("datos del config =>>>> ",datosModeloConfig)
-    console.log("datos del Simple =>>>> ",datosModeloConfigSimple)
+    // console.log("datos del modelo =>>>> ",datosModeloAtributos)
+    // console.log("datos del config =>>>> ",datosModeloConfig)
+    // console.log("datos del Simple =>>>> ",datosModeloConfigSimple)
     formulario=[...datosModeloAtributos,...datosModeloConfig,...datosModeloConfigSimple]
     console.log("datos formulario =>>>> ",formulario)
 
@@ -351,52 +351,23 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
             datosInput.name=nombreNivel+"-"+propiedadModelo
             datosInput.datos=datosPropiedad
             datosInput.label=propiedadModelo.split("_").join(" ")
-            if(datosPropiedad!==null){
-                if(datosPropiedad.length===0){
-                    // [object Object] , [object String]
-                    if(tipoDeDatoPropiedadModel==="[object Object]"){
-                        datosInput.tipoInput="compuesto"
-                        datosInput.padre=true
-                        for(let propiedadModeloNivel2 in nivelModelo[propiedadModelo]){
-                            let datosInput2=JSON.parse(JSON.stringify(plantillaDatos))
-                            // console.log("inicio for nivel 2")
-                            let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
-                            let datosPropiedad2=await consultarDatosPropiedad(propiedadModeloNivel2)
-                            datosInput2.id=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2
-                            datosInput2.name=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2
-                            datosInput2.datos=datosPropiedad2
-                            datosInput2.label=propiedadModeloNivel2.split("_").join(" ")
-                            // console.log(propiedadModeloNivel2," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]))
-                            // console.log("datos items =>>> ",datosPropiedad2)
-                            // console.log("fin for nivel 2")
-                            if(tipoDeDatoPropiedadModel2==="[object String]"){
-                                datosInput2.tipoInput="text"
-                            }
-                            datosInput.camposHijos.push(datosInput2)
-                        }
-                    }
-                    else{
-                        datosInput.tipoInput="text"
-                    }
-                }
-                else{
-                    datosInput.tipoInput="select"
-                    datosInput.padre=false
-                }
-            }
-            else{
-                // esto se ejecuta para casos especiales, en el caso de que la propiedad retorne un null en vez de un array vacio
+            if(datosPropiedad.length===0){
+                // [object Object] , [object String]
                 if(tipoDeDatoPropiedadModel==="[object Object]"){
                     datosInput.tipoInput="compuesto"
                     datosInput.padre=true
                     for(let propiedadModeloNivel2 in nivelModelo[propiedadModelo]){
                         let datosInput2=JSON.parse(JSON.stringify(plantillaDatos))
+                        // console.log("inicio for nivel 2")
                         let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
                         let datosPropiedad2=await consultarDatosPropiedad(propiedadModeloNivel2)
                         datosInput2.id=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2
                         datosInput2.name=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2
                         datosInput2.datos=datosPropiedad2
                         datosInput2.label=propiedadModeloNivel2.split("_").join(" ")
+                        // console.log(propiedadModeloNivel2," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]))
+                        // console.log("datos items =>>> ",datosPropiedad2)
+                        // console.log("fin for nivel 2")
                         if(tipoDeDatoPropiedadModel2==="[object String]"){
                             datosInput2.tipoInput="text"
                         }
@@ -406,6 +377,10 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                 else{
                     datosInput.tipoInput="text"
                 }
+            }
+            else{
+                datosInput.tipoInput="select"
+                datosInput.padre=false
             }
             datosCamposFormulario.push(datosInput);
         

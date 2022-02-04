@@ -339,6 +339,11 @@ class CategoriaController extends ModuleAdminController{
         }
     }
 
+    public function consultarTodosDatosPropiedad($id_propiedad_modelo){
+        $SQL="SELECT * FROM ps_wbzalando_datos_propiedad WHERE id_propiedad_modelo=".$id_propiedad_modelo.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
     public function consultarTipoDeDatoModeloZalando($propiedad){
         $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
@@ -516,9 +521,9 @@ class CategoriaController extends ModuleAdminController{
     public function ajaxProcessGetConsultarDatosPropiedad(){
         $respuesta_servidor=["respuestaServidor" => []];
         $repuesta=$this->consultarDatosPropiedad($_GET["propiedad"]);
-        if(is_object($repuesta["response"])){
+        if(is_array($repuesta)){
             $respuesta_servidor["respuestaServidor"]=[
-                "datos" => $repuesta["response"]->items,
+                "datos" => $repuesta,
                 "estado" => 200
             ];
         }
@@ -532,20 +537,27 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function consultarDatosPropiedad($propiedad){
-        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
-        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad."/attributes";
-        $curlController=new CurlController($url);
-        $header = array(
-            'Authorization: '.'Bearer '. $token
-        );
-        $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("get",false);
-        error_log("respuesta al consultar los datos de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
+        // $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        // $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        // $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        // $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad."/attributes";
+        // $curlController=new CurlController($url);
+        // $header = array(
+        //     'Authorization: '.'Bearer '. $token
+        // );
+        // $curlController->setdatosCabezera($header);
+        // $respuesta=$curlController->ejecutarPeticion("get",false);
+        // error_log("respuesta al consultar los datos de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
+        // return $respuesta;
+        $respuesta=[];
+        $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
+        $respuestaDB2=$this->consultarTodosDatosPropiedad($respuestaDB[0]["id_propiedad_modelo"]);
+        if(count($respuestaDB2)>0){
+            foreach($respuestaDB2 as $datosPropiedad){
+                $respuesta[]=$datosPropiedad["json_datos_propiedad"];
+            }
+        }
         return $respuesta;
-        
-        
     }
 
 
