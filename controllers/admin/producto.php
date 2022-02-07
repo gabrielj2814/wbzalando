@@ -622,36 +622,6 @@ class ProductoController extends ModuleAdminController{
         $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
         print(json_encode($respuesta));
     }
-    
-    // public function ajaxProcessGetConsultarDatosPropiedadModelo(){
-    //     $respuesta_servidor=["respuestaServidor" => []];
-    //     $datos=$this->validarTipoDeDatoModelo($_GET["propiedad"]);
-    //     if(is_array($datos)){
-    //         foreach($datos as $key => $valor){
-    //             $datos[$key]=$this->validarTipoDeDatoModelo($key);
-    //         }
-    //     }
-    //     $respuesta_servidor["respuestaServidor"]=$datos;
-    //     print(json_encode($respuesta_servidor));
-    // }
-
-    // public function validarTipoDeDatoModelo($propiedad){
-    //     $respuesta=$this->consultarTipoDeDatoModeloZalando($propiedad);
-    //     $datos=null;
-    //     if($respuesta["response"]->definition->type==="StructuredDefinition"){
-    //         $datos=[];
-    //         foreach($respuesta["response"]->definition->types as $subPropiedades){
-    //             $datos[$subPropiedades->label]="StructuredDefinition";
-    //         }
-    //     }
-    //     if($respuesta["response"]->definition->type==="StringDefinition"){
-    //         $datos="StringDefinition";
-    //     }
-    //     if($respuesta["response"]->definition->type==="LocalizedStringDefinition"){
-    //         $datos="LocalizedStringDefinition";
-    //     }
-    //     return $datos;
-    // }
 
     public function consultarTipoDeDatoModeloZalando($propiedad){
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");

@@ -2,9 +2,9 @@
 let datosTest=[
     {
         "id_categoria_asociacion":"",
-        "id_category":"1",
-        "outline_name":"Bag",
-        "outline":"bag",
+        "id_category":"3",
+        "outline_name":"Other Accessoires",
+        "outline":"other_accessoires",
     }
 ]
 // botones

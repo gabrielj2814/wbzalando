@@ -1,6 +1,7 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
 <input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
+        <!--
         <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
             <button class="btn btn-primary" id="botonConsultarCategoriasAso" data-url-ajax="{$linkControlador}">
                 consultar Categorias
@@ -12,6 +13,7 @@
                 consultar tallas asociadas + pais
             </button>
         </div>
+        -->
 <div class="vistaInicial id="vistaInicial">
     <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
         <div class="col-11 col-sm-11 col-md-11 col-lg-6 col-xl-6" style="margin-left:auto;margin-right:auto;">
@@ -60,24 +62,20 @@
         </div>
     </div>
 
-   <form id="formTablaProductos">
-   
-        <table class="table">
-            <thead>
-                <tr>
-                <th scope="col"></th>
-                <th scope="col">ID</th>
-                <th scope="col">Nombre de Producto</th>
-                <th scope="col">Referencia (EAN)</th>
-                </tr>
-            </thead>
-            <tbody id="tablaProductos">
-            
-                
-            </tbody>
-        </table>
-   
-   </form>
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col"></th>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre de Producto</th>
+            <th scope="col">Referencia (EAN)</th>
+            </tr>
+        </thead>
+        <tbody id="tablaProductos">
+
+
+        </tbody>
+    </table>
 
 </div>
 
@@ -88,6 +86,7 @@
         </svg>
     </button>
     
+    <!--
     <div class="centrar-columnas">
         <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-bottom: 30px;">
             <label>Paises</label>
@@ -103,6 +102,14 @@
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonConsultarPedidos"">
         consultar pedidos
     </button>
+    -->
+
+
+    <div id="formulariosProductos" class="formulariosProductos">
+
+    
+    
+    </div>
 
 </div>
 

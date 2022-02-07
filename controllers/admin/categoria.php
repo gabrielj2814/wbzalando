@@ -387,6 +387,7 @@ class CategoriaController extends ModuleAdminController{
         ps_wbzalando_asociacion_categoria.modelo,
         ps_wbzalando_asociacion_categoria.id_category,
         ps_wbzalando_asociacion_categoria.outline,
+        ps_wbzalando_asociacion_categoria.id_categoria_asociacion ,
         ps_category_lang.name
         FROM 
         ps_wbzalando_asociacion_categoria,
@@ -415,6 +416,7 @@ class CategoriaController extends ModuleAdminController{
         else{
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "error no se ha encontrado el recuros solicitado",
+                "datos" => [],
                 "estado" => 404
             ];
         }
@@ -428,6 +430,7 @@ class CategoriaController extends ModuleAdminController{
         ps_wbzalando_asociacion_categoria.outline_name,
         ps_wbzalando_asociacion_categoria.id_category,
         ps_wbzalando_asociacion_categoria.outline,
+        ps_wbzalando_asociacion_categoria.modelo,
         ps_category_lang.name
         FROM 
         ps_wbzalando_asociacion_categoria,
@@ -537,18 +540,6 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function consultarDatosPropiedad($propiedad){
-        // $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
-        // $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        // $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        // $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad."/attributes";
-        // $curlController=new CurlController($url);
-        // $header = array(
-        //     'Authorization: '.'Bearer '. $token
-        // );
-        // $curlController->setdatosCabezera($header);
-        // $respuesta=$curlController->ejecutarPeticion("get",false);
-        // error_log("respuesta al consultar los datos de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
-        // return $respuesta;
         $respuesta=[];
         $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
         $respuestaDB2=$this->consultarTodosDatosPropiedad($respuestaDB[0]["id_propiedad_modelo"]);
