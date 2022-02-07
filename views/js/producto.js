@@ -111,11 +111,12 @@ async function consultarCategoriaModelo(selectCategoria){
             success: async (respuesta) => {
                 let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
                 if(datos.estado===200){
-                    formulario.textContent=JSON.stringify(datos.datos[0].modelo)
+                    // formulario.textContent=JSON.stringify(datos.datos[0].modelo)
                     jsonModeloProductoBase=JSON.parse(datos.datos[0].modelo)
                     jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase))
                     let datosCamposFormulario=await generarFormulario(jsonModeloProducto)
                     console.log("datos campos formulario =>>>> ",datosCamposFormulario)
+                    formulario.innerHTML=agregarCamposAlFormulario(datosCamposFormulario)
                 }
             },
             error: () => {
@@ -125,6 +126,156 @@ async function consultarCategoriaModelo(selectCategoria){
     else{
         formulario.innerHTML=""
     }
+}
+
+async function generarFormulario(jsonModeloProducto){
+    let datosCampos=[]
+    let datosModeloAtributos=await datosCampoFormulario(jsonModeloProducto.product_model.product_model_attributes,"product_model_attributes");
+    let datosModeloConfig=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_config_attributes,"product_config_attributes-0");
+    let datosModeloConfigSimple=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_simples[0].product_simple_attributes,"product_simple_attributes-0");
+    // console.log("datos del Modelo =>>>> ",datosModeloAtributos)
+    // console.log("datos del Config =>>>> ",datosModeloConfig)
+    // console.log("datos del Simple =>>>> ",datosModeloConfigSimple)
+    datosCampos=[...datosModeloAtributos,...datosModeloConfig,...datosModeloConfigSimple];
+    return datosCampos;
+}
+
+async function datosCampoFormulario(nivelModelo,nombreNivel){
+    let plantillaDatos={
+        tipoInput:"", // con esto indicamos el tipo de campo de formulario que va hacer
+        padre:false, // con esto indicamos si tiene o no tiene valore hijos false => no , true => si
+        camposHijos:[], // aqui se almacena los campos hijos si es padre
+        datos:[], // aqui se almacena los datos del padre
+        name:"",//  nombre del name que tendra el campo del formulario
+        id:"",//  nombre del id que tendra el campo del formulario
+        label:"",//  nombre del label que tendra el campo del formulario que sera visible en el formulario
+    }
+    let datosCamposFormulario=[];
+    for(let propiedadModelo in nivelModelo){
+            let datosInput=JSON.parse(JSON.stringify(plantillaDatos));
+            // console.log("Inicio for nivel 1")
+            let datosPropiedad=await consultarDatosPropiedad(propiedadModelo);
+            let tipoDeDatoPropiedadModel=Object.prototype.toString.call(nivelModelo[propiedadModelo]);
+            // console.log(propiedadModelo," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo]))
+            // console.log("datos items =>>> ",datosPropiedad)
+            // console.log("=>>>>> ",propiedadModelo);
+            datosInput.id=nombreNivel+"-"+propiedadModelo;
+            datosInput.name=nombreNivel+"-"+propiedadModelo;
+            datosInput.datos=datosPropiedad;
+            datosInput.label=propiedadModelo.split("_").join(" ").split(".").join(" ");
+            if(datosPropiedad.length===0){
+                // [object Object] , [object String]
+                if(tipoDeDatoPropiedadModel==="[object Object]"){
+                    datosInput.tipoInput="compuesto";
+                    datosInput.padre=true;
+                    for(let propiedadModeloNivel2 in nivelModelo[propiedadModelo]){
+                        let datosInput2=JSON.parse(JSON.stringify(plantillaDatos));
+                        // console.log("inicio for nivel 2")
+                        let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
+                        let datosPropiedad2=await consultarDatosPropiedad(propiedadModeloNivel2);
+                        datosInput2.id=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
+                        datosInput2.name=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
+                        datosInput2.datos=datosPropiedad2;
+                        datosInput2.label=propiedadModeloNivel2.split("_").join(" ").split(".").join(" ");
+                        // console.log(propiedadModeloNivel2," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]))
+                        // console.log("datos items =>>> ",datosPropiedad2)
+                        // console.log("fin for nivel 2")
+                        if(tipoDeDatoPropiedadModel2==="[object String]"){
+                            datosInput2.tipoInput="text";
+                        }
+                        datosInput.camposHijos.push(datosInput2);
+                    }
+                }
+                else{
+                    datosInput.tipoInput="text";
+                }
+            }
+            else{
+                datosInput.tipoInput="select";
+                datosInput.padre=false;
+            }
+            datosCamposFormulario.push(datosInput);
+        
+    }
+    return datosCamposFormulario;
+}
+
+async function consultarDatosPropiedad(propiedad){
+    let datosPropiedad=null;
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            if(respuestaJson.estado===200){
+                datosPropiedad=respuestaJson.datos;
+            }
+        },
+        error: () => {
+        }
+    });
+    return datosPropiedad;
+}
+
+function agregarCamposAlFormulario(campos){
+    let htmlCampos="";
+    for(let campo of campos){
+        if(campo.tipoInput==="text"){
+            htmlCampos+=campoTexto(campo);
+        }
+        if(campo.tipoInput==="select"){
+            htmlCampos+=campoSelect(campo);
+        }
+        // if(campo.tipoInput==="compuesto"){}
+    }
+    return htmlCampos;
+
+}
+
+function campoTexto(campo){
+    let input="<div>\
+        <label for='"+campo.id+"'>"+campo.label+"</label>\
+        <input type='text' id='"+campo.id+"' name='"+campo.name+"' />\
+    </div>";
+    return input;
+    
+}
+
+function campoSelect(campo){
+    console.log("este cambron",campo.label)
+    let option="";
+    for(let datosOption of campo.datos){
+        datosOption=JSON.parse(datosOption)
+        if(datosOption.value){
+            if(datosOption.value.localized){
+                option+="<option value='"+datosOption.label+"' >"+datosOption.value.localized["en"]+"</option>";
+            }
+            else{
+                option+="<option value='"+datosOption.label+"' >"+datosOption.name.en+"</option>";
+            }
+        }
+        else{
+            option+="<option value='"+datosOption.label+"' >"+datosOption.name.en+"</option>";
+        }
+    }
+    let input="<div>\
+        <label for='"+campo.id+"'>"+campo.label+"</label>\
+        <select id='"+campo.id+"' name='"+campo.name+"' >"+option+"</select>\
+    </div>";
+    return input;
+}
+
+function campoCompuesto(campo){
+
 }
 
 // async function consultarProducto(id_producto){
@@ -308,103 +459,7 @@ async function consultarCategorias(){
     return categorias;
 }
 
-async function generarFormulario(jsonModeloProducto){
-    let datosCampos=[]
-    let datosModeloAtributos=await datosCampoFormulario(jsonModeloProducto.product_model.product_model_attributes,"product_model_attributes");
-    let datosModeloConfig=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_config_attributes,"product_config_attributes-0");
-    let datosModeloConfigSimple=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_simples[0].product_simple_attributes,"product_simple_attributes-0");
-    // console.log("datos del Modelo =>>>> ",datosModeloAtributos)
-    // console.log("datos del Config =>>>> ",datosModeloConfig)
-    // console.log("datos del Simple =>>>> ",datosModeloConfigSimple)
-    datosCampos=[...datosModeloAtributos,...datosModeloConfig,...datosModeloConfigSimple];
-    return datosCampos;
-}
 
-async function datosCampoFormulario(nivelModelo,nombreNivel){
-    let plantillaDatos={
-        tipoInput:"", // con esto indicamos el tipo de campo de formulario que va hacer
-        padre:false, // con esto indicamos si tiene o no tiene valore hijos false => no , true => si
-        camposHijos:[], // aqui se almacena los campos hijos si es padre
-        datos:[], // aqui se almacena los datos del padre
-        name:"",//  nombre del name que tendra el campo del formulario
-        id:"",//  nombre del id que tendra el campo del formulario
-        label:"",//  nombre del label que tendra el campo del formulario que sera visible en el formulario
-    }
-    let datosCamposFormulario=[];
-    for(let propiedadModelo in nivelModelo){
-            let datosInput=JSON.parse(JSON.stringify(plantillaDatos));
-            // console.log("Inicio for nivel 1")
-            let datosPropiedad=await consultarDatosPropiedad(propiedadModelo);
-            let tipoDeDatoPropiedadModel=Object.prototype.toString.call(nivelModelo[propiedadModelo]);
-            // console.log(propiedadModelo," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo]))
-            // console.log("datos items =>>> ",datosPropiedad)
-            // console.log("=>>>>> ",propiedadModelo);
-            datosInput.id=nombreNivel+"-"+propiedadModelo;
-            datosInput.name=nombreNivel+"-"+propiedadModelo;
-            datosInput.datos=datosPropiedad;
-            datosInput.label=propiedadModelo.split("_").join(" ");
-            if(datosPropiedad.length===0){
-                // [object Object] , [object String]
-                if(tipoDeDatoPropiedadModel==="[object Object]"){
-                    datosInput.tipoInput="compuesto";
-                    datosInput.padre=true;
-                    for(let propiedadModeloNivel2 in nivelModelo[propiedadModelo]){
-                        let datosInput2=JSON.parse(JSON.stringify(plantillaDatos));
-                        // console.log("inicio for nivel 2")
-                        let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
-                        let datosPropiedad2=await consultarDatosPropiedad(propiedadModeloNivel2);
-                        datosInput2.id=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
-                        datosInput2.name=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
-                        datosInput2.datos=datosPropiedad2;
-                        datosInput2.label=propiedadModeloNivel2.split("_").join(" ");
-                        // console.log(propiedadModeloNivel2," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]))
-                        // console.log("datos items =>>> ",datosPropiedad2)
-                        // console.log("fin for nivel 2")
-                        if(tipoDeDatoPropiedadModel2==="[object String]"){
-                            datosInput2.tipoInput="text";
-                        }
-                        datosInput.camposHijos.push(datosInput2);
-                    }
-                }
-                else{
-                    datosInput.tipoInput="text";
-                }
-            }
-            else{
-                datosInput.tipoInput="select";
-                datosInput.padre=false;
-            }
-            datosCamposFormulario.push(datosInput);
-        
-    }
-    return datosCamposFormulario;
-}
-
-async function consultarDatosPropiedad(propiedad){
-    let datosPropiedad=null;
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultardatospropiedad',
-            propiedad
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            if(respuestaJson.estado===200){
-                datosPropiedad=respuestaJson.datos;
-            }
-        },
-        error: () => {
-        }
-    });
-    return datosPropiedad;
-}
 
 
 function coonsultarTallasProPais(){
