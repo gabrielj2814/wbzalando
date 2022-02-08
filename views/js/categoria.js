@@ -30,7 +30,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardarasociacion',
-            asociacion:datosTest[1]
+            asociacion:datosTest[0]
         },
         success: (respuesta) => {
             console.log(respuesta);

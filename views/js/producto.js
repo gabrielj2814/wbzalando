@@ -180,9 +180,15 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                         // console.log(propiedadModeloNivel2," =>>> ",Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]))
                         // console.log("datos items =>>> ",datosPropiedad2)
                         // console.log("fin for nivel 2")
-                        if(tipoDeDatoPropiedadModel2==="[object String]"){
+                        if(datosPropiedad2.length===0){
                             datosInput2.tipoInput="text";
                         }
+                        else{
+                            datosInput2.tipoInput="select";
+                        }
+                        // if(tipoDeDatoPropiedadModel2==="[object String]"){
+                        //     datosInput2.tipoInput="text";
+                        // }
                         datosInput.camposHijos.push(datosInput2);
                     }
                 }
@@ -235,7 +241,9 @@ function agregarCamposAlFormulario(campos){
         if(campo.tipoInput==="select"){
             htmlCampos+=campoSelect(campo);
         }
-        // if(campo.tipoInput==="compuesto"){}
+        if(campo.tipoInput==="compuesto"){
+            htmlCampos+=campoCompuesto(campo);
+        }
     }
     return htmlCampos;
 
@@ -251,7 +259,7 @@ function campoTexto(campo){
 }
 
 function campoSelect(campo){
-    console.log("este cambron",campo.label)
+    let input="";
     let option="";
     for(let datosOption of campo.datos){
         datosOption=JSON.parse(datosOption)
@@ -267,15 +275,34 @@ function campoSelect(campo){
             option+="<option value='"+datosOption.label+"' >"+datosOption.name.en+"</option>";
         }
     }
-    let input="<div>\
+
+    if(campo.label!=="color code primary"){
+        input="<div>\
         <label for='"+campo.id+"'>"+campo.label+"</label>\
-        <select id='"+campo.id+"' name='"+campo.name+"' >"+option+"</select>\
-    </div>";
+            <select id='"+campo.id+"' name='"+campo.name+"' >"+option+"</select>\
+        </div>";
+    }
     return input;
 }
 
 function campoCompuesto(campo){
-
+    let input="";
+    let htmlCamposHijos="";
+    for(let campoHijo of campo.camposHijos){
+        if(campoHijo.tipoInput==="text"){
+            htmlCamposHijos+=campoTexto(campoHijo);
+        }
+        if(campoHijo.tipoInput==="select"){
+            htmlCamposHijos+=campoSelect(campoHijo);
+        }
+    }
+    if(campo.label!=="size group" && campo.label!=="size codes"){
+        input="<div>\
+            <label for='"+campo.id+"'>"+campo.label+"</label>\
+                    "+htmlCamposHijos+"\
+            </div>";
+    }
+    return input;
 }
 
 // async function consultarProducto(id_producto){
