@@ -204,15 +204,15 @@ class CategoriaController extends ModuleAdminController{
             }
             $modeloBase["product_model"]["product_model_attributes"][$propiedades_obligatorias_modelo]=$respuesta;
         }
-        foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
-            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
-            if(is_array($respuesta)){
-                foreach($respuesta as $key => $valor){
-                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
-                }
-            }
-            $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]= $respuesta;
-        }
+        // foreach($esquema["model"]["optional_types"] as $propiedades_opcionales_modelo){
+        //     $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_modelo);
+        //     if(is_array($respuesta)){
+        //         foreach($respuesta as $key => $valor){
+        //             $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+        //         }
+        //     }
+        //     $modeloBase["product_model"]["product_model_attributes"][$propiedades_opcionales_modelo]= $respuesta;
+        // }
         // config
         foreach($esquema["config"]["mandatory_types"] as $propiedades_obligatorias_config){
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_config);
@@ -223,15 +223,15 @@ class CategoriaController extends ModuleAdminController{
             }
             $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]=$respuesta;
         }
-        foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
-            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
-            if(is_array($respuesta)){
-                foreach($respuesta as $key => $valor){
-                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
-                }
-            }
-            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
-        }
+        // foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
+        //     $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+        //     if(is_array($respuesta)){
+        //         foreach($respuesta as $key => $valor){
+        //             $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+        //         }
+        //     }
+        //     $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
+        // }
         // simple
         foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
@@ -242,15 +242,15 @@ class CategoriaController extends ModuleAdminController{
             }
             $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_obligatorias_simple]=$respuesta;
         }
-        foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
-            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
-            if(is_array($respuesta)){
-                foreach($respuesta as $key => $valor){
-                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
-                }
-            }
-            $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]=$respuesta;
-        }
+        // foreach($esquema["simple"]["optional_types"] as $propiedades_opcionales_simple){
+        //     $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_simple);
+        //     if(is_array($respuesta)){
+        //         foreach($respuesta as $key => $valor){
+        //             $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+        //         }
+        //     }
+        //     $modeloBase["product_model"]["product_configs"][0]["product_simples"][0]["product_simple_attributes"][$propiedades_opcionales_simple]=$respuesta;
+        // }
         return $modeloBase;
 
     }
@@ -283,19 +283,12 @@ class CategoriaController extends ModuleAdminController{
             if($tipoDeDato!=="StructuredDefinition"){
                 $respuestaDB2=$this->consultarExistenciaPropidad($propiedad);
                 if(count($respuestaDB2)===0){
-                    $datosPropiead=$this->consultarDatosPropiedad($propiedad);
-                    if($datosPropiead["estado"]===200){
-                        $respuestaDBInsert=$this->guardarPropidad($propiedad,$tipoDeDato);
+                    $respuestaDBInsert=$this->guardarPropidad($propiedad,$tipoDeDato);
+                    $datosPropiedad=$this->consultarTipoDeDatoModeloZalandoFull($propiedad);
+                    if($datosPropiedad["estado"]===200){ 
                         $respuestaDB3=$this->consultarExistenciaPropidad($propiedad);
-                        if(count($respuestaDB3)===1 && count($datosPropiead["response"]->items)>0){
-                            $this->guardarDatosPropidad($respuestaDB3[0]["id_propiedad_modelo"],$datosPropiead);
-                        }
-                    }
-                    else{
-                        $respuestaDBInsert=$this->guardarPropidad($propiedad,$tipoDeDato);
-                        $respuestaDB3=$this->consultarExistenciaPropidad($propiedad);
-                        if(count($respuestaDB3)===1 && count($datosPropiead["response"]->items)>0){
-                            $this->guardarDatosPropidad($respuestaDB3[0]["id_propiedad_modelo"],$datosPropiead);
+                        if(count($respuestaDB3)===1 && count($datosPropiedad["response"]->items)>0){
+                            $this->guardarDatosPropidad($respuestaDB3[0]["id_propiedad_modelo"],$datosPropiedad);
                         }
                     }
                 } 
@@ -325,8 +318,8 @@ class CategoriaController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
     
-    public function guardarDatosPropidad($id_propiedad_modelo,$datosPropiead){
-        foreach($datosPropiead["response"]->items as $datos){
+    public function guardarDatosPropidad($id_propiedad_modelo,$datosPropiedad){
+        foreach($datosPropiedad["response"]->items as $datos){
             $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
                 id_propiedad_modelo,
                 json_datos_propiedad
@@ -350,6 +343,22 @@ class CategoriaController extends ModuleAdminController{
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
         $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad;
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        error_log("respuesta al consultar el tipo de dato de la propiedad ".$propiedad." =>>>>  " . var_export($respuesta["response"], true));
+        return $respuesta;
+    }
+    
+    public function consultarTipoDeDatoModeloZalandoFull($propiedad){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/attribute-types/".$propiedad."/attributes";
         $curlController=new CurlController($url);
         $header = array(
             'Authorization: '.'Bearer '. $token
