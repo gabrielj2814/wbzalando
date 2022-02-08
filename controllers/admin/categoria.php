@@ -280,6 +280,9 @@ class CategoriaController extends ModuleAdminController{
             if($tipoDeDato==="IntegerDefinition"){
                 $datos="IntegerDefinition";
             }
+            if($tipoDeDato==="DecimalDefinition"){
+                $datos="DecimalDefinition";
+            }
             if($tipoDeDato!=="StructuredDefinition"){
                 $respuestaDB2=$this->consultarExistenciaPropidad($propiedad);
                 if(count($respuestaDB2)===0){

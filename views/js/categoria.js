@@ -5,6 +5,12 @@ let datosTest=[
         "id_category":"3",
         "outline_name":"Bag",
         "outline":"bag"
+    },
+    {
+        "id_categoria_asociacion":"",
+        "id_category":"2",
+        "outline_name":"other accessoires",
+        "outline":"other_accessoires"
     }
 ]
 // botones
@@ -24,7 +30,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardarasociacion',
-            asociacion:datosTest[0]
+            asociacion:datosTest[1]
         },
         success: (respuesta) => {
             console.log(respuesta);
