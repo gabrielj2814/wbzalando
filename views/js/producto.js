@@ -171,7 +171,7 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                     for(let propiedadModeloNivel2 in nivelModelo[propiedadModelo]){
                         let datosInput2=JSON.parse(JSON.stringify(plantillaDatos));
                         // console.log("inicio for nivel 2")
-                        let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
+                        // let tipoDeDatoPropiedadModel2=Object.prototype.toString.call(nivelModelo[propiedadModelo][propiedadModeloNivel2]);
                         let datosPropiedad2=await consultarDatosPropiedad(propiedadModeloNivel2);
                         datosInput2.id=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
                         datosInput2.name=nombreNivel+"-"+propiedadModelo+"-"+propiedadModeloNivel2;
@@ -186,9 +186,6 @@ async function datosCampoFormulario(nivelModelo,nombreNivel){
                         else{
                             datosInput2.tipoInput="select";
                         }
-                        // if(tipoDeDatoPropiedadModel2==="[object String]"){
-                        //     datosInput2.tipoInput="text";
-                        // }
                         datosInput.camposHijos.push(datosInput2);
                     }
                 }
