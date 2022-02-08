@@ -291,7 +291,9 @@ class WbZalando extends Module{
     {
         if(Tools::getValue("controller")==="Producto"){
             $this->context->controller->addCSS(array(
-                $this->_path.'/views/css/producto.css'
+                $this->_path.'/views/css/producto.css',
+                $this->_path.'/views/css/style_back_office.css',
+                $this->_path.'/views/css/style_front_office.css'
             ));
         }
         $shop = new Shop((int)$this->context->shop->id);
