@@ -271,18 +271,19 @@ class CategoriaController extends ModuleAdminController{
                     $datos[$subPropiedades->label]="StructuredDefinition";
                 }
             }
-            if($tipoDeDato==="StringDefinition"){
-                $datos="StringDefinition";
-            }
-            if($tipoDeDato==="LocalizedStringDefinition"){
-                $datos="LocalizedStringDefinition";
-            }
-            if($tipoDeDato==="IntegerDefinition"){
-                $datos="IntegerDefinition";
-            }
-            if($tipoDeDato==="DecimalDefinition"){
-                $datos="DecimalDefinition";
-            }
+            // if($tipoDeDato==="StringDefinition"){
+            //     $datos="StringDefinition";
+            // }
+            // if($tipoDeDato==="LocalizedStringDefinition"){
+            //     $datos="LocalizedStringDefinition";
+            // }
+            // if($tipoDeDato==="IntegerDefinition"){
+            //     $datos="IntegerDefinition";
+            // }
+            // if($tipoDeDato==="DecimalDefinition"){
+            //     $datos="DecimalDefinition";
+            // }
+            $datos=$tipoDeDato;
             if($tipoDeDato!=="StructuredDefinition"){
                 $respuestaDB2=$this->consultarExistenciaPropidad($propiedad);
                 if(count($respuestaDB2)===0){
