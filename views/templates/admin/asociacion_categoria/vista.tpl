@@ -1,7 +1,6 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <!--
 <h1>hola</h1>
-<button id="botonRegistrar">registrar categoria</button>
 <button id="botonConsultarTodos">consultar todos</button>
 <button id="botonConsultar">consultar</button>
 <button id="botonActualizar">Actualizar</button>
@@ -18,7 +17,7 @@
 </div>
 <form id="formularioCategoria" class="text-primary">
 
-
 </form>
+<button id="botonRegistrar">registrar categoria</button>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/categoria.js"></script>

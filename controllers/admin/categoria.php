@@ -102,22 +102,24 @@ class CategoriaController extends ModuleAdminController{
 
     public function ajaxProcessPostGuardarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $datosEsquema=$this->consultarEsquema($_POST["asociacion"]["outline"]);
-        $modeloProducto=$this->creacionDeModelo($datosEsquema,$_POST["asociacion"]["outline"]);
-        // $jsonFake=["msj" => "hola mundo"];
-        $repuestaDB=$this->registrar($_POST["asociacion"]["id_category"],$_POST["asociacion"]["outline"],$_POST["asociacion"]["outline_name"],$modeloProducto);
-        if( $repuestaDB){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "registro completado",
-                "estado" => 200
-            ];
-            // $respuesta_servidor["respuestaServidor"]=$modeloProducto;
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "error al registrar",
-                "estado" => 500
-            ];
+        foreach($_POST["asociacion"] as $categorias){
+            $datosEsquema=$this->consultarEsquema($categorias["outline"]);
+            $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
+            // $jsonFake=["msj" => "hola mundo"];
+            $repuestaDB=$this->registrar($categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
+            if( $repuestaDB){
+                $respuesta_servidor["respuestaServidor"][]=[
+                    "mensaje" => "registro completado",
+                    "estado" => 200
+                ];
+                // $respuesta_servidor["respuestaServidor"]=$modeloProducto;
+            }
+            else{
+                $respuesta_servidor["respuestaServidor"][]=[
+                    "mensaje" => "error al registrar",
+                    "estado" => 500
+                ];
+            }
         }
         print(json_encode($respuesta_servidor));
 
