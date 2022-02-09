@@ -1,5 +1,4 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
-<button id="botonRegistrar">registrar categoria</button>
 <!--
 <h1>hola</h1>
 <button id="botonConsultarTodos">consultar todos</button>
@@ -11,5 +10,6 @@
 <form id="formularioCategoria">
 
 </form>
+<button id="botonRegistrar">registrar categoria</button>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/categoria.js"></script>
