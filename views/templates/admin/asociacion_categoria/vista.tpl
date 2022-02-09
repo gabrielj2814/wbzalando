@@ -23,4 +23,5 @@
     <button id="botonRegistrar" class="btn btn-primary" >registrar categoria</button>
 </div>
 
+
 <script type="text/javascript" src="/modules/wbzalando/views/js/categoria.js"></script>
