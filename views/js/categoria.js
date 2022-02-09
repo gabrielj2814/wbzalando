@@ -14,11 +14,11 @@ let datosTest=[
     }
 ]
 // botones
-let botonRegistrar=document.getElementById("botonRegistrar");
-let botonConsultarTodos=document.getElementById("botonConsultarTodos");
-let botonConsultar=document.getElementById("botonConsultar");
-let botonActualizar=document.getElementById("botonActualizar");
-let botonEliminar=document.getElementById("botonEliminar");
+// let botonRegistrar=document.getElementById("botonRegistrar");
+// let botonConsultarTodos=document.getElementById("botonConsultarTodos");
+// let botonConsultar=document.getElementById("botonConsultar");
+// let botonActualizar=document.getElementById("botonActualizar");
+// let botonEliminar=document.getElementById("botonEliminar");
 
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -30,7 +30,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardarasociacion',
-            asociacion:datosTest[0]
+            asociacion:datosTest
         },
         success: (respuesta) => {
             console.log(respuesta);
@@ -99,12 +99,36 @@ function consultarEsquemasYCategorias(){
         },
         success: (respuesta) => {
             console.log(respuesta);
-            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            crearElementosFormulario(datos)
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
         }
     });
+}
+
+
+function crearElementosFormulario(datos){
+    let formularioCategoria=document.getElementById("formularioCategoria");
+    let html="";
+    let contador=0;
+    for(let categoriasPrestashop of datos.categorias){
+        let opciones="";
+        for(let categoriaZalando of datos.esquemas){
+            let label=categoriaZalando.split("-")[1];
+            let name=categoriaZalando.split("-")[0];
+            opciones+="<option value='"+categoriaZalando+"'>"+name+"</option>"
+        }
+        let selectCategoriasZalando="\
+            <span>"+categoriasPrestashop.name+"</span>\
+            <input type='hidden' name='array_categoria_prestashop[]' id='categoria_prestashop_"+categoriasPrestashop.id_category+"' value='"+categoriasPrestashop.id_category+"'/>\
+            <select id='asociacion-n-"+contador+"' name='array_categoria_zalando[]'>"+opciones+"</select>\
+        ";
+        html+=selectCategoriasZalando;
+        contador++;
+    }
+    formularioCategoria.innerHTML=html;
 }
 
 function actualizar(){
@@ -158,8 +182,8 @@ function eliminar(){
     });
 }
 consultarEsquemasYCategorias();
-botonRegistrar.addEventListener("click",registrar)
-botonConsultarTodos.addEventListener("click",consultarTodos)
-botonConsultar.addEventListener("click",consultar)
-botonActualizar.addEventListener("click",actualizar)
-botonEliminar.addEventListener("click",eliminar)
+// botonRegistrar.addEventListener("click",registrar)
+// botonConsultarTodos.addEventListener("click",consultarTodos)
+// botonConsultar.addEventListener("click",consultar)
+// botonActualizar.addEventListener("click",actualizar)
+// botonEliminar.addEventListener("click",eliminar)
