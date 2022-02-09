@@ -14,7 +14,7 @@ let datosTest=[
     }
 ]
 // botones
-// let botonRegistrar=document.getElementById("botonRegistrar");
+let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonConsultarTodos=document.getElementById("botonConsultarTodos");
 // let botonConsultar=document.getElementById("botonConsultar");
 // let botonActualizar=document.getElementById("botonActualizar");
@@ -182,7 +182,7 @@ function eliminar(){
     });
 }
 consultarEsquemasYCategorias();
-// botonRegistrar.addEventListener("click",registrar)
+botonRegistrar.addEventListener("click",registrar)
 // botonConsultarTodos.addEventListener("click",consultarTodos)
 // botonConsultar.addEventListener("click",consultar)
 // botonActualizar.addEventListener("click",actualizar)
