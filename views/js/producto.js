@@ -109,14 +109,14 @@ async function consultarCategoriaModelo(selectCategoria){
                 id_categoria_asociacion:selectCategoria.value
             },
             success: async (respuesta) => {
-                let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+                let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 if(datos.estado===200){
                     // formulario.textContent=JSON.stringify(datos.datos[0].modelo)
-                    jsonModeloProductoBase=JSON.parse(datos.datos[0].modelo)
-                    jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase))
-                    let datosCamposFormulario=await generarFormulario(jsonModeloProducto)
-                    console.log("datos campos formulario =>>>> ",datosCamposFormulario)
-                    formulario.innerHTML=agregarCamposAlFormulario(datosCamposFormulario)
+                    jsonModeloProductoBase=JSON.parse(datos.datos[0].modelo);
+                    jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase));
+                    let datosCamposFormulario=await generarFormulario(jsonModeloProducto);
+                    console.log("datos campos formulario =>>>> ",datosCamposFormulario);
+                    formulario.innerHTML=agregarCamposAlFormulario(datosCamposFormulario);
                 }
             },
             error: () => {
@@ -124,7 +124,7 @@ async function consultarCategoriaModelo(selectCategoria){
         });
     }
     else{
-        formulario.innerHTML=""
+        formulario.innerHTML="";
     }
 }
 
@@ -133,9 +133,6 @@ async function generarFormulario(jsonModeloProducto){
     let datosModeloAtributos=await datosCampoFormulario(jsonModeloProducto.product_model.product_model_attributes,"product_model_attributes");
     let datosModeloConfig=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_config_attributes,"product_config_attributes-0");
     let datosModeloConfigSimple=await datosCampoFormulario(jsonModeloProducto.product_model.product_configs[0].product_simples[0].product_simple_attributes,"product_simple_attributes-0");
-    // console.log("datos del Modelo =>>>> ",datosModeloAtributos)
-    // console.log("datos del Config =>>>> ",datosModeloConfig)
-    // console.log("datos del Simple =>>>> ",datosModeloConfigSimple)
     datosCampos=[...datosModeloAtributos,...datosModeloConfig,...datosModeloConfigSimple];
     return datosCampos;
 }
@@ -338,7 +335,7 @@ function consultarProductos(){
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
             console.log("datos producto prestashop =>>> ",datos);
             insertarDatosTablaProducto(datos);
-            // consultarPaisesZalando();
+            consultarPaisesZalando();
         },
         error: () => {
         }
@@ -384,8 +381,12 @@ function consultarPaisesZalando(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 console.log("paises zalando =>>> ",datos)
-                // insertarPaisesSelectFormulario(datos.respuestaServidor.items)
-                // consultarEsquemasDeProductosZalando();
+                let contenedorBanderas=document.getElementById("paisesHaEnviar");
+                contenedorBanderas.innerHTML="";
+                for(let pais of datos.respuestaServidor.items){
+                    let htmlCheckbox="<input type='checkbox' value='"+pais.sales_channel_id+"_"+pais.country_code+"' id='"+pais.sales_channel_id+"'/>";
+                    contenedorBanderas.innerHTML+=htmlCheckbox;
+                }
             }
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
@@ -395,17 +396,6 @@ function consultarPaisesZalando(){
             // alert("error al conectar con el servidor");
         }
     });
-}
-
-function insertarPaisesSelectFormulario(paises){
-    let paisesProducto=document.getElementById("paisesProducto")
-    paisesProducto.innerHTML="";
-    for(let pais of paises){
-        let html="\
-            <option value='"+pais.sales_channel_id+"'>"+pais.country_name+"</option>\
-        ";
-        paisesProducto.innerHTML+=html;
-    }
 }
 
 function enviarProductos(){
@@ -482,9 +472,6 @@ async function consultarCategorias(){
     });
     return categorias;
 }
-
-
-
 
 function coonsultarTallasProPais(){
     const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;

@@ -87,14 +87,6 @@
     </button>
     
     <!--
-    <div class="centrar-columnas">
-        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-bottom: 30px;">
-            <label>Paises</label>
-                <select multiple id="paisesProducto" name="paisesProducto" style="height: 45px;margin-bottom:10px;">
-            </select>
-            <span>precione Ctrl + shift</span>
-        </div>
-    </div>
     <h2 class="centrar-texto">Lista de productos seleccionados</h2>
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
         probar envio
@@ -104,7 +96,9 @@
     </button>
     -->
 
+    <div id="paisesHaEnviar" >
 
+    </div>
     <div id="formulariosProductos" class="formulariosProductos">
 
     
