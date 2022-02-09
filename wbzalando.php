@@ -97,7 +97,7 @@ class WbZalando extends Module{
                 id_attribute INTEGER NOT NULL,
                 codigo_color VARCHAR(20) NOT NULL,
                 codigo_pais VARCHAR(4) NOT NULL,
-                color_zalando VARCHAR(10) NOT NULL,
+                color_zalando VARCHAR(150) NOT NULL,
                 PRIMARY KEY (`id_color_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 
