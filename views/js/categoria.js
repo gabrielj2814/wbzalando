@@ -22,6 +22,34 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
+    let datosFormulario=$("#formularioCategoria").serializeArray()
+    let arrayCatgorias=[]
+    let idsCategoriaPresta=[]
+    let categoriasZalando=[]
+    for(let categoria of datosFormulario){
+        if(categoria.name==="array_categoria_zalando[]"){
+            categoriasZalando.push(categoria.value);
+        }
+        if(categoria.name==="array_categoria_prestashop[]"){
+            idsCategoriaPresta.push(categoria.value);
+        }
+    }
+    let contador=0;
+    while(contador<idsCategoriaPresta.length){
+        let jsonFormato={
+            "id_categoria_asociacion":"",
+            "id_category":"",
+            "outline_name":"",
+            "outline":""
+        }
+        jsonFormato.id_category=idsCategoriaPresta[contador]
+        jsonFormato.outline_name=categoriasZalando[contador].split("-")[0]
+        jsonFormato.outline=categoriasZalando[contador].split("-")[1]
+        arrayCatgorias.push(jsonFormato)
+        contador++
+    }
+    console.log("array final =>>>> ",arrayCatgorias)
+    
     $.ajax({
         type: 'POST',
         cache: false,
@@ -30,7 +58,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardarasociacion',
-            asociacion:datosTest
+            asociacion:arrayCatgorias
         },
         success: (respuesta) => {
             console.log(respuesta);
