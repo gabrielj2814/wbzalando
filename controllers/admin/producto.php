@@ -191,6 +191,42 @@ class ProductoController extends ModuleAdminController{
         $productos=$this->generarUrlProducto($productos);
         print(json_encode(["datos" =>  $productos]));
     }
+
+    public function ajaxProcessConsultarPorCategoriasAsociadas(){
+        $SQL="";
+        $productos=[];
+        $fracmetoConsulta=[];
+        if($_GET["categoriaProducto"]!="null"){
+            $fracmetoConsulta[]="ps_category_product.id_category=".$_GET["categoriaProducto"];
+        }
+        $condicion="";
+        if(count($fracmetoConsulta)===1){
+            $condicion= "(".$fracmetoConsulta[0].") AND ";
+        }
+        if($_GET["categoriaProducto"]!="null"){
+            $SQL="
+            SELECT 
+            ps_product_lang.name,
+            ps_product.id_product,
+            ps_product.ean13
+            FROM ps_category_product,ps_product_lang,ps_product,ps_lang
+            WHERE
+            ".$condicion."
+            ps_product_lang.id_lang=".$this->id_idioma." AND
+            ps_product.id_product=ps_category_product.id_product AND
+            ps_product_lang.id_lang=ps_lang.id_lang AND
+            ps_product_lang.id_product=ps_product.id_product";
+        }
+        if($_GET["categoriaProducto"]!="null"){
+            $productos=Db::getInstance()->executeS($SQL);
+            $productos=$this->generarUrlProducto($productos);
+            print(json_encode(["datos" =>  $productos]));
+        }
+        else{
+            print(json_encode(["datos" =>  $productos]));
+        }
+        
+    }
     
     public function ajaxProcessGetConsultarProductos(){
         $listaDeProductos=$this->consultarProductosPrestashop();

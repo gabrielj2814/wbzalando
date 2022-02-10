@@ -43,13 +43,11 @@ async function mostrarModalSubirProductos(){
 
 function htmlPorducto(producto){
     let html="\
-        <div>Nombre Poducto</div>\
-        <div><select></select></div>\
+        <div>"+producto.name+"</div>\
         <div><input type='text' id='stock'/></div>\
         <div><input type='text' id='precio'/></div>\
         <div><input type='text' id='descuento'/></div>\
-        <div><input type='date' id='fecha-desde'/></div>\
-        <div><input type='date' id='fecha-hasta'/></div>\
+        <div><input type='date' id='fecha-descuento'/></div>\
     ";
     return html;
 }
@@ -167,6 +165,68 @@ function consultarProductos(){
     });
 }
 
+function consultarCategoraisAsociadas(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos categorias asociadas =>>> ",json.datos);
+            insertarCategoriasSelect(json.datos);
+        },
+        error: () => {
+        }
+    });
+}
+
+function insertarCategoriasSelect(categorias){
+    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
+    selectCategoriaAsosiadas.innerHTML=""
+    let option="<option value='null'>Seleccion una categoria</option>";
+    for(let categoria of categorias){
+        option+="<option value='"+categoria.id_category+"'>"+categoria.name+"</option>";
+    }
+    selectCategoriaAsosiadas.innerHTML=option
+
+}
+
+function cargarProductoProcategoria(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'consultarporcategoriasasociadas',
+            categoriaProducto:selectCategoriaAsosiadas.value
+        },
+        success: (respuesta) => {
+            let productos=JSON.parse(JSON.stringify(respuesta.datos));
+            console.log("datos categorias asociadas =>>> ",productos);
+            let formulariosProductos= document.getElementById("formulariosProductos");
+            formulariosProductos.innerHTML="";
+            let htmlproducto="";
+            for(let producto of productos){
+                htmlproducto+=htmlPorducto(producto);
+            }
+            formulariosProductos.innerHTML=htmlproducto
+        },
+        error: () => {
+        }
+    });
+}
+
+
 function insertarDatosTablaProducto(datos){
     let tabla=document.getElementById("tablaProductos");
     tabla.innerHTML="";
@@ -204,6 +264,7 @@ function consultarPaisesZalando(){
             action: 'getconsultarpaiseszalando'
         },
         success: (respuesta) => {
+            consultarCategoraisAsociadas();
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 console.log("paises zalando =>>> ",datos)
@@ -558,4 +619,5 @@ botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
+
 

@@ -97,7 +97,9 @@
         consultar pedidos
     </button>
     -->
+    <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
 
+    
 
     <div id="formulariosProductos" class="formulariosProductos">
 
