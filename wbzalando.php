@@ -195,6 +195,17 @@ class WbZalando extends Module{
         }
 
         $tab->save();
+        
+        $lang = Language::getLanguages(); 
+        $tab = new Tab();
+        $tab->class_name = 'Pedido'; 
+        $tab->module = 'wbzalando';
+        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+        foreach ($lang as $l) {
+            $tab->name[$l['id_lang']] = $this->l('Pedido'); 
+        }
+
+        $tab->save();
 
         $lang = Language::getLanguages(); 
         $tab = new Tab();
@@ -250,6 +261,13 @@ class WbZalando extends Module{
 
         $tab = new Tab($tabId);
         
+        $tabId = (int) Tab::getIdFromClassName('PedidoController'); 
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+
         $tabId = (int) Tab::getIdFromClassName('ColorController'); 
         if (!$tabId) {
             return true;
