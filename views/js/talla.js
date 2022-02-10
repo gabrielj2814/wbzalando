@@ -23,6 +23,33 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
+    let campoCategoriaTallasZalando=document.getElementById("campoCategoriaTallasZalando")
+    let campoPais=document.getElementById("campoPais")
+    let datosFormulario=$("#formularioTalla").serializeArray()
+    let arrayTallas=[]
+    let arrayIdsTallasPrestashop=[]
+    let arrayTallasZalando=[]
+    for(let datosTalla of datosFormulario){
+        if(datosTalla.name==="array_talla_zalando[]"){
+            arrayTallasZalando.push(datosTalla.value)
+        }
+        if(datosTalla.name==="array_id_talla_prestashop[]"){
+            arrayIdsTallasPrestashop.push(datosTalla.value)
+        }
+    }
+    let contador=0;
+    while(contador<arrayIdsTallasPrestashop.length){
+        let json={
+            "id_talla_asociacion":"",
+            "id_attribute":arrayIdsTallasPrestashop[contador],
+            "codigo_size_group":campoCategoriaTallasZalando.value, 
+            "codigo_pais":campoPais.value,
+            "talla_zalando":arrayTallasZalando[contador],
+        }
+        arrayTallas.push(json)
+        contador++
+    }
+    // console.log("datos finales formulario =>>> ",arrayTallas)
     $.ajax({
         type: 'POST',
         cache: false,
@@ -31,7 +58,7 @@ function registrar(){
         data: {
             ajax: true,
             action: 'postguardarasociacion',
-            asociacion:datosTest
+            asociacion:arrayTallas
         },
         success: (respuesta) => {
             console.log(respuesta);
