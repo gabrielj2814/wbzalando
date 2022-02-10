@@ -211,12 +211,9 @@ function consultarAtributosPrestashop(){
             action: 'getconsultaratributosprestashop'
         },
         success: async (respuesta) => {
-            // console.log(respuesta);
-            // paises=respuesta;
             let datos=JSON.parse(JSON.stringify(respuesta))
             let colores=datos["respuestaServidor"]
             cargarAtributosPrestashop(colores);
-            // console.log("colores prestashop filtrados =>>> ",datos)
             let paises=await consultarPaises();
             cargarPaisesZalando(paises);
         },
