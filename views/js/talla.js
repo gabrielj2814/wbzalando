@@ -117,9 +117,6 @@ function consultarConsultarTallaPorAtributoTalla(){
             }
         });
     }
-    else{
-        alert("hola no puede haber null")
-    }
     
 }
 
