@@ -36,11 +36,11 @@ let tallas=[];
 
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
-let botonConsultarTodos=document.getElementById("botonConsultarTodos");
-let botonConsultar=document.getElementById("botonConsultar");
-let botonActualizar=document.getElementById("botonActualizar");
-let botonEliminar=document.getElementById("botonEliminar");
-let botonConsultarTallas=document.getElementById("botonConsultarTallas");
+// let botonConsultarTodos=document.getElementById("botonConsultarTodos");
+// let botonConsultar=document.getElementById("botonConsultar");
+// let botonActualizar=document.getElementById("botonActualizar");
+// let botonEliminar=document.getElementById("botonEliminar");
+// let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -244,9 +244,10 @@ function actualizar(){
     });
 }
 
-function consultarPaises(){
+async function consultarPaises(){
     const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
+    let paises=[];
+    await $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
@@ -257,15 +258,23 @@ function consultarPaises(){
         },
         success: (respuesta) => {
             console.log(respuesta);
-            // paises=respuesta;
             let datos=JSON.parse(JSON.stringify(respuesta))
             paises=datos["respuestaServidor"]["items"]
-            consultarCategoriasTalla();
-            // console.log("productos filtrados =>>> ",datos)
+            // consultarCategoriasTalla();
         },
         error: () => {
         }
     });
+    return paises
+}
+
+function cargarPaisesZalando(paises){
+    let campoPais=document.getElementById("campoPais")
+    let option="<option value='null' >Seleccione</option>";
+    for(let pais of paises){
+        option+="<option value='"+pais.country_code+"' >"+pais.country_name+"</option>";
+    }
+    campoPais.innerHTML=option
 }
 
 function consultarCategoriasTalla(){
@@ -279,12 +288,13 @@ function consultarCategoriasTalla(){
             ajax: true,
             action: 'getconsultarcateogriasquetienentallazalando'
         },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            categoriaTallas=datos.respuestaServidor
-            console.log("categorias de tallas filtrados =>>> ",datos)
-            consultarTodosAtributos();
+        success: async (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            let categoriaTallas=datos.respuestaServidor;
+            let paises=await consultarPaises();
+            cargarPaisesZalando(paises)
+            console.log("categorias de tallas filtrados =>>> ",categoriaTallas);
+            // consultarTodosAtributos();
         },
         error: () => {
         }
@@ -315,12 +325,10 @@ function traerTallas(){
     });
 }
 
-consultarPaises();
-
-// consultarCategoriasTalla();
+consultarCategoriasTalla();
 botonRegistrar.addEventListener("click",registrar)
-botonConsultarTodos.addEventListener("click",consultarTodos)
-botonConsultar.addEventListener("click",consultar)
-botonActualizar.addEventListener("click",actualizar)
-botonEliminar.addEventListener("click",eliminar)
-botonConsultarTallas.addEventListener("click",traerTallas)
+// botonConsultarTodos.addEventListener("click",consultarTodos)
+// botonConsultar.addEventListener("click",consultar)
+// botonActualizar.addEventListener("click",actualizar)
+// botonEliminar.addEventListener("click",eliminar)
+// botonConsultarTallas.addEventListener("click",traerTallas)

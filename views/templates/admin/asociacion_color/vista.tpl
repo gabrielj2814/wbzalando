@@ -39,7 +39,7 @@
 </form>
 
 <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
-    <button id="botonRegistrar" class="btn btn-primary" >registrar categoria</button>
+    <button id="botonRegistrar" class="btn btn-primary" >registrar color</button>
 </div>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/color.js"></script>
