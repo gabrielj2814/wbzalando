@@ -49,7 +49,9 @@
             </button>
         </div>
     </div>
+    <div id="paisesHaEnviar" >
 
+    </div>
     <div class="row justify-content-end" style="margin-bottom: 30px;">
         <div class="col-auto" style="margin-top: 24px;">
             <button class="btn btn-primary" id="obtenerProductos" data-url-ajax="{$linkControlador}">
@@ -96,12 +98,13 @@
     </button>
     -->
 
-    <div id="paisesHaEnviar" >
 
-    </div>
     <div id="formulariosProductos" class="formulariosProductos">
 
     
+    
+    </div>
+    <div id="contenedorFormularioProductosPaises">
     
     </div>
 

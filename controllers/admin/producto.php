@@ -65,7 +65,7 @@ class ProductoController extends ModuleAdminController{
     }
     
     public function consultarProductoPrestashop($idProducto){
-        return Db::getInstance()->executeS("
+        $SQL="
         SELECT 
         ps_product_lang.name,
         ps_product.id_product,
@@ -75,7 +75,9 @@ class ProductoController extends ModuleAdminController{
         ps_product.id_product=".$idProducto." AND
         ps_product_lang.id_lang=".$this->id_idioma." AND
         ps_product_lang.id_lang=ps_lang.id_lang AND
-        ps_product_lang.id_product=ps_product.id_product");
+        ps_product_lang.id_product=ps_product.id_product
+        ";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function consultarCategoriasPrestashop(){
@@ -116,6 +118,24 @@ class ProductoController extends ModuleAdminController{
             }
         }
         return $lista;
+    }
+
+    public function ajaxProcessGetConsultarProducto(){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $respuesta=$this->consultarProductoPrestashop($_GET["id_producto"]);
+        if(count($respuesta)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "datos" => $respuesta,
+                "mensaje" => "consulta completada"
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "datos" =>[],
+                "mensaje" => "error al consultar"
+            ];
+        }
+        print(json_encode($respuesta_servidor));
     }
 
     public function ajaxProcessGetConsultarProductoConFiltros(){

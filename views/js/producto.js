@@ -17,17 +17,68 @@ async function mostrarModalSubirProductos(){
     formularioSubirProducto.classList.toggle("mostrarVista");
     vistaInicial.classList.toggle("ocultar");
     // ---------
-    let formulariosProductos= document.getElementById("formulariosProductos");
+    // let formulariosProductos= document.getElementById("formulariosProductos");
     let idsProducto=document.querySelectorAll(".producto_centrar_checkbox_tabla_celda:checked");
+    let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
     productosSeleccionados=[];
     for(let idProducto of idsProducto){
-        productosSeleccionados.push(idProducto.value);
+        // productosSeleccionados.push(idProducto.value);
+        let producto=await consultarProducto(idProducto.value)
+        productosSeleccionados.push(producto);
     }
-    let htmlGenericoProductoFormulario=htmlGenericoProductosFormulario(productosSeleccionados);
-    let categorias=await consultarCategorias();
-    formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
-    insertarCategoriasSelect(categorias);
+    console.log("lista de productos =>>> ",productosSeleccionados)
+    console.log("checkboxs Paises =>>> ",checkboxsPaises)
+    for(let paises of checkboxsPaises){
+        let formulario=document.getElementById("form-"+paises.value)
+        formulario.innerHTML="";
+        for(let producto of productosSeleccionados){
+            formulario.innerHTML+=htmlPorducto(producto)
+        }
+    }
+    // let htmlGenericoProductoFormulario=htmlGenericoProductosFormulario(productosSeleccionados);
+    // let categorias=await consultarCategorias();
+    // formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
+    // insertarCategoriasSelect(categorias);
 }
+
+function htmlPorducto(producto){
+    let html="\
+        <div>Nombre Poducto</div>\
+        <div><select></select></div>\
+        <div><input type='text' id='stock'/></div>\
+        <div><input type='text' id='precio'/></div>\
+        <div><input type='text' id='descuento'/></div>\
+        <div><input type='date' id='fecha-desde'/></div>\
+        <div><input type='date' id='fecha-hasta'/></div>\
+    ";
+    return html;
+}
+
+async function consultarProducto(idProducto){
+    const linkControlador=document.getElementById("linkControlador").value;
+    let datosProducto=[];
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarproducto',
+            id_producto:idProducto
+        },
+        success: (respuesta) => {
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("producto consultado =>>> ",json);
+            datosProducto=json.datos[0]
+        },
+        error: () => {
+        }
+    });
+
+    return datosProducto;
+}
+
 
 function htmlGenericoProductosFormulario(productosSeleccionados){
     let html="";
@@ -86,6 +137,203 @@ function filtrarProductos(e){
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
             console.log("productos filtrados =>>> ",datos);
             insertarDatosTablaProducto(datos);
+        },
+        error: () => {
+        }
+    });
+}
+
+
+
+function consultarProductos(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarproductos'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta.datos));
+            console.log("datos producto prestashop =>>> ",datos);
+            insertarDatosTablaProducto(datos);
+            consultarPaisesZalando();
+        },
+        error: () => {
+        }
+    });
+}
+
+function insertarDatosTablaProducto(datos){
+    let tabla=document.getElementById("tablaProductos");
+    tabla.innerHTML="";
+    let filasTablas=""
+    listaProductos={};
+    for(let producto of datos){
+        listaProductos[producto.id_product]=producto;
+        let html="\
+            <tr >\
+                <td class='producto_tabla_td_pdd_tb'><input type='checkbox' class='form-check-input producto_centrar_checkbox_tabla_celda' name='array_productos[]' value='"+producto.id_product+"'/></td>\
+                <td class='producto_tabla_td_pdd_tb'>"+producto.id_product+"</td>\
+                <td class='producto_tabla_td_pdd_tb'><img style='width: 45px;height: 45px;display: inline-block;margin-right: 15px;' src='"+producto.urlImagen+"'/>"+producto.name+"</td>\
+                <td class='producto_tabla_td_pdd_tb'>"+producto.ean13+"</td>\
+            </tr>";
+        filasTablas+=html;
+    }
+    if(datos.length===0){
+        filasTablas="\
+            <tr >\
+                <td colspan='4' class='producto_tabla_td_pdd_tb'><center>Sin resultados</center></td>\
+            </tr>";
+    }
+    tabla.innerHTML=filasTablas;
+}
+
+function consultarPaisesZalando(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpaiseszalando'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            if(datos.respuestaServidor.items){
+                console.log("paises zalando =>>> ",datos)
+                crearCheckboxPaisTest(datos.respuestaServidor.items);
+            }
+            if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
+                console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
+            }
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+}
+
+function crearCheckboxPaisTest(paises){
+    let contenedorBanderas=document.getElementById("paisesHaEnviar");
+    contenedorBanderas.innerHTML="";
+    for(let pais of paises){
+        let htmlCheckbox="\
+            <label>\
+                <input type='checkbox'  class='checkbox-paises' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='crearFormularioEnvioDeProducto(this)'/>\
+                "+pais.country_name+"\
+            </label>\
+        ";
+        contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+}
+
+function crearFormularioEnvioDeProducto(checkbox){
+    let contenedorFormularioProductosPaises=document.getElementById("contenedorFormularioProductosPaises")
+    if(checkbox.checked){
+        let formulario="<form id='form-"+checkbox.id+"' data-nombre-pais='"+checkbox.getAttribute("data-nombre-pais")+"'></form>";
+        contenedorFormularioProductosPaises.innerHTML+=formulario;
+    }
+    else{
+        let formularioProductosPaises=document.getElementById("form-"+checkbox.id)
+        contenedorFormularioProductosPaises.removeChild(formularioProductosPaises)
+    }
+}
+
+function enviarProductos(){
+    // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
+    // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
+    const linkControlador=document.getElementById("linkControlador").value;
+    let productos=[]
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'postenviarproductos',
+            productos
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            console.log("datos envio =>>>>>>",datos);
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+}
+
+function coonsultarPedidos(e){
+    e.preventDefault();
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpedidoszalando'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            // console.log("pedidos consultados =>>> ",datos)
+        },
+        error: () => {
+        }
+    });
+}
+
+async function consultarCategorias(){
+    // console.clear()
+    let categorias=[];
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            categorias=json.datos;
+            // let categoria=json.datos[0]
+            // let jsonModeloProductoBase=JSON.parse(categoria.modelo);
+            // let jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase));
+            // generarFormulario(jsonModeloProducto)
+            // console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
+        },
+        error: () => {
+        }
+    });
+    return categorias;
+}
+
+function coonsultarTallasProPais(){
+    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorTalla, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodotallasporpais',
+            pais:"fr"
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
         },
         error: () => {
         }
@@ -297,200 +545,6 @@ function campoCompuesto(campo){
             </div>";
     }
     return input;
-}
-
-// async function consultarProducto(id_producto){
-//     const linkControlador=document.getElementById("linkControlador").value;
-//     await $.ajax({
-//         type: 'GET',
-//         cache: false,
-//         dataType: 'json',
-//         url: linkControlador, 
-//         data: {
-//             ajax: true,
-//             action: 'getconsultarproductos',
-//             id_producto
-//         },
-//         success: (respuesta) => {
-//             let datos=JSON.parse(JSON.stringify(respuesta.datos))
-//             console.log("producto prestashop =>>> ",datos)
-//         },
-//         error: () => {
-//         }
-//     });
-// }
-
-function consultarProductos(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproductos'
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta.datos));
-            console.log("datos producto prestashop =>>> ",datos);
-            insertarDatosTablaProducto(datos);
-            consultarPaisesZalando();
-        },
-        error: () => {
-        }
-    });
-}
-function insertarDatosTablaProducto(datos){
-    let tabla=document.getElementById("tablaProductos");
-    tabla.innerHTML="";
-    let filasTablas=""
-    listaProductos={};
-    for(let producto of datos){
-        listaProductos[producto.id_product]=producto;
-        let html="\
-            <tr >\
-                <td class='producto_tabla_td_pdd_tb'><input type='checkbox' class='form-check-input producto_centrar_checkbox_tabla_celda' name='array_productos[]' value='"+producto.id_product+"'/></td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.id_product+"</td>\
-                <td class='producto_tabla_td_pdd_tb'><img style='width: 45px;height: 45px;display: inline-block;margin-right: 15px;' src='"+producto.urlImagen+"'/>"+producto.name+"</td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.ean13+"</td>\
-            </tr>";
-        filasTablas+=html;
-    }
-    if(datos.length===0){
-        filasTablas="\
-            <tr >\
-                <td colspan='4' class='producto_tabla_td_pdd_tb'><center>Sin resultados</center></td>\
-            </tr>";
-    }
-    tabla.innerHTML=filasTablas;
-}
-
-function consultarPaisesZalando(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarpaiseszalando'
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            if(datos.respuestaServidor.items){
-                console.log("paises zalando =>>> ",datos)
-                let contenedorBanderas=document.getElementById("paisesHaEnviar");
-                contenedorBanderas.innerHTML="";
-                for(let pais of datos.respuestaServidor.items){
-                    let htmlCheckbox="<input type='checkbox' value='"+pais.sales_channel_id+"_"+pais.country_code+"' id='"+pais.sales_channel_id+"'/>";
-                    contenedorBanderas.innerHTML+=htmlCheckbox;
-                }
-            }
-            if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
-                console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
-            }
-        },
-        error: () => {
-            // alert("error al conectar con el servidor");
-        }
-    });
-}
-
-function enviarProductos(){
-    // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
-    // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
-    const linkControlador=document.getElementById("linkControlador").value;
-    let productos=[]
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'postenviarproductos',
-            productos
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            console.log("datos envio =>>>>>>",datos);
-        },
-        error: () => {
-            // alert("error al conectar con el servidor");
-        }
-    });
-}
-
-function coonsultarPedidos(e){
-    e.preventDefault();
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarpedidoszalando'
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            // console.log("pedidos consultados =>>> ",datos)
-        },
-        error: () => {
-        }
-    });
-}
-
-async function consultarCategorias(){
-    // console.clear()
-    let categorias=[];
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodo'
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            categorias=json.datos;
-            // let categoria=json.datos[0]
-            // let jsonModeloProductoBase=JSON.parse(categoria.modelo);
-            // let jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase));
-            // generarFormulario(jsonModeloProducto)
-            // console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
-        },
-        error: () => {
-        }
-    });
-    return categorias;
-}
-
-function coonsultarTallasProPais(){
-    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorTalla, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodotallasporpais',
-            pais:"fr"
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-        },
-        error: () => {
-        }
-    });
 }
 
 // asignadoles eventos a los elementos html
