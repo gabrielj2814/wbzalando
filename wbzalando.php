@@ -367,14 +367,35 @@ class WbZalando extends Module{
                         'name' => 'clienteSecretZolando',
                         'required'  => true
                     ],
+                    // [
+                    //     "type" => "text",
+                    //     "label" => $this->l("Ruta de acceso"),
+                    //     "desc" => $this->l("Ruta de acceso ha Zalando"),
+                    //     'hint' => $this->l(''),
+                    //     'name' => 'rutaZolando',
+                    //     'required'  => true
+                    //     // 'lang' => trues
+                    // ],
                     [
-                        "type" => "text",
-                        "label" => $this->l("Ruta de acceso"),
-                        "desc" => $this->l("Ruta de acceso ha Zalando"),
-                        'hint' => $this->l(''),
-                        'name' => 'rutaZolando',
-                        'required'  => true
-                        // 'lang' => trues
+                        'type'      => 'radio',                               
+                        'label'     => $this->l('Ruta de acceso'),        
+                        'desc'      => $this->l('Ruta de acceso ha Zalando'),  
+                        'name'      => 'rutaZolando',                             
+                        'required'  => true,                                  
+                        'class'     => 't',                                   
+                        'is_bool'   => true,                                  
+                        'values'    => [
+                            [
+                                'id'    => 'active_on',                           
+                                'value' => "https://api-sandbox.merchants.zalando.com",                                        
+                                'label' => $this->l('Modo Sandbox')  
+                            ],
+                            [
+                                'id'    => 'active_off',
+                                'value' => "https://api.merchants.zalando.com",
+                                'label' => $this->l('Modo de Producción')
+                            ]
+                        ],
                     ],
                     // script
                     [
