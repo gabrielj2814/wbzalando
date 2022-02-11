@@ -43,14 +43,14 @@ async function mostrarModalSubirProductos(){
 
 function htmlPorducto(producto){
     let html="\
-    <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 alignitem-tb p-10'>\
+    <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 alignitem-tb p-10 global-input'>\
     <div class='col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5 text-left'><div><h4 class='text-primary'>"+producto.name+"</h4></div></div>\
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='stock'/></div></div>\
     <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='text' id='precio'/></div></div>\
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input type='date' id='fecha-descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><select >opciones</select></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='attributes-color-container m-auto' type='checkbox' id='check1'></div></div></div>\
+    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='date' id='fecha-descuento'/></div></div>\
+    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><select class='h35'>opciones</select></div></div>\
+    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='w20 m-auto' type='checkbox' id='check1'></div></div></div>\
     ";
     return html;
 }
@@ -624,3 +624,23 @@ botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto)
 consultarProductos();
 
 
+(function(){
+    $('.carousel-showmanymoveone .item').each(function(){
+      var itemToClone = $(this);
+  
+      for (var i=1;i<4;i++) {
+        itemToClone = itemToClone.next();
+  
+        // wrap around if at end of item collection
+        if (!itemToClone.length) {
+          itemToClone = $(this).siblings(':first');
+        }
+  
+        // grab item, clone, add marker class, add to collection
+        itemToClone.children(':first-child').clone()
+          .addClass("cloneditem-"+(i))
+          .appendTo($(this));
+      }
+    });
+  }());
+  

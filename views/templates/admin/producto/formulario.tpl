@@ -98,30 +98,75 @@
     </button>
     -->
 
+
+<div class="container ">   
+<!--  <a href="https://github.com/rtpHarry/Bootstrap3-ShowManySlideOneCarousel">this code sample</a>   -->
+<div class="row jt-center">
+   <div class="col-md-6">
+      <div class="carousel carousel-showmanymoveone slide" id="carousel-tilenav" data-interval="false">
+         <div class="carousel-inner">
+            <div class="item active">
+               <div class="col-xs-12 col-sm-6 col-md-3">
+                  <a href="#">
+                    <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+                  </a>
+               </div>
+            </div>
+            <div class="item">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                  <a href="#">
+                    <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+                  </a>
+               </div>
+            </div>
+            <div class="item">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                  <a href="#">
+                    <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+                  </a>
+               </div>
+            </div>
+            <div class="item">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                  <a href="#">
+                    <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+                  </a>
+               </div>
+            </div>
+         </div>
+         <a class="left carousel-control" href="#carousel-tilenav" data-slide="prev"><i> < </i></a>
+         <a class="right carousel-control" href="#carousel-tilenav" data-slide="next"><i> > </i></a>
+      </div>
+   </div>
+</div>
+
+   
+</div>
+
     <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
     </div>
     
     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-header p-20"> 
-        <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5 txt-title">
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 txt-title">
             <label>Productos a enviar</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
             <label>stock</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
             <label>Precio</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
             <label>Descuento</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
             <label>Fecha Descuento</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
             <label>Tallas</label>
         </div>
-        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
             <label>Marcar para no enviar</label>
         </div>
     </div>
