@@ -97,6 +97,7 @@
         consultar pedidos
     </button>
     -->
+    <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
 
     <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
@@ -129,6 +130,9 @@
 
     <div id="formulariosProductos" class="formulariosProductos">
 
+    </div>
+    <div id="contenedorFormularioProductosPaises">
+    
     </div>
     <div id="contenedorFormularioProductosPaises">
     
