@@ -76,7 +76,7 @@
         <tbody id="tablaProductos">
 
 
-        </tbody>
+        </tbody> 
     </table>
 
 </div>
@@ -99,17 +99,49 @@
     -->
     <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
 
+    <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
+        <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
+    </div>
+    
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-header p-20"> 
+        <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5 txt-title">
+            <label>Productos a enviar</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+            <label>stock</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center txt-title">
+            <label>Precio</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+            <label>Descuento</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+            <label>Fecha Descuento</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center txt-title">
+            <label>Tallas</label>
+        </div>
+        <div class="col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center txt-title">
+            <label>Marcar para no enviar</label>
+        </div>
+    </div>
     
 
     <div id="formulariosProductos" class="formulariosProductos">
 
-    
+    </div>
+    <div id="contenedorFormularioProductosPaises">
     
     </div>
     <div id="contenedorFormularioProductosPaises">
     
     </div>
 
+</div>
+
+<div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
+    <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
 </div>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>

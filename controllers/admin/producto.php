@@ -13,7 +13,7 @@ class ProductoController extends ModuleAdminController{
         parent::__construct();
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
-        $this->nombreTabla="ps_wbzalando_esquemas";
+        $this->nombreTabla="ps_wbzalando_esquemas"; 
     }
 
     public function init()

@@ -11,30 +11,31 @@
 -->
 
 <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 btn-lg'> 
-    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-3'>
         <label>Atributo</label>
     </div>
-    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'>
         <label>Categorias Tallas Zalando</label>
     </div>
-    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-3'>
         <label>Pais</label>
     </div>
 </div>
 
 <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'>
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
         <select id='campoAtributoTalla' name='campoAtributoTalla' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
     </div>
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'>
         <select id='campoCategoriaTallasZalando' name='campoCategoriaTallasZalando' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
     </div>
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
+    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
         <select id='campoPais' name='campoPais' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
     </div>
 </div>
 
-<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 btn-lg'> 
+
+<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 btn-lg modal-header'> 
     <div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'>
         <label>Talla</label>
     </div>

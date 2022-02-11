@@ -7,7 +7,7 @@
 <button id="botonEliminar">Eliminar</button>
 -->
 
-<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 btn-lg'> 
+<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 btn-lg modal-header'> 
     <div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'>
         <label>Categorias</label>
     </div>
