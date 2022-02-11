@@ -736,6 +736,27 @@ class ProductoController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
+    function ajaxProcessGetEliminarProducto($id){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->eliminar($_GET["id"]);
+        if($respuestaDB){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "eliminacion cumpletada"
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al eliminar"
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+
+    function eliminar($id){
+        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+        return Db::getInstance()->execute($SQL);
+    }
+
 }
 
 ?>

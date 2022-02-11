@@ -748,8 +748,7 @@ function campoCompuesto(campo){
     return input;
 }
 
-async function consultarProductosWBZalando(propiedad){
-    let datosPropiedad=null;
+async function consultarProductosWBZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     await $.ajax({
         type: 'GET',
@@ -759,7 +758,6 @@ async function consultarProductosWBZalando(propiedad){
         data: {
             ajax: true,
             action: 'getconsultarproductoswbzalando',
-            propiedad
         },
         success: (respuesta) => {
             // console.log(respuesta);
@@ -769,7 +767,28 @@ async function consultarProductosWBZalando(propiedad){
         error: () => {
         }
     });
-    return datosPropiedad;
+}
+
+async function eliminarProducto(id){
+    const linkControlador=document.getElementById("linkControlador").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'geteliminarproducto',
+            id
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("producto Eliminado =>>>>> ",respuestaJson)
+        },
+        error: () => {
+        }
+    });
 }
 
 // asignadoles eventos a los elementos html
