@@ -135,8 +135,8 @@ function consultarEsquemasYCategorias(){
         }
     });
 }
-
-
+ 
+ 
 function crearElementosFormulario(datos){
     let formularioCategoria=document.getElementById("formularioCategoria");
     let html="";

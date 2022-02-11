@@ -227,7 +227,6 @@ class TallaController extends ModuleAdminController{
         $Categorias=(Object)$respuesta["response"];
         // error_log("respuesta al consultar los paises a zalando =>>>>  " . var_export($respuesta["response"], true));
         $tallas=[];
-        $tallas[$_GET["codigo_pais"]]=[];
         foreach($Categorias->items as $item){
             if($_GET["codigo_size_group"]===$item->label){
                 $sizes=$item->_meta->sizes;
@@ -235,13 +234,15 @@ class TallaController extends ModuleAdminController{
                     $conversions=$size->conversions;
                     foreach($conversions as $conversion){
                         if($_GET["codigo_pais"]===$conversion->cluster){
-                            $tallas[$_GET["codigo_pais"]][$conversion->raw]=$conversion->raw;
+                            $tallas[]=$conversion->raw;
                         }
                     }
                 }
             }
         }
-        $respuesta_servidor["respuestaServidor"]=  $tallas;
+        $respuesta_servidor["respuestaServidor"]=  [
+            "datos" => $tallas
+        ];
         $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
         print(json_encode($respuesta_servidor));
     }

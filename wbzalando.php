@@ -97,7 +97,7 @@ class WbZalando extends Module{
                 id_attribute INTEGER NOT NULL,
                 codigo_color VARCHAR(20) NOT NULL,
                 codigo_pais VARCHAR(4) NOT NULL,
-                color_zalando VARCHAR(10) NOT NULL,
+                color_zalando VARCHAR(150) NOT NULL,
                 PRIMARY KEY (`id_color_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 
@@ -195,6 +195,17 @@ class WbZalando extends Module{
         }
 
         $tab->save();
+        
+        $lang = Language::getLanguages(); 
+        $tab = new Tab();
+        $tab->class_name = 'Pedido'; 
+        $tab->module = 'wbzalando';
+        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+        foreach ($lang as $l) {
+            $tab->name[$l['id_lang']] = $this->l('Pedido'); 
+        }
+
+        $tab->save();
 
         $lang = Language::getLanguages(); 
         $tab = new Tab();
@@ -250,6 +261,13 @@ class WbZalando extends Module{
 
         $tab = new Tab($tabId);
         
+        $tabId = (int) Tab::getIdFromClassName('PedidoController'); 
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+
         $tabId = (int) Tab::getIdFromClassName('ColorController'); 
         if (!$tabId) {
             return true;
@@ -289,13 +307,18 @@ class WbZalando extends Module{
 
     public function hookDisplayBackOfficeHeader()
     {
-        if(Tools::getValue("controller")==="Producto"){
-            $this->context->controller->addCSS(array(
-                $this->_path.'/views/css/producto.css',
-                $this->_path.'/views/css/style_back_office.css',
-                $this->_path.'/views/css/style_front_office.css'
-            ));
-        }
+        // if(Tools::getValue("controller")==="Producto"){
+        //     $this->context->controller->addCSS(array(
+        //         $this->_path.'/views/css/producto.css',
+        //         $this->_path.'/views/css/style_back_office.css',
+        //         $this->_path.'/views/css/style_front_office.css'
+        //     ));
+        // }
+        $this->context->controller->addCSS(array(
+            $this->_path.'/views/css/producto.css',
+            $this->_path.'/views/css/style_back_office.css',
+            $this->_path.'/views/css/style_front_office.css'
+        ));
         $shop = new Shop((int)$this->context->shop->id);
         $base_url = $shop->getBaseURL();
         $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');
@@ -367,14 +390,35 @@ class WbZalando extends Module{
                         'name' => 'clienteSecretZolando',
                         'required'  => true
                     ],
+                    // [
+                    //     "type" => "text",
+                    //     "label" => $this->l("Ruta de acceso"),
+                    //     "desc" => $this->l("Ruta de acceso ha Zalando"),
+                    //     'hint' => $this->l(''),
+                    //     'name' => 'rutaZolando',
+                    //     'required'  => true
+                    //     // 'lang' => trues
+                    // ],
                     [
-                        "type" => "text",
-                        "label" => $this->l("Ruta de acceso"),
-                        "desc" => $this->l("Ruta de acceso ha Zalando"),
-                        'hint' => $this->l(''),
-                        'name' => 'rutaZolando',
-                        'required'  => true
-                        // 'lang' => trues
+                        'type'      => 'radio',                               
+                        'label'     => $this->l('Ruta de acceso'),        
+                        'desc'      => $this->l('Ruta de acceso ha Zalando'),  
+                        'name'      => 'rutaZolando',                             
+                        'required'  => true,                                  
+                        'class'     => 't',                                   
+                        'is_bool'   => true,                                  
+                        'values'    => [
+                            [
+                                'id'    => 'active_on',                           
+                                'value' => "https://api-sandbox.merchants.zalando.com",                                        
+                                'label' => $this->l('Modo Sandbox')  
+                            ],
+                            [
+                                'id'    => 'active_off',
+                                'value' => "https://api.merchants.zalando.com",
+                                'label' => $this->l('Modo de Producción')
+                            ]
+                        ],
                     ],
                     // script
                     [
@@ -435,7 +479,7 @@ class WbZalando extends Module{
             }
             return $salida;
         }
-            
+             
     }
 
     public function autenticarSesionZalando(){
