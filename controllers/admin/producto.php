@@ -276,23 +276,22 @@ class ProductoController extends ModuleAdminController{
         ];
         foreach($productos as $producto ){
             // enviar productos a zalando
-            $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
-            $curlController->setDatosPeticion($producto);
-            $curlController->setdatosCabezera($header);
-            $respuesta=$curlController->ejecutarPeticion("post",true);
-            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            // $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            // $curlController->setDatosPeticion($producto);
+            // $curlController->setdatosCabezera($header);
+            // $respuesta=$curlController->ejecutarPeticion("post",true);
+            // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
             $producto=$this->destructurarModeloDeProductoZalando($producto);
-            // subir stocks de producto
-            $stocksSubidos=$this->subirStock($producto["stocks"]);
-            // subir precios de producto
-            $preciosSubidos=$this->subirPrecio($producto["precios"]);
-            // captura de respuestas de la api de zalandos 
-            $estadoDeProductos["productos_enviados"][]=[
-                "respuestaServidor" => $respuesta,
-                "estatuRespuestaApi" => $respuesta["estado"],
-                // "stocksSubidos" => $stocksSubidos,
-                // "preciosSubidos" => $preciosSubidos
-            ];
+            // // subir stocks de producto
+            // $stocksSubidos=$this->subirStock($producto["stocks"]);
+            // // subir precios de producto
+            // $preciosSubidos=$this->subirPrecio($producto["precios"]);
+            // // captura de respuestas de la api de zalandos 
+            // $estadoDeProductos["productos_enviados"][]=[
+            //     "respuestaServidor" => $respuesta,
+            //     "estatuRespuestaApi" => $respuesta["estado"]
+            // ];
+
             // verificando existencia de producto en la base de datos
             $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["merchant_product_model_id"]);
             if(count($respuestaExistenciaProducto)===1){
@@ -431,7 +430,6 @@ class ProductoController extends ModuleAdminController{
     public function consultarModeloProductoDB($idModeloProducto){
         $SQL="SELECT * FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto='".$idModeloProducto."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-
     }
     
     public function guardarConfigProducto($producto){
@@ -691,7 +689,53 @@ class ProductoController extends ModuleAdminController{
         $curlController->setdatosCabezera($header);
         return $curlController->ejecutarPeticion("get",false);
     }
+
+    function ajaxProcessGetConsultarProductosWBZalando(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarProductosWBZalando();
+        if(count($respuestaDB)>0){
+            for($contador=0;$contador<count($respuestaDB);$contador++){
+                $jsonSimple=json_decode($respuestaDB[$contador]["json_simple_producto"]);
+                $respuestaDB[$contador]["precio"]=$this->consultarPrecio($jsonSimple->product_simple_attributes->ean)[0];
+                $respuestaDB[$contador]["stock"]=$this->consultarStock($jsonSimple->product_simple_attributes->ean)[0];
+            }
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar",
+                "datos" => []
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+
+    }
+
+    function consultarProductosWBZalando(){
+        $SQL="SELECT * FROM 
+        ps_wbzalando_modelo_producto,
+        ps_wbzalando_configuracion_producto,
+        ps_wbzalando_simple_producto 
+        WHERE 
+        ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
+        ps_wbzalando_modelo_producto.id_modelo_producto=ps_wbzalando_configuracion_producto.id_modelo_producto
+        ";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    function consultarPrecio($ean){
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
     
+    function consultarStock($ean){
+        $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
 }
 
 ?>
