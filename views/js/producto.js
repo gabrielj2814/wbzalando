@@ -366,9 +366,18 @@ function enviarProductos(){
                     {
                         merchant_product_simple_id: "WTC742-XL",
                         product_simple_attributes: {
-                            ean: "1523698745632",
+                            ean: "1523698745631",
                             size_codes: {
-                                size: "XL"
+                                size: "S"
+                        }
+                      }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC743-XL",
+                        product_simple_attributes: {
+                            ean: "1523698745631",
+                            size_codes: {
+                                size: "L"
                         }
                       }
                     }
@@ -404,46 +413,19 @@ function enviarProductos(){
                             }
                         ],
                         "ignore_warnings": true
-                    },
-                    {
-                        "ean": "1523698745632",
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "regular_price": {
-                            "amount": 89.95,
-                            "currency": "EUR"
-                        },
-                        "promotional_price": {
-                            "amount": 80.95,
-                            "currency": "EUR"
-                        },
-                        "scheduled_prices": [
-                            {
-                                "regular_price": {
-                                    "amount": 89.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
-                                    "amount": 80.95,
-                                    "currency": "EUR"
-                                },
-                                "start_time": "2022-01-25T00:00:00.00Z",
-                                "end_time": "2022-01-28T00:00:00.00Z"
-                            }
-                        ],
-                        "ignore_warnings": true
                     }
                   ]
             },
             stock:{
                 items: [
                     {
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
                         "ean": "1523698745631",
-                        "quantity": 25
+                        "quantity": 50
                     },
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "ean": "1523698745632",
+                        "ean": "1523698745631",
                         "quantity": 25
                     }
                   ]

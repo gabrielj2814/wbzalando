@@ -299,14 +299,14 @@ class ProductoController extends ModuleAdminController{
                 // lo que haces es que actualiza los precios del producto
                 // o en caso de que sean precios o stocks nuevos los agrega a la base de datos 
                 $datosNuevos=["stocks" =>[], "precios" =>[]];
-                foreach($producto["stocks"] as $stockProducto){
-                    if(count($this->consultarStockProducto($stockProducto["ean"]))){
-                        $this->actualizarStockProducto($stockProducto);
-                    }
-                    else{
-                        $datosNuevos["stocks"][]=$stockProducto;
-                    }
-                }
+                // foreach($producto["stocks"] as $stockProducto){
+                //     if(count($this->consultarStockProducto($stockProducto["ean"]))){
+                //         $this->actualizarStockProducto($stockProducto);
+                //     }
+                //     else{
+                //         $datosNuevos["stocks"][]=$stockProducto;
+                //     }
+                // }
                 foreach($producto["precios"] as $precioProducto){
                     if(count($this->consultarPrecioProducto($precioProducto["ean"]))){
                         $this->actualizarPrecioProducto($precioProducto);
@@ -692,12 +692,18 @@ class ProductoController extends ModuleAdminController{
 
     function ajaxProcessGetConsultarProductosWBZalando(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->consultarProductosWBZalando();
+        $respuestaDB=$this->consultarModeloProducto();
         if(count($respuestaDB)>0){
             for($contador=0;$contador<count($respuestaDB);$contador++){
-                $jsonSimple=json_decode($respuestaDB[$contador]["json_simple_producto"]);
-                $respuestaDB[$contador]["precio"]=$this->consultarPrecio($jsonSimple->product_simple_attributes->ean)[0];
-                $respuestaDB[$contador]["stock"]=$this->consultarStock($jsonSimple->product_simple_attributes->ean)[0];
+                $respuestaDB[$contador]["config"]=$this->consultarConfigProducto($respuestaDB[$contador]["id_modelo_producto"]);
+                for($contador2=0;$contador2<count($respuestaDB[$contador]["config"]);$contador2++){
+                    $respuestaDB[$contador]["config"][$contador2]["simple"]=$this->consultarSimpleProducto($respuestaDB[$contador]["config"][$contador2]["id_configuracion_producto"]);
+                    for($contador3=0;$contador3<count($respuestaDB[$contador]["config"]);$contador3++){
+                        $json=json_decode($respuestaDB[$contador]["config"][$contador2]["simple"][$contador3]["json_simple_producto"]);
+                        $respuestaDB[$contador]["config"][$contador2]["stock"]=$this->consultarStock($json->product_simple_attributes->ean);
+                        $respuestaDB[$contador]["config"][$contador2]["precio"]=$this->consultarPrecio($json->product_simple_attributes->ean);
+                    }
+                }
             }
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
@@ -714,15 +720,26 @@ class ProductoController extends ModuleAdminController{
 
     }
 
-    function consultarProductosWBZalando(){
-        $SQL="SELECT * FROM 
-        ps_wbzalando_modelo_producto,
-        ps_wbzalando_configuracion_producto,
-        ps_wbzalando_simple_producto 
-        WHERE 
-        ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
-        ps_wbzalando_modelo_producto.id_modelo_producto=ps_wbzalando_configuracion_producto.id_modelo_producto
-        ";
+    function consultarModeloProducto(){
+        // $SQL="SELECT * FROM 
+        // ps_wbzalando_modelo_producto,
+        // ps_wbzalando_configuracion_producto,
+        // ps_wbzalando_simple_producto 
+        // WHERE 
+        // ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
+        // ps_wbzalando_modelo_producto.id_modelo_producto=ps_wbzalando_configuracion_producto.id_modelo_producto
+        // ";
+        $SQL="SELECT * FROM ps_wbzalando_modelo_producto";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function consultarConfigProducto($idModelo){
+        $SQL="SELECT * FROM ps_wbzalando_configuracion_producto WHERE id_modelo_producto='".$idModelo."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function consultarSimpleProducto($idConfig){
+        $SQL="SELECT * FROM ps_wbzalando_simple_producto WHERE id_configuracion_producto='".$idConfig."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
