@@ -401,8 +401,8 @@ class WbZalando extends Module{
                     // ],
                     [
                         'type'      => 'radio',                               
-                        'label'     => $this->l('Ruta de acceso'),        
-                        'desc'      => $this->l('Ruta de acceso ha Zalando'),  
+                        'label'     => $this->l('Environment'),        
+                        'desc'      => $this->l('Environment de acceso ha Zalando Dev'),  
                         'name'      => 'rutaZolando',                             
                         'required'  => true,                                  
                         'class'     => 't',                                   
@@ -411,12 +411,12 @@ class WbZalando extends Module{
                             [
                                 'id'    => 'active_on',                           
                                 'value' => "https://api-sandbox.merchants.zalando.com",                                        
-                                'label' => $this->l('Modo Sandbox')  
+                                'label' => $this->l('Sandbox')  
                             ],
                             [
                                 'id'    => 'active_off',
                                 'value' => "https://api.merchants.zalando.com",
-                                'label' => $this->l('Modo de Producción')
+                                'label' => $this->l('Live')
                             ]
                         ],
                     ],
@@ -432,6 +432,10 @@ class WbZalando extends Module{
                 ],
                 "submit" => [
                     "title" => $this->l("Guardar")
+                ],
+                [
+                    "type" => "html",
+                    "html_content" => '<link rel="stylesheet" type="text/css"  href="'.$this->_path.'views/css/style_front_office.css"/>'
                 ]
             ]
         ];
