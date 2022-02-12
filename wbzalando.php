@@ -424,6 +424,10 @@ class WbZalando extends Module{
                     [
                         "type" => "html",
                         "html_content" => '<script type="text/javascript" src="'.$this->_path.'views/js/wbzalando.js"></script>'
+                    ],
+                    [
+                        "type" => "html",
+                        "html_content" => '<link rel="stylesheet" type="text/css"  href="'.$this->_path.'views/css/style_front_office.css"/>'
                     ]
                 ],
                 "submit" => [
