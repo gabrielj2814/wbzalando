@@ -6,7 +6,7 @@ let botonFiltroProducto=document.getElementById("botonFiltroProducto");
 let nombreProducto=document.getElementById("nombreProducto");
 let obtenerProductos=document.getElementById("obtenerProductos");
 let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
-// let botonTestEnvio=document.getElementById("botonTestEnvio")
+let botonTestEnvio=document.getElementById("botonTestEnvio")
 // let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
 // let botonConsultarCategoriasAso=document.getElementById("botonConsultarCategoriasAso")
 // let botonConsultartallasAsociadasMasPais=document.getElementById("botonConsultartallasAsociadasMasPais")
@@ -183,6 +183,7 @@ function consultarCategoraisAsociadas(){
             let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos categorias asociadas =>>> ",json.datos);
             insertarCategoriasSelect(json.datos);
+            consultarProductosWBZalando();
         },
         error: () => {
         }
@@ -313,7 +314,125 @@ function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
     // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
     const linkControlador=document.getElementById("linkControlador").value;
-    let productos=[]
+    let productos=[
+        {
+            outline: "bag",
+            product_model: {
+                merchant_product_model_id: "modelo_producto_1",
+                product_model_attributes: {
+                    name: "New Fancy Product 2.0",
+                    brand_code: "5FX",
+                    size_group: {
+                        size: "2MAE000A2A"
+                    },
+                    target_age_groups: [
+                        "target_age_group_kid",
+                        "target_age_group_baby"
+                    ],
+                    target_genders: [
+                        "target_gender_female",
+                        "target_gender_male"
+                    ]
+              },
+              product_configs: [
+                {
+                    merchant_product_config_id: "333666",
+                    product_config_attributes: {
+                        color_code: "802",
+                        season_code: "fs18",
+                        "color_code.primary": "fff",
+                        description: {
+                            en:"hello"
+                        },
+                        "supplier_color": "hola que tal 2",
+                        media: [
+                            {
+                                media_path: "https://zalando.com/1667531.jpg",
+                                url: "https://zalando.com/1667531.jpg",
+                                media_sort_key: 222
+                            }
+                        ]
+                  },
+                  product_simples: [
+                    {
+                        merchant_product_simple_id: "WTC741-XL",
+                        product_simple_attributes: {
+                            ean: "1523698745631",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC742-XL",
+                        product_simple_attributes: {
+                            ean: "1523698745631",
+                            size_codes: {
+                                size: "S"
+                        }
+                      }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC743-XL",
+                        product_simple_attributes: {
+                            ean: "1523698745631",
+                            size_codes: {
+                                size: "L"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            precio:{
+                "product_prices": [
+                    {
+                        "ean": "1523698745631",
+                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "regular_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "promotional_price": {
+                            "amount": 80.95,
+                            "currency": "EUR"
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "promotional_price": {
+                                    "amount": 80.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
+                            }
+                        ],
+                        "ignore_warnings": true
+                    }
+                  ]
+            },
+            stock:{
+                items: [
+                    {
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
+                        "ean": "1523698745631",
+                        "quantity": 50
+                    },
+                    {
+                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "ean": "1523698745631",
+                        "quantity": 25
+                    }
+                  ]
+            }
+          }
+    ]
+
     $.ajax({
         type: 'POST',
         cache: false,
@@ -611,12 +730,55 @@ function campoCompuesto(campo){
     return input;
 }
 
+async function consultarProductosWBZalando(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarproductoswbzalando',
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos consultados productos zalando =>>>>> ",respuestaJson)
+        },
+        error: () => {
+        }
+    });
+}
+
+async function eliminarProducto(id){
+    const linkControlador=document.getElementById("linkControlador").value;
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'geteliminarproducto',
+            id
+        },
+        success: (respuesta) => {
+            // console.log(respuesta);
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("producto Eliminado =>>>>> ",respuestaJson)
+        },
+        error: () => {
+        }
+    });
+}
+
 // asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos);
 nombreProducto.addEventListener("keyup", filtrarProductos);
 obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-// botonTestEnvio.addEventListener("click", enviarProductos)
+botonTestEnvio.addEventListener("click", enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
