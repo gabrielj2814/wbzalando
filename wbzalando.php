@@ -19,6 +19,43 @@ class WbZalando extends Module{
         $this->tablaModulo=_DB_PREFIX_."wbzalando";
         // ----- traducciones
         $this->todosLenguajes=Language::getLanguages();
+        $this->listaDeControladores=[
+            [
+                "nombre" => "Productos",
+                "nombreControladorFull" => "ProductoController",
+                "nombreControlador" => "Producto",
+            ],
+            [
+                "nombre" => "Pedido",
+                "nombreControladorFull" => "PedidoController",
+                "nombreControlador" => "Pedido",
+            ],
+            [
+                "nombre" => "Color",
+                "nombreControladorFull" => "ColorController",
+                "nombreControlador" => "Color",
+            ],
+            [
+                "nombre" => "Talla",
+                "nombreControladorFull" => "TallaController",
+                "nombreControlador" => "Talla",
+            ],
+            [
+                "nombre" => "Atributo Talla",
+                "nombreControladorFull" => "AtributotallaController",
+                "nombreControlador" => "Atributotalla",
+            ],
+            [
+                "nombre" => "categorias",
+                "nombreControladorFull" => "CategoriaController",
+                "nombreControlador" => "categoria",
+            ],
+            [
+                "nombre" => "Eliminar Producto",
+                "nombreControladorFull" => "EliminarController",
+                "nombreControlador" => "Eliminar",
+            ],
+        ];
         parent::__construct();
     }
 
@@ -97,7 +134,7 @@ class WbZalando extends Module{
                 id_attribute INTEGER NOT NULL,
                 codigo_color VARCHAR(20) NOT NULL,
                 codigo_pais VARCHAR(4) NOT NULL,
-                color_zalando VARCHAR(10) NOT NULL,
+                color_zalando VARCHAR(150) NOT NULL,
                 PRIMARY KEY (`id_color_asociacion`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
 
@@ -184,118 +221,60 @@ class WbZalando extends Module{
     }
 
     private function installTab()
-    {
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Producto'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Productos'); 
+    {  
+        $estado=true;
+        foreach($this->listaDeControladores as $controlado){
+            $lang = Language::getLanguages(); 
+            $tab = new Tab();
+            $tab->class_name = $controlado["nombreControlador"];
+            $tab->module = 'wbzalando';
+            $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+            foreach ($lang as $l) {
+                $tab->name[$l['id_lang']] = $this->l($controlado["nombre"] ); 
+            }
+            if(!$tab->save()){
+                $estado=false;
+                break;
+            }
         }
 
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Color'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Color'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Talla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Talla'); 
-        }
-
-        $tab->save();
-        
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Atributotalla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Atributo Talla'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'categoria'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Cetegorias'); 
-        }
-
-        return $tab->save();
+        return $estado;
     }
 
     private function uninstallTab()
     {
-        $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
-        if (!$tabId) {
-            return true;
+        $estado=true;
+        foreach($this->listaDeControladores as $controlado){
+            $tabId = (int) Tab::getIdFromClassName($controlado["nombreControladorFull"]); 
+            if (!$tabId) {
+                return true;
+                break;
+            }
+
+            $tab = new Tab($tabId);
+            if(!$tab->delete()){
+                $estado=false;
+                break;
+            }
         }
 
-        $tab = new Tab($tabId);
-        
-        $tabId = (int) Tab::getIdFromClassName('ColorController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-
-        $tabId = (int) Tab::getIdFromClassName('TallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-        
-        $tabId = (int) Tab::getIdFromClassName('AtributotallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete();
-
-        $tabId = (int) Tab::getIdFromClassName('CategoriaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        return $tab->delete(); 
+        return $estado;
     }
 
     public function hookDisplayBackOfficeHeader()
     {
-        if(Tools::getValue("controller")==="Producto"){
-            $this->context->controller->addCSS(array(
-                $this->_path.'/views/css/producto.css',
-                $this->_path.'/views/css/style_back_office.css',
-                $this->_path.'/views/css/style_front_office.css'
-            ));
-        }
+        // if(Tools::getValue("controller")==="Producto"){
+        //     $this->context->controller->addCSS(array(
+        //         $this->_path.'/views/css/producto.css',
+        //         $this->_path.'/views/css/style_back_office.css',
+        //         $this->_path.'/views/css/style_front_office.css'
+        //     ));
+        // }
+        $this->context->controller->addCSS(array(
+            $this->_path.'/views/css/producto.css',
+            $this->_path.'/views/css/style_back_office.css',
+            $this->_path.'/views/css/style_front_office.css'
+        ));
         $shop = new Shop((int)$this->context->shop->id);
         $base_url = $shop->getBaseURL();
         $ajax = $base_url.'modules/'.$this->name.'/ajax.php?token='.Tools::encrypt($this->name.'/ajax.php');
@@ -367,23 +346,52 @@ class WbZalando extends Module{
                         'name' => 'clienteSecretZolando',
                         'required'  => true
                     ],
+                    // [
+                    //     "type" => "text",
+                    //     "label" => $this->l("Ruta de acceso"),
+                    //     "desc" => $this->l("Ruta de acceso ha Zalando"),
+                    //     'hint' => $this->l(''),
+                    //     'name' => 'rutaZolando',
+                    //     'required'  => true
+                    //     // 'lang' => trues
+                    // ],
                     [
-                        "type" => "text",
-                        "label" => $this->l("Ruta de acceso"),
-                        "desc" => $this->l("Ruta de acceso ha Zalando"),
-                        'hint' => $this->l(''),
-                        'name' => 'rutaZolando',
-                        'required'  => true
-                        // 'lang' => trues
+                        'type'      => 'radio',                               
+                        'label'     => $this->l('Environment'),        
+                        'desc'      => $this->l('Environment de acceso ha Zalando Dev'),  
+                        'name'      => 'rutaZolando',                             
+                        'required'  => true,                                  
+                        'class'     => 't',                                   
+                        'is_bool'   => true,                                  
+                        'values'    => [
+                            [
+                                'id'    => 'active_on',                           
+                                'value' => "https://api-sandbox.merchants.zalando.com",                                        
+                                'label' => $this->l('Sandbox')  
+                            ],
+                            [
+                                'id'    => 'active_off',
+                                'value' => "https://api.merchants.zalando.com",
+                                'label' => $this->l('Live')
+                            ]
+                        ],
                     ],
                     // script
                     [
                         "type" => "html",
                         "html_content" => '<script type="text/javascript" src="'.$this->_path.'views/js/wbzalando.js"></script>'
+                    ],
+                    [
+                        "type" => "html",
+                        "html_content" => '<link rel="stylesheet" type="text/css"  href="'.$this->_path.'views/css/style_front_office.css"/>'
                     ]
                 ],
                 "submit" => [
                     "title" => $this->l("Guardar")
+                ],
+                [
+                    "type" => "html",
+                    "html_content" => '<link rel="stylesheet" type="text/css"  href="'.$this->_path.'views/css/style_front_office.css"/>'
                 ]
             ]
         ];
@@ -435,7 +443,7 @@ class WbZalando extends Module{
             }
             return $salida;
         }
-            
+             
     }
 
     public function autenticarSesionZalando(){

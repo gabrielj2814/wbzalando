@@ -67,11 +67,10 @@ class ColorController extends ModuleAdminController{
         $Colores=(Object)$respuesta["response"];
         error_log("respuesta al consultar colores zalando =>>>>  " . var_export($respuesta["response"], true));
         $colores=[];
-        $colores[$_GET["codigo_pais"]]=[];
         foreach($Colores->items as $colorZalando){
             $codigoColor=$colorZalando->label;
             $coloreZalandoIdioma=get_object_vars($colorZalando->value->localized);
-            $colores[$_GET["codigo_pais"]][$codigoColor]= $coloreZalandoIdioma[$_GET["codigo_pais"]];
+            $colores[$codigoColor]= $coloreZalandoIdioma[$_GET["codigo_pais"]];
         }
         $respuesta_servidor["respuestaServidor"]=  $colores;
         $respuesta_servidor["estatuRespuestaApi"]= $respuesta["estado"];
