@@ -97,8 +97,6 @@
         consultar pedidos
     </button>
     -->
-    <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
-
 
 <div class="container ">   
 <!--  <a href="https://github.com/rtpHarry/Bootstrap3-ShowManySlideOneCarousel">this code sample</a>   -->
@@ -183,10 +181,12 @@
     
     </div>
 
+    <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
+        <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
+    </div>
+
 </div>
 
-<div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
-    <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
-</div>
+
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
