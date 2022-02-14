@@ -721,14 +721,6 @@ class ProductoController extends ModuleAdminController{
     }
 
     function consultarModeloProducto(){
-        // $SQL="SELECT * FROM 
-        // ps_wbzalando_modelo_producto,
-        // ps_wbzalando_configuracion_producto,
-        // ps_wbzalando_simple_producto 
-        // WHERE 
-        // ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
-        // ps_wbzalando_modelo_producto.id_modelo_producto=ps_wbzalando_configuracion_producto.id_modelo_producto
-        // ";
         $SQL="SELECT * FROM ps_wbzalando_modelo_producto";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
@@ -753,26 +745,26 @@ class ProductoController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function ajaxProcessGetEliminarProducto($id){
-        $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->eliminar($_GET["id"]);
-        if($respuestaDB){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "eliminacion cumpletada"
-            ];
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "error al eliminar"
-            ];
-        }
-        print(json_encode($respuesta_servidor));
-    }
+    // function ajaxProcessGetEliminarProducto($id){
+    //     $respuesta_servidor=["respuestaServidor" => []];
+    //     $respuestaDB=$this->eliminar($_GET["id"]);
+    //     if($respuestaDB){
+    //         $respuesta_servidor["respuestaServidor"]=[
+    //             "mensaje" => "eliminacion cumpletada"
+    //         ];
+    //     }
+    //     else{
+    //         $respuesta_servidor["respuestaServidor"]=[
+    //             "mensaje" => "error al eliminar"
+    //         ];
+    //     }
+    //     print(json_encode($respuesta_servidor));
+    // }
 
-    function eliminar($id){
-        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
-        return Db::getInstance()->execute($SQL);
-    }
+    // function eliminar($id){
+    //     $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+    //     return Db::getInstance()->execute($SQL);
+    // }
 
 }
 

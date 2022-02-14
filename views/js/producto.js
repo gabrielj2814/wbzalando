@@ -183,7 +183,6 @@ function consultarCategoraisAsociadas(){
             let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos categorias asociadas =>>> ",json.datos);
             insertarCategoriasSelect(json.datos);
-            consultarProductosWBZalando();
         },
         error: () => {
         }
@@ -318,9 +317,9 @@ function enviarProductos(){
         {
             outline: "bag",
             product_model: {
-                merchant_product_model_id: "modelo_producto_1",
+                merchant_product_model_id: "modelo_producto_3",
                 product_model_attributes: {
-                    name: "New Fancy Product 2.0",
+                    name: "Mi Producto",
                     brand_code: "5FX",
                     size_group: {
                         size: "2MAE000A2A"
@@ -336,7 +335,7 @@ function enviarProductos(){
               },
               product_configs: [
                 {
-                    merchant_product_config_id: "333666",
+                    merchant_product_config_id: "3336663",
                     product_config_attributes: {
                         color_code: "802",
                         season_code: "fs18",
@@ -355,27 +354,27 @@ function enviarProductos(){
                   },
                   product_simples: [
                     {
-                        merchant_product_simple_id: "WTC741-XL",
+                        merchant_product_simple_id: "WTC741-XL3",
                         product_simple_attributes: {
-                            ean: "1523698745631",
+                            ean: "3523698745631",
                             size_codes: {
                                 size: "XL"
                         }
                       }
                     },
                     {
-                        merchant_product_simple_id: "WTC742-XL",
+                        merchant_product_simple_id: "WTC742-XL3",
                         product_simple_attributes: {
-                            ean: "1523698745631",
+                            ean: "3523698745631",
                             size_codes: {
                                 size: "S"
                         }
                       }
                     },
                     {
-                        merchant_product_simple_id: "WTC743-XL",
+                        merchant_product_simple_id: "WTC743-XL3",
                         product_simple_attributes: {
-                            ean: "1523698745631",
+                            ean: "3523698745631",
                             size_codes: {
                                 size: "L"
                         }
@@ -388,7 +387,7 @@ function enviarProductos(){
             precio:{
                 "product_prices": [
                     {
-                        "ean": "1523698745631",
+                        "ean": "3523698745631",
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
                         "regular_price": {
                             "amount": 89.95,
@@ -420,12 +419,12 @@ function enviarProductos(){
                 items: [
                     {
                         "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-                        "ean": "1523698745631",
+                        "ean": "3523698745631",
                         "quantity": 50
                     },
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "ean": "1523698745631",
+                        "ean": "3523698745631",
                         "quantity": 25
                     }
                   ]
@@ -728,49 +727,6 @@ function campoCompuesto(campo){
             </div>";
     }
     return input;
-}
-
-async function consultarProductosWBZalando(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproductoswbzalando',
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos consultados productos zalando =>>>>> ",respuestaJson)
-        },
-        error: () => {
-        }
-    });
-}
-
-async function eliminarProducto(id){
-    const linkControlador=document.getElementById("linkControlador").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'geteliminarproducto',
-            id
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("producto Eliminado =>>>>> ",respuestaJson)
-        },
-        error: () => {
-        }
-    });
 }
 
 // asignadoles eventos a los elementos html
