@@ -19,6 +19,43 @@ class WbZalando extends Module{
         $this->tablaModulo=_DB_PREFIX_."wbzalando";
         // ----- traducciones
         $this->todosLenguajes=Language::getLanguages();
+        $this->listaDeControladores=[
+            [
+                "nombre" => "Productos",
+                "nombreControladorFull" => "ProductoController",
+                "nombreControlador" => "Producto",
+            ],
+            [
+                "nombre" => "Pedido",
+                "nombreControladorFull" => "PedidoController",
+                "nombreControlador" => "Pedido",
+            ],
+            [
+                "nombre" => "Color",
+                "nombreControladorFull" => "ColorController",
+                "nombreControlador" => "Color",
+            ],
+            [
+                "nombre" => "Talla",
+                "nombreControladorFull" => "TallaController",
+                "nombreControlador" => "Talla",
+            ],
+            [
+                "nombre" => "Atributo Talla",
+                "nombreControladorFull" => "AtributotallaController",
+                "nombreControlador" => "Atributotalla",
+            ],
+            [
+                "nombre" => "categorias",
+                "nombreControladorFull" => "CategoriaController",
+                "nombreControlador" => "categoria",
+            ],
+            [
+                "nombre" => "Eliminar Producto",
+                "nombreControladorFull" => "EliminarController",
+                "nombreControlador" => "Eliminar",
+            ],
+        ];
         parent::__construct();
     }
 
@@ -184,125 +221,44 @@ class WbZalando extends Module{
     }
 
     private function installTab()
-    {
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Producto'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Productos'); 
+    {  
+        $estado=true;
+        foreach($this->listaDeControladores as $controlado){
+            $lang = Language::getLanguages(); 
+            $tab = new Tab();
+            $tab->class_name = $controlado["nombreControlador"];
+            $tab->module = 'wbzalando';
+            $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
+            foreach ($lang as $l) {
+                $tab->name[$l['id_lang']] = $this->l($controlado["nombre"] ); 
+            }
+            if(!$tab->save()){
+                $estado=false;
+                break;
+            }
         }
 
-        $tab->save();
-        
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Pedido'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Pedido'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Color'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Color'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Talla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Talla'); 
-        }
-
-        $tab->save();
-        
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Atributotalla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Atributo Talla'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'categoria'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Cetegorias'); 
-        }
-
-        return $tab->save();
+        return $estado;
     }
 
     private function uninstallTab()
     {
-        $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
-        if (!$tabId) {
-            return true;
+        $estado=true;
+        foreach($this->listaDeControladores as $controlado){
+            $tabId = (int) Tab::getIdFromClassName($controlado["nombreControladorFull"]); 
+            if (!$tabId) {
+                return true;
+                break;
+            }
+
+            $tab = new Tab($tabId);
+            if(!$tab->delete()){
+                $estado=false;
+                break;
+            }
         }
 
-        $tab = new Tab($tabId);
-        
-        $tabId = (int) Tab::getIdFromClassName('PedidoController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tabId = (int) Tab::getIdFromClassName('ColorController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-
-        $tabId = (int) Tab::getIdFromClassName('TallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-        
-        $tabId = (int) Tab::getIdFromClassName('AtributotallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete();
-
-        $tabId = (int) Tab::getIdFromClassName('CategoriaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        return $tab->delete(); 
+        return $estado;
     }
 
     public function hookDisplayBackOfficeHeader()
