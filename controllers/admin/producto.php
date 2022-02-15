@@ -462,11 +462,13 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_simple_producto(
                 id_simple_producto,
                 id_configuracion_producto,
+                ean,
                 json_simple_producto
                     ) 
                 VALUES (
                     '". $simpleProducto["datos_product_simples"]["merchant_product_simple_id"]."',
                     '". $simpleProducto["merchant_product_config_id"]."',
+                    '". $simpleProducto["datos_product_simples"]["product_simple_attributes"]["ean"]."',
                     '".json_encode($simpleProducto["datos_product_simples"])."'
                 );
             ";
@@ -744,27 +746,6 @@ class ProductoController extends ModuleAdminController{
         $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
-
-    // function ajaxProcessGetEliminarProducto($id){
-    //     $respuesta_servidor=["respuestaServidor" => []];
-    //     $respuestaDB=$this->eliminar($_GET["id"]);
-    //     if($respuestaDB){
-    //         $respuesta_servidor["respuestaServidor"]=[
-    //             "mensaje" => "eliminacion cumpletada"
-    //         ];
-    //     }
-    //     else{
-    //         $respuesta_servidor["respuestaServidor"]=[
-    //             "mensaje" => "error al eliminar"
-    //         ];
-    //     }
-    //     print(json_encode($respuesta_servidor));
-    // }
-
-    // function eliminar($id){
-    //     $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
-    //     return Db::getInstance()->execute($SQL);
-    // }
 
 }
 

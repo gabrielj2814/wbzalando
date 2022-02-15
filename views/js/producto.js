@@ -412,6 +412,33 @@ function enviarProductos(){
                             }
                         ],
                         "ignore_warnings": true
+                    },
+                    {
+                        "ean": "352369874563",
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
+                        "regular_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "promotional_price": {
+                            "amount": 80.95,
+                            "currency": "EUR"
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "promotional_price": {
+                                    "amount": 80.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
+                            }
+                        ],
+                        "ignore_warnings": true
                     }
                   ]
             },

@@ -4,6 +4,10 @@
 
 <h1>Eliminar producto</h1>
 
+    <div id="paisesHaEnviar" >
+
+    </div>
+
 <div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-header p-20"> 
         <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 txt-title">
@@ -30,7 +34,6 @@
     </div>
 
 </div>
-
 
 
 
