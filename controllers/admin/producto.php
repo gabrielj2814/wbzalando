@@ -766,6 +766,7 @@ class ProductoController extends ModuleAdminController{
     //     return Db::getInstance()->execute($SQL);
     // }
 
+
 }
 
 ?>

@@ -1,3 +1,8 @@
+<style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" type="text/css" />
+</style>
+
+
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
 <input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
@@ -98,54 +103,39 @@
     </button>
     -->
 
-<div class="container ">   
-<!--  <a href="https://github.com/rtpHarry/Bootstrap3-ShowManySlideOneCarousel">this code sample</a>   -->
-<div class="row jt-center">
-   <div class="col-md-6">
-      <div class="carousel carousel-showmanymoveone slide" id="carousel-tilenav" data-interval="false">
-         <div class="carousel-inner">
-            <div class="item active">
-               <div class="col-xs-12 col-sm-6 col-md-3">
-                  <a href="#">
-                    <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-                  </a>
-               </div>
-            </div>
-            <div class="item">
-                <div class="col-xs-12 col-sm-6 col-md-3">
-                  <a href="#">
-                    <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-                  </a>
-               </div>
-            </div>
-            <div class="item">
-                <div class="col-xs-12 col-sm-6 col-md-3">
-                  <a href="#">
-                    <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-                  </a>
-               </div>
-            </div>
-            <div class="item">
-                <div class="col-xs-12 col-sm-6 col-md-3">
-                  <a href="#">
-                    <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-                  </a>
-               </div>
-            </div>
-         </div>
-         <a class="left carousel-control" href="#carousel-tilenav" data-slide="prev"><i> < </i></a>
-         <a class="right carousel-control" href="#carousel-tilenav" data-slide="next"><i> > </i></a>
-      </div>
-   </div>
+<div class="slider-pais" style="width: 80%;">
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+        </a>
+    </div>
+    
 </div>
+
+
+
 
    
 </div>
-
     <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
     </div>
-    
+
     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-header p-20"> 
         <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 txt-title">
             <label>Productos a enviar</label>
@@ -177,9 +167,6 @@
     <div id="contenedorFormularioProductosPaises">
     
     </div>
-    <div id="contenedorFormularioProductosPaises">
-    
-    </div>
 
     <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
         <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
@@ -187,6 +174,15 @@
 
 </div>
 
-
-
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>
+    $('.slider-pais').slick
+    ({
+            infinite: true,
+            slidesToShow: 6,
+            slidesToScroll: 6
+        });
+</script>

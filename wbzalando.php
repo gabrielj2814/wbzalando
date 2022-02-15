@@ -250,7 +250,6 @@ class WbZalando extends Module{
                 return true;
                 break;
             }
-
             $tab = new Tab($tabId);
             if(!$tab->delete()){
                 $estado=false;

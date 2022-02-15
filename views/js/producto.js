@@ -39,6 +39,7 @@ async function mostrarModalSubirProductos(){
     // let categorias=await consultarCategorias();
     // formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
     // insertarCategoriasSelect(categorias);
+
 }
 
 function htmlPorducto(producto){
@@ -79,7 +80,6 @@ async function consultarProducto(idProducto){
 
     return datosProducto;
 }
-
 
 function htmlGenericoProductosFormulario(productosSeleccionados){
     let html="";
