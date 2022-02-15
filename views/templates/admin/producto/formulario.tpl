@@ -92,46 +92,53 @@
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
         </svg>
     </button>
+    <h2 class="centrar-texto">Lista de productos seleccionados</h2>
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
         probar envio
     </button>
     
     <!--
-    <h2 class="centrar-texto">Lista de productos seleccionados</h2>
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonConsultarPedidos"">
         consultar pedidos
     </button>
     -->
 
-    <div class="slider-pais" style="width: 80%;">
-        <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-            </a>
-        </div>
-        <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-            </a>
-        </div>
-        <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-            </a>
-        </div>
-        <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-            </a>
-        </div>
-        
+
+<div class="slider-pais" style="width: 100%; position: relative;">
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+        </a>
     </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+        </a>
+    </div>
+    <div class="">
+        <a href="#">
+            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+        </a>
+    </div>
+</div>
 
 
-
-
-   
-    <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
+<div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
     </div>
 
@@ -171,7 +178,9 @@
         <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
     </div>
 
+   
 </div>
+
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
 
@@ -180,8 +189,12 @@
 <script>
     $('.slider-pais').slick
     ({
-            infinite: true,
-            slidesToShow: 6,
-            slidesToScroll: 6
-        });
+        infinite: true,
+        slidesToShow: 5,
+        slidesToScroll: 1
+    });
+
+
+    let btnPrev = document.querySelector('.slick-prev').className += " btn btn-primary";     
+    let btnNext = document.querySelector('.slick-next').className += " btn btn-primary";
 </script>
