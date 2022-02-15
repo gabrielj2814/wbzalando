@@ -39,24 +39,48 @@ class EliminarController extends ModuleAdminController{
     }
 
     function ajaxProcessGetEliminarProducto(){
-        // codigo pais, ean 
         $respuesta_servidor=["respuestaServidor" => []];
-        $respuestaDB=$this->eliminar($_GET["id"]);
-        if($respuestaDB){
+        $eliminarPrecioDB=$this->eliminarPrecio($_GET["ean"],$_GET["idPais"]);
+        $eliminarStockDB=$this->eliminarStock($_GET["ean"],$_GET["idPais"]);
+        $consultarExistenciaProductoDB=$this->consultarPrecioPorEan($_GET["ean"]);
+        if(count($consultarExistenciaProductoDB)===0){
+            $respustaEliminarConfig=$this->eliminarConfig($_GET["idConfig"]);
+            $respuestaExistenciaConfigModelo=$this->consultarConfigPorModelo($_GET["idModelo"]);
+            if(count($respuestaExistenciaConfigModelo)===0){
+                $this->eliminarModelo($_GET["idModelo"]);
+            }
             $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "eliminacion cumpletada"
+                "datos" => $consultarExistenciaProductoDB,
+                "eliminarPrecioDB" => $eliminarPrecioDB,
+                "eliminarStockDB" => $eliminarStockDB,
+                "respustaEliminarConfig" => $respustaEliminarConfig
             ];
         }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "error al eliminar"
-            ];
-        }
+        // $respuestaDB=$this->eliminar($_GET["id"]);
+        // if($respuestaDB){
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "eliminacion cumpletada"
+        //     ];
+        // }
+        // else{
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "error al eliminar"
+        //     ];
+        // }
         print(json_encode($respuesta_servidor));
     }
 
-    function eliminar($id){
-        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+    // function eliminar($id){
+    //     $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+    //     return Db::getInstance()->execute($SQL);
+    // }
+    function eliminarPrecio($ean,$idPais){
+        $SQL="DELETE FROM ps_wbzalando_precio WHERE ean='".$ean."' AND sales_channel_id ='".$idPais."';";
+        return Db::getInstance()->execute($SQL);
+    }
+    
+    function eliminarStock($ean,$idPais){
+        $SQL="DELETE FROM ps_wbzalando_stock WHERE ean='".$ean."' AND sales_channel_id ='".$idPais."';";
         return Db::getInstance()->execute($SQL);
     }
 
@@ -123,6 +147,24 @@ class EliminarController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
+    function consultarPrecioPorEan($ean){
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function consultarConfigPorModelo($idModelo){
+        $SQL="SELECT * FROM ps_wbzalando_configuracion_producto WHERE id_modelo_producto='".$idModelo."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
 
+    function eliminarConfig($idConfig){
+        $SQL="DELETE FROM ps_wbzalando_configuracion_producto WHERE id_configuracion_producto='".$idConfig."';";
+        return Db::getInstance()->execute($SQL);
+    }
+    
+    function eliminarModelo($idModelo){
+        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto='".$idModelo."';";
+        return Db::getInstance()->execute($SQL);
+    }
 
 }
