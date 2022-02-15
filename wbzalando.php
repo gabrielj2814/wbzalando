@@ -221,7 +221,6 @@ class WbZalando extends Module{
     }
 
     private function installTab()
-<<<<<<< HEAD
     {  
         $estado=true;
         foreach($this->listaDeControladores as $controlado){
@@ -237,71 +236,6 @@ class WbZalando extends Module{
                 $estado=false;
                 break;
             }
-=======
-    {
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Producto'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Productos'); 
-        }
-
-        $tab->save();
-        
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Pedido'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Pedido'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Color'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Color'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Talla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Talla'); 
-        }
-
-        $tab->save();
-        
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'Atributotalla'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Atributo Talla'); 
-        }
-
-        $tab->save();
-
-        $lang = Language::getLanguages(); 
-        $tab = new Tab();
-        $tab->class_name = 'categoria'; 
-        $tab->module = 'wbzalando';
-        $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE'); 
-        foreach ($lang as $l) {
-            $tab->name[$l['id_lang']] = $this->l('Cetegorias'); 
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
         }
 
         return $estado;
@@ -309,7 +243,6 @@ class WbZalando extends Module{
 
     private function uninstallTab()
     {
-<<<<<<< HEAD
         $estado=true;
         foreach($this->listaDeControladores as $controlado){
             $tabId = (int) Tab::getIdFromClassName($controlado["nombreControladorFull"]); 
@@ -317,49 +250,6 @@ class WbZalando extends Module{
                 return true;
                 break;
             }
-=======
-        $tabId = (int) Tab::getIdFromClassName('ProductoController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-        
-        $tabId = (int) Tab::getIdFromClassName('PedidoController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tabId = (int) Tab::getIdFromClassName('ColorController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-
-        $tabId = (int) Tab::getIdFromClassName('TallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete(); 
-        
-        $tabId = (int) Tab::getIdFromClassName('AtributotallaController'); 
-        if (!$tabId) {
-            return true;
-        }
-
-        $tab = new Tab($tabId);
-
-        $tab->delete();
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
-
             $tab = new Tab($tabId);
             if(!$tab->delete()){
                 $estado=false;

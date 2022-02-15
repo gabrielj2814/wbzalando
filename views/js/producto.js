@@ -39,7 +39,7 @@ async function mostrarModalSubirProductos(){
     // let categorias=await consultarCategorias();
     // formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
     // insertarCategoriasSelect(categorias);
-<<<<<<< HEAD
+
 }
 
 function htmlPorducto(producto){
@@ -80,50 +80,6 @@ async function consultarProducto(idProducto){
 
     return datosProducto;
 }
-
-=======
-}
-
-function htmlPorducto(producto){
-    let html="\
-    <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 alignitem-tb p-10 global-input'>\
-    <div class='col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5 text-left'><div><h4 class='text-primary'>"+producto.name+"</h4></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='stock'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='text' id='precio'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='date' id='fecha-descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><select class='h35'>opciones</select></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='w20 m-auto' type='checkbox' id='check1'></div></div></div>\
-    ";
-    return html;
-}
-
-async function consultarProducto(idProducto){
-    const linkControlador=document.getElementById("linkControlador").value;
-    let datosProducto=[];
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproducto',
-            id_producto:idProducto
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("producto consultado =>>> ",json);
-            datosProducto=json.datos[0]
-        },
-        error: () => {
-        }
-    });
-
-    return datosProducto;
-}
-
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
 
 function htmlGenericoProductosFormulario(productosSeleccionados){
     let html="";
@@ -227,10 +183,6 @@ function consultarCategoraisAsociadas(){
             let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos categorias asociadas =>>> ",json.datos);
             insertarCategoriasSelect(json.datos);
-<<<<<<< HEAD
-=======
-            consultarProductosWBZalando();
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
         },
         error: () => {
         }
@@ -365,15 +317,9 @@ function enviarProductos(){
         {
             outline: "bag",
             product_model: {
-<<<<<<< HEAD
                 merchant_product_model_id: "modelo_producto_3",
                 product_model_attributes: {
                     name: "Mi Producto",
-=======
-                merchant_product_model_id: "modelo_producto_1",
-                product_model_attributes: {
-                    name: "New Fancy Product 2.0",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                     brand_code: "5FX",
                     size_group: {
                         size: "2MAE000A2A"
@@ -389,11 +335,7 @@ function enviarProductos(){
               },
               product_configs: [
                 {
-<<<<<<< HEAD
                     merchant_product_config_id: "3336663",
-=======
-                    merchant_product_config_id: "333666",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                     product_config_attributes: {
                         color_code: "802",
                         season_code: "fs18",
@@ -412,45 +354,27 @@ function enviarProductos(){
                   },
                   product_simples: [
                     {
-<<<<<<< HEAD
                         merchant_product_simple_id: "WTC741-XL3",
                         product_simple_attributes: {
                             ean: "3523698745631",
-=======
-                        merchant_product_simple_id: "WTC741-XL",
-                        product_simple_attributes: {
-                            ean: "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                             size_codes: {
                                 size: "XL"
                         }
                       }
                     },
                     {
-<<<<<<< HEAD
                         merchant_product_simple_id: "WTC742-XL3",
                         product_simple_attributes: {
                             ean: "3523698745631",
-=======
-                        merchant_product_simple_id: "WTC742-XL",
-                        product_simple_attributes: {
-                            ean: "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                             size_codes: {
                                 size: "S"
                         }
                       }
                     },
                     {
-<<<<<<< HEAD
                         merchant_product_simple_id: "WTC743-XL3",
                         product_simple_attributes: {
                             ean: "3523698745631",
-=======
-                        merchant_product_simple_id: "WTC743-XL",
-                        product_simple_attributes: {
-                            ean: "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                             size_codes: {
                                 size: "L"
                         }
@@ -463,11 +387,7 @@ function enviarProductos(){
             precio:{
                 "product_prices": [
                     {
-<<<<<<< HEAD
                         "ean": "3523698745631",
-=======
-                        "ean": "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
                         "regular_price": {
                             "amount": 89.95,
@@ -499,20 +419,12 @@ function enviarProductos(){
                 items: [
                     {
                         "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-<<<<<<< HEAD
                         "ean": "3523698745631",
-=======
-                        "ean": "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                         "quantity": 50
                     },
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-<<<<<<< HEAD
                         "ean": "3523698745631",
-=======
-                        "ean": "1523698745631",
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
                         "quantity": 25
                     }
                   ]
@@ -817,52 +729,6 @@ function campoCompuesto(campo){
     return input;
 }
 
-<<<<<<< HEAD
-=======
-async function consultarProductosWBZalando(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproductoswbzalando',
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos consultados productos zalando =>>>>> ",respuestaJson)
-        },
-        error: () => {
-        }
-    });
-}
-
-async function eliminarProducto(id){
-    const linkControlador=document.getElementById("linkControlador").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'geteliminarproducto',
-            id
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("producto Eliminado =>>>>> ",respuestaJson)
-        },
-        error: () => {
-        }
-    });
-}
-
->>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
 // asignadoles eventos a los elementos html
 botonFiltroProducto.addEventListener("click", filtrarProductos);
 nombreProducto.addEventListener("keyup", filtrarProductos);

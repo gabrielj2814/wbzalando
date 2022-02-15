@@ -1,7 +1,6 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorProducto" value="{$linkDeControladorProducto}"/>
 
-
 <h1>Eliminar producto</h1>
 <div>
     
@@ -31,7 +30,5 @@
     </div>
 
 </div>
-
-
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/eliminar.js"></script>
