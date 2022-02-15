@@ -73,7 +73,8 @@ async function eliminarProducto(e){
             // console.log(respuesta);
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("producto Eliminado =>>>>> ",respuestaJson)
-            consultarProductosWBZalando()
+            let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
+            consultarProductosPorPais2(checkboxsPaises[0].value)
         },
         error: () => {
         }
@@ -146,4 +147,28 @@ function consultarProductosPorPais(a){
         }
     });
 }
+function consultarProductosPorPais2(idPais){
+    // alert(a.id)
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarproductosporpais',
+            codigoPais:idPais
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta))
+            console.log("productos filtrados por pais =>>>> ",respuestaJson)
+            insertarProductos(respuestaJson.respuestaServidor.datos)
+        },
+        error: () => {
+            // alert("error al conectar con el servidor");
+        }
+    });
+}
+
 consultarPaisesZalando();
