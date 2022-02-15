@@ -317,9 +317,9 @@ function enviarProductos(){
         {
             outline: "bag",
             product_model: {
-                merchant_product_model_id: "modelo_producto_3",
+                merchant_product_model_id: "modelo_producto_1",
                 product_model_attributes: {
-                    name: "Mi Producto",
+                    name: "Mi Producto 2",
                     brand_code: "5FX",
                     size_group: {
                         size: "2MAE000A2A"
@@ -335,7 +335,7 @@ function enviarProductos(){
               },
               product_configs: [
                 {
-                    merchant_product_config_id: "3336663",
+                    merchant_product_config_id: "333666",
                     product_config_attributes: {
                         color_code: "802",
                         season_code: "fs18",
@@ -354,27 +354,27 @@ function enviarProductos(){
                   },
                   product_simples: [
                     {
-                        merchant_product_simple_id: "WTC741-XL3",
+                        merchant_product_simple_id: "WTC741-XL",
                         product_simple_attributes: {
-                            ean: "3523698745631",
+                            ean: "352369874563",
                             size_codes: {
                                 size: "XL"
                         }
                       }
                     },
                     {
-                        merchant_product_simple_id: "WTC742-XL3",
+                        merchant_product_simple_id: "WTC742-S",
                         product_simple_attributes: {
-                            ean: "3523698745631",
+                            ean: "352369874563",
                             size_codes: {
                                 size: "S"
                         }
                       }
                     },
                     {
-                        merchant_product_simple_id: "WTC743-XL3",
+                        merchant_product_simple_id: "WTC743-L",
                         product_simple_attributes: {
-                            ean: "3523698745631",
+                            ean: "352369874563",
                             size_codes: {
                                 size: "L"
                         }
@@ -387,7 +387,7 @@ function enviarProductos(){
             precio:{
                 "product_prices": [
                     {
-                        "ean": "3523698745631",
+                        "ean": "352369874563",
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
                         "regular_price": {
                             "amount": 89.95,
@@ -419,12 +419,12 @@ function enviarProductos(){
                 items: [
                     {
                         "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-                        "ean": "3523698745631",
+                        "ean": "352369874563",
                         "quantity": 50
                     },
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "ean": "3523698745631",
+                        "ean": "352369874563",
                         "quantity": 25
                     }
                   ]
@@ -740,25 +740,3 @@ botonTestEnvio.addEventListener("click", enviarProductos)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 consultarProductos();
-
-
-(function(){
-    $('.carousel-showmanymoveone .item').each(function(){
-      var itemToClone = $(this);
-  
-      for (var i=1;i<4;i++) {
-        itemToClone = itemToClone.next();
-  
-        // wrap around if at end of item collection
-        if (!itemToClone.length) {
-          itemToClone = $(this).siblings(':first');
-        }
-  
-        // grab item, clone, add marker class, add to collection
-        itemToClone.children(':first-child').clone()
-          .addClass("cloneditem-"+(i))
-          .appendTo($(this));
-      }
-    });
-  }());
-  

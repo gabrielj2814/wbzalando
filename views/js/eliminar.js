@@ -1,4 +1,4 @@
-console.log("print('hola en mundo en python pero es realmente en javascript XD')")
+// console.log("print('hola en mundo en python pero es realmente en javascript XD')")
 
 async function consultarProductosWBZalando(){
     const linkDeControladorProducto=document.getElementById("linkDeControladorProducto").value;
@@ -24,6 +24,7 @@ async function consultarProductosWBZalando(){
 
 function insertarProductos(productos){
     let listaDeProductosHaEliminar=document.getElementById("listaDeProductosHaEliminar");
+    listaDeProductosHaEliminar.innerHTML="";
     let html="";
     for(let producto of productos){
         let jsonModelo=JSON.parse(producto.json_modelo_producto);
@@ -35,14 +36,15 @@ function insertarProductos(productos){
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-left'><div><h4 class='text-center'>€1200</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>€200</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>12/12/21</h4></div></div>\
-        <div class='col-3 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><button style='border: unset;'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div>\
+        <div class='col-3 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><button style='border: unset;' id='"+jsonModelo.merchant_product_model_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div>\
         ";
     }
     listaDeProductosHaEliminar.innerHTML=html
 
 }
 
-async function eliminarProducto(id){
+async function eliminarProducto(e){
+    // alert(e.id)
     const linkControlador=document.getElementById("linkControlador").value;
     await $.ajax({
         type: 'GET',
@@ -52,12 +54,13 @@ async function eliminarProducto(id){
         data: {
             ajax: true,
             action: 'geteliminarproducto',
-            id
+            id:e.id
         },
         success: (respuesta) => {
             // console.log(respuesta);
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("producto Eliminado =>>>>> ",respuestaJson)
+            consultarProductosWBZalando()
         },
         error: () => {
         }

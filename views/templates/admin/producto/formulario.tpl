@@ -103,35 +103,34 @@
     </button>
     -->
 
-<div class="slider-pais" style="width: 80%;">
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-        </a>
+    <div class="slider-pais" style="width: 80%;">
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+            </a>
+        </div>
+        
     </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-        </a>
-    </div>
-    
-</div>
 
 
 
 
    
-</div>
     <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
     </div>

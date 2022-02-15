@@ -31,7 +31,7 @@ class EliminarController extends ModuleAdminController{
         $this->setTemplate('/eliminar_producto/vista.tpl');
     }
 
-    function ajaxProcessGetEliminarProducto($id){
+    function ajaxProcessGetEliminarProducto(){
         $respuesta_servidor=["respuestaServidor" => []];
         $respuestaDB=$this->eliminar($_GET["id"]);
         if($respuestaDB){
