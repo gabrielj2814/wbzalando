@@ -721,6 +721,17 @@ class ProductoController extends ModuleAdminController{
     }
 
     function consultarModeloProducto(){
+<<<<<<< HEAD
+=======
+        // $SQL="SELECT * FROM 
+        // ps_wbzalando_modelo_producto,
+        // ps_wbzalando_configuracion_producto,
+        // ps_wbzalando_simple_producto 
+        // WHERE 
+        // ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
+        // ps_wbzalando_modelo_producto.id_modelo_producto=ps_wbzalando_configuracion_producto.id_modelo_producto
+        // ";
+>>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
         $SQL="SELECT * FROM ps_wbzalando_modelo_producto";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
@@ -729,6 +740,7 @@ class ProductoController extends ModuleAdminController{
         $SQL="SELECT * FROM ps_wbzalando_configuracion_producto WHERE id_modelo_producto='".$idModelo."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
+<<<<<<< HEAD
     
     function consultarSimpleProducto($idConfig){
         $SQL="SELECT * FROM ps_wbzalando_simple_producto WHERE id_configuracion_producto='".$idConfig."';";
@@ -740,11 +752,25 @@ class ProductoController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
+=======
+    
+    function consultarSimpleProducto($idConfig){
+        $SQL="SELECT * FROM ps_wbzalando_simple_producto WHERE id_configuracion_producto='".$idConfig."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    function consultarPrecio($ean){
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE ean='".$ean."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+>>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
     function consultarStock($ean){
         $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
+<<<<<<< HEAD
     // function ajaxProcessGetEliminarProducto($id){
     //     $respuesta_servidor=["respuestaServidor" => []];
     //     $respuestaDB=$this->eliminar($_GET["id"]);
@@ -765,6 +791,28 @@ class ProductoController extends ModuleAdminController{
     //     $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
     //     return Db::getInstance()->execute($SQL);
     // }
+=======
+    function ajaxProcessGetEliminarProducto($id){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->eliminar($_GET["id"]);
+        if($respuestaDB){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "eliminacion cumpletada"
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al eliminar"
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+
+    function eliminar($id){
+        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+        return Db::getInstance()->execute($SQL);
+    }
+>>>>>>> 1e4604f9f6d4df1fbd591b44f40517fd59300489
 
 }
 
