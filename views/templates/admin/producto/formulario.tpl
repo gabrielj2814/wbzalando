@@ -6,19 +6,21 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
 <input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
-        <!--
-        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
-            <button class="btn btn-primary" id="botonConsultarCategoriasAso" data-url-ajax="{$linkControlador}">
-                consultar Categorias
-            </button>
-        </div>
 
-        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
-            <button class="btn btn-primary" id="botonConsultartallasAsociadasMasPais" data-url-ajax="{$linkControlador}">
-                consultar tallas asociadas + pais
-            </button>
-        </div>
-        -->
+<!--
+<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
+    <button class="btn btn-primary" id="botonConsultarCategoriasAso" data-url-ajax="{$linkControlador}">
+        consultar Categorias
+    </button>
+</div>
+
+<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3" style="margin-top: 24px;">
+    <button class="btn btn-primary" id="botonConsultartallasAsociadasMasPais" data-url-ajax="{$linkControlador}">
+        consultar tallas asociadas + pais
+    </button>
+</div>
+-->
+
 <div class="vistaInicial id="vistaInicial">
     <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
         <div class="col-11 col-sm-11 col-md-11 col-lg-6 col-xl-6" style="margin-left:auto;margin-right:auto;">
@@ -86,59 +88,64 @@
 
 </div>
 
-<div id="contenedorVistaSubirProductos" class="contenedorVistaSubirProductos">
+<div id="contenedorVistaSubirProductos" class="contenedorVistaSubirProductos" style="width: 100%;" >
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonSalirVistaSubirProducto">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
         </svg>
     </button>
+
+    
+    <!--
     <h2 class="centrar-texto">Lista de productos seleccionados</h2>
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
         probar envio
     </button>
-    
-    <!--
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonConsultarPedidos"">
         consultar pedidos
     </button>
     -->
 
-
-<div class="slider-pais" style="width: 100%; position: relative;">
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-        </a>
+    <div class="slider-pais" style="width: 100%; position: relative;">
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
+            </a>
+        </div>
     </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-        </a>
-    </div>
-    <div class="">
-        <a href="#">
-            <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
-        </a>
-    </div>
+   
 </div>
 
 
-<div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
+
+   
+<div>
+    <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
         <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
     </div>
 
@@ -174,8 +181,14 @@
     
     </div>
 
+    
     <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
-        <button id="botonRegistrar" class="btn btn-primary" >Enviar Producto</button>
+        <button class="btn btn-primary" id="botonTestEnvio"">
+            probar envio
+        </button>
+        <button id="botonRegistrar" class="btn btn-primary" >
+            Enviar Producto
+        </button>
     </div>
 
    
@@ -183,8 +196,6 @@
 
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
-
-
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 <script>
     $('.slider-pais').slick
