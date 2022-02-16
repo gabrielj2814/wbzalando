@@ -358,7 +358,7 @@ class WbZalando extends Module{
                     [
                         'type'      => 'radio',                               
                         'label'     => $this->l('Environment'),        
-                        'desc'      => $this->l('Environment de acceso ha Zalando Dev'),  
+                        'desc'      => $this->l('Sandbox da acceso ha Zalando Dev'),  
                         'name'      => 'rutaZolando',                             
                         'required'  => true,                                  
                         'class'     => 't',                                   
