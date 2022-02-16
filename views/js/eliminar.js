@@ -110,7 +110,7 @@ function consultarPaisesZalando(){
 }
 
 function crearCheckboxPaisTest(paises){
-    let contenedorBanderas=document.getElementById("paisesHaEnviar");
+    let contenedorBanderas=document.getElementById("paisesRadio");
     contenedorBanderas.innerHTML="";
     for(let pais of paises){
         paises[pais.sales_channel_id]=true;
