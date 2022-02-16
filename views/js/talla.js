@@ -22,6 +22,8 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
 function registrar(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let campoCategoriaTallasZalando=document.getElementById("campoCategoriaTallasZalando")
     let campoPais=document.getElementById("campoPais")
@@ -61,11 +63,13 @@ function registrar(){
             asociacion:arrayTallas
         },
         success: (respuesta) => {
+            preloader.style.opacity="0"
             console.log(respuesta);
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -96,6 +100,8 @@ function consultarConsultarTallaPorAtributoTalla(){
     let campoCategoriaTallasZalando=document.getElementById("campoCategoriaTallasZalando")
     let campoPais=document.getElementById("campoPais")
     if(campoAtributoTalla.value!=="null" && campoCategoriaTallasZalando.value!=="null" && campoPais.value!=="null"){
+        let preloader=document.getElementById("preloader")
+        preloader.style.opacity="1"
         $.ajax({
             type: 'GET',
             cache: false,
@@ -112,8 +118,10 @@ function consultarConsultarTallaPorAtributoTalla(){
                 console.log("datos atributos =>>>> ",json);
                 let tallasZalandoFiltrdas=await traerTallas(campoPais.value,campoCategoriaTallasZalando.value);
                 crearElementosFormulario(json.respuestaServidor.datos,campoCategoriaTallasZalando.value,tallasZalandoFiltrdas,campoPais.value)
+                preloader.style.opacity="0"
             },
             error: () => {
+                preloader.style.opacity="0"
             }
         });
     }
@@ -227,6 +235,8 @@ function actualizar(){
 }
 
 function consultarTodosAtributos(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkDeControladorAtributoTalla=document.getElementById("linkDeControladorAtributoTalla").value;
     $.ajax({
         type: 'GET',
@@ -245,8 +255,10 @@ function consultarTodosAtributos(){
             cargarPaisesZalando(paises)
             let categoriasTallasZalando=await consultarCategoriasTalla();
             cargarCategoriasTallasZalando(categoriasTallasZalando);
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -261,6 +273,8 @@ function cargarAtributosTalla(datos){
 }
 
 async function consultarCategoriasTalla(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let categoriaTallas=[];
     await $.ajax({
@@ -276,8 +290,10 @@ async function consultarCategoriasTalla(){
             let datos=JSON.parse(JSON.stringify(respuesta));
             categoriaTallas=datos.respuestaServidor;
             console.log("categorias de tallas filtrados =>>> ",categoriaTallas);
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
     return categoriaTallas
@@ -293,6 +309,8 @@ function cargarCategoriasTallasZalando(datos){
 }
 
 async function consultarPaises(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let paises=[];
     await $.ajax({
@@ -308,8 +326,10 @@ async function consultarPaises(){
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta))
             paises=datos["respuestaServidor"]["items"]
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
     return paises
