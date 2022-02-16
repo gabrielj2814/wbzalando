@@ -7,9 +7,9 @@ let botonEliminar=document.getElementById("botonEliminar");
 let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
 function registrar(){
-    let preloader=document.getElementById("preloader")
     const linkControlador=document.getElementById("linkControlador").value;
     let atributo=document.getElementById("selectAtributoPrestashop")
+    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
@@ -161,7 +161,7 @@ function actualizar(){
 
 function eliminar(a){
     const linkControlador=document.getElementById("linkControlador").value;
-    let atributo=document.getElementById("selectAtributoPrestashop")
+    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
