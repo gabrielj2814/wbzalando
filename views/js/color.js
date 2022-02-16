@@ -35,6 +35,8 @@ let paises=[];
 let colores=[];
 
 function registrar(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioColor").serializeArray()
     console.log("datos formulario =>>> ",datosFormulario)
@@ -75,10 +77,12 @@ function registrar(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            preloader.style.opacity="0"
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -200,6 +204,8 @@ function actualizar(){
 
 
 function consultarAtributosPrestashop(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
         type: 'GET',
@@ -216,8 +222,10 @@ function consultarAtributosPrestashop(){
             cargarAtributosPrestashop(colores);
             let paises=await consultarPaises();
             cargarPaisesZalando(paises);
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -245,6 +253,8 @@ function consultarColorPrestashop(){
     let campoAtributo=document.getElementById("campoAtributo")
     let campoPais=document.getElementById("campoPais")
     if(campoAtributo.value!=="null" && campoPais.value!=="null"){
+        let preloader=document.getElementById("preloader")
+        preloader.style.opacity="1"
         $.ajax({
             type: 'GET',
             cache: false,
@@ -262,8 +272,10 @@ function consultarColorPrestashop(){
                 let coloresZalando=await consultarColoresZalando(campoPais.value);
                 console.log("colors zalando =>>> ",coloresZalando)
                 crearElementosFormulario(colores,coloresZalando,campoPais.value)
+                preloader.style.opacity="0"
             },
             error: () => {
+                preloader.style.opacity="0"
             }
         });
     }
@@ -297,6 +309,8 @@ function crearElementosFormulario(colores,coloresZalando,pais){
 }
 
 async function consultarPaises(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let paises=[]
     await $.ajax({
@@ -309,6 +323,7 @@ async function consultarPaises(){
             action: 'getconsultarpaiseszalando'
         },
         success: (respuesta) => {
+            preloader.style.opacity="0"
             // console.log(respuesta);
             // paises=respuesta;
             let datos=JSON.parse(JSON.stringify(respuesta));
@@ -317,12 +332,15 @@ async function consultarPaises(){
             console.log("paises =>>> ",datos);
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
     return paises;
 }
 
 async function consultarColoresZalando(pais){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let colorZalando=[]
     await $.ajax({
@@ -336,6 +354,7 @@ async function consultarColoresZalando(pais){
             codigo_pais:pais
         },
         success: (respuesta) => {
+            preloader.style.opacity="0"
             let datos=JSON.parse(JSON.stringify(respuesta));
             colores=datos["respuestaServidor"];
             colorZalando=colores;
@@ -343,6 +362,7 @@ async function consultarColoresZalando(pais){
             // consultarColorPrestashop()
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
     return colorZalando;
