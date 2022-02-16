@@ -837,13 +837,13 @@ function campoCompuesto(campo){
 }
 
 // asignadoles eventos a los elementos html
-botonFiltroProducto.addEventListener("click", filtrarProductos);
-nombreProducto.addEventListener("keyup", filtrarProductos);
-obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
-botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
+// botonFiltroProducto.addEventListener("click", filtrarProductos);
+// nombreProducto.addEventListener("keyup", filtrarProductos);
+// obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
+// botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
 botonTestEnvio.addEventListener("click", enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
-consultarProductos();
+// consultarProductos();
