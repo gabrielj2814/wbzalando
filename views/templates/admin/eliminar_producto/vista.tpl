@@ -21,9 +21,11 @@
             </a>
         </div>
         <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://cdn.pixabay.com/photo/2013/07/13/14/15/france-162295_960_720.png">
-            </a>
+            <label for="01924c48-49bb-40c2-9c32-ab582e6db6f4">
+                <a href="#">
+                    <img class="aj-img px-10" src="https://cdn.pixabay.com/photo/2013/07/13/14/15/france-162295_960_720.png">
+                </a>
+            </label>
         </div>
         <div class="">
             <a href="#">
