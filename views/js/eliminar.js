@@ -52,6 +52,8 @@ function insertarProductos(productos){
 async function eliminarProducto(e){
     // alert(e.id)
     const linkControlador=document.getElementById("linkControlador").value;
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     let idModelo=e.getAttribute("data-id-modelo")
     let idConfig=e.getAttribute("data-id-config")
     let ean=e.getAttribute("data-ean")
@@ -74,15 +76,19 @@ async function eliminarProducto(e){
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("producto Eliminado =>>>>> ",respuestaJson)
             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
+            preloader.style.opacity="0"
             consultarProductosPorPais2(checkboxsPaises[0].value)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
 
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -102,9 +108,11 @@ function consultarPaisesZalando(){
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
             }
+            preloader.style.opacity="0"
         },
         error: () => {
             // alert("error al conectar con el servidor");
+            preloader.style.opacity="0"
         }
     });
 }
@@ -126,6 +134,8 @@ function crearCheckboxPaisTest(paises){
 
 function consultarProductosPorPais(a){
     // alert(a.id)
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
         type: 'GET',
@@ -141,8 +151,10 @@ function consultarProductosPorPais(a){
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
             console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
             // alert("error al conectar con el servidor");
         }
     });
@@ -150,6 +162,8 @@ function consultarProductosPorPais(a){
 function consultarProductosPorPais2(idPais){
     // alert(a.id)
     const linkControlador=document.getElementById("linkControlador").value;
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -164,9 +178,11 @@ function consultarProductosPorPais2(idPais){
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
             console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
+            preloader.style.opacity="0"
         },
         error: () => {
             // alert("error al conectar con el servidor");
+            preloader.style.opacity="0"
         }
     });
 }
