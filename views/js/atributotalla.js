@@ -7,8 +7,10 @@ let botonEliminar=document.getElementById("botonEliminar");
 let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
 function registrar(){
+    let preloader=document.getElementById("preloader")
     const linkControlador=document.getElementById("linkControlador").value;
     let atributo=document.getElementById("selectAtributoPrestashop")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
         cache: false,
@@ -21,11 +23,13 @@ function registrar(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            preloader.style.opacity="0"
             consultarTodos()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -66,6 +70,8 @@ function insertarAtributoSelect(atributos){
 
 function consultarTodos(){
     const linkControlador=document.getElementById("linkControlador").value;
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -79,9 +85,11 @@ function consultarTodos(){
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor.datos))
             insertarAtributosGuardados(datos);
+            preloader.style.opacity="0"
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -153,6 +161,8 @@ function actualizar(){
 
 function eliminar(a){
     const linkControlador=document.getElementById("linkControlador").value;
+    let atributo=document.getElementById("selectAtributoPrestashop")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
         cache: false,
@@ -166,11 +176,13 @@ function eliminar(a){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            preloader.style.opacity="0"
             consultarTodos()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }

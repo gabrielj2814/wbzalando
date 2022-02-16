@@ -1,3 +1,4 @@
+
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <h1>Añadir Atributo Talla</h1>
    
@@ -39,4 +40,11 @@
     <button class="btn btn-primary" id="botonEliminar">Eliminar</button>
 </div>
 -->
+<div class="col-12 fat-pre"  id="preloader">
+    <div class="pre-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
 <script type="text/javascript" src="/modules/wbzalando/views/js/atributotalla.js"></script>
