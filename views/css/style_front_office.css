@@ -82,8 +82,11 @@
 
 /* carrusel */
 .slick-list{
-    width: 100%;
+    width: 80%;
     overflow: hidden;
+    margin: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 .slick-track{
     display: flex;
@@ -94,25 +97,21 @@
     width: 160px; 
 }
 
-.right.carousel-control{
-    margin-right: -35px !important;
+.slick-arrow {
+    position: absolute;
+    bottom: 40%;
+    z-index: 15;
+    padding: 5px !important;
 }
-.left.carousel-control{
-    margin-left: -35px !important; 
+.prev-arrow{
+    left: 7%;
+}
+.next-arrow{
+    right: 7%;
 }
 
-.slick-prev{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 15;
-    margin-bottom: 20px !important;
-}
-.slick-next{
-    position: relative;
-    bottom: 0;
-    left: 100px;
-    z-index: 1;
-    margin-top: 15px;
-    margin-bottom: 20px !important;
-}
+.date-style::placeholder {
+    color: black;
+    font-size: 0.9rem;
+    text-align: center;
+  }
