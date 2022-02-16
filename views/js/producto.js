@@ -381,6 +381,54 @@ function enviarProductos(){
                       }
                     }
                   ]
+                },
+                {
+                    merchant_product_config_id: "3336662",
+                    product_config_attributes: {
+                        color_code: "802",
+                        season_code: "fs18",
+                        "color_code.primary": "fff",
+                        description: {
+                            en:"hello"
+                        },
+                        "supplier_color": "hola que tal 2",
+                        media: [
+                            {
+                                media_path: "https://zalando.com/1667531.jpg",
+                                url: "https://zalando.com/1667531.jpg",
+                                media_sort_key: 222
+                            }
+                        ]
+                  },
+                  product_simples: [
+                    {
+                        merchant_product_simple_id: "WTC7412-XL",
+                        product_simple_attributes: {
+                            ean: "3523698745632",
+                            size_codes: {
+                                size: "XL"
+                        }
+                      }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC7422-S",
+                        product_simple_attributes: {
+                            ean: "3523698745632",
+                            size_codes: {
+                                size: "S"
+                        }
+                      }
+                    },
+                    {
+                        merchant_product_simple_id: "WTC7432-L",
+                        product_simple_attributes: {
+                            ean: "3523698745632",
+                            size_codes: {
+                                size: "L"
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -389,6 +437,60 @@ function enviarProductos(){
                     {
                         "ean": "352369874563",
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
+                        "regular_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "promotional_price": {
+                            "amount": 80.95,
+                            "currency": "EUR"
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "promotional_price": {
+                                    "amount": 80.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
+                            }
+                        ],
+                        "ignore_warnings": true
+                    },
+                    {
+                        "ean": "352369874563",
+                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
+                        "regular_price": {
+                            "amount": 89.95,
+                            "currency": "EUR"
+                        },
+                        "promotional_price": {
+                            "amount": 80.95,
+                            "currency": "EUR"
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": 89.95,
+                                    "currency": "EUR"
+                                },
+                                "promotional_price": {
+                                    "amount": 80.95,
+                                    "currency": "EUR"
+                                },
+                                "start_time": "2022-01-25T00:00:00.00Z",
+                                "end_time": "2022-01-28T00:00:00.00Z"
+                            }
+                        ],
+                        "ignore_warnings": true
+                    },
+                    {
+                        "ean": "3523698745632",
+                        "sales_channel_id": "00f2a393-6889-4fc0-8cd9-86e454e6dfa3",
                         "regular_price": {
                             "amount": 89.95,
                             "currency": "EUR"
@@ -425,6 +527,11 @@ function enviarProductos(){
                     {
                         "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
                         "ean": "352369874563",
+                        "quantity": 25
+                    },
+                    {
+                        "sales_channel_id": "00f2a393-6889-4fc0-8cd9-86e454e6dfa3",
+                        "ean": "3523698745632",
                         "quantity": 25
                     }
                   ]

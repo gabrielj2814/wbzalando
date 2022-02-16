@@ -164,6 +164,7 @@ class WbZalando extends Module{
             'CREATE TABLE IF NOT EXISTS '.$this->tablaModulo.'_simple_producto(
                 id_simple_producto VARCHAR(150) NOT NULL,
                 id_configuracion_producto VARCHAR(150) NOT NULL,
+                ean VARCHAR(150) NOT NULL,
                 json_simple_producto JSON NOT NULL,
                 PRIMARY KEY (`id_simple_producto`),
                 CONSTRAINT `FK_id_configuracion_producto` FOREIGN KEY (id_configuracion_producto) REFERENCES '.$this->tablaModulo.'_configuracion_producto(id_configuracion_producto) ON UPDATE CASCADE ON DELETE CASCADE
