@@ -1,6 +1,4 @@
-<style>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" type="text/css" />
-</style>
+<style><link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" type="text/css" /></style>
 
 
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
@@ -20,7 +18,7 @@
     </button>
 </div>
 -->
-
+<!--
 <div class="vistaInicial id="vistaInicial">
     <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
         <div class="col-11 col-sm-11 col-md-11 col-lg-6 col-xl-6" style="margin-left:auto;margin-right:auto;">
@@ -87,16 +85,18 @@
     </table>
 
 </div>
+-->
 
+<!--
 <div id="contenedorVistaSubirProductos" class="contenedorVistaSubirProductos" style="width: 100%;" >
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonSalirVistaSubirProducto">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
         </svg>
     </button>
-
     
-    <!--
+    
+ 
     <h2 class="centrar-texto">Lista de productos seleccionados</h2>
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonTestEnvio"">
         probar envio
@@ -104,16 +104,16 @@
     <button class="btn btn-primary" style="margin-bottom: 30px;" id="botonConsultarPedidos"">
         consultar pedidos
     </button>
-    -->
+
+-->
+
+
+<h1>Enviar producto</h1>
+<div class="width: 100%; display: block;">
 
     <div class="slider-pais" style="width: 100%; position: relative;">
         <div class="">
             <a href="#">
-                <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-            </a>
-        </div>
-        <div class="">
-            <a href="#">
                 <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
             </a>
         </div>
@@ -124,20 +124,39 @@
         </div>
         <div class="">
             <a href="#">
+                <img class="aj-img px-10" src="https://cdn.countryflags.com/thumbs/germany/flag-400.png">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
+                <img class="aj-img px-10" src="https://cdn.pixabay.com/photo/2013/07/13/14/15/france-162295_960_720.png">
+            </a>
+        </div>
+        <div class="">
+            <a href="#">
                 <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
             </a>
         </div>
         <div class="">
             <a href="#">
                 <img class="aj-img px-10" src="https://img.freepik.com/vector-gratis/ilustracion-bandera-estados-unidos_53876-18165.jpg?w=900">
-            </a>
-        </div>
-        <div class="">
-            <a href="#">
-                <img class="aj-img px-10" src="https://www.comprarbanderas.es/images/banderas/400/60-espana-sin-escudo_400px.jpg">
             </a>
         </div>
     </div>
+
+   
+</div>
+
+
+
+   
+<div>
+    <!-- 
+    <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
+        <select id="selectCategoriaAsosiadas" onBlur="cargarProductoProcategoria()"></select>
+    </div>
+    -->
+
 
     <div>
         <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5">
@@ -192,10 +211,7 @@
 </div>
 
 
-
-   
-
-
+</div>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
@@ -203,11 +219,9 @@
     $('.slider-pais').slick
     ({
         infinite: true,
+        prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
+        nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
         slidesToShow: 5,
         slidesToScroll: 1
     });
-
-
-    let btnPrev = document.querySelector('.slick-prev').className += " btn btn-primary";     
-    let btnNext = document.querySelector('.slick-next').className += " btn btn-primary";
 </script>
