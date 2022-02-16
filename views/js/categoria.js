@@ -21,6 +21,8 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonEliminar=document.getElementById("botonEliminar");
 
 function registrar(){
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioCategoria").serializeArray()
     let arrayCatgorias=[]
@@ -62,10 +64,12 @@ function registrar(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            preloader.style.opacity="0"
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
@@ -115,6 +119,8 @@ function consultar(){
 
 function consultarEsquemasYCategorias(){
     const linkControlador=document.getElementById("linkControlador").value;
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -129,9 +135,11 @@ function consultarEsquemasYCategorias(){
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             crearElementosFormulario(datos)
+            preloader.style.opacity="0"
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
 }
