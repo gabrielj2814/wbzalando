@@ -26,6 +26,11 @@ class WbZalando extends Module{
                 "nombreControlador" => "Producto",
             ],
             [
+                "nombre" => "Modificar productos",
+                "nombreControladorFull" => "ModificarproductoController",
+                "nombreControlador" => "Modificarproducto",
+            ],
+            [
                 "nombre" => "Estatus de pedidos",
                 "nombreControladorFull" => "PedidoController",
                 "nombreControlador" => "Pedido",
