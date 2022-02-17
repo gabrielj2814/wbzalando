@@ -115,3 +115,8 @@
     font-size: 0.9rem;
     text-align: center;
 }
+/* pre-loader */
+.pre-loader{
+    position: relative;
+    z-index: 99;
+}
