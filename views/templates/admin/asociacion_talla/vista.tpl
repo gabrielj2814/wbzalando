@@ -24,14 +24,23 @@
 
 <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
-        <select id='campoAtributoTalla' name='campoAtributoTalla' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
+        <select id='campoAtributoTalla' name='campoAtributoTalla' ></select>
     </div>
     <div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'>
-        <select id='campoCategoriaTallasZalando' name='campoCategoriaTallasZalando' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
+        <select id='campoCategoriaTallasZalando' name='campoCategoriaTallasZalando' ></select>
     </div>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
-        <select id='campoPais' name='campoPais' onBlur='consultarConsultarTallaPorAtributoTalla()'></select>
+        <select id='campoPais' name='campoPais' ></select>
     </div>
+    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
+        <button class="btn btn-primary" onClick="consultarConsultarTallaPorAtributoTalla()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+            </svg>
+            Filtrar
+        </button>
+    </div>
+    
 </div>
 
 
