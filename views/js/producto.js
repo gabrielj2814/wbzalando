@@ -312,6 +312,8 @@ function crearFormularioEnvioDeProducto(checkbox){
 function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
     // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
+    let preloader=document.getElementById("preloader")
+    preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let productos=[
         {
@@ -552,8 +554,10 @@ function enviarProductos(){
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
             console.log("datos envio =>>>>>>",datos);
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
             // alert("error al conectar con el servidor");
         }
     });
