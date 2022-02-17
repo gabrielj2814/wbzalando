@@ -65,10 +65,11 @@ class WbZalando extends Module{
     }
 
     public function install(){
-        
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/setup.php');
         return (
             parent::install() && 
-            $this->installTab() && 
+            // $this->installTab() && 
+            SetupWbZalando::instalarTabs() && 
             $this->instalarTablas() && 
             $this->registerHook("displayBackOfficeHeader") && 
             Configuration::updateValue("WB_ZALANDO_ID_TALLA_PS","NULL") && 
@@ -80,9 +81,11 @@ class WbZalando extends Module{
     }
 
     public function uninstall(){
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/setup.php');
         return (
             parent::uninstall() && 
-            $this->uninstallTab() && 
+            // $this->uninstallTab() && 
+            SetupWbZalando::desintalarTabs() && 
             $this->desintalarTablas() && 
             $this->unregisterHook("displayBackOfficeHeader") && 
             Configuration::deleteByName("WB_ZALANDO_ID_TALLA_PS")  && 
@@ -243,7 +246,6 @@ class WbZalando extends Module{
                 break;
             }
         }
-
         return $estado;
     }
 
