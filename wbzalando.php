@@ -21,22 +21,22 @@ class WbZalando extends Module{
         $this->todosLenguajes=Language::getLanguages();
         $this->listaDeControladores=[
             [
-                "nombre" => "Productos",
+                "nombre" => "Envio de productos",
                 "nombreControladorFull" => "ProductoController",
                 "nombreControlador" => "Producto",
             ],
             [
-                "nombre" => "Pedido",
+                "nombre" => "Estatus de pedidos",
                 "nombreControladorFull" => "PedidoController",
                 "nombreControlador" => "Pedido",
             ],
             [
-                "nombre" => "Color",
+                "nombre" => "Gestión color",
                 "nombreControladorFull" => "ColorController",
                 "nombreControlador" => "Color",
             ],
             [
-                "nombre" => "Talla",
+                "nombre" => "Gestión talla",
                 "nombreControladorFull" => "TallaController",
                 "nombreControlador" => "Talla",
             ],
@@ -46,12 +46,12 @@ class WbZalando extends Module{
                 "nombreControlador" => "Atributotalla",
             ],
             [
-                "nombre" => "categorias",
+                "nombre" => "Gestión categorias",
                 "nombreControladorFull" => "CategoriaController",
                 "nombreControlador" => "categoria",
             ],
             [
-                "nombre" => "Eliminar Producto",
+                "nombre" => "Eliminar de productos",
                 "nombreControladorFull" => "EliminarController",
                 "nombreControlador" => "Eliminar",
             ],
