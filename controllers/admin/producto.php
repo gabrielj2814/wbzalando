@@ -291,41 +291,11 @@ class ProductoController extends ModuleAdminController{
             //     "respuestaServidor" => $respuesta,
             //     "estatuRespuestaApi" => $respuesta["estado"]
             // ];
-
-            // verificando existencia de producto en la base de datos
-            $respuestaExistenciaProducto=$this->consultarModeloProductoDB($producto["merchant_product_model_id"]);
-            if(count($respuestaExistenciaProducto)===1){
-                // este codigo se encargar de cuando un producto ya exista 
-                // lo que haces es que actualiza los precios del producto
-                // o en caso de que sean precios o stocks nuevos los agrega a la base de datos 
-                $datosNuevos=["stocks" =>[], "precios" =>[]];
-                // foreach($producto["stocks"] as $stockProducto){
-                //     if(count($this->consultarStockProducto($stockProducto["ean"]))){
-                //         $this->actualizarStockProducto($stockProducto);
-                //     }
-                //     else{
-                //         $datosNuevos["stocks"][]=$stockProducto;
-                //     }
-                // }
-                foreach($producto["precios"] as $precioProducto){
-                    if(count($this->consultarPrecioProducto($precioProducto["ean"]))){
-                        $this->actualizarPrecioProducto($precioProducto);
-                    }
-                    else{
-                        $datosNuevos["precios"][]=$precioProducto;
-                    }
-                }
-                $respuestaStock=$this->guardarStockProducto($datosNuevos);
-                $respuestaPrecio=$this->guardarPrecioProducto($datosNuevos);
-            }
-            else{
-                // guardar el producto en la base de datos
-                $respuestaModelo=$this->guardarModeloProducto($producto);
-                $respuestaConfig=$this->guardarConfigProducto($producto);
-                $respuestaSimple=$this->guardarSimpleProducto($producto);
-                $respuestaPrecio=$this->guardarPrecioProducto($producto);
-                $respuestaStock=$this->guardarStockProducto($producto);
-            }
+            $respuestaModelo=$this->guardarModeloProducto($producto);
+            $respuestaConfig=$this->guardarConfigProducto($producto);
+            $respuestaSimple=$this->guardarSimpleProducto($producto);
+            $respuestaPrecio=$this->guardarPrecioProducto($producto);
+            $respuestaStock=$this->guardarStockProducto($producto);
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
