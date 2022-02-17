@@ -17,7 +17,7 @@ class WbZalando extends Module{
         $this->controllers = array('default');
         $this->bootstrap = 1;
         $this->tablaModulo=_DB_PREFIX_."wbzalando";
-        // ----- traducciones
+        // ----- traducciones 
         $this->todosLenguajes=Language::getLanguages();
         $this->listaDeControladores=[
             [
