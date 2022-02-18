@@ -117,7 +117,11 @@ function consultar(){
     });
 }
 
-function consultarEsquemasYCategorias(){
+function consultarEsquemasYCategorias(a=1){
+    let pagina=1;
+    if(a!=1){
+        pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
+    }
     const linkControlador=document.getElementById("linkControlador").value;
     let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
@@ -129,21 +133,45 @@ function consultarEsquemasYCategorias(){
         data: {
             ajax: true,
             action: 'getconsultaresquemasycategorias',
+            pagina
 
         },
         success: (respuesta) => {
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             crearElementosFormulario(datos)
+            let primeraPag=document.getElementById("primera-pag")
+            let ultimaPag=document.getElementById("ultima-pag")
+            primeraPag.setAttribute("data-numero-pagina",((datos.totalDePagina-datos.totalDePagina)+1))
+            ultimaPag.setAttribute("data-numero-pagina",datos.totalDePagina)
+            insertarBotonesPaginasPaginacion(pagina,datos.totalDePagina)
             preloader.style.opacity="0"
-            // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
         }
     });
 }
- 
+
+function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let listaPaginas=document.getElementById("lista-paginas")
+    listaPaginas.innerHTML=""
+    let contador=0;
+    let htmlBotonesPaginacion="";
+    while(contador<totalDePagina){
+        let paginaBoton=(contador+1)
+        let boton=""
+        if(paginaBoton===parseInt(pagina)){
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+        }
+        else{
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+        }
+        htmlBotonesPaginacion+=boton;
+        contador++
+    }
+    listaPaginas.innerHTML=htmlBotonesPaginacion;
+}
  
 function crearElementosFormulario(datos){
     let formularioCategoria=document.getElementById("formularioCategoria");

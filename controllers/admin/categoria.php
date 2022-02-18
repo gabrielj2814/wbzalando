@@ -105,14 +105,12 @@ class CategoriaController extends ModuleAdminController{
         foreach($_POST["asociacion"] as $categorias){
             $datosEsquema=$this->consultarEsquema($categorias["outline"]);
             $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
-            // $jsonFake=["msj" => "hola mundo"];
             $repuestaDB=$this->registrar($categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
             if( $repuestaDB){
                 $respuesta_servidor["respuestaServidor"][]=[
                     "mensaje" => "registro completado",
                     "estado" => 200
                 ];
-                // $respuesta_servidor["respuestaServidor"]=$modeloProducto;
             }
             else{
                 $respuesta_servidor["respuestaServidor"][]=[
@@ -273,18 +271,6 @@ class CategoriaController extends ModuleAdminController{
                     $datos[$subPropiedades->label]="StructuredDefinition";
                 }
             }
-            // if($tipoDeDato==="StringDefinition"){
-            //     $datos="StringDefinition";
-            // }
-            // if($tipoDeDato==="LocalizedStringDefinition"){
-            //     $datos="LocalizedStringDefinition";
-            // }
-            // if($tipoDeDato==="IntegerDefinition"){
-            //     $datos="IntegerDefinition";
-            // }
-            // if($tipoDeDato==="DecimalDefinition"){
-            //     $datos="DecimalDefinition";
-            // }
             if($tipoDeDato!=="StructuredDefinition"){
                 $datos=$tipoDeDato;
                 $respuestaDB2=$this->consultarExistenciaPropidad($propiedad);
@@ -515,11 +501,15 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarEsquemasYCategorias(){
+        $minimoRegistros=2;
+        $pagina=$_GET["pagina"];
         $respuesta_servidor=["respuestaServidor" => []];
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
         $resultCategorias=$this->consultarCategoriasPrestashop();
+        $resultCategoriasPaginadas=$this->paginarCategoriasPrestashop($pagina,$minimoRegistros);
         $respuesta_servidor["respuestaServidor"]["esquemas"]=(count($resultEsquemas)===1)?json_decode($resultEsquemas[0]["esquemas_name_label"]):[];
-        $respuesta_servidor["respuestaServidor"]["categorias"]=$resultCategorias;
+        $respuesta_servidor["respuestaServidor"]["categorias"]=$resultCategoriasPaginadas;
+        $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($resultCategorias)/$minimoRegistros);
         print(json_encode($respuesta_servidor));
     }
 
@@ -532,7 +522,21 @@ class CategoriaController extends ModuleAdminController{
         ps_lang 
         WHERE ps_category_lang.id_lang=".$this->id_idioma." AND 
         ps_category_lang.id_category=ps_category.id_category AND 
-        ps_category_lang.id_lang=ps_lang.id_lang";
+        ps_category_lang.id_lang=ps_lang.id_lang;";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    public function paginarCategoriasPrestashop($pagina,$minimoRegistros){
+        $empezarPor=($pagina-1) * $minimoRegistros;
+        $SQL="
+        SELECT 
+        ps_category.id_category,
+        ps_category_lang.name  FROM ps_category,
+        ps_category_lang,
+        ps_lang 
+        WHERE ps_category_lang.id_lang=".$this->id_idioma." AND 
+        ps_category_lang.id_category=ps_category.id_category AND 
+        ps_category_lang.id_lang=ps_lang.id_lang LIMIT ".$empezarPor.",".$minimoRegistros.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
@@ -565,6 +569,9 @@ class CategoriaController extends ModuleAdminController{
         }
         return $respuesta;
     }
+
+
+
 
 
 }
