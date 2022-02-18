@@ -20,8 +20,26 @@
 .m-auto{
     margin: auto !important;
 }
+.m-0{
+    margin: 0px !important;
+}
 .mx{
     margin: 0px 30px;
+}
+.mt{
+    margin-top: 10px;
+}
+.mb{
+    margin-bottom: 10px;
+}
+.mr{
+    margin-right: 10px;
+}
+.ml{
+    margin-left: 10px;
+}
+.p-0{
+    padding: 0px !important;
 }
 .p-5{
     padding-top: 5px;
@@ -117,7 +135,95 @@
 }
 
 
+/* modificar producto */
 
+.wrapp_search_category{
+    display: inline-block;
+}
+.search_category {
+    font-size: 13px !important;
+    display: inline-block !important;
+    height: 38px !important;
+    line-height: 4 !important;
+    margin-top: 10px;
+}
+.tab_container .tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #fff;
+}
+.tab_container .tabs li {
+    float: left;
+    padding: 10px;
+    line-height: 30px;
+    color: #333333;
+    font: 400 13px/1.42857 "Open Sans",Helvetica,Arial,sans-serif;
+    text-transform: capitalize;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+}
+.custom_bootstrap .panel .panel-heading {
+    font-family: "Ubuntu Condensed",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #555;
+    height: auto;
+    margin: 0;
+}
+.tab_container {
+    overflow: hidden;
+    margin-top: -25px;
+}
 
-
-/* ---------------------------------------------------------------- */
+#content.bootstrap input, #content.bootstrap button, #content.bootstrap textarea, #content.bootstrap select {
+    font-family: "Open Sans",helvetica,arial,sans-serif;
+}
+.custom_bootstrap input, .custom_bootstrap select, .custom_bootstrap label, .custom_bootstrap button:not(.dropdown-toggle), .custom_bootstrap textarea, .wrap_file_input, #content .alert, .alert {
+    margin-top: 15px;
+}
+.bootstrap input, .bootstrap button, .bootstrap select, .bootstrap textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+.tab-menu {
+    float: left;
+    padding: 10px 15px;
+    line-height: 30px;
+    font-size: 18px !important;
+    background-color: #2789AD;
+    border-bottom: 2px solid #ccc;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    text-align: left;
+    display: none;
+    margin: 0 !important;
+}
+.custom_bootstrap .panel .panel-heading {
+    font-family: "Ubuntu Condensed",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #555;
+    height: auto;
+    margin: 0;
+}
