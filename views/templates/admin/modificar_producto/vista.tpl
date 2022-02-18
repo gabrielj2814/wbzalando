@@ -1,4 +1,6 @@
+
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
+
 
 
 <div class="{if $smarty.const._PS_VERSION_ < 1.6}custom_responsive{/if} custom_bootstrap">
@@ -34,7 +36,7 @@
                                         <i class="icon-check-empty"></i>
                                         Deseleccionar todo
                                     </a>
-                                        <span class="wrapp_search_category">
+                                        <span class="wrapp_search_category" style="display: inline-block;">
                                             <input type="text" class="search_category">
                                         </span>
                                 </span>
@@ -79,7 +81,7 @@
 						<!-- search-products -->
 						<div class="col-lg-6 search-products">
 							<div class="row">
-								<div class="col-sm-12">
+								<div class="col-sm-12 alignitem-tb">
 									<label class="control-label search-prod margin-right">
 										Buscar producto
 									</label>
@@ -95,8 +97,8 @@
                                     </span>
 									</span>
 								</div>
-								<div class="col-xs-12 form-group form-group-lg">
-									<div class="col-sm-9">
+								<div class="col-xs-12 form-group form-group-lg" style="margin-bottom: 0 !important;">
+									<div class="col-sm-9 p-0">
 										<input name="search_query" class="form-control" type="text"/>
 									</div>
 									<div class="col-sm-3">
@@ -111,12 +113,12 @@
 										</select>
 									</div>
 								</div>
-								<label class="control-label col-xs-12">
+								<label class="control-label col-xs-12 mt">
                                     Búsqueda por fabricante
 								</label>
 								<div class="col-xs-12">
-									<select id="manufacturer" class="form-control" multiple name="">
-											<option value="">Graphic Comer</option>
+                                    <select id='' name=''>
+                                            <option value="">Graphic Comer</option>
                                             <option value="">Studio Design</option>
                                     </select>
 									<!-- <script>
@@ -125,12 +127,12 @@
                                         });
 									</script> -->
 								</div>
-								<label class="control-label col-lg-12">
+								<label class="control-label col-lg-12 mt">
                                     Búsqueda por proveedor
 								</label>
 								<div class="col-lg-12">
-									<select id="supplier" class="form-control" multiple name="">
-											<option value="">Accessories suppller</option>
+                                    <select id='' name=''>
+                                            <option value="">Accessories suppller</option>
                                             <option value="">Fashion suppller</option>
                                     </select>
 									<!-- <script>
@@ -140,11 +142,11 @@
 									</script> -->
 								</div>
 
-                                <label class="control-label col-lg-12">
+                                <label class="control-label col-lg-12 mt">
                                     Search by carrier
                                 </label>
                                 <div class="col-lg-12">
-                                    <select id="carrier" class="form-control" multiple name="carrier[]">
+                                    <select id='' name=''>
                                             <option value="">zalandolocal</option>
                                             <option value="">My carrier</option>
                                             <option value="">My cheap carrier</option>
@@ -157,7 +159,7 @@
                                     </script> -->
                                 </div>
 
-								<div class="col-sm-12">
+								<div class="col-sm-12 mt">
                                         <label class="control-label margin-right">
                                             Sólo los productos activos
                                         </label>
@@ -181,7 +183,7 @@
                                         </span>
                                         {/if} -->
 
-                                        <label class="control-label margin-right">
+                                        <label class="control-label">
                                             Sólo no activo productos
                                         </label>
                                         <!-- Only disabled products -->
@@ -205,18 +207,18 @@
                                         {/if} -->
 								</div>
 
-								<div class="col-lg-12">
-									<label class="control-label font-weight-bold margin-right">
+								<div class="col-lg-12 alignitem-tb mt">
+									<label class="control-label font-weight-bold">
                                         Buscar por el cantidad?
 									</label>
 									<!-- search-quantity -->
-									<span class="search-quantity margin-right">
+									<span class="alignitem-tb search-quantity">
                                         <label class="control-label">
                                             De
                                         </label>
                                         <input type="text" class="fixed-width-xs" name="qty_from"">
                                     </span>
-									<span class="search-quantity">
+									<span class="alignitem-tb search-quantity ml">
                                         <label class="control-label">
                                             Hasta
                                         </label>
@@ -224,22 +226,22 @@
                                     </span>
 								</div>
 
-								<div class="col-lg-12">
+								<div class="col-lg-12 alignitem-tb mt">
 									<!-- Search by price -->
-									<label class="control-label font-weight-bold margin-right">
+									<label class="control-label font-weight-bold">
                                         Buscar por precio?
 									</label>
-									<select name="type_price" class="fixed-width-md margin-right">
+									<select id='' name='' style="width: 19%;">
 										<option value="0">Precio base</option>
 										<option value="1">Precio final</option>
 									</select>
-									<span class="search-quantity margin-right">
+									<span class="alignitem-tb search-quantity ml">
                                         <label class="control-label">
                                             De
                                         </label>
                                         <input type="text" class="fixed-width-xs" name="price_from">
                                     </span>
-									<span class="search-quantity">
+									<span class="alignitem-tb search-quantity ml">
                                         <label class="control-label">
                                             Hasta
                                         </label>
@@ -248,27 +250,27 @@
 
 								</div>
 
-								<label class="control-label font-weight-bold col-lg-12">
+								<label class="control-label font-weight-bold col-lg-12 mt">
                                     Buscar por fecha de creación?
 								</label>
 
 								<!-- Search by creation date -->
-								<div class="col-lg-12">
-									<label class="control-label margin-right">
+								<div class="col-lg-12 alignitem-tb mt">
+									<label class="control-label ">
 										Desde
 									</label>
-									<input class="datetimepicker fixed-width-lg margin-right" type="text" name="date_from" value="" autocomplete="off">
-									<label class="control-label margin-right">
+									<input class="datetimepicker fixed-width-lg" type="text" name="date_from" value="" autocomplete="off">
+									<label class="control-label ml">
 										A
 									</label>
 									<input class="datetimepicker fixed-width-lg" type="text" name="date_to" value="" autocomplete="off">
 								</div>
 
-								<div class="col-sm-12">
-									<label class="control-label margin-right">
+								<div class="col-sm-12 mt">
+									<label class="control-label">
                                         Cuántas de mostrar los productos?
 									</label>
-									<select class="form-control fixed-width-sm" name="how_many_show">
+									<select id='' name=''>
 										<option selected value="20">20</option>
 										<option value="50">50</option>
 										<option value="100">100</option>
@@ -279,22 +281,78 @@
 								</div>
 								<div class="col-sm-12">
 									<div class="clearfix">
-										<label class="control-label margin-right">
+										<label class="control-label">
                                             Seleccionar característica
                                         </label>
-										<select name="feature_group" class="fixed-width-lg">
+										<select id='' name=''>
                                             <option value="">Composition (6)</option>
                                             <option value="">Property (4)</option>
 										</select>
 									</div>
+                                    <div data-feature-values="1" style="" class="form-group clearfix"><!-- feature_values -->
+                                        <div class="feature_checkbox">
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="4">
+                                                    Algodón
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="3">
+                                                    Ceramic
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="2">
+                                                    Lana
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="6">
+                                                    Matt paper
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="1">
+                                                    Poliéster
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <label class="control-label">
+                                                    <input type="checkbox" name="features[]" value="5">
+                                                    Recycled cardboard
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12 clearfix" style="padding-top: 5px;padding-bottom: 5px;margin-top:5px;background-color:#f1f1f1;">
+                                                        <label class="control-label">
+                                                            <input type="checkbox" name="no_feature_value[]" value="1">
+                                                            Sin valor
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div " style="display: none" class="form-group clearfix"></div>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-12 control_btn">
-							<button id="beginSearch" class="btn btn-default">
-                                Buscar producto
-							</button>
+                        <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
+                            <div class="jt-center">
+                                <div class="mr">
+                                    <input  type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Buscar por nombre de producto"/>
+                                </div>
+                                <button id="beginSearch" class="btn btn-default">
+                                    Buscar producto
+                                </button>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -313,226 +371,236 @@
 			</div>
 		</div>
 
-		<div class="panel mode_edit panel-container row">
-			<div class="tn-box mv_succes">
-            <p class="message_mv_content">Actualización con éxito!</p>
-            <div class="tn-progress"></div>
-        </div>
-        <div class="tn-box mv_error">
-            <p class="message_mv_content">error</p>
-            <div class="tn-progress"></div>
-        </div>
-        <div class="panel">
-            <div class="panel-heading clearfix">
-                <button class="change_date_button">
-                    <i class="icon-plus"></i>
-                </button>
-                <span>Configuración global
+        
+
+
+
+        <div class="panel mode_edit panel-container row">
+            <div class="tn-box mv_succes" style="display: none;">
+                <p class="message_mv_content">Actualización con éxito!</p>
+                <div class="tn-progress"></div>
+            </div>
+            <div class="tn-box mv_error" style="display: none;">
+                <p class="message_mv_content">error</p>
+                <div class="tn-progress"></div>
+            </div>
+            <div class="panel" style="border: none !important;">
+                <div class="panel-heading clearfix">
+                    <button class="change_date_button">
+                        <i class="icon-plus"></i>
+                    </button>
+                    <span>Configuración global
                 </span>
-                <a class="masseditdoc" href="http://zalando.test/admin639kgjtj6/index.php?controller=AdminModules&amp;token=fa51ac314d730e3a5d2dc58ce267468e&amp;configure=masseditproduct&amp;tab_module=masseditproduct&amp;tab_module=front_office_features&amp;module_name=masseditproduct">Documentación</a>
-                <a class="float-right" id="seosa_manager_btn" href="#">Nuestros módulos</a>
-            </div>
-            <div class="form-group change_date_container clearfix">
-                <label class="control-label col-lg-12">Cambiar la fecha de actualización del producto después de que los cambios entren en vigor?</label>
-                <div class="col-lg-12">
-                    <div class="btn-group btn-group-radio">
-                        <label for="change_date_upd_yes">
-                            <input type="radio" name="change_date_upd" value="1" id="change_date_upd_yes">
-                            <span class="btn btn-default">Sí</span>
-                        </label>
-                        <label for="change_date_upd_no">
-                            <input type="radio" checked="" name="change_date_upd" value="0" id="change_date_upd_no">
-                            <span class="btn btn-default">No</span>
-                        </label>
+                    <a class="masseditdoc" href="http://zalando.test/admin639kgjtj6/index.php?controller=AdminModules&amp;token=fa51ac314d730e3a5d2dc58ce267468e&amp;configure=masseditproduct&amp;tab_module=masseditproduct&amp;tab_module=front_office_features&amp;module_name=masseditproduct">Documentación</a>
+                    <a class="float-right" id="seosa_manager_btn" href="#">Nuestros módulos</a>
+                </div>
+                <div class="form-group change_date_container clearfix" style="display: none;">
+                    <label class="control-label col-lg-12">Cambiar la fecha de actualización del producto después de que los cambios entren en vigor?</label>
+                    <div class="col-lg-12">
+                        <div class="btn-group btn-group-radio">
+                            <label for="change_date_upd_yes">
+                                <input type="radio" name="change_date_upd" value="1" id="change_date_upd_yes">
+                                <span class="btn btn-default">Sí</span>
+                            </label>
+                            <label for="change_date_upd_no">
+                                <input type="radio" checked="" name="change_date_upd" value="0" id="change_date_upd_no">
+                                <span class="btn btn-default">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group change_date_container clearfix" style="display: none;">
+                    <label class="control-label col-lg-12">Productos reindex después del cambio?</label>
+                    <div class="col-lg-12">
+                        <div class="btn-group btn-group-radio">
+                            <label for="reindex_products_yes">
+                                <input type="radio" checked="" name="reindex_products" value="1" id="reindex_products_yes">
+                                <span class="btn btn-default">Sí</span>
+                            </label>
+                            <label for="reindex_products_no">
+                                <input type="radio" name="reindex_products" value="0" id="reindex_products_no">
+                                <span class="btn btn-default">No</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group change_date_container clearfix">
-                <label class="control-label col-lg-12">Productos reindex después del cambio?</label>
-                <div class="col-lg-12">
-                    <div class="btn-group btn-group-radio">
-                        <label for="reindex_products_yes">
-                            <input type="radio" checked="" name="reindex_products" value="1" id="reindex_products_yes">
-                            <span class="btn btn-default">Sí</span>
-                        </label>
-                        <label for="reindex_products_no">
-                            <input type="radio" name="reindex_products" value="0" id="reindex_products_no">
-                            <span class="btn btn-default">No</span>
-                        </label>
+            <div class="tab_container">
+                <div class="col-md-2">
+                    <button class="tab-menu">Menú<i class="icon-chevron-down"></i></button>
+                    <ul class="tabs clearfix">
+                        <li data-tab="category">Categorías</li>
+                        <li data-tab="price">Precio</li>
+                        <li data-tab="active">Activo</li>
+                        <li data-tab="manufacturer">Fabricante</li>
+                        <li data-tab="accessories">Accesorios</li>
+                        <li data-tab="supplier">Proveedor</li>
+                        <li data-tab="discount">Descuento</li>
+                        <li data-tab="features">Características</li>
+                        <li data-tab="delivery">Entrega</li>
+                        <li data-tab="image">Imagen</li>
+                        <li data-tab="description">Descripción</li>
+                        <li data-tab="rule_combination">Combinaciones</li>
+                        <li data-tab="attachment">Archivos adjuntos</li>
+                        <li data-tab="advanced_stock_management">Gestion de Stocks</li>
+                        <li data-tab="quantity">Cantidad</li>
+                        <li data-tab="meta">Meta</li>
+                        <li data-tab="reference">Referencia</li>
+                        <li data-tab="createproducts" data-action="create_products">Crear productos</li>
+                        <li data-tab="customization">Campos de personalización</li>
+                    </ul>
+                </div>
+                <div class="col-md-10">
+                    <div class="tabs_content clearfix ">
+                        <h3 id="title_edit_tabs" class="panel-heading" style="margin: 0 !important;">Comenzar a trabajar con los productos seleccionados</h3>
+                        <h3 id="title_create_tabs" class="panel-heading" style="margin: 0 !important;">Comenzar a crear productos</h3>
+                        <div class="tab_content ajax_load_tab loading" id="category">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="price">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="active">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="manufacturer">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="accessories">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="supplier">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="discount">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="features">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="delivery">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="image">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="description">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="rule_combination">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="attachment">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="advanced_stock_management">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="quantity">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="meta">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="reference">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="createproducts">
+                        </div>
+                        <div class="tab_content ajax_load_tab loading" id="customization">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <br>
+        
 		
-        <div class="tab_container">
-            <div class="col-md-2">
-                <button class="tab-menu">Menú<i class="icon-chevron-down"></i></button>
-                <ul class="tabs clearfix">
-                    <li data-tab="category">Categorías</li>
-                    <li data-tab="price">Precio</li>
-                    <li data-tab="active">Activo</li>
-                    <li data-tab="manufacturer">Fabricante</li>
-                    <li data-tab="accessories">Accesorios</li>
-                    <li data-tab="supplier">Proveedor</li>
-                    <li data-tab="discount">Descuento</li>
-                    <li data-tab="features">Características</li>
-                    <li data-tab="delivery">Entrega</li>
-                    <li data-tab="image">Imagen</li>
-                    <li data-tab="description">Descripción</li>
-                    <li data-tab="rule_combination">Combinaciones</li>
-                    <li data-tab="attachment">Archivos adjuntos</li>
-                    <li data-tab="advanced_stock_management">Gestion de Stocks</li>
-                    <li data-tab="quantity">Cantidad</li>
-                    <li data-tab="meta">Meta</li>
-                    <li data-tab="reference">Referencia</li>
-                    <li data-tab="createproducts" data-action="create_products">Crear productos</li>
-                    <li data-tab="customization">Campos de personalización</li>
-                </ul>
-            </div>
-            <div class="col-md-10">
-                <div class="tabs_content clearfix ">
-                <h3 id="title_edit_tabs" class="panel-heading">Comenzar a trabajar con los productos seleccionados</h3>
-                <h3 id="title_create_tabs" class="panel-heading">Comenzar a crear productos</h3>
-                <div class="tab_content ajax_load_tab loading" id="category">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="price">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="active">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="manufacturer">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="accessories">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="supplier">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="discount">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="features">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="delivery">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="image">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="description">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="rule_combination">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="attachment">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="advanced_stock_management">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="quantity">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="meta">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="reference">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="createproducts">
-                </div>
-                <div class="tab_content ajax_load_tab loading" id="customization">
-                </div>
-            </div>
-        </div>
-		<div class="panel mode_edit clearfix">
+
+
+        <div class="panel mode_edit clearfix">
             <h3 class="panel-heading">Artículos seleccionados</h3>
             <div class="table_selected_products">
                 <div class="col-xs-12">
-                  <table class="table">
-                    <thead>
-                        <tr class="table_head">
-                            <th>
-                                <span class="title_box" data-orderby="id_product">ID
-                                    <a href="#" data-orderway="DESC">
-                                        <i class="icon-caret-down"></i>
-                                    </a>
-                                    <a href="#" data-orderway="ASC">
-                                        <i class="icon-caret-up"></i>
-                                    </a>
-                                </span>
-                            </th>
-                            <th>Imagen</th>
-                            <th>Nombre</th>
-                            <th>
-                                <span class="title_box" data-orderby="reference">Referencia
-                                    <a href="#" data-orderway="DESC">
-                                        <i class="icon-caret-down"></i>
-                                    </a>
-                                    <a href="#" data-orderway="ASC">
-                                        <i class="icon-caret-up"></i>
-                                    </a>
-                                </span>
-                            </th>
-                            <th>Categoría por defecto</th>
-                            <th>
-                                <span class="title_box" data-orderby="price">Precio
-                                    <a href="#" data-orderway="DESC">
-                                        <i class="icon-caret-down"></i>
-                                    </a>
-                                    <a href="#" data-orderway="ASC">
-                                        <i class="icon-caret-up"></i>
-                                    </a>
-                                </span>
-                            </th>
-                            <th>Precio unitario (incl IVA )</th>
-                            <th>Fabricante</th>
-                            <th>Proveedor</th>
+                    <table class="table">
+                        <thead>
+                            <tr class="table_head">
                                 <th>
-                                <span class="title_box" data-orderby="quantity">Cantidad
-                                    <a href="#" data-orderway="DESC">
-                                        <i class="icon-caret-down"></i>
-                                    </a>
-                                    <a href="#" data-orderway="ASC">
-                                        <i class="icon-caret-up"></i>
-                                    </a>
-                                </span>
-                            </th>
-                            <th>Gestion de Stocks</th>
-                            <th>Activo</th>
-                            <th data-combinations="">Combinaciones <a href="#">Seleccionar</a>
-                                <div class="selector_item select_combinations">
-                                    <a class="check_all_combinations btn btn-default button" href="#">
-                                        <i class="icon-check-sign"></i>
-                                        Marcar todo
-                                    </a>
-                                    <a class="uncheck_all_combinations btn btn-default button" href="#">
-                                        <i class="icon-check-empty"></i>
-                                        Desmarcar todo
-                                    </a>
-                                    <a class="check_attribute_combinations btn btn-default button" href="#">
-                                        <i class="icon-list"></i>
-                                        Seleccionar atributo
-                                    </a>
-                                    <div id="attributes_select">
-                                        <div class="attribute_group_block">
-                                            <div>
-                                                Atributo
-                                                <select class="select_attribute">
-                                                    <option value="0">--</option>
-                                                    <option value="2">Color</option>
-                                                    <option value="3">Dimension</option>
-                                                    <option value="4">Paper Type</option>
-                                                    <option value="1">Tamaño</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                Valor
-                                                <select class="select_attribute_value">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <a class="start_select_combinations btn btn-default button" href="#">
-                                            Seleccionar
+                                    <span class="title_box" data-orderby="id_product">ID
+                                        <a href="#" data-orderway="DESC">
+                                            <i class="icon-caret-down"></i>
                                         </a>
+                                        <a href="#" data-orderway="ASC">
+                                            <i class="icon-caret-up"></i>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>
+                                    <span class="title_box" data-orderby="reference">Referencia
+                                        <a href="#" data-orderway="DESC">
+                                            <i class="icon-caret-down"></i>
+                                        </a>
+                                        <a href="#" data-orderway="ASC">
+                                            <i class="icon-caret-up"></i>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th>Categoría por defecto</th>
+                                <th>
+                                    <span class="title_box" data-orderby="price">Precio
+                                        <a href="#" data-orderway="DESC">
+                                            <i class="icon-caret-down"></i>
+                                        </a>
+                                        <a href="#" data-orderway="ASC">
+                                            <i class="icon-caret-up"></i>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th>Precio unitario (incl IVA )</th>
+                                <th>Fabricante</th>
+                                <th>Proveedor</th>
+                                <th>
+                                    <span class="title_box" data-orderby="quantity">Cantidad
+                                        <a href="#" data-orderway="DESC">
+                                            <i class="icon-caret-down"></i>
+                                        </a>
+                                        <a href="#" data-orderway="ASC">
+                                            <i class="icon-caret-up"></i>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th>Gestion de Stocks</th>
+                                <th>Activo</th>
+                                <th data-combinations="">Combinaciones <a href="#">Seleccionar</a>
+                                    <div class="selector_item select_combinations" style="display: none;">
+                                        <a class="check_all_combinations btn btn-default button" href="#">
+                                            <i class="icon-check-sign"></i>
+                                            Marcar todo
+                                        </a>
+                                        <a class="uncheck_all_combinations btn btn-default button" href="#">
+                                            <i class="icon-check-empty"></i>
+                                            Desmarcar todo
+                                        </a>
+                                        <a class="check_attribute_combinations btn btn-default button" href="#">
+                                            <i class="icon-list"></i>
+                                            Seleccionar atributo
+                                        </a>
+                                        <div id="attributes_select">
+                                            <div class="attribute_group_block">
+                                                <div>
+                                                    Atributo
+                                                    <select class="select_attribute">
+                                                        <option value="0">--</option>
+                                                        <option value="2">Color</option>
+                                                        <option value="3">Dimension</option>
+                                                        <option value="4">Paper Type</option>
+                                                        <option value="1">Tamaño</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    Valor
+                                                    <select class="select_attribute_value">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <a class="start_select_combinations btn btn-default button" href="#">
+                                                Seleccionar
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
                     </table>
-                </div>
+                </div>			
             </div>
         </div>
+        
 	</div>
 </div>
 
@@ -597,3 +665,5 @@
 	}
 </style>
 <script type="text/javascript" src="/modules/wbzalando/views/js/modificarprodcuto.js"></script>
+
+
