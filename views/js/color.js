@@ -279,13 +279,14 @@ function consultarColorPrestashop(a){
                 let coloresZalando=await consultarColoresZalando(campoPais.value);
                 console.log("colors zalando =>>> ",coloresZalando)
                 crearElementosFormulario(colores,coloresZalando,campoPais.value)
-
-                insertarControlesPaginacion();
-                let primeraPag=document.getElementById("primera-pag")
-                let ultimaPag=document.getElementById("ultima-pag")
-                primeraPag.setAttribute("data-numero-pagina",((respuestaJson.totalDePagina-respuestaJson.totalDePagina)+1))
-                ultimaPag.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
-                insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                if(respuestaJson.totalRegistros>20){
+                    insertarControlesPaginacion();
+                    let primeraPag=document.getElementById("primera-pag")
+                    let ultimaPag=document.getElementById("ultima-pag")
+                    primeraPag.setAttribute("data-numero-pagina",((respuestaJson.totalDePagina-respuestaJson.totalDePagina)+1))
+                    ultimaPag.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                    insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                }
                 preloader.style.opacity="0"
             },
             error: () => {
@@ -324,8 +325,8 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
     listaPaginas.innerHTML=""
     let contador=0;
     let htmlBotonesPaginacion="";
-    let quitarPrimeraPagina=false
-    let quitarUltimaPagina=false
+    let agregarPrimeraPagina=false
+    let agregarUltimaPagina=false
     while(contador<totalDePagina){
         let paginaBoton=(contador+1)
         let boton=""
@@ -333,10 +334,10 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
             boton+="<button onClick='consultarColorPrestashop(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
             htmlBotonesPaginacion+=boton;
             if((totalDePagina-1)===pagina){
-                quitarUltimaPagina=true
+                agregarUltimaPagina=true
             }
             if(((totalDePagina-totalDePagina)+2)<pagina){
-                quitarPrimeraPagina=true
+                agregarPrimeraPagina=true
             }
         }
         if(paginaBoton===pagina+1){
@@ -349,10 +350,10 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
         }
         contador++
     }
-    if(totalDePagina>pagina && quitarUltimaPagina===false){
+    if(totalDePagina>pagina && agregarUltimaPagina===false){
         htmlBotonesPaginacion+="...<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
     }
-    if(quitarPrimeraPagina){
+    if(agregarPrimeraPagina){
         listaPaginas.insertAdjacentHTML("beforebegin","<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+1+"'>"+1+"</button>...")
         // htmlBotonesPaginacion+="";
     }

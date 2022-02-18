@@ -501,7 +501,7 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarEsquemasYCategorias(){
-        $minimoRegistros=2;
+        $minimoRegistros=20;
         $pagina=$_GET["pagina"];
         $respuesta_servidor=["respuestaServidor" => []];
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
@@ -510,6 +510,7 @@ class CategoriaController extends ModuleAdminController{
         $respuesta_servidor["respuestaServidor"]["esquemas"]=(count($resultEsquemas)===1)?json_decode($resultEsquemas[0]["esquemas_name_label"]):[];
         $respuesta_servidor["respuestaServidor"]["categorias"]=$resultCategoriasPaginadas;
         $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($resultCategorias)/$minimoRegistros);
+        $respuesta_servidor["respuestaServidor"]["totalRegistros"]=count($resultCategorias);
         print(json_encode($respuesta_servidor));
     }
 

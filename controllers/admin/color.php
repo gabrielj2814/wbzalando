@@ -208,7 +208,7 @@ class ColorController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarColoresPrestashop(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $minimoRegistros=2;
+        $minimoRegistros=20;
         $pagina=$_GET["pagina"];
         $respuestaDB=$this->consultarColoresPrestashop($_GET["id_attribute"]);
         $respuestaPaginadaDB=$this->paginadoColoresPrestashop($_GET["id_attribute"],$pagina,$minimoRegistros);
@@ -217,6 +217,7 @@ class ColorController extends ModuleAdminController{
                 "mensaje" => "consulta completada",
                 "datos" => $respuestaPaginadaDB,
                 "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
+                "totalRegistros" => count($respuestaDB),
             ];
         }
         else{
