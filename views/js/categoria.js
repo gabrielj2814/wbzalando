@@ -160,8 +160,6 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
     listaPaginas.innerHTML=""
     let contador=0;
     let htmlBotonesPaginacion="";
-    let paginaAnterior=false;
-    let paginaSiguiente=false;
     let quitarUltimaPagina=false
     while(contador<totalDePagina){
         let paginaBoton=(contador+1)
