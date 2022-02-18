@@ -154,21 +154,37 @@ function consultarEsquemasYCategorias(a=1){
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let minimoPagina=3
+    pagina=parseInt(pagina)
     let listaPaginas=document.getElementById("lista-paginas")
     listaPaginas.innerHTML=""
     let contador=0;
     let htmlBotonesPaginacion="";
+    let paginaAnterior=false;
+    let paginaSiguiente=false;
+    let quitarUltimaPagina=false
     while(contador<totalDePagina){
         let paginaBoton=(contador+1)
         let boton=""
-        if(paginaBoton===parseInt(pagina)){
+        if(paginaBoton===pagina){
             boton+="<button onClick='consultarEsquemasYCategorias(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+            if((totalDePagina-1)===pagina){
+                quitarUltimaPagina=true
+            }
         }
-        else{
+        if(paginaBoton===pagina+1){
             boton+="<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
         }
-        htmlBotonesPaginacion+=boton;
+        if(paginaBoton===pagina-1 && paginaBoton!==0){
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
         contador++
+    }
+    if(totalDePagina>pagina && quitarUltimaPagina===false){
+        htmlBotonesPaginacion+="...<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
     }
     listaPaginas.innerHTML=htmlBotonesPaginacion;
 }
