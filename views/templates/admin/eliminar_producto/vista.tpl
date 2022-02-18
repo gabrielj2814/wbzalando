@@ -3,7 +3,6 @@
 <input type="hidden" id="linkDeControladorProducto" value="{$linkDeControladorProducto}"/>
 
 
-<h1>Eliminar producto</h1>
 <div class="slider-pais" style="width: 100%; position: relative;">
     <div class="">
             <a href="#">

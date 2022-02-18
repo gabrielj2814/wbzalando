@@ -1,7 +1,6 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorAtributoTalla" value="{$linkDeControladorAtributoTalla}"/>
 <!--
-<h1>hola vista talla</h1>
 <button id="botonRegistrar">registrar</button>
 <button id="botonConsultarTodos">consultar todos</button>
 <button id="botonConsultar">consultar</button>
