@@ -227,3 +227,25 @@
     height: auto;
     margin: 0;
 }
+
+/* paginacion */
+.primera-pag{
+    display: block !important;
+    border: 0;
+    color: #25b9d7;
+}
+.ultima-pag{
+    display: block !important;
+    border: 0;
+    color: #25b9d7;
+}
+#lista-pagina{
+    margin: 0px 10px;
+}
+#lista-pagina button{
+    height: 35px;
+    font-size: 0.9rem;
+    background: transparent !important;
+    border: 0;
+    color: #25b9d7;
+}
