@@ -248,11 +248,17 @@ function cargarPaisesZalando(paises){
     campoPais.innerHTML=option
 }
 
-function consultarColorPrestashop(){
+function consultarColorPrestashop(a){
+    let pagina=1;
+    if(a!=1){
+        pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
+    }
     const linkControlador=document.getElementById("linkControlador").value;
     let campoAtributo=document.getElementById("campoAtributo")
     let campoPais=document.getElementById("campoPais")
     if(campoAtributo.value!=="null" && campoPais.value!=="null"){
+        let controlesPaginacion=document.getElementById("controlesPaginacion")
+        controlesPaginacion.innerHTML="";
         let preloader=document.getElementById("preloader")
         preloader.style.opacity="1"
         $.ajax({
@@ -263,15 +269,24 @@ function consultarColorPrestashop(){
             data: {
                 ajax: true,
                 action: 'getconsultarcoloresprestashop',
-                id_attribute:campoAtributo.value
+                id_attribute:campoAtributo.value,
+                pagina
             },
             success: async (respuesta) => {
-                let datos=JSON.parse(JSON.stringify(respuesta))
-                let colores=datos["respuestaServidor"].datos
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+                let colores=respuestaJson.datos
                 console.log("colores prestashop filtrados =>>> ",colores)
                 let coloresZalando=await consultarColoresZalando(campoPais.value);
                 console.log("colors zalando =>>> ",coloresZalando)
                 crearElementosFormulario(colores,coloresZalando,campoPais.value)
+                if(respuestaJson.totalRegistros>20){
+                    insertarControlesPaginacion();
+                    let primeraPag=document.getElementById("primera-pag")
+                    let ultimaPag=document.getElementById("ultima-pag")
+                    primeraPag.setAttribute("data-numero-pagina",((respuestaJson.totalDePagina-respuestaJson.totalDePagina)+1))
+                    ultimaPag.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                    insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                }
                 preloader.style.opacity="0"
             },
             error: () => {
@@ -283,6 +298,66 @@ function consultarColorPrestashop(){
         let formularioColor=document.getElementById("formularioColor");
         formularioColor.innerHTML=""
     }
+}
+
+function insertarControlesPaginacion(){
+    let controlesPaginacion=document.getElementById("controlesPaginacion")
+    // controlesPaginacion.innerHTML="";
+    let html="\
+        <button id='primera-pag' onClick='consultarColorPrestashop(this)'>\
+            <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrow-left-circle-fill' viewBox='0 0 16 16'>\
+            <path d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z'/>\
+            </svg>\
+        </button>\
+        <div id='lista-paginas'></div>\
+        <button id='ultima-pag' onClick='consultarColorPrestashop(this)'>\
+        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrow-right-circle-fill' viewBox='0 0 16 16'>\
+        <path d='M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z'/>\
+        </svg>\
+        </button>"
+    controlesPaginacion.innerHTML=html;
+}
+
+function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let minimoPagina=3
+    pagina=parseInt(pagina)
+    let listaPaginas=document.getElementById("lista-paginas")
+    listaPaginas.innerHTML=""
+    let contador=0;
+    let htmlBotonesPaginacion="";
+    let agregarPrimeraPagina=false
+    let agregarUltimaPagina=false
+    while(contador<totalDePagina){
+        let paginaBoton=(contador+1)
+        let boton=""
+        if(paginaBoton===pagina){
+            boton+="<button onClick='consultarColorPrestashop(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+            if((totalDePagina-1)===pagina){
+                agregarUltimaPagina=true
+            }
+            if(((totalDePagina-totalDePagina)+2)<pagina){
+                agregarPrimeraPagina=true
+            }
+        }
+        if(paginaBoton===pagina+1){
+            boton+="<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        if(paginaBoton===pagina-1 && paginaBoton!==0){
+            boton+="<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        contador++
+    }
+    if(totalDePagina>pagina && agregarUltimaPagina===false){
+        htmlBotonesPaginacion+="...<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+    }
+    if(agregarPrimeraPagina){
+        listaPaginas.insertAdjacentHTML("beforebegin","<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+1+"'>"+1+"</button>...")
+        // htmlBotonesPaginacion+="";
+    }
+    listaPaginas.innerHTML=htmlBotonesPaginacion;
 }
 
 function crearElementosFormulario(colores,coloresZalando,pais){

@@ -208,11 +208,16 @@ class ColorController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarColoresPrestashop(){
         $respuesta_servidor=["respuestaServidor" => []];
+        $minimoRegistros=20;
+        $pagina=$_GET["pagina"];
         $respuestaDB=$this->consultarColoresPrestashop($_GET["id_attribute"]);
+        $respuestaPaginadaDB=$this->paginadoColoresPrestashop($_GET["id_attribute"],$pagina,$minimoRegistros);
         if(count($respuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
-                "datos" => $respuestaDB,
+                "datos" => $respuestaPaginadaDB,
+                "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
+                "totalRegistros" => count($respuestaDB),
             ];
         }
         else{
@@ -231,6 +236,18 @@ class ColorController extends ModuleAdminController{
         ps_attribute.id_attribute_group = ".$id_attribute." AND
         ps_attribute_lang.id_attribute =ps_attribute.id_attribute AND 
         ps_attribute_lang.id_lang=".$this->id_idioma.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    public function paginadoColoresPrestashop($id_attribute,$pagina,$minimoRegistros){
+        $empezarPor=($pagina-1) * $minimoRegistros;
+        $SQL="SELECT * FROM 
+        ps_attribute,
+        ps_attribute_lang
+        WHERE 
+        ps_attribute.id_attribute_group = ".$id_attribute." AND
+        ps_attribute_lang.id_attribute =ps_attribute.id_attribute AND 
+        ps_attribute_lang.id_lang=".$this->id_idioma." LIMIT ".$empezarPor.",".$minimoRegistros.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 

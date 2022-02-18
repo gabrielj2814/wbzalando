@@ -24,7 +24,7 @@
         <select id='campoPais' name='campoPais'></select>
     </div>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
-        <button class="btn btn-primary" onClick="consultarColorPrestashop()">
+        <button class="btn btn-primary" onClick="consultarColorPrestashop(this)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
                 <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
             </svg>
@@ -44,6 +44,8 @@
 <form id="formularioColor" class="text-primary">
 
 </form>
+
+<div id="controlesPaginacion"></div>
 
 <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
     <button id="botonRegistrar" class="btn btn-primary" >registrar color</button>

@@ -117,7 +117,11 @@ function consultar(){
     });
 }
 
-function consultarEsquemasYCategorias(){
+function consultarEsquemasYCategorias(a=1){
+    let pagina=1;
+    if(a!=1){
+        pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
+    }
     const linkControlador=document.getElementById("linkControlador").value;
     let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
@@ -129,21 +133,75 @@ function consultarEsquemasYCategorias(){
         data: {
             ajax: true,
             action: 'getconsultaresquemasycategorias',
+            pagina
 
         },
         success: (respuesta) => {
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             crearElementosFormulario(datos)
+            let primeraPag=document.getElementById("primera-pag")
+            let ultimaPag=document.getElementById("ultima-pag")
+            if(datos.totalRegistros>20){
+                primeraPag.style.display="block"
+                ultimaPag.style.display="block"
+                primeraPag.setAttribute("data-numero-pagina",((datos.totalDePagina-datos.totalDePagina)+1))
+                ultimaPag.setAttribute("data-numero-pagina",datos.totalDePagina)
+                insertarBotonesPaginasPaginacion(pagina,datos.totalDePagina)
+            }
+            else{
+                primeraPag.style.display="none"
+                ultimaPag.style.display="none"
+            }
             preloader.style.opacity="0"
-            // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
         }
     });
 }
- 
+
+function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let minimoPagina=3
+    pagina=parseInt(pagina)
+    let listaPaginas=document.getElementById("lista-paginas")
+    listaPaginas.innerHTML=""
+    let contador=0;
+    let htmlBotonesPaginacion="";
+    let agregarPrimeraPagina=false
+    let agregarUltimaPagina=false
+    while(contador<totalDePagina){
+        let paginaBoton=(contador+1)
+        let boton=""
+        if(paginaBoton===pagina){
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+            if((totalDePagina-1)===pagina){
+                agregarUltimaPagina=true
+            }
+            if(((totalDePagina-totalDePagina)+2)<pagina){
+                agregarPrimeraPagina=true
+            }
+        }
+        if(paginaBoton===pagina+1){
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        if(paginaBoton===pagina-1 && paginaBoton!==0){
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        contador++
+    }
+    if(totalDePagina>pagina && agregarUltimaPagina===false){
+        htmlBotonesPaginacion+="...<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+    }
+    if(agregarPrimeraPagina){
+        listaPaginas.insertAdjacentHTML("beforebegin","<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+1+"'>"+1+"</button>...")
+        // htmlBotonesPaginacion+="";
+    }
+    listaPaginas.innerHTML=htmlBotonesPaginacion;
+}
  
 function crearElementosFormulario(datos){
     let formularioCategoria=document.getElementById("formularioCategoria");
