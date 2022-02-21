@@ -135,9 +135,53 @@
     text-align: center;
 }
 
+/* Preloader */
+.fat-pre{
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 40px;
+    left: 210px;
+    opacity: 0;
+    transition: 0.6s;
+    transition-timing-function: ease-out;
+    pointer-events: none;
+    z-index: 99;
+}
+.pre-loader{
+    background: #EFF1F2;
+    width: 86%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pre-loader div {
+    width: 16px;
+    height: 32px; 
+    margin-left: 10px;
+    animation: prealoader 1.2s infinite;
+}
+@keyframes prealoader {
+    50%{
+        height: 64px;
+    }    
+}
+.pre-loader div:nth-child(1){
+    background: #25B9D7;
+    animation-delay: -0.40s;
+}
+.pre-loader div:nth-child(2){
+    background: #1da5c0;
+    animation-delay: -0.20s;
+}
+.pre-loader div:nth-child(3){
+    background: #0d8aa3;
+    animation-delay: 0s;
+}
+
 
 /* modificar producto */
-
 .wrapp_search_category{
     display: inline-block;
 }
