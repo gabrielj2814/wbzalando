@@ -140,18 +140,30 @@ function consultarEsquemasYCategorias(a=1){
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             crearElementosFormulario(datos)
-            let primeraPag=document.getElementById("primera-pag")
-            let ultimaPag=document.getElementById("ultima-pag")
-            if(datos.totalRegistros>20){
-                primeraPag.style.display="block"
-                ultimaPag.style.display="block"
-                primeraPag.setAttribute("data-numero-pagina",((datos.totalDePagina-datos.totalDePagina)+1))
-                ultimaPag.setAttribute("data-numero-pagina",datos.totalDePagina)
+            let paginaSig=document.getElementById("pagina-sig")
+            let paginaAnt=document.getElementById("pagina-ant")
+            if(datos.totalRegistros>3){
+                paginaSig.style.display="block"
+                paginaAnt.style.display="block"
+                if(parseInt(pagina)===datos.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",datos.totalDePagina)
+                    paginaSig.style.display="none"
+                }
+                else if(parseInt(pagina)<datos.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                }
+                if(parseInt(pagina)===1){
+                    paginaAnt.setAttribute("data-numero-pagina",1)
+                    paginaAnt.style.display="none"
+                }
+                else if(parseInt(pagina)<=datos.totalDePagina){
+                    paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                }
                 insertarBotonesPaginasPaginacion(pagina,datos.totalDePagina)
             }
             else{
-                primeraPag.style.display="none"
-                ultimaPag.style.display="none"
+                paginaSig.style.display="none"
+                paginaAnt.style.display="none"
             }
             preloader.style.opacity="0"
         },
@@ -179,8 +191,14 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
             if((totalDePagina-1)===pagina){
                 agregarUltimaPagina=true
             }
-            if(((totalDePagina-totalDePagina)+2)<pagina){
+            if(pagina>2){
                 agregarPrimeraPagina=true
+            }
+            else{
+                if(document.getElementById("primera-pagina")){
+                    let primeraPagina=document.getElementById("primera-pagina")
+                    primeraPagina.remove()
+                }
             }
         }
         if(paginaBoton===pagina+1){
@@ -194,13 +212,12 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
         contador++
     }
     if(totalDePagina>pagina && agregarUltimaPagina===false){
-        htmlBotonesPaginacion+="...<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+        htmlBotonesPaginacion+="<button onClick='consultarEsquemasYCategorias(this)' id='ultima-pagina' class='ultima-pagina' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
     }
     if(agregarPrimeraPagina){
-        listaPaginas.insertAdjacentHTML("beforebegin","<button onClick='consultarEsquemasYCategorias(this)' data-numero-pagina='"+1+"'>"+1+"</button>...")
-        // htmlBotonesPaginacion+="";
+        listaPaginas.insertAdjacentHTML("afterBegin","<button onClick='consultarEsquemasYCategorias(this)' id='primera-pagina' class='primera-pagina' data-numero-pagina='"+1+"'>"+1+"</button>")
     }
-    listaPaginas.innerHTML=htmlBotonesPaginacion;
+    listaPaginas.innerHTML+=htmlBotonesPaginacion;
 }
  
 function crearElementosFormulario(datos){
