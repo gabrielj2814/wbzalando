@@ -234,18 +234,13 @@
     display: inline-flex;
     padding-top: 60px;
 }
-.arrow-right{
-    display: block !important;
-    border: 0;
-    color: #25b9d7;
-}
 .lista-pagina{
     margin: 0px 10px;
 }
 .lista-paginas button{
     color: #25b9d7;
 }
-#controlesPaginacion button{
+.estructura-paginador button{
     height: 35px;
     font-size: 0.9rem;
     color: #25b9d7;
