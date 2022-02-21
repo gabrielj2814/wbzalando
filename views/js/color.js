@@ -281,10 +281,24 @@ function consultarColorPrestashop(a){
                 crearElementosFormulario(colores,coloresZalando,campoPais.value)
                 if(respuestaJson.totalRegistros>2){
                     insertarControlesPaginacion();
-                    let primeraPag=document.getElementById("primera-pag")
-                    let ultimaPag=document.getElementById("ultima-pag")
-                    primeraPag.setAttribute("data-numero-pagina",((respuestaJson.totalDePagina-respuestaJson.totalDePagina)+1))
-                    ultimaPag.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                    let paginaAnt=document.getElementById("pagina-ant")
+                    let paginaSig=document.getElementById("pagina-sig")
+                    paginaSig.style.display="block"
+                    paginaAnt.style.display="block"
+                    if(parseInt(pagina)===respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                        paginaSig.style.display="none"
+                    }
+                    else if(parseInt(pagina)<respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                    }
+                    if(parseInt(pagina)===1){
+                        paginaAnt.setAttribute("data-numero-pagina",1)
+                        paginaAnt.style.display="none"
+                    }
+                    else if(parseInt(pagina)<=respuestaJson.totalDePagina){
+                        paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                    }
                     insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
                 }
                 preloader.style.opacity="0"
@@ -305,13 +319,13 @@ function insertarControlesPaginacion(){
     // controlesPaginacion.innerHTML="";
     let html="\
         <div style='display: inline-flex;'>\
-        <button id='primera-pag' onClick='consultarColorPrestashop(this)'>\
+        <button id='pagina-ant' onClick='consultarColorPrestashop(this)'>\
             <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-left-circle-fill' viewBox='0 0 16 16'>\
             <path d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z'/>\
             </svg>\
         </button>\
         <div id='lista-paginas'></div>\
-        <button id='ultima-pag' onClick='consultarColorPrestashop(this)'>\
+        <button id='pagina-sig' onClick='consultarColorPrestashop(this)'>\
         <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-right-circle-fill' viewBox='0 0 16 16'>\
         <path d='M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z'/>\
         </svg>\
@@ -337,8 +351,14 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
             if((totalDePagina-1)===pagina){
                 agregarUltimaPagina=true
             }
-            if(((totalDePagina-totalDePagina)+2)<pagina){
+            if(pagina>2){
                 agregarPrimeraPagina=true
+            }
+            else{
+                if(document.getElementById("primera-pagina")){
+                    let primeraPagina=document.getElementById("primera-pagina")
+                    primeraPagina.remove()
+                }
             }
         }
         if(paginaBoton===pagina+1){
@@ -352,13 +372,12 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
         contador++
     }
     if(totalDePagina>pagina && agregarUltimaPagina===false){
-        htmlBotonesPaginacion+="...<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+        htmlBotonesPaginacion+="<button onClick='consultarColorPrestashop(this)' id='ultima-pagina' class='ultima-pagina' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
     }
     if(agregarPrimeraPagina){
-        listaPaginas.insertAdjacentHTML("beforebegin","<button onClick='consultarColorPrestashop(this)' data-numero-pagina='"+1+"'>"+1+"</button>...")
-        // htmlBotonesPaginacion+="";
+        listaPaginas.insertAdjacentHTML("afterBegin","<button onClick='consultarColorPrestashop(this)' id='primera-pagina' class='primera-pagina' data-numero-pagina='"+1+"'>"+1+"</button>")
     }
-    listaPaginas.innerHTML=htmlBotonesPaginacion;
+    listaPaginas.innerHTML+=htmlBotonesPaginacion;
 }
 
 function crearElementosFormulario(colores,coloresZalando,pais){
