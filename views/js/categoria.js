@@ -162,7 +162,7 @@ function consultarEsquemasYCategorias(a=1){
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
-    let minimoPagina=3
+    let minimoPagina=20
     pagina=parseInt(pagina)
     let listaPaginas=document.getElementById("lista-paginas")
     listaPaginas.innerHTML=""
@@ -174,7 +174,7 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
         let paginaBoton=(contador+1)
         let boton=""
         if(paginaBoton===pagina){
-            boton+="<button onClick='consultarEsquemasYCategorias(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            boton+="<button onClick='consultarEsquemasYCategorias(this)' style='color: #1900e7 !important;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
             htmlBotonesPaginacion+=boton;
             if((totalDePagina-1)===pagina){
                 agregarUltimaPagina=true

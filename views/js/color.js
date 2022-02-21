@@ -279,7 +279,7 @@ function consultarColorPrestashop(a){
                 let coloresZalando=await consultarColoresZalando(campoPais.value);
                 console.log("colors zalando =>>> ",coloresZalando)
                 crearElementosFormulario(colores,coloresZalando,campoPais.value)
-                if(respuestaJson.totalRegistros>20){
+                if(respuestaJson.totalRegistros>2){
                     insertarControlesPaginacion();
                     let primeraPag=document.getElementById("primera-pag")
                     let ultimaPag=document.getElementById("ultima-pag")
@@ -320,7 +320,7 @@ function insertarControlesPaginacion(){
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
-    let minimoPagina=3
+    let minimoPagina=20
     pagina=parseInt(pagina)
     let listaPaginas=document.getElementById("lista-paginas")
     listaPaginas.innerHTML=""
@@ -332,7 +332,7 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
         let paginaBoton=(contador+1)
         let boton=""
         if(paginaBoton===pagina){
-            boton+="<button onClick='consultarColorPrestashop(this)' style='background-color:red;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            boton+="<button onClick='consultarColorPrestashop(this)' style='color: #1900e7 !important;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
             htmlBotonesPaginacion+=boton;
             if((totalDePagina-1)===pagina){
                 agregarUltimaPagina=true
