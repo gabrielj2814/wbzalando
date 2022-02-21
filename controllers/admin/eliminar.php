@@ -110,8 +110,8 @@ class EliminarController extends ModuleAdminController{
         $respuestaDB=$this->consultarPrecio($_GET["codigoPais"]);
         for($contador=0;$contador<count($respuestaDB);$contador++){
             $ean=$respuestaDB[$contador]["ean"];
+            $respuestaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
             $respuestaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
-            $contador++;
         }
         if(count($respuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
@@ -143,7 +143,12 @@ class EliminarController extends ModuleAdminController{
     }
 
     function consultarPrecio($pais){
-        $SQL="SELECT * FROM ps_wbzalando_precio,ps_wbzalando_stock WHERE ps_wbzalando_precio.sales_channel_id='".$pais."' AND ps_wbzalando_stock.sales_channel_id=ps_wbzalando_precio.sales_channel_id;";
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    function consultarStock($ean,$pais){
+        $SQL="SELECT * FROM ps_wbzalando_stock WHERE sales_channel_id='".$pais."' AND ean='".$ean."' ;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     
