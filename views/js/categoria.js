@@ -174,7 +174,7 @@ function consultarEsquemasYCategorias(a=1){
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
-    let minimoPagina=3
+    let minimoPagina=20
     pagina=parseInt(pagina)
     let listaPaginas=document.getElementById("lista-paginas")
     listaPaginas.innerHTML=""

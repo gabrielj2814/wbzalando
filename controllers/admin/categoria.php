@@ -501,7 +501,7 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarEsquemasYCategorias(){
-        $minimoRegistros=3;
+        $minimoRegistros=20;
         $pagina=$_GET["pagina"];
         $respuesta_servidor=["respuestaServidor" => []];
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
