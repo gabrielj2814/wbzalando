@@ -229,12 +229,12 @@
 }
 
 /* paginacion */
-.primera-pag{
+#primera-pag{
     display: block !important;
     border: 0;
     color: #25b9d7;
 }
-.ultima-pag{
+#ultima-pag{
     display: block !important;
     border: 0;
     color: #25b9d7;
@@ -242,10 +242,17 @@
 #lista-pagina{
     margin: 0px 10px;
 }
-#lista-pagina button{
+#lista-paginas button{
     height: 35px;
     font-size: 0.9rem;
     background: transparent !important;
     border: 0;
     color: #25b9d7;
+}
+#controlesPaginacion button{
+    height: 35px;
+    font-size: 0.9rem;
+    background: transparent !important;
+    border: 0;
+    color: #0066ff;
 }
