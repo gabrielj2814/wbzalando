@@ -230,10 +230,9 @@
 }
 
 /* paginacion */
-.arrow-left{
-    display: block !important;
-    border: 0;
-    color: #25b9d7;
+.estructura-paginador{
+    display: inline-flex;
+    padding-top: 60px;
 }
 .arrow-right{
     display: block !important;
@@ -251,4 +250,26 @@
     font-size: 0.9rem;
     color: #25b9d7;
     border: 0;
+}
+.ultima-pagina{
+    margin-left: 14px;
+    position: relative;
+}
+.ultima-pagina::after{
+    content: '...';
+    left: -11px;
+    bottom: 6px;
+    position: absolute;
+    font-size: 1.3rem;
+}
+.primera-pagina{
+    margin-right: 14px;
+    position: relative;
+}
+.primera-pagina::after{
+    content: '...';
+    right: -11px;
+    bottom: 6px;
+    position: absolute;
+    font-size: 1.3rem;
 }
