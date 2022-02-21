@@ -142,7 +142,7 @@ function consultarEsquemasYCategorias(a=1){
             crearElementosFormulario(datos)
             let paginaSig=document.getElementById("pagina-sig")
             let paginaAnt=document.getElementById("pagina-ant")
-            if(datos.totalRegistros>20){
+            if(datos.totalRegistros>2){
                 paginaSig.style.display="block"
                 paginaAnt.style.display="block"
                 if(parseInt(pagina)===datos.totalDePagina){
