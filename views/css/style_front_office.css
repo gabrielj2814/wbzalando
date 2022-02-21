@@ -101,6 +101,7 @@
     margin-right: 10px;
 }
 
+
 /* carrusel */
 .slick-list{
     width: 80%;
@@ -229,20 +230,20 @@
 }
 
 /* paginacion */
-#primera-pag{
+.arrow-left{
     display: block !important;
     border: 0;
     color: #25b9d7;
 }
-#ultima-pag{
+.arrow-right{
     display: block !important;
     border: 0;
     color: #25b9d7;
 }
-#lista-pagina{
+.lista-pagina{
     margin: 0px 10px;
 }
-#lista-paginas button{
+.lista-paginas button{
     color: #25b9d7;
 }
 #controlesPaginacion button{

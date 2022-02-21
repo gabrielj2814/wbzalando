@@ -127,7 +127,7 @@ class WbZalando extends Module{
                         'desc'      => $this->l('Environment de acceso ha Zalando Dev'),  
                         'name'      => 'rutaZolando',                             
                         'required'  => true,                                  
-                        'class'     => 't documento-input',                                   
+                        'class'     => 't documento-input-1 documento-input-2',                                   
                         'is_bool'   => true,                                  
                         'values'    => [
                             [
