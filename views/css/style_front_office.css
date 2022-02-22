@@ -1,3 +1,7 @@
+a:focus {
+    outline: none !important;
+}
+
 .input-tb{
     padding: 8px 16px;
     width: 100%;
@@ -179,7 +183,25 @@
     background: #0d8aa3;
     animation-delay: 0s;
 }
-
+@media (max-width: 1024px) {
+    .fat-pre {
+        left: 0 !important;
+    }
+    .pre-loader {
+        width: 100%;
+    }
+}
+@media (min-width: 1600px) {
+    .pre-loader {
+        width: 88%;
+    }
+}
+@media (min-width: 2200px) {
+    .pre-loader {
+        width: 91%;
+    }
+}
+ 
 
 /* modificar producto */
 .wrapp_search_category{
