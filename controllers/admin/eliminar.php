@@ -107,16 +107,21 @@ class EliminarController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarProductosPorPais(){
         $respuesta_servidor=["respuestaServidor" => []];
+        $minimoRegistros=2;
+        $pagina=$_GET["pagina"];
         $respuestaDB=$this->consultarPrecio($_GET["codigoPais"]);
-        for($contador=0;$contador<count($respuestaDB);$contador++){
-            $ean=$respuestaDB[$contador]["ean"];
-            $respuestaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
-            $contador++;
+        $respuestaPaginadaDB=$this->paginarPrecio($pagina,$minimoRegistros,$_GET["codigoPais"]);
+        for($contador=0;$contador<count($respuestaPaginadaDB);$contador++){
+            $ean=$respuestaPaginadaDB[$contador]["ean"];
+            $respuestaPaginadaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
+            $respuestaPaginadaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
         }
         if(count($respuestaDB)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "consulta completada",
-                "datos" => $respuestaDB
+                "datos" => $respuestaPaginadaDB,
+                "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
+                "totalRegistros" => count($respuestaDB),
             ];
         }
         else{
@@ -143,7 +148,18 @@ class EliminarController extends ModuleAdminController{
     }
 
     function consultarPrecio($pais){
-        $SQL="SELECT * FROM ps_wbzalando_precio,ps_wbzalando_stock WHERE ps_wbzalando_precio.sales_channel_id='".$pais."' AND ps_wbzalando_stock.sales_channel_id=ps_wbzalando_precio.sales_channel_id;";
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' ;";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function paginarPrecio($pagina,$minimoRegistros,$pais){
+        $empezarPor=($pagina-1) * $minimoRegistros;
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' LIMIT ".$empezarPor.",".$minimoRegistros.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    function consultarStock($ean,$pais){
+        $SQL="SELECT * FROM ps_wbzalando_stock WHERE sales_channel_id='".$pais."' AND ean='".$ean."' ;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     

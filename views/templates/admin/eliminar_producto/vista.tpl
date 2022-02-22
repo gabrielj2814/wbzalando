@@ -63,7 +63,7 @@
 
     </div>
 </div>
-
+<div id="controlesPaginacion"></div>
 <div class="col-12 fat-pre"  id="preloader">
     <div class="pre-loader">
         <div></div>

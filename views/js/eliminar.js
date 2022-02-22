@@ -17,7 +17,7 @@ async function consultarProductosWBZalando(){
             // console.log(respuesta);
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos consultados productos zalando =>>>>> ",respuestaJson)
-            insertarProductos(respuestaJson.datos);
+            // insertarProductos(respuestaJson.datos);
         },
         error: () => {
         }
@@ -29,6 +29,7 @@ function insertarProductos(productos){
     listaDeProductosHaEliminar.innerHTML="";
     let html="";
     for(let producto of productos){
+        let infoStock=producto.datosStock[0]
         let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
         let infoConfig=JSON.parse(producto.detallesDelProdcuto[0].json_configuracion_producto)
         let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
@@ -37,7 +38,7 @@ function insertarProductos(productos){
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>"+producto.quantity+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>"+infoStock.quantity+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+" "+infoPrecio.regular_price.amount+"</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>"+infoPrecio.promotional_price.currency+" "+infoPrecio.promotional_price.amount+"</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-3 col-xs-2 text-left'><div><h4 class='text-center'>"+arrayFecha[2]+"/"+arrayFecha[1]+"/"+arrayFecha[0]+"</h4></div></div>\
@@ -133,7 +134,13 @@ function crearCheckboxPaisTest(paises){
 }
 
 function consultarProductosPorPais(a){
-    // alert(a.id)
+    let controlesPaginacion=document.getElementById("controlesPaginacion")
+    controlesPaginacion.innerHTML="";
+    let pagina=1;
+    if(a!=1){
+        pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
+    }
+    let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
     let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
@@ -145,12 +152,35 @@ function consultarProductosPorPais(a){
         data: {
             ajax: true,
             action: 'getconsultarproductosporpais',
-            codigoPais:a.id
+            codigoPais:checkboxsPaises[0].value,
+            pagina
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
             console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
+            if(respuestaJson.respuestaServidor.totalRegistros>1){
+                insertarControlesPaginacion();
+                let paginaAnt=document.getElementById("pagina-ant")
+                let paginaSig=document.getElementById("pagina-sig")
+                paginaSig.style.display="block"
+                paginaAnt.style.display="block"
+                if(parseInt(pagina)===respuestaJson.respuestaServidor.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",respuestaJson.respuestaServidor.totalDePagina)
+                    paginaSig.style.display="none"
+                }
+                else if(parseInt(pagina)<respuestaJson.respuestaServidor.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                }
+                if(parseInt(pagina)===1){
+                    paginaAnt.setAttribute("data-numero-pagina",1)
+                    paginaAnt.style.display="none"
+                }
+                else if(parseInt(pagina)<=respuestaJson.respuestaServidor.totalDePagina){
+                    paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                }
+                insertarBotonesPaginasPaginacion(pagina,respuestaJson.respuestaServidor.totalDePagina)
+            }
             preloader.style.opacity="0"
         },
         error: () => {
@@ -159,10 +189,78 @@ function consultarProductosPorPais(a){
         }
     });
 }
+
+function insertarControlesPaginacion(){
+    let controlesPaginacion=document.getElementById("controlesPaginacion")
+    // controlesPaginacion.innerHTML="";
+    let html="\
+        <div class='estructura-paginador'>\
+        <button id='pagina-ant' onClick='consultarProductosPorPais(this)'>\
+            <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-left-circle-fill' viewBox='0 0 16 16'>\
+            <path d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z'/>\
+            </svg>\
+        </button>\
+        <div id='lista-paginas'></div>\
+        <button id='pagina-sig' onClick='consultarProductosPorPais(this)'>\
+        <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-right-circle-fill' viewBox='0 0 16 16'>\
+        <path d='M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z'/>\
+        </svg>\
+        </button></div>"
+    controlesPaginacion.innerHTML=html;
+}
+
+function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let minimoPagina=5
+    pagina=parseInt(pagina)
+    let listaPaginas=document.getElementById("lista-paginas")
+    listaPaginas.innerHTML=""
+    let contador=0;
+    let htmlBotonesPaginacion="";
+    let agregarPrimeraPagina=false
+    let agregarUltimaPagina=false
+    while(contador<totalDePagina){
+        let paginaBoton=(contador+1)
+        let boton=""
+        if(paginaBoton===pagina){
+            boton+="<button onClick='consultarProductosPorPais(this)' style='color: #1900e7 !important; text-decoration: underline;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+            if((totalDePagina-1)===pagina){
+                agregarUltimaPagina=true
+            }
+            if(pagina>2){
+                agregarPrimeraPagina=true
+            }
+            else{
+                if(document.getElementById("primera-pagina")){
+                    let primeraPagina=document.getElementById("primera-pagina")
+                    primeraPagina.remove()
+                }
+            }
+        }
+        if(paginaBoton===pagina+1){
+            boton+="<button onClick='consultarProductosPorPais(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        if(paginaBoton===pagina-1 && paginaBoton!==0){
+            boton+="<button onClick='consultarProductosPorPais(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        contador++
+    }
+    if(totalDePagina>pagina && agregarUltimaPagina===false){
+        htmlBotonesPaginacion+="<button onClick='consultarProductosPorPais(this)' id='ultima-pagina' class='ultima-pagina' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+    }
+    if(agregarPrimeraPagina){
+        listaPaginas.insertAdjacentHTML("afterBegin","<button onClick='consultarProductosPorPais(this)' id='primera-pagina' class='primera-pagina' data-numero-pagina='"+1+"'>"+1+"</button>")
+    }
+    listaPaginas.innerHTML+=htmlBotonesPaginacion;
+}
+
 function consultarProductosPorPais2(idPais){
     // alert(a.id)
     const linkControlador=document.getElementById("linkControlador").value;
     let preloader=document.getElementById("preloader")
+    let pagina=1
     preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
@@ -172,12 +270,35 @@ function consultarProductosPorPais2(idPais){
         data: {
             ajax: true,
             action: 'getconsultarproductosporpais',
-            codigoPais:idPais
+            codigoPais:idPais,
+            pagina
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
             console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
+            if(respuestaJson.respuestaServidor.totalRegistros>1){
+                insertarControlesPaginacion();
+                let paginaAnt=document.getElementById("pagina-ant")
+                let paginaSig=document.getElementById("pagina-sig")
+                paginaSig.style.display="block"
+                paginaAnt.style.display="block"
+                if(parseInt(pagina)===respuestaJson.respuestaServidor.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",respuestaJson.respuestaServidor.totalDePagina)
+                    paginaSig.style.display="none"
+                }
+                else if(parseInt(pagina)<respuestaJson.respuestaServidor.totalDePagina){
+                    paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                }
+                if(parseInt(pagina)===1){
+                    paginaAnt.setAttribute("data-numero-pagina",1)
+                    paginaAnt.style.display="none"
+                }
+                else if(parseInt(pagina)<=respuestaJson.respuestaServidor.totalDePagina){
+                    paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                }
+                insertarBotonesPaginasPaginacion(pagina,respuestaJson.respuestaServidor.totalDePagina)
+            }
             preloader.style.opacity="0"
         },
         error: () => {
