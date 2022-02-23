@@ -20,9 +20,8 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonActualizar=document.getElementById("botonActualizar");
 // let botonEliminar=document.getElementById("botonEliminar");
 // let botonConsultarTallas=document.getElementById("botonConsultarTallas");
-
+let preloader=document.getElementById("preloader")
 function registrar(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let campoCategoriaTallasZalando=document.getElementById("campoCategoriaTallasZalando")
@@ -100,7 +99,6 @@ function consultarConsultarTallaPorAtributoTalla(){
     let campoCategoriaTallasZalando=document.getElementById("campoCategoriaTallasZalando")
     let campoPais=document.getElementById("campoPais")
     if(campoAtributoTalla.value!=="null" && campoCategoriaTallasZalando.value!=="null" && campoPais.value!=="null"){
-        let preloader=document.getElementById("preloader")
         preloader.style.opacity="1"
         $.ajax({
             type: 'GET',
@@ -113,12 +111,13 @@ function consultarConsultarTallaPorAtributoTalla(){
                 id_attribute:campoAtributoTalla.value
     
             },
-            success: async (respuesta) => {
+            success: (respuesta) => {
                 let json=JSON.parse(JSON.stringify(respuesta))
                 console.log("datos atributos =>>>> ",json);
-                let tallasZalandoFiltrdas=await traerTallas(campoPais.value,campoCategoriaTallasZalando.value);
-                crearElementosFormulario(json.respuestaServidor.datos,campoCategoriaTallasZalando.value,tallasZalandoFiltrdas,campoPais.value)
-                preloader.style.opacity="0"
+                let tallasPrestashop=json.respuestaServidor.datos
+                traerTallas(tallasPrestashop,campoPais.value,campoCategoriaTallasZalando.value);
+                // crearElementosFormulario(tallasPrestashop,campoCategoriaTallasZalando.value,tallasZalandoFiltrdas,campoPais.value)
+                
             },
             error: () => {
                 preloader.style.opacity="0"
@@ -234,11 +233,10 @@ function actualizar(){
     });
 }
 
-function consultarTodosAtributos(){
-    let preloader=document.getElementById("preloader")
+async function consultarTodosAtributos(){
     preloader.style.opacity="1"
     const linkDeControladorAtributoTalla=document.getElementById("linkDeControladorAtributoTalla").value;
-    $.ajax({
+    await $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
@@ -247,17 +245,15 @@ function consultarTodosAtributos(){
             ajax: true,
             action: 'getconsultartodo'
         },
-        success: async (respuesta) => {
+        success: (respuesta) => {
             let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             cargarAtributosTalla(json.datos)
             console.log("datos attributo talla =>>> ",respuesta);
-            let paises=await consultarPaises();
-            cargarPaisesZalando(paises)
-            let categoriasTallasZalando=await consultarCategoriasTalla();
-            cargarCategoriasTallasZalando(categoriasTallasZalando);
-            preloader.style.opacity="0"
+            consultarCategoriasTalla();
+            // cargarCategoriasTallasZalando(categoriasTallasZalando)
         },
         error: () => {
+            console.log("no entre")
             preloader.style.opacity="0"
         }
     });
@@ -273,7 +269,6 @@ function cargarAtributosTalla(datos){
 }
 
 async function consultarCategoriasTalla(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let categoriaTallas=[];
@@ -286,11 +281,12 @@ async function consultarCategoriasTalla(){
             ajax: true,
             action: 'getconsultarcateogriasquetienentallazalando'
         },
-        success: async (respuesta) => {
+        success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
             categoriaTallas=datos.respuestaServidor;
             console.log("categorias de tallas filtrados =>>> ",categoriaTallas);
-            preloader.style.opacity="0"
+            cargarCategoriasTallasZalando(categoriaTallas)
+            consultarPaises();
         },
         error: () => {
             preloader.style.opacity="0"
@@ -309,7 +305,6 @@ function cargarCategoriasTallasZalando(datos){
 }
 
 async function consultarPaises(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let paises=[];
@@ -326,6 +321,7 @@ async function consultarPaises(){
             console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta))
             paises=datos["respuestaServidor"]["items"]
+            cargarPaisesZalando(paises)
             preloader.style.opacity="0"
         },
         error: () => {
@@ -353,10 +349,10 @@ function cargarPaisesZalando(paises){
     campoPais.innerHTML=option
 }
 
-async function traerTallas(codigoPais,codigoTalla){
+function traerTallas(tallasPrestashop,codigoPais,codigoTalla){
     const linkControlador=document.getElementById("linkControlador").value;
     let tallas=[];
-    await $.ajax({
+    $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
@@ -372,11 +368,15 @@ async function traerTallas(codigoPais,codigoTalla){
             let datos=JSON.parse(JSON.stringify(respuesta))
             tallas=datos.respuestaServidor.datos
             console.log("tallas =>>> ",tallas)
+            crearElementosFormulario(tallasPrestashop,campoCategoriaTallasZalando.value,tallas,codigoPais)
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
         }
     });
     return tallas;
+
 }
 
 consultarTodosAtributos();

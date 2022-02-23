@@ -203,11 +203,11 @@ function actualizar(){
 
 
 
-function consultarAtributosPrestashop(){
+async function consultarAtributosPrestashop(){
     let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
+    await $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
