@@ -334,3 +334,128 @@ a:focus {
     position: absolute;
     font-size: 1.3rem;
 }
+
+
+/* bootstrap */
+#fieldset_0 .form-wrapper .form-group label.control-label {
+    width: 17% !important;
+    text-align: left !important;
+}
+#fieldset_0 .form-wrapper .form-group label.required::before {
+    display: none !important;
+}
+#fieldset_0 .form-wrapper .form-group .col-lg-9{
+    width: 40% !important;
+    display: flex;
+    flex-wrap: wrap;
+}
+#fieldset_0 .form-wrapper .form-group .col-lg-9 .radio.t {
+    width: 40% !important;
+}
+#fieldset_0 .form-wrapper .form-group .col-lg-9 .radio.t label{
+    display: flex;
+    align-items: center;
+}
+#fieldset_0 .form-wrapper .form-group .col-lg-9 .radio.t input[type="radio"] {
+    content: "";
+    width: 26px;
+    height: 26px;
+    border: 8px solid #66afe9;
+    float: left;
+    margin-right: 10px;
+}
+
+.bootstrap .form-control, .bootstrap input[type="text"], .bootstrap input[type="search"], .bootstrap input[type="password"], .bootstrap textarea, .bootstrap select {
+    display: block;
+    width: 100%;
+    height: 39px;
+    padding: 8px 16px;
+    font-size: 12px;
+    line-height: 1.42857;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #bbcdd2;
+    border-radius: 4px;
+    -webkit-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    -webkit-transition: border-color ease-in-out 0.15s,-webkit-box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,-webkit-box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s,-webkit-box-shadow ease-in-out 0.15s;
+}
+.bootstrap .btn-primary:hover, .bootstrap .panel .panel-footer .btn.pull-right:hover, .bootstrap #dash_version .panel-footer .btn.pull-right:hover, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right:hover, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right:hover {
+    color: #fff;
+    background: #7cd5e7;
+    border-color: #7cd5e7;
+}
+#content.bootstrap input, #content.bootstrap button, #content.bootstrap textarea, #content.bootstrap select {
+    font-family: "Open Sans",helvetica,arial,sans-serif;
+}
+.bootstrap .panel .panel-footer .btn i, .bootstrap #dash_version .panel-footer .btn i, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn i, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn i {
+    display: none;
+}
+.bootstrap .panel .panel-footer .btn, .bootstrap #dash_version .panel-footer .btn, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+.bootstrap .btn.btn-default, #content.bootstrap .panel .panel-heading>.btn-group .btn.btn-default, #content.bootstrap #dash_version .panel-heading>.btn-group .btn.btn-default, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading>.btn-group .btn.btn-default, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading>.btn-group .btn.btn-default, .bootstrap .table .btn-group-action a.btn, .bootstrap .table .btn-group-action button.btn, .bootstrap .table .btn-group a.btn, .bootstrap .table .btn-group button.btn, .bootstrap .btn.btn-default i, #content.bootstrap .panel .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap #dash_version .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading>.btn-group .btn.btn-default i, .bootstrap .table .btn-group-action a.btn i, .bootstrap .table .btn-group-action button.btn i, .bootstrap .table .btn-group a.btn i, .bootstrap .table .btn-group button.btn i {
+    color: #6c868e;
+    -webkit-transition: 0.25s ease-out;
+    transition: 0.25s ease-out;
+}
+.bootstrap .btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-transition: .25s ease-out;
+    transition: .25s ease-out;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 8px 16px;
+    font-size: 12px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.bootstrap .btn {
+    font-weight: 600;
+    white-space: normal;
+}
+.bootstrap .btn.btn-default, #content.bootstrap .panel .panel-heading>.btn-group .btn.btn-default, #content.bootstrap #dash_version .panel-heading>.btn-group .btn.btn-default, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading>.btn-group .btn.btn-default, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading>.btn-group .btn.btn-default, .bootstrap .table .btn-group-action a.btn, .bootstrap .table .btn-group-action button.btn, .bootstrap .table .btn-group a.btn, .bootstrap .table .btn-group button.btn, .bootstrap .btn.btn-default i, #content.bootstrap .panel .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap #dash_version .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading>.btn-group .btn.btn-default i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading>.btn-group .btn.btn-default i, .bootstrap .table .btn-group-action a.btn i, .bootstrap .table .btn-group-action button.btn i, .bootstrap .table .btn-group a.btn i, .bootstrap .table .btn-group button.btn i {
+    color: #6c868e;
+    -webkit-transition: 0.25s ease-out;
+    transition: 0.25s ease-out;
+}
+.bootstrap .panel .panel-footer .btn.pull-right, .bootstrap #dash_version .panel-footer .btn.pull-right, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right {
+    text-transform: none !important;
+}
+.bootstrap .btn-primary, .bootstrap .panel .panel-footer .btn.pull-right, .bootstrap #dash_version .panel-footer .btn.pull-right, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #fff;
+    background: #25b9d7;
+    border-color: #25b9d7;
+}
+
+.bootstrap h1, .bootstrap h2, .bootstrap h3, .bootstrap h4, .bootstrap h5, .bootstrap h6, .bootstrap .h1, .bootstrap .h2, .bootstrap .h3, .bootstrap .h4, .bootstrap .h5, .bootstrap .h6 {
+    font-family: "Open Sans",helvetica,arial,sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+    color: inherit;
+}
