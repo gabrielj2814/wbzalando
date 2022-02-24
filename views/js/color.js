@@ -34,8 +34,8 @@ let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 let paises=[];
 let colores=[];
 
+let preloader=document.getElementById("preloader")
 function registrar(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioColor").serializeArray()
@@ -204,7 +204,6 @@ function actualizar(){
 
 
 function consultarAtributosPrestashop(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
@@ -216,13 +215,12 @@ function consultarAtributosPrestashop(){
             ajax: true,
             action: 'getconsultaratributosprestashop'
         },
-        success: async (respuesta) => {
+        success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta))
             let colores=datos["respuestaServidor"]
             cargarAtributosPrestashop(colores);
-            let paises=await consultarPaises();
-            cargarPaisesZalando(paises);
-            preloader.style.opacity="0"
+            consultarPaises();
+            
         },
         error: () => {
             preloader.style.opacity="0"
@@ -259,7 +257,6 @@ function consultarColorPrestashop(a){
     if(campoAtributo.value!=="null" && campoPais.value!=="null"){
         let controlesPaginacion=document.getElementById("controlesPaginacion")
         controlesPaginacion.innerHTML="";
-        let preloader=document.getElementById("preloader")
         preloader.style.opacity="1"
         $.ajax({
             type: 'GET',
@@ -272,13 +269,11 @@ function consultarColorPrestashop(a){
                 id_attribute:campoAtributo.value,
                 pagina
             },
-            success: async (respuesta) => {
+            success: (respuesta) => {
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
                 let colores=respuestaJson.datos
                 console.log("colores prestashop filtrados =>>> ",colores)
-                let coloresZalando=await consultarColoresZalando(campoPais.value);
-                console.log("colors zalando =>>> ",coloresZalando)
-                crearElementosFormulario(colores,coloresZalando,campoPais.value)
+                consultarColoresZalando(colores,campoPais.value);
                 if(respuestaJson.totalRegistros>2){
                     insertarControlesPaginacion();
                     let paginaAnt=document.getElementById("pagina-ant")
@@ -301,7 +296,6 @@ function consultarColorPrestashop(a){
                     }
                     insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
                 }
-                preloader.style.opacity="0"
             },
             error: () => {
                 preloader.style.opacity="0"
@@ -403,12 +397,10 @@ function crearElementosFormulario(colores,coloresZalando,pais){
     formularioColor.innerHTML=html;
 }
 
-async function consultarPaises(){
-    let preloader=document.getElementById("preloader")
-    preloader.style.opacity="1"
+function consultarPaises(){
     const linkControlador=document.getElementById("linkControlador").value;
     let paises=[]
-    await $.ajax({
+    $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',
@@ -418,13 +410,11 @@ async function consultarPaises(){
             action: 'getconsultarpaiseszalando'
         },
         success: (respuesta) => {
-            preloader.style.opacity="0"
-            // console.log(respuesta);
-            // paises=respuesta;
             let datos=JSON.parse(JSON.stringify(respuesta));
-            // paises=datos["respuestaServidor"]["items"]
             paises=datos["respuestaServidor"]["items"];
-            console.log("paises =>>> ",datos);
+            console.log("paises =>>> ",paises);
+            cargarPaisesZalando(paises);
+            preloader.style.opacity="0"
         },
         error: () => {
             preloader.style.opacity="0"
@@ -433,8 +423,7 @@ async function consultarPaises(){
     return paises;
 }
 
-async function consultarColoresZalando(pais){
-    let preloader=document.getElementById("preloader")
+async function consultarColoresZalando(coloresPrestashop,pais){
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let colorZalando=[]
@@ -451,10 +440,11 @@ async function consultarColoresZalando(pais){
         success: (respuesta) => {
             preloader.style.opacity="0"
             let datos=JSON.parse(JSON.stringify(respuesta));
-            colores=datos["respuestaServidor"];
-            colorZalando=colores;
+            let colores=datos["respuestaServidor"];
             // console.log("colores filtrados =>>> ",datos)
             // consultarColorPrestashop()
+            crearElementosFormulario(coloresPrestashop,colores,pais)
+            preloader.style.opacity="0"
         },
         error: () => {
             preloader.style.opacity="0"

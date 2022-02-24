@@ -141,7 +141,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_category INTEGER NOT NULL,
                     outline VARCHAR(150) NOT NULL,
                     outline_name VARCHAR(150) NOT NULL,
-                    modelo JSON NOT NULL,
+                    modelo LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_categoria_asociacion`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
                 
@@ -155,7 +155,7 @@ if (!class_exists("SetupWbZalando")) {
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_datos_propiedad(
                     id_datos_propiedad int(11) NOT NULL AUTO_INCREMENT,
                     id_propiedad_modelo int(11) NOT NULL,
-                    json_datos_propiedad JSON NOT NULL,
+                    json_datos_propiedad LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_datos_propiedad`),
                     CONSTRAINT `FK_id_propiedad_modelo` FOREIGN KEY (id_propiedad_modelo) REFERENCES '.$prefijoTabla.'_propiedad_modelo(id_propiedad_modelo) ON UPDATE CASCADE ON DELETE CASCADE
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -187,22 +187,22 @@ if (!class_exists("SetupWbZalando")) {
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_esquemas(
                     id int(11) NOT NULL AUTO_INCREMENT,
                     fecha_registro date NOT NULL,
-                    esquemas_name_label JSON NOT NULL,
-                    esquemas_full JSON NOT NULL,
+                    esquemas_name_label LONGTEXT NOT NULL,
+                    esquemas_full LONGTEXT NOT NULL,
                     PRIMARY KEY (`id`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
     
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_modelo_producto(
                     id_modelo_producto VARCHAR(150) NOT NULL,
                     outline VARCHAR(150) NOT NULL,
-                    json_modelo_producto JSON NOT NULL,
+                    json_modelo_producto LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_modelo_producto`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
     
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_configuracion_producto(
                     id_configuracion_producto VARCHAR(150) NOT NULL,
                     id_modelo_producto VARCHAR(150) NOT NULL,
-                    json_configuracion_producto JSON NOT NULL,
+                    json_configuracion_producto LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_configuracion_producto`),
                     CONSTRAINT `FK_id_modelo_producto` FOREIGN KEY (id_modelo_producto) REFERENCES '.$prefijoTabla.'_modelo_producto(id_modelo_producto) ON UPDATE CASCADE ON DELETE CASCADE
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -211,7 +211,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_simple_producto VARCHAR(150) NOT NULL,
                     id_configuracion_producto VARCHAR(150) NOT NULL,
                     ean VARCHAR(150) NOT NULL,
-                    json_simple_producto JSON NOT NULL,
+                    json_simple_producto LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_simple_producto`),
                     CONSTRAINT `FK_id_configuracion_producto` FOREIGN KEY (id_configuracion_producto) REFERENCES '.$prefijoTabla.'_configuracion_producto(id_configuracion_producto) ON UPDATE CASCADE ON DELETE CASCADE
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -228,7 +228,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_precio int(11) NOT NULL AUTO_INCREMENT,
                     ean VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
-                    json_precio JSON NOT NULL,
+                    json_precio LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_precio`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'
             ];
