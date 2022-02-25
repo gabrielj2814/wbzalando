@@ -186,8 +186,133 @@ class EliminarController extends ModuleAdminController{
     public function ajaxProcessPostModificarProductos(){
         $respuesta_servidor=["respuestaServidor" => [
             "precios" => $_POST["precios"], "stock" => $_POST["stocks"]
-        ],"estatuRespuestaApi" => 0];
+        ]];
         print(json_encode($respuesta_servidor));
+    }
+
+    public function verificarExistenciaProducto($ean){
+        // verificar existencia de producto mediante el ean
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/products/identifiers/".$ean;
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $respuesta=null;
+        $curlController->setdatosCabezera($header);
+        return $curlController->ejecutarPeticion("get",false);
+    }
+
+    public function subirStock($stocks){
+        $respuestasSubidaStocks=[];
+        foreach($stocks as $stock){
+            $respuestaExistencia= $this->verificarExistenciaProducto($stock["ean"]);
+            if($respuestaExistencia["estado"]===200){
+                $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+                $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+                $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+                $url=$endPoint."/merchants/".$idComerciante."/stocks";
+                $curlController=new CurlController($url);
+                $header = array(
+                    'Content-Type: application/json',
+                    'Authorization: '.'Bearer '. $token
+                );
+                $items=["items" => []];
+                $items["items"][]=$stock;
+                $curlController->setDatosPeticion($items);
+                $curlController->setdatosCabezera($header);
+                $respuesta=$curlController->ejecutarPeticion("post",true);
+                error_log("respuesta de zalando al subir el stock =>>>>  " . var_export($respuesta, true));
+                $respuestasSubidaStocks[]=$respuesta;
+            }
+            else{
+                $respuestasSubidaStocks[$stock["ean"]]=false;
+            }
+        }
+        return $respuestasSubidaStocks;
+        
+    }
+    public function subirPrecio($precios){
+        $respuestasSubidaPrecio=[];
+        foreach($precios as $precio){
+            $respuestaExistencia= $this->verificarExistenciaProducto($precio["ean"]);
+            if($respuestaExistencia["estado"]===200){
+                $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+                $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+                $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+                $url=$endPoint."/merchants/".$idComerciante."/prices";
+                $curlController=new CurlController($url);
+                $header = array(
+                    'Content-Type: application/json',
+                    'Authorization: '.'Bearer '. $token
+                );
+                if($precio["ignore_warnings"]==="true"){
+                    $precio["ignore_warnings"]=true;
+                }
+                else if($precio["ignore_warnings"]==="false"){
+                    $precio["ignore_warnings"]=false;
+                }
+                $product_precio=["product_prices" => []];
+                $product_precio["product_prices"][]=$precio;
+                $curlController->setDatosPeticion($product_precio);
+                $curlController->setdatosCabezera($header);
+                $respuesta=$curlController->ejecutarPeticion("post",true);
+                error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
+                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
+            }
+            else{
+                $respuestasSubidaPrecio[$precio["ean"]]=false;
+            }
+        }
+        return $respuestasSubidaPrecio;
+    }
+
+    public function editarPrecioProducto($producto){
+        $estado=true;
+        foreach($producto["precios"] as $precioProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_precio(
+                ean,
+                sales_channel_id,
+                json_precio
+                    ) 
+                VALUES (
+                    '". $precioProducto["ean"]."',
+                    '". $precioProducto["sales_channel_id"]."',
+                    '".json_encode($precioProducto)."'
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
+
+    public function editarStockProducto($producto){
+        $estado=true;
+        foreach($producto["stocks"] as $stockProducto){
+            $SQL="
+            INSERT INTO ps_wbzalando_stock(
+                ean,
+                sales_channel_id,
+                quantity
+                ) 
+                VALUES (
+                    '". $stockProducto["ean"]."',
+                    '". $stockProducto["sales_channel_id"]."',
+                    ". $stockProducto["quantity"]."
+                );
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
     }
 
 
