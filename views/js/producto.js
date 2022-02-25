@@ -845,7 +845,7 @@ function campoCompuesto(campo){
 // nombreProducto.addEventListener("keyup", filtrarProductos);
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-botonTestEnvio.addEventListener("click", enviarProductos)
+//botonTestEnvio.addEventListener("click", enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
