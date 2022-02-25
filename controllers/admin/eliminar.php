@@ -183,5 +183,12 @@ class EliminarController extends ModuleAdminController{
         return Db::getInstance()->execute($SQL);
     }
 
+    public function ajaxProcessPostModificarProductos(){
+        $respuesta_servidor=["respuestaServidor" => [
+            "precios" => $_POST["precios"], "stock" => $_POST["stocks"]
+        ],"estatuRespuestaApi" => 0];
+        print(json_encode($respuesta_servidor));
+    }
+
 
 }

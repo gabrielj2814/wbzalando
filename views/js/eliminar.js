@@ -56,11 +56,11 @@ function insertarProductos(productos){
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_stock' data-propiedad='stock' value='"+infoStock.quantity+"'  onKeyup='modicandoProducucto(this)'/></h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioRegular' data-propiedad='precioRegular' value='"+infoPrecio.regular_price.amount+"' onKeyup='modicandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+infoPrecio.promotional_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modicandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaInicioPromocion' data-propiedad='fechaInicioPromocion' value='"+arrayFechaInicio+"' onBlur='modicandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaFinPromocion' data-propiedad='fechaFinPromocion' value='"+arrayFechaFinal+"' onBlur='modicandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_stock' data-propiedad='stock' value='"+infoStock.quantity+"'  onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioRegular' data-propiedad='precioRegular' value='"+infoPrecio.regular_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+infoPrecio.promotional_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaInicioPromocion' data-propiedad='fechaInicioPromocion' value='"+arrayFechaInicio+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaFinPromocion' data-propiedad='fechaFinPromocion' value='"+arrayFechaFinal+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
         ";
         // html+=producto.ean+" - "+producto.sales_channel_id;
@@ -93,7 +93,7 @@ function guardarModificaciones(){
             let formatoStock={
                 "sales_channel_id": datos.sales_channel_id,
                 "ean": datos.ean,
-                "quantity": datos.stock
+                "quantity": parseInt(datos.stock)
             }
             let formatoPrecio={
                 "ean": datos.ean,
@@ -122,11 +122,33 @@ function guardarModificaciones(){
                 ],
                 "ignore_warnings": true
             }
-            stocks.push(formatoStock)
-            precios.push(formatoPrecio)
+            stocks.push(JSON.stringify(formatoStock))
+            precios.push(JSON.stringify(formatoPrecio))
         }
         console.log("stocks listo para enviar =>>>> ",stocks)
         console.log("precios listo para enviar =>>>> ",precios)
+        const linkControlador=document.getElementById("linkControlador").value;
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postmodificarProductos',
+                stocks,
+                precios
+            },
+            success: (respuesta) => {
+                // console.log(respuesta);
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("producto Eliminado =>>>>> ",respuestaJson)
+            },
+            error: () => {
+                preloader.style.opacity="0"
+            }
+        });
+
     }
     else{
         alert("no hay productos modificados")
@@ -157,7 +179,7 @@ function obtenerSoloProductosModificados(){
 
 
 
-function modicandoProducucto(a){
+function modificandoProducucto(a){
     // productosModificados
     let idProducto=a.getAttribute("data-id-producto")
     let propiedad=a.getAttribute("data-propiedad")
