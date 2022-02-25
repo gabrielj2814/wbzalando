@@ -1,3 +1,8 @@
+<style><link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" type="text/css" /></style>
+
+<input type="hidden" id="linkControlador" value="{$linkControlador}"/>
+<input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
+<input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
 
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 
@@ -94,12 +99,12 @@
                                             <label for="">
                                             </label>
                                         <a class="slide-button btn"></a>
-                                    </span>
+                                        </span>
 									</span>
 								</div>
 								<div class="col-xs-12 form-group form-group-lg" style="margin-bottom: 0 !important;">
 									<div class="col-sm-9 p-0">
-										<input name="search_query" class="form-control" type="text"/>
+										<input  type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Buscar por nombre de producto"/>
 									</div>
 									<div class="col-sm-3">
 										<select class="form-control" name="type_search">
@@ -345,325 +350,221 @@
 						</div>
 						<div class="col-lg-12 control_btn">
                         <div class="centrar-columnas" style="margin-bottom: 30px;margin-top: 60px;">
-                            <div class="jt-center">
-                                <div class="mr">
-                                    <input  type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Buscar por nombre de producto"/>
-                                </div>
-                                <button id="beginSearch" class="btn btn-default">
-                                    Buscar producto
-                                </button>
-                            </div>
+                            <button id="beginSearch" class="btn btn-default">
+                                Buscar producto
+                            </button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<div class="panel mode_search">
-			<h3 class="panel-heading">Producto de búsqueda Resultado</h3>
-			<div class="table_search_product">
-				<div class="alert alert-warning">¿Necesitas iniciar la búsqueda</div>
-			</div>
-			<div class="row_select_all clearfix">
-				<button class="btn btn-default selectAll">
-                    Seleccionar todo
-				</button>
-			</div>
-		</div>
-
-        
-
-
-
-        <div class="panel mode_edit panel-container row">
-            <div class="tn-box mv_succes" style="display: none;">
-                <p class="message_mv_content">Actualización con éxito!</p>
-                <div class="tn-progress"></div>
-            </div>
-            <div class="tn-box mv_error" style="display: none;">
-                <p class="message_mv_content">error</p>
-                <div class="tn-progress"></div>
-            </div>
-            <div class="panel" style="border: none !important;">
-                <div class="panel-heading clearfix">
-                    <button class="change_date_button">
-                        <i class="icon-plus"></i>
-                    </button>
-                    <span>Configuración global
-                </span>
-                    <a class="masseditdoc" href="http://zalando.test/admin639kgjtj6/index.php?controller=AdminModules&amp;token=fa51ac314d730e3a5d2dc58ce267468e&amp;configure=masseditproduct&amp;tab_module=masseditproduct&amp;tab_module=front_office_features&amp;module_name=masseditproduct">Documentación</a>
-                    <a class="float-right" id="seosa_manager_btn" href="#">Nuestros módulos</a>
-                </div>
-                <div class="form-group change_date_container clearfix" style="display: none;">
-                    <label class="control-label col-lg-12">Cambiar la fecha de actualización del producto después de que los cambios entren en vigor?</label>
-                    <div class="col-lg-12">
-                        <div class="btn-group btn-group-radio">
-                            <label for="change_date_upd_yes">
-                                <input type="radio" name="change_date_upd" value="1" id="change_date_upd_yes">
-                                <span class="btn btn-default">Sí</span>
-                            </label>
-                            <label for="change_date_upd_no">
-                                <input type="radio" checked="" name="change_date_upd" value="0" id="change_date_upd_no">
-                                <span class="btn btn-default">No</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group change_date_container clearfix" style="display: none;">
-                    <label class="control-label col-lg-12">Productos reindex después del cambio?</label>
-                    <div class="col-lg-12">
-                        <div class="btn-group btn-group-radio">
-                            <label for="reindex_products_yes">
-                                <input type="radio" checked="" name="reindex_products" value="1" id="reindex_products_yes">
-                                <span class="btn btn-default">Sí</span>
-                            </label>
-                            <label for="reindex_products_no">
-                                <input type="radio" name="reindex_products" value="0" id="reindex_products_no">
-                                <span class="btn btn-default">No</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab_container">
-                <div class="col-md-2">
-                    <button class="tab-menu">Menú<i class="icon-chevron-down"></i></button>
-                    <ul class="tabs clearfix">
-                        <li data-tab="category">Categorías</li>
-                        <li data-tab="price">Precio</li>
-                        <li data-tab="active">Activo</li>
-                        <li data-tab="manufacturer">Fabricante</li>
-                        <li data-tab="accessories">Accesorios</li>
-                        <li data-tab="supplier">Proveedor</li>
-                        <li data-tab="discount">Descuento</li>
-                        <li data-tab="features">Características</li>
-                        <li data-tab="delivery">Entrega</li>
-                        <li data-tab="image">Imagen</li>
-                        <li data-tab="description">Descripción</li>
-                        <li data-tab="rule_combination">Combinaciones</li>
-                        <li data-tab="attachment">Archivos adjuntos</li>
-                        <li data-tab="advanced_stock_management">Gestion de Stocks</li>
-                        <li data-tab="quantity">Cantidad</li>
-                        <li data-tab="meta">Meta</li>
-                        <li data-tab="reference">Referencia</li>
-                        <li data-tab="createproducts" data-action="create_products">Crear productos</li>
-                        <li data-tab="customization">Campos de personalización</li>
-                    </ul>
-                </div>
-                <div class="col-md-10">
-                    <div class="tabs_content clearfix ">
-                        <h3 id="title_edit_tabs" class="panel-heading" style="margin: 0 !important;">Comenzar a trabajar con los productos seleccionados</h3>
-                        <h3 id="title_create_tabs" class="panel-heading" style="margin: 0 !important;">Comenzar a crear productos</h3>
-                        <div class="tab_content ajax_load_tab loading" id="category">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="price">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="active">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="manufacturer">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="accessories">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="supplier">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="discount">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="features">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="delivery">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="image">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="description">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="rule_combination">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="attachment">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="advanced_stock_management">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="quantity">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="meta">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="reference">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="createproducts">
-                        </div>
-                        <div class="tab_content ajax_load_tab loading" id="customization">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-		
-
-
-        <div class="panel mode_edit clearfix">
-            <h3 class="panel-heading">Artículos seleccionados</h3>
-            <div class="table_selected_products">
-                <div class="col-xs-12">
-                    <table class="table">
-                        <thead>
-                            <tr class="table_head">
-                                <th>
-                                    <span class="title_box" data-orderby="id_product">ID
-                                        <a href="#" data-orderway="DESC">
-                                            <i class="icon-caret-down"></i>
-                                        </a>
-                                        <a href="#" data-orderway="ASC">
-                                            <i class="icon-caret-up"></i>
-                                        </a>
-                                    </span>
-                                </th>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>
-                                    <span class="title_box" data-orderby="reference">Referencia
-                                        <a href="#" data-orderway="DESC">
-                                            <i class="icon-caret-down"></i>
-                                        </a>
-                                        <a href="#" data-orderway="ASC">
-                                            <i class="icon-caret-up"></i>
-                                        </a>
-                                    </span>
-                                </th>
-                                <th>Categoría por defecto</th>
-                                <th>
-                                    <span class="title_box" data-orderby="price">Precio
-                                        <a href="#" data-orderway="DESC">
-                                            <i class="icon-caret-down"></i>
-                                        </a>
-                                        <a href="#" data-orderway="ASC">
-                                            <i class="icon-caret-up"></i>
-                                        </a>
-                                    </span>
-                                </th>
-                                <th>Precio unitario (incl IVA )</th>
-                                <th>Fabricante</th>
-                                <th>Proveedor</th>
-                                <th>
-                                    <span class="title_box" data-orderby="quantity">Cantidad
-                                        <a href="#" data-orderway="DESC">
-                                            <i class="icon-caret-down"></i>
-                                        </a>
-                                        <a href="#" data-orderway="ASC">
-                                            <i class="icon-caret-up"></i>
-                                        </a>
-                                    </span>
-                                </th>
-                                <th>Gestion de Stocks</th>
-                                <th>Activo</th>
-                                <th data-combinations="">Combinaciones <a href="#">Seleccionar</a>
-                                    <div class="selector_item select_combinations" style="display: none;">
-                                        <a class="check_all_combinations btn btn-default button" href="#">
-                                            <i class="icon-check-sign"></i>
-                                            Marcar todo
-                                        </a>
-                                        <a class="uncheck_all_combinations btn btn-default button" href="#">
-                                            <i class="icon-check-empty"></i>
-                                            Desmarcar todo
-                                        </a>
-                                        <a class="check_attribute_combinations btn btn-default button" href="#">
-                                            <i class="icon-list"></i>
-                                            Seleccionar atributo
-                                        </a>
-                                        <div id="attributes_select">
-                                            <div class="attribute_group_block">
-                                                <div>
-                                                    Atributo
-                                                    <select class="select_attribute">
-                                                        <option value="0">--</option>
-                                                        <option value="2">Color</option>
-                                                        <option value="3">Dimension</option>
-                                                        <option value="4">Paper Type</option>
-                                                        <option value="1">Tamaño</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    Valor
-                                                    <select class="select_attribute_value">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <a class="start_select_combinations btn btn-default button" href="#">
-                                                Seleccionar
-                                            </a>
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>			
-            </div>
-        </div>
-        
-	</div>
+    </div>
 </div>
 
-<script id="image_row" type="text/html">
-	<div class="row">
-		<div class="col-lg-12">
-			<input name="" type="file">
-		</div>
-	</div>
+
+<div class="panel mode_search" style="display: block;">
+    <h3 class="panel-heading">Producto de búsqueda Resultado<span id="count_result" class="badge">#</span></h3>
+    <form id="formTablaProductos">
+        <table class="table">
+            <!--
+            <thead>
+                <tr>
+                <th scope="col"></th>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre de Producto</th>
+                <th scope="col">Referencia (EAN)</th>
+                </tr>
+            </thead>
+            -->
+            <thead>
+                <tr class="table_head">
+                    <th>
+                        <span class="title_box" data-orderby="id_product">ID
+                            <a href="#" data-orderway="DESC">
+                                <i class="icon-caret-down"></i>
+                            </a>
+                            <a href="#" data-orderway="ASC">
+                                <i class="icon-caret-up"></i>
+                            </a>
+                        </span>
+                    </th>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>
+                        <span class="title_box" data-orderby="reference">Referencia
+                            <a href="#" data-orderway="DESC">
+                                <i class="icon-caret-down"></i>
+                            </a>
+                            <a href="#" data-orderway="ASC">
+                                <i class="icon-caret-up"></i>
+                            </a>
+                        </span>
+                    </th>
+                    <th>Categoría por defecto</th>
+                    <th>
+                        <span class="title_box" data-orderby="price">Precio
+                            <a href="#" data-orderway="DESC">
+                                <i class="icon-caret-down"></i>
+                            </a>
+                            <a href="#" data-orderway="ASC">
+                                <i class="icon-caret-up"></i>
+                            </a>
+                        </span>
+                    </th>
+                    <th>Precio unitario (incl IVA )</th>
+                    <th>Fabricante</th>
+                    <th>Proveedor</th>
+                    <th>
+                        <span class="title_box" data-orderby="quantity">Cantidad
+                            <a href="#" data-orderway="DESC">
+                                <i class="icon-caret-down"></i>
+                            </a>
+                            <a href="#" data-orderway="ASC">
+                                <i class="icon-caret-up"></i>
+                            </a>
+                        </span>
+                    </th>
+                    <th>Gestion de Stocks</th>
+                    <th>Activo</th>
+                    <th data-combinations="">Combinaciones <a href="#">Seleccionar</a>
+                        <div class="selector_item select_combinations" style="display: none;">
+                            <a class="check_all_combinations btn btn-default button" href="#">
+                                <i class="icon-check-sign"></i>
+                                Marcar todo
+                            </a>
+                            <a class="uncheck_all_combinations btn btn-default button" href="#">
+                                <i class="icon-check-empty"></i>
+                                Desmarcar todo
+                            </a>
+                            <a class="check_attribute_combinations btn btn-default button" href="#">
+                                <i class="icon-list"></i>
+                                Seleccionar atributo
+                            </a>
+                            <div id="attributes_select">
+                                <div class="attribute_group_block">
+                                    <div>
+                                        Atributo
+                                        <select class="select_attribute">
+                                            <option value="0">--</option>
+                                            <option value="2">Color</option>
+                                            <option value="3">Dimension</option>
+                                            <option value="4">Paper Type</option>
+                                            <option value="1">Tamaño</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        Valor
+                                        <select class="select_attribute_value">
+                                        </select>
+                                    </div>
+                                </div>
+                                <a class="start_select_combinations btn btn-default button" href="#">
+                                    Seleccionar
+                                </a>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tablaProductos">
+            </tbody>
+        </table>
+
+        <div class="well-lg col-lg-12 blockquote-reverse col-xs-11">
+            <button id="" class="btn btn-primary" >
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="panel">
+    
+    <div class="slider-pais" style="width: 100%; position: relative;">
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                España
+            </button>
+        </div>
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                EEUU
+            </button>
+        </div>
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                Germany
+            </button>
+        </div>
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                France
+            </button>
+        </div>
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                España
+            </button>
+        </div>
+        <div class="">
+            <button id="botonRegistrar" class="btn btn-primary">
+                EEUU
+            </button>
+        </div>
+    </div>
+    <div id="paisesRadio">
+    
+    </div>
+    <div style="display: flex;">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-header p-20"> 
+            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 txt-title">
+                <label>Productos</label>
+            </div>
+            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
+                <label>stock</label>
+            </div>
+            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
+                <label>Precio</label>
+            </div>
+            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
+                <label>Descuento</label>
+            </div>
+            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
+                <label>Fecha de inicio descuento</label>
+            </div>
+            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
+                <label>Fecha de final descuento</label>
+            </div>
+            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
+            </div>
+        </div>
+        
+
+        <div id="listaDeProductosHaEliminar">
+
+        </div>
+    </div>
+
+    <div id="controlesPaginacion"></div>
+</div>
+
+<div class="col-12 fat-pre" id="preloader">
+    <div class="pre-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>
+    $('.slider-pais').slick
+    ({
+        infinite: true,
+        prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
+        nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
+        slidesToShow: 5,
+        slidesToScroll: 1
+    });
 </script>
-<style>
-	@media (max-width: 991px) {
-		.table td:nth-of-type(1):before {
-			content: "{l s='ID' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(2):before {
-			content: "{l s='Image' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(3):before {
-			content: "{l s='Name' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(4):before {
-			content: "{l s='Reference' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(5):before {
-			content: "{l s='Category default' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(6):before {
-			content: "{l s='Price' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(7):before {
-			content: "{l s='Price final' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(8):before {
-			content: "{l s='Manufacture' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(9):before {
-			content: "{l s='Supplier' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(10):before {
-			content: "{l s='Quantity' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(11):before {
-			content: "{l s='Stock management' mod='masseditproduct' js=true}";
-		}
-		.table td:nth-of-type(12):before {
-			content: "{l s='Active' mod='masseditproduct' js=true}";
-		}
-
-		#supplier .table td:nth-of-type(1):before {
-			content: "{l s='Suppliers' mod='masseditproduct' js=true}";
-		}
-		#supplier .table td:nth-of-type(2):before {
-			content: "{l s='Supplier reference' mod='masseditproduct' js=true}";
-		}
-		#supplier .table td:nth-of-type(3):before {
-			content: "{l s='Unit price tax excluded' mod='masseditproduct' js=true}";
-		}
-		#supplier .table td:nth-of-type(4):before {
-			content: "{l s='Unit price currency' mod='masseditproduct' js=true}";
-		}
-	}
-</style>
-<script type="text/javascript" src="/modules/wbzalando/views/js/modificarprodcuto.js"></script>
-
-
