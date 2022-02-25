@@ -2,6 +2,10 @@
 
 let paises={}
 
+let productosRespaldo={}
+
+let productosModificados={}
+
 async function consultarProductosWBZalando(){
     const linkDeControladorProducto=document.getElementById("linkDeControladorProducto").value;
     await $.ajax({
@@ -34,21 +38,158 @@ function insertarProductos(productos){
         let infoConfig=JSON.parse(producto.detallesDelProdcuto[0].json_configuracion_producto)
         let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
         let infoPrecio=JSON.parse(producto.json_precio)
-        let arrayFecha=infoPrecio.scheduled_prices[0].end_time.split("T")[0].split("-")
+        // let arrayFecha=infoPrecio.scheduled_prices[0].end_time.split("T")[0].split("-")
+        let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
+        let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
+        if(!productosRespaldo[producto.sales_channel_id+"_"+producto.ean]){
+            productosRespaldo[producto.sales_channel_id+"_"+producto.ean]={
+                ean:producto.ean,
+                sales_channel_id:producto.sales_channel_id,
+                stock:infoStock.quantity,
+                moneda:infoPrecio.regular_price.currency,
+                precioRegular:infoPrecio.regular_price.amount,
+                precioPromocion:infoPrecio.promotional_price.amount,
+                fechaInicioPromocion:arrayFechaInicio,
+                fechaFinPromocion:arrayFechaFinal
+            }
+        }
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+infoStock.quantity+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+" "+infoPrecio.regular_price.amount+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+infoPrecio.promotional_price.currency+" "+infoPrecio.promotional_price.amount+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+arrayFecha[2]+"/"+arrayFecha[1]+"/"+arrayFecha[0]+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>12-12-12</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_stock' data-propiedad='stock' value='"+infoStock.quantity+"'  onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioRegular' data-propiedad='precioRegular' value='"+infoPrecio.regular_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+infoPrecio.promotional_price.currency+" <input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaInicioPromocion' data-propiedad='fechaInicioPromocion' value='"+arrayFechaInicio+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaFinPromocion' data-propiedad='fechaFinPromocion' value='"+arrayFechaFinal+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
         ";
         // html+=producto.ean+" - "+producto.sales_channel_id;
     }
     listaDeProductosHaEliminar.innerHTML=html
+    console.log("lista de respaldo de productos =>>>> ",productosRespaldo)
+    cargarDatosProductosModificados();
 
+}
+
+function cargarDatosProductosModificados(){
+    for(let id in productosModificados){
+        if(document.getElementById(id+"_stock")){
+            document.getElementById(id+"_stock").value=productosModificados[id].stock
+            document.getElementById(id+"_precioRegular").value=productosModificados[id].precioRegular
+            document.getElementById(id+"_precioPromocion").value=productosModificados[id].precioPromocion
+            document.getElementById(id+"_fechaInicioPromocion").value=productosModificados[id].fechaInicioPromocion
+            document.getElementById(id+"_fechaFinPromocion").value=productosModificados[id].fechaFinPromocion
+        }
+    }
+}
+
+function guardarModificaciones(){
+    // alert("guardando")
+    let productosModificadosValidados=obtenerSoloProductosModificados()
+    if(productosModificadosValidados.length>0){
+        let precios=[]
+        let stocks=[]
+        for(let datos of productosModificadosValidados){
+            let formatoStock={
+                "sales_channel_id": datos.sales_channel_id,
+                "ean": datos.ean,
+                "quantity": parseInt(datos.stock)
+            }
+            let formatoPrecio={
+                "ean": datos.ean,
+                "sales_channel_id": datos.sales_channel_id,
+                "regular_price": {
+                    "amount": parseFloat(datos.precioRegular),
+                    "currency": datos.moneda
+                },
+                "promotional_price": {
+                    "amount": parseFloat(datos.precioPromocion),
+                    "currency": datos.moneda
+                },
+                "scheduled_prices": [
+                    {
+                        "regular_price": {
+                            "amount": parseFloat(datos.precioRegular),
+                            "currency": datos.moneda
+                        },
+                        "promotional_price": {
+                            "amount": parseFloat(datos.precioPromocion),
+                            "currency": datos.moneda
+                        },
+                        "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
+                        "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
+                    }
+                ],
+                "ignore_warnings": true
+            }
+            stocks.push(JSON.stringify(formatoStock))
+            precios.push(JSON.stringify(formatoPrecio))
+        }
+        console.log("stocks listo para enviar =>>>> ",stocks)
+        console.log("precios listo para enviar =>>>> ",precios)
+        const linkControlador=document.getElementById("linkControlador").value;
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postmodificarProductos',
+                stocks,
+                precios
+            },
+            success: (respuesta) => {
+                // console.log(respuesta);
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("producto Eliminado =>>>>> ",respuestaJson)
+            },
+            error: () => {
+                preloader.style.opacity="0"
+            }
+        });
+
+    }
+    else{
+        alert("no hay productos modificados")
+    }
+   
+
+}
+
+function obtenerSoloProductosModificados(){
+    let listaDeProductosModificados=[]
+    for(let id in productosRespaldo){
+        if(productosRespaldo[id] && productosModificados[id]){
+            let productoRespaldo=productosRespaldo[id]
+            let productoModificado=productosModificados[id]
+            if(
+                productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
+                productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
+                !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
+                !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
+                productoModificado.stock!==productoRespaldo.stock
+            ){
+                listaDeProductosModificados.push(productoModificado)
+            }
+        }
+    }
+    return listaDeProductosModificados
+}
+
+
+
+function modificandoProducucto(a){
+    // productosModificados
+    let idProducto=a.getAttribute("data-id-producto")
+    let propiedad=a.getAttribute("data-propiedad")
+    if(!productosModificados[idProducto]){
+        // alert("no existe por eso se crea")
+        let copiaDeProducto=JSON.parse(JSON.stringify(productosRespaldo[idProducto]))
+        productosModificados[idProducto]=copiaDeProducto;
+    }
+    productosModificados[idProducto][propiedad]=a.value;
+    console.log("producto =>>>>> ",productosModificados[idProducto])
 }
 
 async function eliminarProducto(e){
