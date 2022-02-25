@@ -184,10 +184,61 @@ class EliminarController extends ModuleAdminController{
     }
 
     public function ajaxProcessPostModificarProductos(){
-        $respuesta_servidor=["respuestaServidor" => [
-            "precios" => $_POST["precios"], "stock" => $_POST["stocks"]
-        ]];
+        //  $_POST["precios"] $_POST["stocks"]
+        $respuesta_servidor=["respuestaServidor" => []];
+        $resuestaModificarPrecioProducto=false;
+        $resuestaModificarStockProducto=false;
+        if(array_key_exists("precios",$_POST)){
+            $resuestaModificarPrecioProducto=$this->editarPrecioProducto($_POST["precios"]);
+        }
+        if(array_key_exists("stocks",$_POST)){
+            $resuestaModificarStockProducto=$this->editarStockProducto($_POST["stocks"]);
+        }
+        $respuesta_servidor["respuestaServidor"]=[
+            "precio" => $resuestaModificarPrecioProducto,
+            "stock" => $resuestaModificarStockProducto
+        ];
         print(json_encode($respuesta_servidor));
+    }
+
+    public function editarPrecioProducto($precios){
+        $estado=true;
+        foreach($precios as $precio){
+            $objPrecio=json_decode($precio);
+            $SQL="
+            UPDATE ps_wbzalando_precio SET
+                json_precio='".$precio."'
+                WHERE 
+                ean='".$objPrecio->ean."' AND 
+                sales_channel_id='".$objPrecio->sales_channel_id."';
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
+    }
+
+    public function editarStockProducto($stocks){
+        $estado=true;
+        foreach($stocks as $stock){
+            $objStock=json_decode($stock);
+            $SQL="
+            UPDATE ps_wbzalando_stock SET
+                ean='".$objStock->ean."',
+                sales_channel_id='".$objStock->sales_channel_id."',
+                quantity=".$objStock->quantity."
+                WHERE 
+                ean='".$objStock->ean."' AND 
+                sales_channel_id='".$objStock->sales_channel_id."';
+            ";
+            if(!Db::getInstance()->execute($SQL)){
+                $estado=false;
+                break;
+            }
+        }
+        return $estado;
     }
 
     public function verificarExistenciaProducto($ean){
@@ -269,51 +320,7 @@ class EliminarController extends ModuleAdminController{
         return $respuestasSubidaPrecio;
     }
 
-    public function editarPrecioProducto($producto){
-        $estado=true;
-        foreach($producto["precios"] as $precioProducto){
-            $SQL="
-            INSERT INTO ps_wbzalando_precio(
-                ean,
-                sales_channel_id,
-                json_precio
-                    ) 
-                VALUES (
-                    '". $precioProducto["ean"]."',
-                    '". $precioProducto["sales_channel_id"]."',
-                    '".json_encode($precioProducto)."'
-                );
-            ";
-            if(!Db::getInstance()->execute($SQL)){
-                $estado=false;
-                break;
-            }
-        }
-        return $estado;
-    }
-
-    public function editarStockProducto($producto){
-        $estado=true;
-        foreach($producto["stocks"] as $stockProducto){
-            $SQL="
-            INSERT INTO ps_wbzalando_stock(
-                ean,
-                sales_channel_id,
-                quantity
-                ) 
-                VALUES (
-                    '". $stockProducto["ean"]."',
-                    '". $stockProducto["sales_channel_id"]."',
-                    ". $stockProducto["quantity"]."
-                );
-            ";
-            if(!Db::getInstance()->execute($SQL)){
-                $estado=false;
-                break;
-            }
-        }
-        return $estado;
-    }
+    
 
 
 }
