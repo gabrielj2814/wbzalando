@@ -39,7 +39,7 @@ function insertarProductos(productos){
         let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
         let infoPrecio=JSON.parse(producto.json_precio)
         // let arrayFecha=infoPrecio.scheduled_prices[0].end_time.split("T")[0].split("-")
-                let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
+        let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
         let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
         if(!productosRespaldo[producto.sales_channel_id+"_"+producto.ean]){
             productosRespaldo[producto.sales_channel_id+"_"+producto.ean]={
@@ -49,8 +49,8 @@ function insertarProductos(productos){
                 moneda:infoPrecio.regular_price.currency,
                 precioRegular:infoPrecio.regular_price.amount,
                 precioPromocion:infoPrecio.promotional_price.amount,
-                fechaInicioPromocion:infoPrecio.scheduled_prices[0].start_time,
-                fechaFinPromocion:infoPrecio.scheduled_prices[0].end_time
+                fechaInicioPromocion:arrayFechaInicio,
+                fechaFinPromocion:arrayFechaFinal
             }
         }
         html+="\
@@ -84,7 +84,75 @@ function cargarDatosProductosModificados(){
 }
 
 function guardarModificaciones(){
-    alert("guardando")
+    // alert("guardando")
+    let productosModificadosValidados=obtenerSoloProductosModificados()
+    if(productosModificadosValidados.length>0){
+        let precios=[]
+        let stocks=[]
+        for(let datos of productosModificadosValidados){
+            let formatoStock={
+                "sales_channel_id": datos.sales_channel_id,
+                "ean": datos.ean,
+                "quantity": datos.stock
+            }
+            let formatoPrecio={
+                "ean": datos.ean,
+                "sales_channel_id": datos.sales_channel_id,
+                "regular_price": {
+                    "amount": parseFloat(datos.precioRegular),
+                    "currency": datos.moneda
+                },
+                "promotional_price": {
+                    "amount": parseFloat(datos.precioPromocion),
+                    "currency": datos.moneda
+                },
+                "scheduled_prices": [
+                    {
+                        "regular_price": {
+                            "amount": parseFloat(datos.precioRegular),
+                            "currency": datos.moneda
+                        },
+                        "promotional_price": {
+                            "amount": parseFloat(datos.precioPromocion),
+                            "currency": datos.moneda
+                        },
+                        "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
+                        "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
+                    }
+                ],
+                "ignore_warnings": true
+            }
+            stocks.push(formatoStock)
+            precios.push(formatoPrecio)
+        }
+        console.log("stocks listo para enviar =>>>> ",stocks)
+        console.log("precios listo para enviar =>>>> ",precios)
+    }
+    else{
+        alert("no hay productos modificados")
+    }
+   
+
+}
+
+function obtenerSoloProductosModificados(){
+    let listaDeProductosModificados=[]
+    for(let id in productosRespaldo){
+        if(productosRespaldo[id] && productosModificados[id]){
+            let productoRespaldo=productosRespaldo[id]
+            let productoModificado=productosModificados[id]
+            if(
+                productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
+                productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
+                !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
+                !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
+                productoModificado.stock!==productoRespaldo.stock
+            ){
+                listaDeProductosModificados.push(productoModificado)
+            }
+        }
+    }
+    return listaDeProductosModificados
 }
 
 
