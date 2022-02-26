@@ -472,9 +472,9 @@
                     </div>
                     <div class="p-20" >
                         <div class="text-font-10 modal-header modal-tr-2">
-                            <div style="width: 5%; text-align: center;">Proveedor</div>
+                            <div style="width: 4%; text-align: center;">Proveedor</div>
                             <div style="width: 5%; text-align: center;">Fabricante</div>
-                            <div style="width: 12%; text-align: left;"">upper_material_clothing</div>
+                            <div style="width: 10%; text-align: left;"">upper_material_clothing</div>
                             <div style="width: 20%; text-align: left;">how_to_use</div>
                             <div style="width: 20%; text-align: left;">warning</div>
                             <div style="width: 20%; text-align: left;">description</div>
