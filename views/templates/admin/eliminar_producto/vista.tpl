@@ -5,37 +5,40 @@
 
 <div class="panel">
     
-    <div class="slider-pais" style="width: 100%; position: relative;">
+    <div class="slider-pais" id="slider-paises" style="width: 100%; position: relative;">
+        <!--
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 España
             </button>
         </div>
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 EEUU
             </button>
         </div>
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 Germany
             </button>
         </div>
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 France
             </button>
         </div>
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 España
             </button>
         </div>
         <div class="">
-            <button id="botonRegistrar" class="btn btn-primary">
+            <button class="btn btn-primary">
                 EEUU
             </button>
         </div>
+        
+        -->
     </div>
     <div id="paisesRadio">
     
