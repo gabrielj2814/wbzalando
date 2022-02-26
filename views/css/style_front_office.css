@@ -522,15 +522,8 @@ input{
     padding: 10px 5px !important;
     width: 50px !important;
 }
-
-@media (max-width: 1800px) {
-    .caj-product .pais-price{
-        height: 30px !important;
-    }
-    .caj-product .alignitem-tb{
-        display: block;
-        margin-top: -8px;
-    }
+.text-font-10{
+    font-size: 10px;
 }
 
 /* .vista-2{
