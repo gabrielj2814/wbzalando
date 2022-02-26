@@ -449,8 +449,8 @@
                             <div class="text-center" style="width: 9%;" data-category="">RUNNING</div>
                             <div class="text-center" style="width: 4%;">
                                 <select class='h35' style="padding: 5px 0px;">
-                                        <option value="">Dolar</option>
                                         <option value="">EUR</option>
+                                        <option value="">Dolar</option>
                                 </select>
                             </div>
                             <div class="text-center alignitem-tb" style="width: 5%;" data-quantity=""><input class='input-tb' type='text' id='stock'/></div>
