@@ -1,16 +1,5 @@
-// variables globales
-let listaProductos={};
-let productosSeleccionados=[];
-// ------ referencia a elementos html
-let botonFiltroProducto=document.getElementById("botonFiltroProducto");
-let nombreProducto=document.getElementById("nombreProducto");
-let obtenerProductos=document.getElementById("obtenerProductos");
-let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
-let botonTestEnvio=document.getElementById("botonTestEnvio")
-// let botonConsultarPedidos=document.getElementById("botonConsultarPedidos")
-// let botonConsultarCategoriasAso=document.getElementById("botonConsultarCategoriasAso")
-// let botonConsultartallasAsociadasMasPais=document.getElementById("botonConsultartallasAsociadasMasPais")
-// functiones
+// funciones que no se estan usando pero que pueden cer utiles borrar o comentar cuando se termene el desarrollo
+
 async function mostrarModalSubirProductos(){
     let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos");
     let vistaInicial=document.querySelector(".vistaInicial");
@@ -40,6 +29,28 @@ async function mostrarModalSubirProductos(){
     // formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
     // insertarCategoriasSelect(categorias);
 
+}
+
+function cerrarModalSubirProducto(){
+    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos");
+    let vistaInicial=document.querySelector(".vistaInicial");
+    formularioSubirProducto.classList.toggle("mostrarVista");
+    vistaInicial.classList.toggle("ocultar");
+}
+
+function htmlGenericoProductosFormulario(productosSeleccionados){
+    let html="";
+    for(let producto of productosSeleccionados){
+        html+="\
+            <div id='contenedor-form-producto-"+producto+"'>\
+                <select onBlur='consultarCategoriaModelo(this)' class='form-producto-categoria' id='form-producto-categoria-"+producto+"' data-form-producto='"+producto+"'></select>\
+                <form id='form-producto-"+producto+"' class='form-producto-"+producto+"'></form>\
+            </div>\
+            </br>\
+            </br>\
+        ";
+    }
+    return html;
 }
 
 function htmlPorducto(producto){
@@ -81,46 +92,36 @@ async function consultarProducto(idProducto){
     return datosProducto;
 }
 
-function htmlGenericoProductosFormulario(productosSeleccionados){
-    let html="";
-    for(let producto of productosSeleccionados){
-        html+="\
-            <div id='contenedor-form-producto-"+producto+"'>\
-                <select onBlur='consultarCategoriaModelo(this)' class='form-producto-categoria' id='form-producto-categoria-"+producto+"' data-form-producto='"+producto+"'></select>\
-                <form id='form-producto-"+producto+"' class='form-producto-"+producto+"'></form>\
-            </div>\
-            </br>\
-            </br>\
-        ";
-    }
-    return html;
-}
 
-function insertarCategoriasSelect(categorias){
-    let capturandoSelectsCategorias=document.querySelectorAll(".form-producto-categoria");
-    for(let selectCategoria of capturandoSelectsCategorias){
-        selectCategoria.innerHTML="";
-        let option="<option value='null'>select a category</option>";
-        for(let categoria of categorias){
-            option+="<option value='"+categoria.id_categoria_asociacion +"'>"+categoria.name+"</option>";
-        }
-        selectCategoria.innerHTML=option;
-    }
-}
+//====================================
+//====================================
+//====================================
 
-function cerrarModalSubirProducto(){
-    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos");
-    let vistaInicial=document.querySelector(".vistaInicial");
-    formularioSubirProducto.classList.toggle("mostrarVista");
-    vistaInicial.classList.toggle("ocultar");
-}
+// variables globales
+let listaProductos={};
+let productosSeleccionados=[];
+// ------ referencia a elementos html
+let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
+let $nombreProducto=document.getElementById("nombreProducto");
+let botonTestEnvio=document.getElementById("botonTestEnvio")
+let $botonIrHaformulario=document.getElementById("botonIrHaformulario")
+let $botonIrHaVistaInicial=document.getElementById("botonIrHaVistaInicial")
+let $botonIrHaVistaBorrarProductos=document.getElementById("botonIrHaVistaBorrarProductos")
+let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFormularioProductos")
+// let obtenerProductos=document.getElementById("obtenerProductos");
+// let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
+// functiones
+
 
 function filtrarProductos(e){
     e.preventDefault();
     const linkControlador=document.getElementById("linkControlador").value;
     let categoriaProducto=document.getElementById("categoriaProducto").value;
     let marcaProducto=document.getElementById("marcaProducto").value;
-    let nombreProducto=document.getElementById("nombreProducto").value;
+    let $nombreProducto=document.getElementById("nombreProducto").value;
+    let totalResultados=document.getElementById("totalResultados")
+    $botonIrHaformulario.setAttribute("disabled","disabled")
+    totalResultados.textContent="cargando... "
     $.ajax({
         type: 'POST',
         cache: false,
@@ -131,20 +132,98 @@ function filtrarProductos(e){
             action: 'getconsultarproductoconfiltros',
             categoriaProducto,
             marcaProducto,
-            nombreProducto
+            nombreProducto:$nombreProducto
         },
         success: (respuesta) => {
             // console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
             console.log("productos filtrados =>>> ",datos);
-            insertarDatosTablaProducto(datos);
+            totalResultados.textContent=datos.length.toString()
+            if(datos.length>0){
+                $botonIrHaformulario.removeAttribute("disabled")
+            }
+            else{
+                totalResultados.textContent="0"
+            }
+            // insertarDatosTablaProducto(datos);
         },
         error: () => {
         }
     });
 }
 
+function irHaFormularioDeProductos(){
+    let $vistaInicial=document.getElementById("vista-inicial")
+    $vistaInicial.style.display="none"
+    let $vistaFormProductos=document.getElementById("vista-form-productos")
+    $vistaFormProductos.style.display="block"
+}
 
+function irHaVistaInicial(){
+    let $vistaFormProductos=document.getElementById("vista-form-productos")
+    $vistaFormProductos.style.display="none"
+    let $vistaInicial=document.getElementById("vista-inicial")
+    $vistaInicial.style.display="block"
+}
+
+function irHaVistaBorrarProductos(e){
+    e.preventDefault()
+    let $vistaFormProductos=document.getElementById("vista-form-productos")
+    $vistaFormProductos.style.display="none"
+    let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
+    $vistaBorrarProductos.style.display="block"
+}
+
+function irHaVistaFormularioProductos(){
+    let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
+    $vistaBorrarProductos.style.display="none"
+    let $vistaFormProductos=document.getElementById("vista-form-productos")
+    $vistaFormProductos.style.display="block"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//====================================
+//====================================
+//====================================
 
 function consultarProductos(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -166,38 +245,6 @@ function consultarProductos(){
         error: () => {
         }
     });
-}
-
-function consultarCategoraisAsociadas(){
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodo'
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos categorias asociadas =>>> ",json.datos);
-            insertarCategoriasSelect(json.datos);
-        },
-        error: () => {
-        }
-    });
-}
-
-function insertarCategoriasSelect(categorias){
-    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
-    selectCategoriaAsosiadas.innerHTML=""
-    let option="<option value='null'>Seleccion una categoria</option>";
-    for(let categoria of categorias){
-        option+="<option value='"+categoria.id_category+"'>"+categoria.name+"</option>";
-    }
-    selectCategoriaAsosiadas.innerHTML=option
-
 }
 
 function cargarProductoProcategoria(){
@@ -281,6 +328,38 @@ function consultarPaisesZalando(){
             // alert("error al conectar con el servidor");
         }
     });
+}
+
+function consultarCategoraisAsociadas(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos categorias asociadas =>>> ",json.datos);
+            // insertarCategoriasSelect(json.datos);
+        },
+        error: () => {
+        }
+    });
+}
+
+function insertarCategoriasSelect(categorias){
+    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
+    selectCategoriaAsosiadas.innerHTML=""
+    let option="<option value='null'>Seleccion una categoria</option>";
+    for(let categoria of categorias){
+        option+="<option value='"+categoria.id_category+"'>"+categoria.name+"</option>";
+    }
+    selectCategoriaAsosiadas.innerHTML=option
+
 }
 
 function crearCheckboxPaisTest(paises){
@@ -839,10 +918,25 @@ function campoCompuesto(campo){
     }
     return input;
 }
+// 
+
+
+
+
+
+
+
+
+
+
 
 // asignadoles eventos a los elementos html
-// botonFiltroProducto.addEventListener("click", filtrarProductos);
-// nombreProducto.addEventListener("keyup", filtrarProductos);
+$botonFiltroProducto.addEventListener("click", filtrarProductos);
+$nombreProducto.addEventListener("keyup", filtrarProductos);
+$botonIrHaformulario.addEventListener("click",irHaFormularioDeProductos)
+$botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
+$botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
+$botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
 //botonTestEnvio.addEventListener("click", enviarProductos)
