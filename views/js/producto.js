@@ -988,7 +988,7 @@ $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioP
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-//botonTestEnvio.addEventListener("click", enviarProductos)
+botonTestEnvio.addEventListener("click", enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
