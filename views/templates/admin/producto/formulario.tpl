@@ -422,17 +422,18 @@
 
                 
                 <div class="p-20">
-                    <div class="table_head modal-header modal-tr">
+                    <div class="text-font-10 table_head modal-header modal-tr">
                         <div style="width: 6%;" class="text-center">ID</div>
                         <div style="width: 9%;" class="text-center">Imagen</div>
                         <div style="width: 12%;" class="text-center">Nombre</div>
                         <div style="width: 9%;" class="text-center">Categoría</div>
-                        <div style="width: 6%;" class="text-center">Stock</div>
-                        <div style="width: 6%;" class="text-center">Precio</div>
-                        <div style="width: 6%;" class="text-center">Descuento</div>
+                        <div style="width: 4%;" class="text-center">Moneda</div>
+                        <div style="width: 5%;" class="text-center">Stock</div>
+                        <div style="width: 5%;" class="text-center">Precio</div>
+                        <div style="width: 5%;" class="text-center">Descuento</div>
                         <div style="width: 11%;" class="text-center">Fecha Descuento</div>
                         <div style="width: 11%;" class="text-center">Fecha final Descuento</div>
-                        <div style="width: 10%;" class="text-center">Tallas</div>
+                        <div style="width: 9%;" class="text-center">Tallas</div>
                         <div style="width: 5%;" class="text-center">Activo</div>
                         <div style="width: 6%;" class="text-center">No enviar</div>
                     </div>
@@ -446,22 +447,18 @@
                             <div class="text-center" style="width: 9%;"><img style="width: 100%; height: 60px;" href="/img/tmp/product_mini_42_184.jpg?time=1645803475" alt="" class="imgm img-thumbnail"></div>
                             <div class="text-center text-primary" style="width: 12%;" data-name="">GLYCERIN 16 NEGRO / NARANJA</div>
                             <div class="text-center" style="width: 9%;" data-category="">RUNNING</div>
-
-                            <div class="text-center alignitem-tb" style="width: 6%;" data-quantity="">
-                            <strong style="margin-right: 10px;">EUR</strong>
-                            <input class='input-tb pais-price' type='text' id='stock'/></div>
-
-                            <div class="text-center alignitem-tb" style="width: 6%;" data-price="">
-                            <strong style="margin-right: 10px;">EUR</strong>
-                            <input class='input-tb pais-price' type='text' id='precio'/></div>
-
-                            <div class="text-center alignitem-tb" style="width: 6%">
-                            <strong style="margin-right: 10px;">EUR</strong>
-                            <input class='input-tb pais-price' type='text' id='descuento'/></div>
-
+                            <div class="text-center" style="width: 4%;">
+                                <select class='h35' style="padding: 5px 0px;">
+                                        <option value="">EUR</option>
+                                        <option value="">Dolar</option>
+                                </select>
+                            </div>
+                            <div class="text-center alignitem-tb" style="width: 5%;" data-quantity=""><input class='input-tb' type='text' id='stock'/></div>
+                            <div class="text-center alignitem-tb" style="width: 5%;" data-price=""><input class='input-tb' type='text' id='precio'/></div>
+                            <div class="text-center alignitem-tb" style="width: 5%"><input class='input-tb' type='text' id='descuento'/></div>
                             <div class="text-center" style="width: 11%"><input class='input-tb' type='date' id='fecha-descuento'/></div>
                             <div class="text-center" style="width: 11%"><input class='input-tb' type='date' id='fecha-descuento'/></div>
-                            <div class="text-center" style="width: 10%;"><select class='h35'>opciones</select></div>
+                            <div class="text-center" style="width: 9%;"><select class='h35'>opciones</select></div>
                             <div class="text-center" style="width: 5%;" data-active=""><img src="../img/admin/disabled.gif"></div>
                             <div class="text-center" style="width: 5%;"><input style="height: 50px;" class='w20 m-auto' type='checkbox' id='check1'></div>
                             <div class="text-center" style="width: 1px; position: relative;">
@@ -474,7 +471,7 @@
                         </div>
                     </div>
                     <div class="p-20" >
-                        <div class="modal-header modal-tr-2">
+                        <div class="text-font-10 modal-header modal-tr-2">
                             <div style="width: 5%; text-align: center;">Proveedor</div>
                             <div style="width: 5%; text-align: center;">Fabricante</div>
                             <div style="width: 12%; text-align: left;"">upper_material_clothing</div>
@@ -570,34 +567,34 @@
     <div class="panel" style="display: block;width: 100%;">    
         <div class="slider-pais" style="width: 100%; position: relative;">
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     España
-                </button>
+                </label>
             </div>
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     EEUU
-                </button>
+                </label>
             </div>
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     Germany
-                </button>
+                </label>
             </div>
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     France
-                </button>
+                </label>
             </div>
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     España
-                </button>
+                </label>
             </div>
             <div class="">
-                <button id="botonRegistrar" class="btn btn-primary">
+                <label id="botonRegistrar" class="btn btn-primary">
                     EEUU
-                </button>
+                </label>
             </div>
         </div>
         <div id="paisesRadio">
