@@ -455,9 +455,19 @@
                             <div class="text-center" style="width: 9%;"><img style="width: 100%; height: 60px;" href="/img/tmp/product_mini_42_184.jpg?time=1645803475" alt="" class="imgm img-thumbnail"></div>
                             <div class="text-center text-primary" style="width: 12%;" data-name="">GLYCERIN 16 NEGRO / NARANJA</div>
                             <div class="text-center" style="width: 9%;" data-category="">RUNNING</div>
-                            <div class="text-center" style="width: 6%;" data-quantity=""><input class='input-tb' type='text' id='stock'/></div>
-                            <div class="text-center" style="width: 6%;" data-price=""><input class='input-tb' type='text' id='precio'/></div>
-                            <div class="text-center" style="width: 6%"><input class='input-tb' type='text' id='descuento'/></div>
+
+                            <div class="text-center alignitem-tb" style="width: 6%;" data-quantity="">
+                            <strong style="margin-right: 10px;">EUR</strong>
+                            <input class='input-tb pais-price' type='text' id='stock'/></div>
+
+                            <div class="text-center alignitem-tb" style="width: 6%;" data-price="">
+                            <strong style="margin-right: 10px;">EUR</strong>
+                            <input class='input-tb pais-price' type='text' id='precio'/></div>
+
+                            <div class="text-center alignitem-tb" style="width: 6%">
+                            <strong style="margin-right: 10px;">EUR</strong>
+                            <input class='input-tb pais-price' type='text' id='descuento'/></div>
+
                             <div class="text-center" style="width: 11%"><input class='input-tb' type='date' id='fecha-descuento'/></div>
                             <div class="text-center" style="width: 11%"><input class='input-tb' type='date' id='fecha-descuento'/></div>
                             <div class="text-center" style="width: 10%;"><select class='h35'>opciones</select></div>
@@ -562,7 +572,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
             </svg>
-            <string style="padding: 0px 15px;">Regresar</string>
+            <strong style="padding: 0px 15px;">Regresar</strong>
         </a>
     </div>
 

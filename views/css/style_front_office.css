@@ -518,6 +518,21 @@ input{
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+.input-tb.pais-price{
+    padding: 10px 5px !important;
+    width: 50px !important;
+}
+
+@media (max-width: 1800px) {
+    .caj-product .pais-price{
+        height: 30px !important;
+    }
+    .caj-product .alignitem-tb{
+        display: block;
+        margin-top: -8px;
+    }
+}
+
 /* .vista-2{
     opacity: 0;
     width: 0;
