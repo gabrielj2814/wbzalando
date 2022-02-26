@@ -187,16 +187,22 @@ class EliminarController extends ModuleAdminController{
         //  $_POST["precios"] $_POST["stocks"]
         $respuesta_servidor=["respuestaServidor" => []];
         $resuestaModificarPrecioProducto=false;
+        $resuestaModificarPrecioProductoZalando=false;
         $resuestaModificarStockProducto=false;
+        $resuestaModificarStockProductoZalando=false;
         if(array_key_exists("precios",$_POST)){
             $resuestaModificarPrecioProducto=$this->editarPrecioProducto($_POST["precios"]);
+            $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
         }
         if(array_key_exists("stocks",$_POST)){
             $resuestaModificarStockProducto=$this->editarStockProducto($_POST["stocks"]);
+            $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
         }
         $respuesta_servidor["respuestaServidor"]=[
             "precio" => $resuestaModificarPrecioProducto,
-            "stock" => $resuestaModificarStockProducto
+            "precioZalando" => $resuestaModificarPrecioProductoZalando,
+            "stock" => $resuestaModificarStockProducto,
+            "stockZalando" => $resuestaModificarStockProductoZalando,
         ];
         print(json_encode($respuesta_servidor));
     }
@@ -259,7 +265,8 @@ class EliminarController extends ModuleAdminController{
     public function subirStock($stocks){
         $respuestasSubidaStocks=[];
         foreach($stocks as $stock){
-            $respuestaExistencia= $this->verificarExistenciaProducto($stock["ean"]);
+            $objStock=json_decode($stock);
+            $respuestaExistencia= $this->verificarExistenciaProducto($objStock->ean);
             if($respuestaExistencia["estado"]===200){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
@@ -271,15 +278,19 @@ class EliminarController extends ModuleAdminController{
                     'Authorization: '.'Bearer '. $token
                 );
                 $items=["items" => []];
-                $items["items"][]=$stock;
+                $items["items"][]=[
+                    "sales_channel_id"=> $objStock->sales_channel_id,
+                    "ean"=> $objStock->ean,
+                    "quantity"=> (int)$objStock->quantity
+                ];
                 $curlController->setDatosPeticion($items);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el stock =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaStocks[]=$respuesta;
+                $respuestasSubidaStocks[]=$respuesta["response"]->results[0];
             }
             else{
-                $respuestasSubidaStocks[$stock["ean"]]=false;
+                $respuestasSubidaStocks[$objStock->ean]=false;
             }
         }
         return $respuestasSubidaStocks;
@@ -288,7 +299,8 @@ class EliminarController extends ModuleAdminController{
     public function subirPrecio($precios){
         $respuestasSubidaPrecio=[];
         foreach($precios as $precio){
-            $respuestaExistencia= $this->verificarExistenciaProducto($precio["ean"]);
+            $objPrecio=json_decode($precio);
+            $respuestaExistencia= $this->verificarExistenciaProducto($objPrecio->ean);
             if($respuestaExistencia["estado"]===200){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
@@ -299,14 +311,35 @@ class EliminarController extends ModuleAdminController{
                     'Content-Type: application/json',
                     'Authorization: '.'Bearer '. $token
                 );
-                if($precio["ignore_warnings"]==="true"){
-                    $precio["ignore_warnings"]=true;
-                }
-                else if($precio["ignore_warnings"]==="false"){
-                    $precio["ignore_warnings"]=false;
-                }
+                $precioEnviar=[
+                    "ean"=> $objPrecio->ean,
+                    "sales_channel_id"=> $objPrecio->sales_channel_id,
+                    "regular_price"=> [
+                        "amount"=> (float)$objPrecio->regular_price->amount,
+                        "currency"=> $objPrecio->regular_price->currency
+                    ],
+                    "promotional_price"=> [
+                        "amount"=> (float)$objPrecio->promotional_price->amount,
+                        "currency"=> $objPrecio->promotional_price->currency,
+                    ],
+                    "scheduled_prices"=> [
+                        [
+                            "regular_price"=> [
+                                "amount"=> (float)$objPrecio->regular_price->amount,
+                                "currency"=> $objPrecio->regular_price->currency
+                            ],
+                            "promotional_price"=> [
+                                "amount"=> (float)$objPrecio->promotional_price->amount,
+                                "currency"=> $objPrecio->promotional_price->currency,
+                            ],
+                            "start_time"=> $objPrecio->scheduled_prices[0]->start_time,
+                            "end_time"=> $objPrecio->scheduled_prices[0]->end_time
+                        ]
+                    ],
+                    "ignore_warnings"=> $objPrecio->ignore_warnings
+                ];
                 $product_precio=["product_prices" => []];
-                $product_precio["product_prices"][]=$precio;
+                $product_precio["product_prices"][]=$precioEnviar;
                 $curlController->setDatosPeticion($product_precio);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
