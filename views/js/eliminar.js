@@ -281,15 +281,25 @@ function consultarPaisesZalando(){
 
 function crearCheckboxPaisTest(paises){
     let contenedorBanderas=document.getElementById("paisesRadio");
+    let sliderPaises=document.getElementById("slider-paises");
+    sliderPaises.innerHTML=""
     contenedorBanderas.innerHTML="";
     for(let pais of paises){
         paises[pais.sales_channel_id]=true;
         let htmlCheckbox="\
-            <label>\
+            <div style='display:none;'>\
                 <input type='radio'  class='checkbox-paises' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-paises' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='consultarProductosPorPais(this)'/>\
                 "+pais.country_name+"\
-            </label>\
+            </div>\
         ";
+        let htmlBotonPais="\
+            <div class=''>\
+                <label for='"+pais.sales_channel_id+"' class='btn btn-primary'>\
+                "+pais.country_name+"\
+                </label>\
+            </div>\
+        ";
+        sliderPaises.innerHTML+=htmlBotonPais
         contenedorBanderas.innerHTML+=htmlCheckbox;
     }
 }
