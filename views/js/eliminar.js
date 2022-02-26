@@ -86,44 +86,50 @@ function cargarDatosProductosModificados(){
 function guardarModificaciones(){
     // alert("guardando")
     let productosModificadosValidados=obtenerSoloProductosModificados()
+    console.log("estado validacion producto =>>> ",productosModificadosValidados)
     if(productosModificadosValidados.length>0){
         let precios=[]
         let stocks=[]
         for(let datos of productosModificadosValidados){
-            let formatoStock={
-                "sales_channel_id": datos.sales_channel_id,
-                "ean": datos.ean,
-                "quantity": parseInt(datos.stock)
+            if(datos.enviarStock===true){
+                let formatoStock={
+                    "sales_channel_id": datos.sales_channel_id,
+                    "ean": datos.ean,
+                    "quantity": parseInt(datos.stock)
+                }
+                stocks.push(JSON.stringify(formatoStock))
             }
-            let formatoPrecio={
-                "ean": datos.ean,
-                "sales_channel_id": datos.sales_channel_id,
-                "regular_price": {
-                    "amount": parseFloat(datos.precioRegular),
-                    "currency": datos.moneda
-                },
-                "promotional_price": {
-                    "amount": parseFloat(datos.precioPromocion),
-                    "currency": datos.moneda
-                },
-                "scheduled_prices": [
-                    {
-                        "regular_price": {
-                            "amount": parseFloat(datos.precioRegular),
-                            "currency": datos.moneda
-                        },
-                        "promotional_price": {
-                            "amount": parseFloat(datos.precioPromocion),
-                            "currency": datos.moneda
-                        },
-                        "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
-                        "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
-                    }
-                ],
-                "ignore_warnings": true
+            if(datos.enviarPrecio===true){
+                let formatoPrecio={
+                    "ean": datos.ean,
+                    "sales_channel_id": datos.sales_channel_id,
+                    "regular_price": {
+                        "amount": parseFloat(datos.precioRegular),
+                        "currency": datos.moneda
+                    },
+                    "promotional_price": {
+                        "amount": parseFloat(datos.precioPromocion),
+                        "currency": datos.moneda
+                    },
+                    "scheduled_prices": [
+                        {
+                            "regular_price": {
+                                "amount": parseFloat(datos.precioRegular),
+                                "currency": datos.moneda
+                            },
+                            "promotional_price": {
+                                "amount": parseFloat(datos.precioPromocion),
+                                "currency": datos.moneda
+                            },
+                            "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
+                            "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
+                        }
+                    ],
+                    "ignore_warnings": true
+                }
+                precios.push(JSON.stringify(formatoPrecio))
             }
-            stocks.push(JSON.stringify(formatoStock))
-            precios.push(JSON.stringify(formatoPrecio))
+            
         }
         console.log("stocks listo para enviar =>>>> ",stocks)
         console.log("precios listo para enviar =>>>> ",precios)
@@ -153,7 +159,6 @@ function guardarModificaciones(){
     else{
         alert("no hay productos modificados")
     }
-   
 
 }
 
@@ -163,15 +168,29 @@ function obtenerSoloProductosModificados(){
         if(productosRespaldo[id] && productosModificados[id]){
             let productoRespaldo=productosRespaldo[id]
             let productoModificado=productosModificados[id]
+            productoModificado["enviarStock"]=false
+            productoModificado["enviarPrecio"]=false
+            // if(
+            //     productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
+            //     productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
+            //     !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
+            //     !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
+            //     productoModificado.stock!==productoRespaldo.stock
+            // ){
+            //     listaDeProductosModificados.push(productoModificado)
+            // }
+            if(productoModificado.stock!==productoRespaldo.stock){
+                productoModificado["enviarStock"]=true
+            }
             if(
                 productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
                 productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
                 !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
-                !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
-                productoModificado.stock!==productoRespaldo.stock
+                !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) 
             ){
-                listaDeProductosModificados.push(productoModificado)
+                productoModificado["enviarPrecio"]=true
             }
+            listaDeProductosModificados.push(productoModificado)
         }
     }
     return listaDeProductosModificados
