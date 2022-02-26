@@ -100,7 +100,11 @@ async function consultarProducto(idProducto){
 // variables globales
 let listaProductos={};
 let productosSeleccionados=[];
+let productosFiltrados=[];
+let datosResPaldoProductos={}
+let datosProductosForm={}
 // ------ referencia a elementos html
+let preloader=document.getElementById("preloader")
 let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
 let $nombreProducto=document.getElementById("nombreProducto");
 let botonTestEnvio=document.getElementById("botonTestEnvio")
@@ -137,10 +141,12 @@ function filtrarProductos(e){
         success: (respuesta) => {
             // console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
-            console.log("productos filtrados =>>> ",datos);
+            // console.log("productos filtrados =>>> ",datos);
             totalResultados.textContent=datos.length.toString()
             if(datos.length>0){
                 $botonIrHaformulario.removeAttribute("disabled")
+                productosFiltrados=datos
+                
             }
             else{
                 totalResultados.textContent="0"
@@ -153,10 +159,45 @@ function filtrarProductos(e){
 }
 
 function irHaFormularioDeProductos(){
+    datosResPaldoProductos={}
+    datosProductosForm={}
     let $vistaInicial=document.getElementById("vista-inicial")
     $vistaInicial.style.display="none"
     let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="block"
+    console.log("los datos que se deben de mostrar en esta vista =>>> ",productosFiltrados)
+    let radiosPaisesForm=document.querySelectorAll(".redio-paises-form");
+
+    for(let pais of radiosPaisesForm){
+        datosResPaldoProductos[pais.value]={}
+        for(let producto of productosFiltrados){
+            datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
+                idProductoTienda:producto.id_product,
+                nombreProducto:producto.name,
+                lenguaje:producto.iso_code,
+                descripcion:producto.description,
+                descripcion_corta:producto.description_short,
+                urlImagen:producto.urlImagen,
+                idUrlImagen:producto.id_product,
+                ean:producto.ean13,
+                supplier_color:"",
+                "color_code.primary":"",
+                target_genders:{},
+                target_age_groups:{},
+                brand_code:"",
+                moneda:"",
+                precioRegular:"",
+                precioPromocional:"",
+                fechaInicioPromocion:"",
+                fechaFinalPromocion:"",
+                stock:"",
+                outline:""
+            }
+        }
+    }
+    console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
+    radiosPaisesForm[0].setAttribute("checked",true)
+    cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
 }
 
 function irHaVistaInicial(){
@@ -179,6 +220,11 @@ function irHaVistaFormularioProductos(){
     $vistaBorrarProductos.style.display="none"
     let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="block"
+}
+
+function cargarProductosPorPaisSeleccionado(a){
+    let producto=datosResPaldoProductos[a.value]
+    console.log("cargar paises por pais seleccionado =>>>> ",producto)
 }
 
 
@@ -240,7 +286,6 @@ function consultarProductos(){
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
             console.log("datos producto prestashop =>>> ",datos);
             insertarDatosTablaProducto(datos);
-            consultarPaisesZalando();
         },
         error: () => {
         }
@@ -304,6 +349,7 @@ function insertarDatosTablaProducto(datos){
 
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
+    preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -314,21 +360,49 @@ function consultarPaisesZalando(){
             action: 'getconsultarpaiseszalando'
         },
         success: (respuesta) => {
-            consultarCategoraisAsociadas();
+            // consultarCategoraisAsociadas();
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 console.log("paises zalando =>>> ",datos)
-                crearCheckboxPaisTest(datos.respuestaServidor.items);
+                crearRadiosPaisTest(datos.respuestaServidor.items);
             }
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
             }
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
             // alert("error al conectar con el servidor");
         }
     });
 }
+
+function crearRadiosPaisTest(paises){
+    let contenedorBanderas=document.getElementById("paisesFormularioProducto");
+    contenedorBanderas.innerHTML="";
+    for(let pais of paises){
+        let htmlCheckbox="\
+            <label>\
+                <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
+                "+pais.country_name+"\
+            </label>\
+        ";
+        contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+}
+
+// function crearFormularioEnvioDeProducto(checkbox){
+//     let contenedorFormularioProductosPaises=document.getElementById("contenedorFormularioProductosPaises")
+//     if(checkbox.checked){
+//         let formulario="<form id='form-"+checkbox.id+"' data-nombre-pais='"+checkbox.getAttribute("data-nombre-pais")+"'></form>";
+//         contenedorFormularioProductosPaises.innerHTML+=formulario;
+//     }
+//     else{
+//         let formularioProductosPaises=document.getElementById("form-"+checkbox.id)
+//         contenedorFormularioProductosPaises.removeChild(formularioProductosPaises)
+//     }
+// }
 
 function consultarCategoraisAsociadas(){
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
@@ -362,36 +436,11 @@ function insertarCategoriasSelect(categorias){
 
 }
 
-function crearCheckboxPaisTest(paises){
-    let contenedorBanderas=document.getElementById("paisesHaEnviar");
-    contenedorBanderas.innerHTML="";
-    for(let pais of paises){
-        let htmlCheckbox="\
-            <label>\
-                <input type='checkbox'  class='checkbox-paises' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='crearFormularioEnvioDeProducto(this)'/>\
-                "+pais.country_name+"\
-            </label>\
-        ";
-        contenedorBanderas.innerHTML+=htmlCheckbox;
-    }
-}
 
-function crearFormularioEnvioDeProducto(checkbox){
-    let contenedorFormularioProductosPaises=document.getElementById("contenedorFormularioProductosPaises")
-    if(checkbox.checked){
-        let formulario="<form id='form-"+checkbox.id+"' data-nombre-pais='"+checkbox.getAttribute("data-nombre-pais")+"'></form>";
-        contenedorFormularioProductosPaises.innerHTML+=formulario;
-    }
-    else{
-        let formularioProductosPaises=document.getElementById("form-"+checkbox.id)
-        contenedorFormularioProductosPaises.removeChild(formularioProductosPaises)
-    }
-}
 
 function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
     // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let productos=[
@@ -945,3 +994,4 @@ $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 // consultarProductos();
+consultarPaisesZalando();

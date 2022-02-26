@@ -163,9 +163,13 @@ class ProductoController extends ModuleAdminController{
             $SQL="
             SELECT 
             ps_product_lang.name,
+            ps_product_lang.description,
+            ps_product_lang.description_short,
             ps_product.id_product,
-            ps_product.ean13
-            FROM ps_category_product,ps_product_lang,ps_product,ps_lang
+            ps_product.ean13,
+            ps_lang.iso_code
+            FROM 
+            ps_category_product,ps_product_lang,ps_product,ps_lang
             WHERE
             ".$condicion."
             ps_product_lang.id_lang=".$this->id_idioma." AND
@@ -177,8 +181,11 @@ class ProductoController extends ModuleAdminController{
             $SQL="
             SELECT 
             ps_product_lang.name,
+            ps_product_lang.description,
+            ps_product_lang.description_short,
             ps_product.id_product,
-            ps_product.ean13
+            ps_product.ean13,
+            ps_lang.iso_code
             FROM ps_product_lang,ps_product,ps_lang
             WHERE
             ".$condicion."
