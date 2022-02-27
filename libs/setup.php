@@ -38,11 +38,11 @@ if (!class_exists("SetupWbZalando")) {
                     "nombreControladorFull" => "ProductoController",
                     "nombreControlador" => "Producto",
                 ],
-                [
-                    "nombre" => "Modificar productos",
-                    "nombreControladorFull" => "ModificarproductoController",
-                    "nombreControlador" => "Modificarproducto",
-                ],
+                // [
+                //     "nombre" => "Modificar productos",
+                //     "nombreControladorFull" => "ModificarproductoController",
+                //     "nombreControlador" => "Modificarproducto",
+                // ],
                 [
                     "nombre" => "Estatus de pedidos",
                     "nombreControladorFull" => "PedidoController",
@@ -69,9 +69,9 @@ if (!class_exists("SetupWbZalando")) {
                     "nombreControlador" => "categoria",
                 ],
                 [
-                    "nombre" => "Eliminar de productos",
-                    "nombreControladorFull" => "EliminarController",
-                    "nombreControlador" => "Eliminar",
+                    "nombre" => "Modificar productos",
+                    "nombreControladorFull" => "ModificarController",
+                    "nombreControlador" => "Modificar",
                 ],
             ];
         }

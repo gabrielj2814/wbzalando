@@ -3,7 +3,7 @@ include("curlController.php");
 include("logger.php");
 use Clases\CurlController;
 
-class EliminarController extends ModuleAdminController{
+class ModificarController extends ModuleAdminController{
 
     private $id_idioma;
 
@@ -28,14 +28,14 @@ class EliminarController extends ModuleAdminController{
 
     public function initContent(){
         parent::initContent();
-        $linkDeControlador=$this->context->link->getAdminLink("Eliminar",true);
+        $linkDeControlador=$this->context->link->getAdminLink("Modificar",true);
         $linkDeControladorProducto=$this->context->link->getAdminLink("Producto",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador,
             "linkDeControladorProducto" => $linkDeControladorProducto
         ];
         $this->context->smarty->assign($variablesSmarty);
-        $this->setTemplate('/eliminar_producto/vista.tpl');
+        $this->setTemplate('/modificar/vista.tpl');
     }
 
     function ajaxProcessGetEliminarProducto(){
