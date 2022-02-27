@@ -184,27 +184,29 @@ function irHaFormularioDeProductos(){
                 idProductoTienda:producto.id_product,
                 nombreProducto:producto.name,
                 lenguaje:producto.iso_code,
-                descripcion:producto.description,
+                descripcion:producto.description.split("<p>")[0].split("</p>"),
                 descripcion_corta:producto.description_short,
                 urlImagen:producto.urlImagen,
                 idUrlImagen:producto.id_product,
                 ean:producto.ean13,
-                supplier_color:"",
+                supplier_color:"supplier color",
                 "color_code.primary":"",
-                target_genders:{},
-                target_age_groups:{},
-                brand_code:"",
-                moneda:"",
-                precioRegular:"",
-                precioPromocional:"",
-                fechaInicioPromocion:"",
-                fechaFinalPromocion:"",
-                stock:"",
-                outline:""
+                target_genders:[1,2],
+                target_age_groups:[3,4],
+                brand_code:"brand-code",
+                moneda:"USD",
+                precioRegular:"15",
+                precioPromocional:"11",
+                fechaInicioPromocion:"2022-02-27",
+                fechaFinalPromocion:"2022-02-27",
+                stock:"15",
+                outline:"bag",
+                haEnviar:false
             }
         }
     }
     console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
+    datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
     radiosPaisesForm[0].setAttribute("checked",true)
     cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
 }
@@ -411,6 +413,43 @@ function cargarDatosEdicionGlobalColor(pais){
     });
 }
 
+function cargarProductosHaEliminarPorPais(a){
+    console.table("lista de productus a eliminar =>>>> ",datosProductosForm[a.value])
+    insertarProductos(a.value,datosProductosForm[a.value])
+}
+
+function insertarProductos(idPais,productos){
+    let listaDeProductosHaBorrar=document.getElementById("listaDeProductosHaBorrar");
+    listaDeProductosHaBorrar.innerHTML="";
+    let html="";
+    for(let codigoIdPaisIdproducto in productos){
+        // <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
+       if(productos[codigoIdPaisIdproducto].haEnviar!=true){
+        html+="\
+        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+productos[codigoIdPaisIdproducto].nombreProducto+"</h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].stock+"</h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioRegular+"</h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioPromocional+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaInicioPromocion+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaFinalPromocion+"</h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-pais='"+idPais+"' data-id-producto='"+codigoIdPaisIdproducto+"'   onClick='cambiarEstadoDeEnvioDeProductoBorrarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
+        ";
+       }
+        // html+=producto.ean+" - "+producto.sales_channel_id;
+    }
+    listaDeProductosHaBorrar.innerHTML=html
+
+}
+
+function cambiarEstadoDeEnvioDeProductoBorrarProducto(a){
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+    datosProductosForm[idPais][idProducto].haEnviar=true
+    let radioPaisBorrarProducto=document.querySelectorAll(".radio-form-producto-borrar:checked")
+    cargarProductosHaEliminarPorPais(radioPaisBorrarProducto[0]);
+}
+
 
 
 
@@ -547,6 +586,7 @@ function consultarPaisesZalando(){
             if(datos.respuestaServidor.items){
                 console.log("paises zalando =>>> ",datos)
                 crearRadiosPaisTest(datos.respuestaServidor.items);
+                crearRadiosPaisTestBorrarProdcuto(datos.respuestaServidor.items)
             }
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
@@ -574,6 +614,20 @@ function crearRadiosPaisTest(paises){
     }
 }
 
+function crearRadiosPaisTestBorrarProdcuto(paises){
+    // paisesBorrarProducto
+    let contenedorBanderas=document.getElementById("paisesBorrarProducto");
+    contenedorBanderas.innerHTML="";
+    for(let pais of paises){
+        let htmlCheckbox="\
+            <label>\
+                <input type='radio'  class='radio-form-producto-borrar' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"_paises_borrar' name='radio-form-producto-borrar' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosHaEliminarPorPais(this)'/>\
+                "+pais.country_name+"\
+            </label>\
+        ";
+        contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+}
 // function crearFormularioEnvioDeProducto(checkbox){
 //     let contenedorFormularioProductosPaises=document.getElementById("contenedorFormularioProductosPaises")
 //     if(checkbox.checked){
