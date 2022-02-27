@@ -103,6 +103,14 @@ let productosSeleccionados=[];
 let productosFiltrados=[];
 let datosResPaldoProductos={}
 let datosProductosForm={}
+//=======================
+//=======================
+//=======================
+let datos_brand_code={}
+let datos_season_code={}
+let datos_color_code={}
+let datos_target_age_groups={}
+let datos_target_genders={}
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
@@ -154,6 +162,7 @@ function filtrarProductos(e){
             // insertarDatosTablaProducto(datos);
         },
         error: () => {
+            totalResultados.textContent="0"
         }
     });
 }
@@ -225,9 +234,182 @@ function irHaVistaFormularioProductos(){
 function cargarProductosPorPaisSeleccionado(a){
     let producto=datosResPaldoProductos[a.value]
     console.log("cargar paises por pais seleccionado =>>>> ",producto)
+    cargarDatosBrandCode();
+}
+
+function cargarDatosBrandCode(){
+    preloader.style.opacity="1"
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
+    edicionGlobalBrandCode.innerHTML=""
+    let propiedad="brand_code"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            if(respuestaJson.datos.length>0){
+                let option="<option value='null'>Seleccione</option>"
+                for(let datos of respuestaJson.datos){
+                    datos=JSON.parse(datos)
+                    option+="<option value='"+datos.label+"'>"+datos.name.en+"</option>"
+                }
+                edicionGlobalBrandCode.innerHTML=option
+                cargarDatosSeasonCode();
+            }
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function cargarDatosSeasonCode(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let edicionGlobalSeasonCode=document.getElementById("edicionGlobalSeasonCode")
+    edicionGlobalSeasonCode.innerHTML=""
+    let propiedad="season_code"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            if(respuestaJson.datos.length>0){
+                let option="<option value='null'>Seleccione</option>"
+                for(let datos of respuestaJson.datos){
+                    datos=JSON.parse(datos)
+                    option+="<option value='"+datos.label+"'>"+datos.value.localized.en+"</option>"
+                }
+                edicionGlobalSeasonCode.innerHTML=option
+                cargarDatosEdicionGlobalTargetAgeGroups()
+            }
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function cargarDatosEdicionGlobalTargetAgeGroups(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let edicionGlobalTargetAgeGroups=document.getElementById("edicionGlobalTargetAgeGroups")
+    edicionGlobalTargetAgeGroups.innerHTML=""
+    let propiedad="target_age_groups"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            if(respuestaJson.datos.length>0){
+                let option="<option value='null'>Seleccione</option>"
+                for(let datos of respuestaJson.datos){
+                    datos=JSON.parse(datos)
+                    option+="<option value='"+datos.label+"'>"+datos.name.en+"</option>"
+                }
+                edicionGlobalTargetAgeGroups.innerHTML=option
+                cargarDatosEdicionGlobalTargetGenders()
+            }
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
 }
 
 
+function cargarDatosEdicionGlobalTargetGenders(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let edicionGlobalTargetGenders=document.getElementById("edicionGlobalTargetGenders")
+    edicionGlobalTargetGenders.innerHTML=""
+    let propiedad="target_genders"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            if(respuestaJson.datos.length>0){
+                let option="<option value='null'>Seleccione</option>"
+                for(let datos of respuestaJson.datos){
+                    datos=JSON.parse(datos)
+                    option+="<option value='"+datos.label+"'>"+datos.name.en+"</option>"
+                }
+                edicionGlobalTargetGenders.innerHTML=option
+                let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
+                cargarDatosEdicionGlobalColor(radiosPaisesForm)
+            }
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function cargarDatosEdicionGlobalColor(pais){
+    const linkDeControladorColor=document.getElementById("linkDeControladorColor").value;
+    let edicionGlobalColor=document.getElementById("edicionGlobalColor")
+    edicionGlobalColor.innerHTML=""
+    let isoCode=pais.getAttribute("data-iso-code")
+    // alert(isoCode)
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorColor, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodoporpais',
+            isoCode
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad colores asociados =>>> ",respuestaJson.datos);
+            if(respuestaJson.datos.length>0){
+                // alert(isoCode)
+                let option="<option value='null'>Seleccione</option>"
+                for(let datos of respuestaJson.datos){
+                    option+="<option value='"+datos.codigo_color+"'>"+datos.color_zalando+"</option>"
+                }
+                edicionGlobalColor.innerHTML=option
+            }
+            preloader.style.opacity="0"
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
 
 
 
@@ -988,7 +1170,7 @@ $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioP
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-botonTestEnvio.addEventListener("click", enviarProductos)
+botonTestEnvio.addEventListener("click",enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)

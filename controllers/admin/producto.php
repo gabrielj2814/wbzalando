@@ -33,10 +33,12 @@ class ProductoController extends ModuleAdminController{
         $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
         $linkDeControladorTalla=$this->context->link->getAdminLink("Talla",true);
         $linkDeControladorCategoria=$this->context->link->getAdminLink("Categoria",true);
+        $linkDeControladorColor=$this->context->link->getAdminLink("Color",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador,
+            "linkDeControladorColor" => $linkDeControladorColor,
             "linkDeControladorCategoria" => $linkDeControladorCategoria,
-            "linkDeControladorTalla" => $linkDeControladorTalla
+            "linkDeControladorTalla" => $linkDeControladorTalla,
         ];
         $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
         $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
@@ -503,32 +505,6 @@ class ProductoController extends ModuleAdminController{
         return $estado;
     }
 
-    public function consultarStockProducto($ean){
-        $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
-        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-    }
-    
-    public function consultarPrecioProducto($ean){
-        $SQL="SELECT * FROM ps_wbzalando_precio WHERE ean='".$ean."';";
-        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
-    }
-
-    public function actualizarStockProducto($producto){
-        $SQL="UPDATE ps_wbzalando_stock SET 
-            sales_channel_id='".$producto["sales_channel_id"]."',
-            quantity=".$producto["quantity"]."  
-            WHERE ean='".$producto["ean"]."';";
-        return Db::getInstance()->execute($SQL);
-    }
-
-    public function actualizarPrecioProducto($producto){
-        $SQL="UPDATE ps_wbzalando_precio SET 
-            sales_channel_id='".$producto["sales_channel_id"]."',
-            json_precio='".json_encode($producto)."'  
-            WHERE ean='".$producto["ean"]."';";
-        return Db::getInstance()->execute($SQL);
-    }
-
     public function destructurarModeloDeProductoZalando($modeloProducto){
         $merchant_product_model_id=null;
         $datosProducto=[
@@ -639,23 +615,6 @@ class ProductoController extends ModuleAdminController{
 
     }
 
-    public function ajaxProcessGetConsultarPedidosZalando(){
-        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
-        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
-        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
-        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
-        $url=$endPoint."/merchants/".$idComerciante."/orders";
-        $curlController=new CurlController($url);
-        $header = array(
-            'Authorization: '.'Bearer '. $token
-        );
-        $curlController->setdatosCabezera($header);
-        $respuesta=$curlController->ejecutarPeticion("get",false);
-        $respuesta_servidor["respuestaServidor"]=$respuesta["response"];
-        $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
-        print(json_encode($respuesta));
-    }
-
     public function consultarTipoDeDatoModeloZalando($propiedad){
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
@@ -722,6 +681,26 @@ class ProductoController extends ModuleAdminController{
     function consultarStock($ean){
         $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    //==============
+    //==============
+    //==============
+    public function ajaxProcessGetConsultarPedidosZalando(){
+        $respuesta_servidor=["respuestaServidor" => [],"estatuRespuestaApi" => 0];
+        $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
+        $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
+        $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
+        $url=$endPoint."/merchants/".$idComerciante."/orders";
+        $curlController=new CurlController($url);
+        $header = array(
+            'Authorization: '.'Bearer '. $token
+        );
+        $curlController->setdatosCabezera($header);
+        $respuesta=$curlController->ejecutarPeticion("get",false);
+        $respuesta_servidor["respuestaServidor"]=$respuesta["response"];
+        $respuesta_servidor["estatuRespuestaApi"]=$respuesta["estado"];
+        print(json_encode($respuesta));
     }
 
 }

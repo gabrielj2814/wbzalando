@@ -544,7 +544,7 @@ class CategoriaController extends ModuleAdminController{
     public function ajaxProcessGetConsultarDatosPropiedad(){
         $respuesta_servidor=["respuestaServidor" => []];
         $repuesta=$this->consultarDatosPropiedad($_GET["propiedad"]);
-        if(is_array($repuesta)){
+        if(count($repuesta)>0){
             $respuesta_servidor["respuestaServidor"]=[
                 "datos" => $repuesta,
                 "estado" => 200
@@ -552,6 +552,7 @@ class CategoriaController extends ModuleAdminController{
         }
         else{
             $respuesta_servidor["respuestaServidor"]=[
+                "datos" => [],
                 "mensaje" => "error no se ha encontrado el recuros",
                 "estado" => 404
             ];
@@ -570,6 +571,7 @@ class CategoriaController extends ModuleAdminController{
         }
         return $respuesta;
     }
+
 
 
 

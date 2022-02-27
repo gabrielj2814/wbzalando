@@ -3,6 +3,7 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
 <input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
+<input type="hidden" id="linkDeControladorColor" value="{$linkDeControladorColor}"/>
 
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 
@@ -139,62 +140,42 @@
                 <div style="display: flex;">
                     <div class="alignitem-tb col-sm-2">
                         <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Brand-code
+                            Brand
                         </label>
                         <div class="col-xs-12">
-                            <select id='' name=''>
-                                    <option value="">vacio</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                            </select>
+                            <select id='edicionGlobalBrandCode'></select>
                         </div>
                     </div>
                     <div class="alignitem-tb col-sm-2">
                         <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Season-code
+                            Season
                         </label>
                         <div class="col-xs-12">
-                            <select id='' name=''>
-                                    <option value="">vacio</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                            </select>
+                            <select id='edicionGlobalSeasonCode'></select>
                         </div>
                     </div>
                     <div class="alignitem-tb col-sm-2">
                         <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Color-code
+                            Color
                         </label>
                         <div class="col-xs-12">
-                            <select id='' name=''>
-                                    <option value="">vacio</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                            </select>
+                            <select id='edicionGlobalColor'></select>
                         </div>
                     </div>
                     <div class="alignitem-tb col-sm-3">
                         <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
-                            Target-age-griiups
+                            Target Age Groups
                         </label>
                         <div class="col-xs-12">
-                            <select id='' name=''>
-                                    <option value="">vacio</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                            </select>
+                            <select id='edicionGlobalTargetAgeGroups' multiple></select>
                         </div>
                     </div>
                     <div class="alignitem-tb col-sm-3">
                         <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
-                            Target-genders
+                            Target Genders
                         </label>
                         <div class="col-xs-12">
-                            <select id='' name=''>
-                                    <option value="">vacio</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                            </select>
+                            <select id='edicionGlobalTargetGenders' multiple></select>
                         </div>
                     </div>
                 </div>

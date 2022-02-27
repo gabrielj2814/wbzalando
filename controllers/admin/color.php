@@ -135,6 +135,29 @@ class ColorController extends ModuleAdminController{
         $SQL="SELECT * FROM ps_wbzalando_asociacion_color,ps_attribute_lang WHERE ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_color.id_attribute AND ps_attribute_lang.id_lang=".$this->id_idioma.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
+    
+    public function ajaxProcessGetConsultarTodoPorPais(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarTodoPorPais($_GET["isoCode"]);
+        if(count($respuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar",
+                "datos" => []
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function consultarTodoPorPais($isoCode){
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_color,ps_attribute_lang WHERE ps_wbzalando_asociacion_color.codigo_pais='".$isoCode."' AND ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_color.id_attribute AND ps_attribute_lang.id_lang=".$this->id_idioma.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
 
     public function ajaxProcessGetConsultar(){
         $respuesta_servidor=["respuestaServidor" => []];
