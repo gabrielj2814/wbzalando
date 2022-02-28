@@ -202,91 +202,125 @@
                         </div>
                     </div>
                     <div class="contenedor-formulario-producto ocultar" id="idPais-idProducto-contenedor-formulario-producto">
-                    <div class="row">
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >Cetegoria</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >Cetegoria</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >brand</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >brand</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >target age groups</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >target age groups</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >target genders</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >target genders</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                    
+                        
+                        </div>
+                        <div class="row">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >season code</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >color</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label >upper material clothing</label>
+                                    <select class="form-control margin-0">
+                                        <option>Default select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>supplier color</label>
+                                    <input type="text" class="form-control " id="" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>Siglas Moneda</label>
+                                    <input type="text" class="form-control " id="" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>Stock</label>
+                                    <input type="text" class="form-control " id="" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>Precio Regular</label>
+                                    <input type="text" class="form-control " id="" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>Fecha de Inicio de Descuento</label>
+                                    <input type="date" class="form-control " id="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label>Fecha de Final de Descuento</label>
+                                    <input type="date" class="form-control " id="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">warnings</label>
+                                    <textarea class="form-control" id="" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">how to use</label>
+                                    <textarea class="form-control" id="" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >season code</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >color</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label >upper material clothing</label>
-                                <select class="form-control margin-0">
-                                    <option>Default select</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">supplier color</label>
-                                <input type="email" class="form-control " id="exampleFormControlInput1" placeholder="name@example.com">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">warnings</label>
-                                <textarea class="form-control" id="" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">how to use</label>
-                                <textarea class="form-control" id="" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                
                 </div>
             
             </div>
