@@ -136,52 +136,289 @@
     <div class="panel mode_search" style="display: inline-block; width: 100%;">
         <h3 class="panel-heading">Producto de búsqueda Resultado<span id="count_result" class="badge">#</span></h3>
         <form id="formTablaProductos">
-            <table class="table">
-                <div style="display: flex;">
-                    <div class="alignitem-tb col-sm-2">
-                        <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Brand
-                        </label>
-                        <div class="col-xs-12">
-                            <select id='edicionGlobalBrandCode'></select>
+            <div style="display: flex;margin-bottom:30px;">
+                <div class="alignitem-tb col-sm-2">
+                    <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
+                        Brand
+                    </label>
+                    <div class="col-xs-12">
+                        <select id='edicionGlobalBrandCode'></select>
+                    </div>
+                </div>
+                <div class="alignitem-tb col-sm-2">
+                    <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
+                        Season
+                    </label>
+                    <div class="col-xs-12">
+                        <select id='edicionGlobalSeasonCode'></select>
+                    </div>
+                </div>
+                <div class="alignitem-tb col-sm-2">
+                    <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
+                        Color
+                    </label>
+                    <div class="col-xs-12">
+                        <select id='edicionGlobalColor'></select>
+                    </div>
+                </div>
+                <div class="alignitem-tb col-sm-3">
+                    <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
+                        Target Age Groups
+                    </label>
+                    <div class="col-xs-12">
+                        <select id='edicionGlobalTargetAgeGroups' multiple></select>
+                    </div>
+                </div>
+                <div class="alignitem-tb col-sm-3">
+                    <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
+                        Target Genders
+                    </label>
+                    <div class="col-xs-12">
+                        <select id='edicionGlobalTargetGenders' multiple></select>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="listaDeProductosForm">
+                <div data-id-producto-form="idpaisIdProdocuto" class="contenedor_producto_backend">
+                    <div class="row preview-info-producto">
+                        <div class="contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
+                            <input data-id-producto="idproducto" data-id-pais="idpais" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>
+                        </div>
+                        <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                            <img class="imagen-producto" src="https://www.xtrafondos.com/wallpapers/chica-anime-pensando-4699.jpg" alt=""/>
+                            <h3 class="margin-0">nombre del producto</h3>
+                        </div>
+                        <div class="contenedor-toggle-producto col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
+                            <svg id="idPais-idProducto-cerrar" data-id-producto="idPais-idProducto" onClick="cerrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ocultar bi bi-arrow-up-short" viewBox="0 0 16 16">
+                                <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                            </svg>
+
+                            <svg id="idPais-idProducto-abrir" data-id-producto="idPais-idProducto" onClick="mostrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                                <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+                            </svg>
                         </div>
                     </div>
-                    <div class="alignitem-tb col-sm-2">
-                        <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Season
-                        </label>
-                        <div class="col-xs-12">
-                            <select id='edicionGlobalSeasonCode'></select>
+                    <div class="contenedor-formulario-producto ocultar" id="idPais-idProducto-contenedor-formulario-producto">
+                    <div class="row">
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >Cetegoria</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >brand</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >target age groups</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >target genders</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    
+                    </div>
+                    <div class="row">
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >season code</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >color</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >upper material clothing</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">supplier color</label>
+                                <input type="email" class="form-control " id="exampleFormControlInput1" placeholder="name@example.com">
+                            </div>
                         </div>
                     </div>
-                    <div class="alignitem-tb col-sm-2">
-                        <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
-                            Color
-                        </label>
-                        <div class="col-xs-12">
-                            <select id='edicionGlobalColor'></select>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">warnings</label>
+                                <textarea class="form-control" id="" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="alignitem-tb col-sm-3">
-                        <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
-                            Target Age Groups
-                        </label>
-                        <div class="col-xs-12">
-                            <select id='edicionGlobalTargetAgeGroups' multiple></select>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">how to use</label>
+                                <textarea class="form-control" id="" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="alignitem-tb col-sm-3">
-                        <label class="control-label col-xs-12 mt" style="width: auto; min-width: 140px;padding-right: 0 !important;">
-                            Target Genders
-                        </label>
-                        <div class="col-xs-12">
-                            <select id='edicionGlobalTargetGenders' multiple></select>
+                
+                </div>
+            
+            </div>
+
+
+
+
+
+
+            <!-- ===================================== -->
+            <!-- ===================================== -->
+            <!-- ===================================== -->
+<!--
+            <div data-id-producto-form="idpaisIdProdocuto" class="contenedor_producto_backend">
+                <div class="row preview-info-producto">
+                    <div class="contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
+                        <input data-id-producto="idproducto" data-id-pais="idpais" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>
+                    </div>
+                    <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <img class="imagen-producto" src="https://www.xtrafondos.com/wallpapers/chica-anime-pensando-4699.jpg" alt=""/>
+                        <h3 class="margin-0">nombre del producto</h3>
+                    </div>
+                    <div class="contenedor-toggle-producto col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
+                        <svg id="idPais-idProducto-cerrar" data-id-producto="idPais-idProducto" onClick="cerrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ocultar bi bi-arrow-up-short" viewBox="0 0 16 16">
+                            <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                        </svg>
+
+                        <svg id="idPais-idProducto-abrir" data-id-producto="idPais-idProducto" onClick="mostrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                            <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                    </div>
+                </div>
+
+
+
+
+                <div class="contenedor-formulario-producto ocultar" id="idPais-idProducto-contenedor-formulario-producto">
+                    <div class="row">
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >Cetegoria</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >brand</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >target age groups</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >target genders</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    
+                    </div>
+                    <div class="row">
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >season code</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >color</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label >upper material clothing</label>
+                                <select class="form-control margin-0">
+                                    <option>Default select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">supplier color</label>
+                                <input type="email" class="form-control " id="exampleFormControlInput1" placeholder="name@example.com">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">warnings</label>
+                                <textarea class="form-control" id="" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">how to use</label>
+                                <textarea class="form-control" id="" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
 
 
-                
+-->
+
+
+
+
+            </div>
+<!--
+            <table class="table">
                 <div class="p-20">
                     <div class="text-font-10 table_head modal-header modal-tr">
                         <div style="width: 6%;" class="text-center">ID</div>
@@ -258,6 +495,7 @@
                     </div>
                 </div>
             </table>
+-->
             <div class=justify-end-flex col-lg-12 col-xs-11">
                 <button  class="btn btnVistaOne btn-primary" id="botonIrHaVistaBorrarProductos">
                     Guardar

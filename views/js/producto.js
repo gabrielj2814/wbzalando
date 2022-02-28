@@ -452,8 +452,25 @@ function cambiarEstadoDeEnvioDeProductoBorrarProducto(a){
 
 
 
+// toggle de lista de productos
+function mostrarFormularioProducto(a){
+    let idProducto=a.getAttribute("data-id-producto")
+    a.classList.toggle("ocultar")
+    document.getElementById(idProducto+"-cerrar").classList.toggle("ocultar")
+    document.getElementById(idProducto+"-contenedor-formulario-producto").classList.toggle("ocultar")
+}
 
+function cerrarFormularioProducto(a){
+    let idProducto=a.getAttribute("data-id-producto")
+    a.classList.toggle("ocultar")
+    document.getElementById(idProducto+"-abrir").classList.toggle("ocultar")
+    document.getElementById(idProducto+"-contenedor-formulario-producto").classList.toggle("ocultar")
+}
 
+function cambiarEstadoDeEnvioDeProduct(a){
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+}
 
 
 
