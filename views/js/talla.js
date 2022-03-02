@@ -331,15 +331,6 @@ async function consultarPaises(){
     return paises
 }
 
-// function cargarAtributosPrestashop(datos){
-//     let campoAtributo=document.getElementById("campoAtributo")
-//     let option="<option value='null' >Seleccione</option>";
-//     for(let atributo of datos){
-//         option+="<option value='"+atributo.id_attribute_group+"' >"+atributo.name+"</option>";
-//     }
-//     campoAtributo.innerHTML=option
-// }
-
 function cargarPaisesZalando(paises){
     let campoPais=document.getElementById("campoPais")
     let option="<option value='null' >Seleccione</option>";

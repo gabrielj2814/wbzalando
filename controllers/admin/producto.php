@@ -166,7 +166,6 @@ class ProductoController extends ModuleAdminController{
             SELECT 
             ps_product_lang.name,
             ps_product_lang.description,
-            ps_product_lang.description_short,
             ps_product.id_product,
             ps_product.ean13,
             ps_lang.iso_code
@@ -184,7 +183,6 @@ class ProductoController extends ModuleAdminController{
             SELECT 
             ps_product_lang.name,
             ps_product_lang.description,
-            ps_product_lang.description_short,
             ps_product.id_product,
             ps_product.ean13,
             ps_lang.iso_code

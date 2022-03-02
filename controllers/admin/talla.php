@@ -304,5 +304,35 @@ class TallaController extends ModuleAdminController{
         ps_attribute_lang.id_lang=".$this->id_idioma.";";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
+    
+    public function ajaxProcessGetConsultarTodoTallasPorPaisYCategoriaTallaZalando(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaDB=$this->consultarTodoTallasPorPaisYCategoriaTallaZaland($_GET["pais"],$_GET["grupo"]);
+        if(count($respuestaDB)>0){
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => $respuestaDB
+            ];
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "error al consultar",
+                "datos" => []
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+    }
+    
+    public function consultarTodoTallasPorPaisYCategoriaTallaZaland($codigoPais,$grupo){
+        $SQL="SELECT * FROM 
+        ps_wbzalando_asociacion_talla,
+        ps_attribute_lang 
+        WHERE 
+        ps_wbzalando_asociacion_talla.codigo_size_group='".$grupo."' AND 
+        ps_wbzalando_asociacion_talla.codigo_pais='".$codigoPais."' AND 
+        ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND 
+        ps_attribute_lang.id_lang=".$this->id_idioma.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
 
 }

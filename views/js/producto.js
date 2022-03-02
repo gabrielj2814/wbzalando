@@ -106,11 +106,13 @@ let datosProductosForm={}
 //=======================
 //=======================
 //=======================
-let datos_brand_code={}
+let datos_brand_code=[]
 let datos_season_code={}
 let datos_color_code={}
 let datos_target_age_groups={}
 let datos_target_genders={}
+let datos_categorias_tallas_zalando=[]
+let datos_categorias=[]
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
@@ -123,6 +125,116 @@ let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFo
 // let obtenerProductos=document.getElementById("obtenerProductos");
 // let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
 // functiones
+
+function consultarPaisesZalando(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    preloader.style.opacity="1"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarpaiseszalando'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta))
+            if(datos.respuestaServidor.items){
+                consultarCategoraisAsociadas();
+                console.log("paises zalando =>>> ",datos)
+                crearRadiosPaisTest(datos.respuestaServidor.items);
+                crearRadiosPaisTestBorrarProdcuto(datos.respuestaServidor.items)
+            }
+            if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
+                console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
+            }
+
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            // alert("error al conectar con el servidor");
+        }
+    });
+}
+
+function consultarCategoraisAsociadas(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    datos_categorias=[]
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos categorias asociadas =>>> ",json.datos);
+            datos_categorias=json.datos
+            // insertarCategoriasSelect(json.datos);
+            consultarCategoriasTalla()
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function consultarCategoriasTalla(){
+    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorTalla, 
+        data: {
+            ajax: true,
+            action: 'getconsultarcateogriasquetienentallazalando'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            console.log("categorias de tallas filtrados =>>> ",datos.respuestaServidor);
+            datos_categorias_tallas_zalando=datos.respuestaServidor
+            // cargarCategoriasTallasZalando(categoriaTallas)
+            preloader.style.opacity="0"
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function crearRadiosPaisTest(paises){
+    let contenedorBanderas=document.getElementById("paisesFormularioProducto");
+    contenedorBanderas.innerHTML="";
+    for(let pais of paises){
+        let htmlCheckbox="\
+            <label>\
+                <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
+                "+pais.country_name+"\
+            </label>\
+        ";
+        contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+}
+
+function crearRadiosPaisTestBorrarProdcuto(paises){
+    // paisesBorrarProducto
+    let contenedorBanderas=document.getElementById("paisesBorrarProducto");
+    contenedorBanderas.innerHTML="";
+    for(let pais of paises){
+        let htmlCheckbox="\
+            <label>\
+                <input type='radio'  class='radio-form-producto-borrar' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"_paises_borrar' name='radio-form-producto-borrar' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosHaEliminarPorPais(this)'/>\
+                "+pais.country_name+"\
+            </label>\
+        ";
+        contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+}
 
 
 function filtrarProductos(e){
@@ -185,15 +297,15 @@ function irHaFormularioDeProductos(){
                 nombreProducto:producto.name,
                 lenguaje:producto.iso_code,
                 descripcion:producto.description.replace("<p>","").replace("</p>",""),
-                descripcion_corta:producto.description_short.replace("<p>","").replace("</p>",""),
                 urlImagen:producto.urlImagen,
                 idUrlImagen:producto.id_product,
                 ean:producto.ean13,
                 supplier_color:"supplier color",
                 "color_code.primary":"",
-                target_genders:[1,2],
-                target_age_groups:[3,4],
+                target_genders:[],
+                target_age_groups:[],
                 brand_code:"brand-code",
+                season_code:"season",
                 moneda:"USD",
                 precioRegular:"15",
                 precioPromocional:"11",
@@ -201,12 +313,16 @@ function irHaFormularioDeProductos(){
                 fechaFinalPromocion:"2022-02-27",
                 stock:"15",
                 outline:"bag",
-                haEnviar:false
+                size_group:"",
+                size_codes:[],
+                haEnviar:false,
+                how_to_use:null,
+                warnings:null
             }
         }
     }
     console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
-    datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
+    // datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
     radiosPaisesForm[0].setAttribute("checked",true)
     cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
     
@@ -236,11 +352,11 @@ function irHaVistaFormularioProductos(){
 
 function cargarProductosPorPaisSeleccionado(a){
     let productos=datosResPaldoProductos[a.value]
-    insertarProductosVistaEnvio(a.value,productos)
     console.log("cargar porductos por pais seleccionado =>>>> ",productos)
     cargarDatosBrandCode();
+    insertarProductosVistaEnvio(a.value,productos)
 }
-
+// creacion del formulario de producto
 function insertarProductosVistaEnvio(idPais,productos){
     let listaDeProductosForm=document.getElementById("listaDeProductosForm")
     listaDeProductosForm.innerHTML=""
@@ -259,7 +375,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <label id="'+codigoIdPaisIdproducto+'_check_false" class="" for="'+codigoIdPaisIdproducto+'_check_envio">\
                         <div class="checked-false"></div>\
                     </label>\
-                    <input style="display:none;" id="'+codigoIdPaisIdproducto+'_check_envio" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>\
+                    <input style="display:none;" id="'+codigoIdPaisIdproducto+'_check_envio" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="haEnviar" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>\
                 </div>\
                 <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">\
                     <img class="imagen-producto" src="'+producto.urlImagen+'" alt=""/>\
@@ -279,7 +395,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Cetegoria</label>\
-                            <select class="form-control margin-0">\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="outline" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-categoria">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -287,7 +403,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >brand</label>\
-                            <select class="form-control margin-0">\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -295,7 +411,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target age groups</label>\
-                            <select class="form-control margin-0">\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-target-age-groups">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -303,7 +419,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target genders</label>\
-                            <select class="form-control margin-0">\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-target-genders">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -313,7 +429,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >season code</label>\
-                            <select class="form-control margin-0">\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -321,7 +437,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >color</label>\
-                            <select class="form-control margin-0">\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="color_code.primary" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-color-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -329,45 +445,52 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label for="">supplier color</label>\
-                            <input type="text" class="form-control " id="" placeholder="">\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Stock</label>\
-                            <input type="text" class="form-control " id="" placeholder="">\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Tallas</label>\
-                            <select class="form-control margin-0">\
+                            <label >Categoria talla</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
+                            <label >Tallas</label>\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_tallas" class="form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
                             <label>Siglas Moneda</label>\
-                            <input type="text" class="form-control " id="" placeholder="">\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Regular</label>\
-                            <input type="text" class="form-control " id="" placeholder="">\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label>Precio Descuento</label>\
-                            <input type="text" class="form-control " id="" placeholder="">\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                 </div>\
                 <div class="row">\
+                 <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label>Precio Descuento</label>\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                        </div>\
+                    </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Inicio de Descuento</label>\
@@ -393,7 +516,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="exampleFormControlInput1">warnings</label>\
-                            <textarea class="form-control" id="" rows="3"></textarea>\
+                            <textarea class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -401,7 +524,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="exampleFormControlInput1">how to use</label>\
-                            <textarea class="form-control" id="" rows="3"></textarea>\
+                            <textarea class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -411,7 +534,117 @@ function insertarProductosVistaEnvio(idPais,productos){
     }
     listaDeProductosForm.innerHTML=html
 }
+// insertar elementos html a los select de los formulario de prodcuto
+function insertarCategoriasSelect(){
+    let $camposCategorias=document.querySelectorAll(".campo-categoria")
+    for(let $campoCategorias of $camposCategorias){
+        $campoCategorias.innerHTML=""
+        let html="<option value='null'>Seleccione una categoria</option>"
+        for(let categoria of datos_categorias){
+            let option='<option value="'+categoria.outline+'">'+categoria.name+'</option>'
+            html+=option
+        }
+        $campoCategorias.innerHTML=html
+    }
+}
 
+function insertarBrandCodeSelect(){
+    let $camposBrandCode=document.querySelectorAll(".campo-brand-code")
+    for(let $campoBrandCode of $camposBrandCode){
+        $campoBrandCode.innerHTML=""
+        let html="<option value='null'>Seleccione una brand</option>"
+        for(let brand of datos_brand_code){
+            brand=JSON.parse(brand)
+            let option="<option value='"+brand.label+"'>"+brand.name.en+"</option>"
+            html+=option
+        }
+        $campoBrandCode.innerHTML=html
+    }
+}
+
+function insertarSeasonCodeSelect(){
+    let $camposSeasonCode=document.querySelectorAll(".campo-season-code")
+    for(let $campoSeasonCode of $camposSeasonCode){
+        $campoSeasonCode.innerHTML=""
+        let html="<option value='null'>Seleccione una season</option>"
+        for(let season of datos_season_code){
+            season=JSON.parse(season)
+            let option="<option value='"+season.label+"'>"+season.value.localized.en+"</option>"
+            html+=option
+        }
+        $campoSeasonCode.innerHTML=html
+    }
+}
+
+function insertarColorCodeSelect(){
+    let $camposColorCode=document.querySelectorAll(".campo-color-code")
+    for(let $campoColorCode of $camposColorCode){
+        $campoColorCode.innerHTML=""
+        let html="<option value='null'>Seleccione un color</option>"
+        for(let color of datos_color_code){
+            // season=JSON.parse(season)
+            let option="<option value='"+color.codigo_color+"'>"+color.color_zalando+"</option>"
+            html+=option
+        }
+        $campoColorCode.innerHTML=html
+    }
+}
+
+function insertarCategoriasTallasZalando(){
+    // campo-categoria-talla
+    let $camposCategoriaTallaCode=document.querySelectorAll(".campo-categoria-talla")
+    for(let $campoCategoriaTallaCode of $camposCategoriaTallaCode){
+        $campoCategoriaTallaCode.innerHTML=""
+        let html="<option value='null'>Seleccione una categoria</option>"
+        for(let categoriaTalla of datos_categorias_tallas_zalando){
+            let option="<option value='"+categoriaTalla.codigo_size_group+"'>"+categoriaTalla.nombreGrupo+"</option>"
+            html+=option
+        }
+        $campoCategoriaTallaCode.innerHTML=html
+    }
+}
+
+function insertarTallaCodeSelect(idProducto,tallas){
+    let $campoTallaCode=document.getElementById(idProducto+"_tallas")
+    $campoTallaCode.innerHTML=""
+    let html="<option value='null'>Seleccione una o mas tallas</option>"
+    for(let talla of tallas){
+        let option="<option value='"+talla.talla_zalando+"'>"+talla.name+"</option>"
+        html+=option
+    }
+    $campoTallaCode.innerHTML=html
+}
+
+function insertarTargetAgeGroupsCodeSelect(){
+    let $camposTargetAgeGroups=document.querySelectorAll(".campo-target-age-groups")
+    for(let $campoTargetAgeGroups of $camposTargetAgeGroups){
+        $campoTargetAgeGroups.innerHTML=""
+        let html="<option value='null'>Seleccione una target age groups</option>"
+        for(let targetAgeGroups of datos_target_age_groups){
+            targetAgeGroups=JSON.parse(targetAgeGroups)
+            let option="<option value='"+targetAgeGroups.label+"'>"+targetAgeGroups.name.en+"</option>"
+            html+=option
+        }
+        $campoTargetAgeGroups.innerHTML=html
+    }
+}
+
+function insertarTargetGendersCodeSelect(){
+    let $camposTargetGenders=document.querySelectorAll(".campo-target-genders")
+    for(let $campoTargetGenders of $camposTargetGenders){
+        $campoTargetGenders.innerHTML=""
+        let html="<option value='null'>Seleccione una target genders</option>"
+        for(let targetGenders of datos_target_genders){
+            targetGenders=JSON.parse(targetGenders)
+            let option="<option value='"+targetGenders.label+"'>"+targetGenders.name.en+"</option>"
+            html+=option
+        }
+        $campoTargetGenders.innerHTML=html
+    }
+}
+
+// -----------------------------------------------
+// cargar de datos para los inputs de los formulario al cargar la vista formulario
 function cargarDatosBrandCode(){
     preloader.style.opacity="1"
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
@@ -431,6 +664,7 @@ function cargarDatosBrandCode(){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_brand_code=respuestaJson.datos
             if(respuestaJson.datos.length>0){
                 let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
@@ -465,6 +699,7 @@ function cargarDatosSeasonCode(){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_season_code=respuestaJson.datos;
             if(respuestaJson.datos.length>0){
                 let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
@@ -499,6 +734,7 @@ function cargarDatosEdicionGlobalTargetAgeGroups(){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_target_age_groups=respuestaJson.datos
             if(respuestaJson.datos.length>0){
                 let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
@@ -534,6 +770,7 @@ function cargarDatosEdicionGlobalTargetGenders(){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_target_genders=respuestaJson.datos
             if(respuestaJson.datos.length>0){
                 let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
@@ -573,10 +810,18 @@ function cargarDatosEdicionGlobalColor(pais){
             if(respuestaJson.datos.length>0){
                 // alert(isoCode)
                 let option="<option value='null'>Seleccione</option>"
+                datos_color_code=respuestaJson.datos
                 for(let datos of respuestaJson.datos){
                     option+="<option value='"+datos.codigo_color+"'>"+datos.color_zalando+"</option>"
                 }
                 edicionGlobalColor.innerHTML=option
+                insertarCategoriasSelect()
+                insertarBrandCodeSelect()
+                insertarSeasonCodeSelect()
+                insertarColorCodeSelect()
+                insertarCategoriasTallasZalando()
+                insertarTargetGendersCodeSelect()
+                insertarTargetAgeGroupsCodeSelect()
             }
             preloader.style.opacity="0"
         },
@@ -584,6 +829,39 @@ function cargarDatosEdicionGlobalColor(pais){
             preloader.style.opacity="0"
         }
     });
+}
+// -------------------------------------
+// cargar datos al interacturar con el formulario 
+function consultarTallasPorPaisYCategoriaTalla(a){
+    insertarDatosDeEnvioDeProduct(a)
+    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
+    let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
+    let isoCode=radiosPaisesForm.getAttribute("data-iso-code")
+    let idProducto=a.getAttribute("data-id-producto")
+    preloader.style.opacity="1"
+    if(a.value!==null){
+        $.ajax({
+            type: 'GET',
+            cache: false,
+            dataType: 'json',
+            url: linkDeControladorTalla, 
+            data: {
+                ajax: true,
+                action: 'getConsultartodotallasporpaisycategoriatallazalando',
+                pais:isoCode,
+                grupo:a.value
+            },
+            success: (respuesta) => {
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("datos talla consultar por categoria y pais =>>> ",respuestaJson.datos);
+                insertarTallaCodeSelect(idProducto,respuestaJson.datos)
+                preloader.style.opacity="0"
+            },
+            error: () => {
+                preloader.style.opacity="0"
+            }
+        });
+    }
 }
 
 function cargarProductosHaEliminarPorPais(a){
@@ -641,22 +919,43 @@ function cerrarFormularioProducto(a){
 function cambiarEstadoDeEnvioDeProduct(a){
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
+    let campo=a.getAttribute("data-campo")
     document.getElementById(idProducto+"_check_true").classList.toggle("ocultar")
     document.getElementById(idProducto+"_check_false").classList.toggle("ocultar")
-    // alert(a.checked)
+    if(!datosProductosForm[idPais]){
+        datosProductosForm[idPais]={}
+    }
+    if(!datosProductosForm[idPais][idProducto]){
+        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
+    }
+    datosProductosForm[idPais][idProducto][campo]=a.checked
+    console.log(datosProductosForm)
 }
 
-
-
-
-
-
-
-
-
-
-
-
+function insertarDatosDeEnvioDeProduct(a){
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+    let campo=a.getAttribute("data-campo")
+    if(!datosProductosForm[idPais]){
+        datosProductosForm[idPais]={}
+    }
+    if(!datosProductosForm[idPais][idProducto]){
+        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
+    }
+    if(a.multiple){
+        let opciones=[]
+        for(let option of a){
+            if(option.selected){
+                opciones.push(option.value)
+            }
+        }
+        datosProductosForm[idPais][idProducto][campo]=opciones
+    }
+    else{
+        datosProductosForm[idPais][idProducto][campo]=a.value
+    }
+    console.log(datosProductosForm)
+}
 
 
 
@@ -757,110 +1056,6 @@ function insertarDatosTablaProducto(datos){
             </tr>";
     }
     tabla.innerHTML=filasTablas;
-}
-
-function consultarPaisesZalando(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    preloader.style.opacity="1"
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarpaiseszalando'
-        },
-        success: (respuesta) => {
-            // consultarCategoraisAsociadas();
-            let datos=JSON.parse(JSON.stringify(respuesta))
-            if(datos.respuestaServidor.items){
-                console.log("paises zalando =>>> ",datos)
-                crearRadiosPaisTest(datos.respuestaServidor.items);
-                crearRadiosPaisTestBorrarProdcuto(datos.respuestaServidor.items)
-            }
-            if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
-                console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
-            }
-            preloader.style.opacity="0"
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            // alert("error al conectar con el servidor");
-        }
-    });
-}
-
-function crearRadiosPaisTest(paises){
-    let contenedorBanderas=document.getElementById("paisesFormularioProducto");
-    contenedorBanderas.innerHTML="";
-    for(let pais of paises){
-        let htmlCheckbox="\
-            <label>\
-                <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
-                "+pais.country_name+"\
-            </label>\
-        ";
-        contenedorBanderas.innerHTML+=htmlCheckbox;
-    }
-}
-
-function crearRadiosPaisTestBorrarProdcuto(paises){
-    // paisesBorrarProducto
-    let contenedorBanderas=document.getElementById("paisesBorrarProducto");
-    contenedorBanderas.innerHTML="";
-    for(let pais of paises){
-        let htmlCheckbox="\
-            <label>\
-                <input type='radio'  class='radio-form-producto-borrar' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"_paises_borrar' name='radio-form-producto-borrar' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosHaEliminarPorPais(this)'/>\
-                "+pais.country_name+"\
-            </label>\
-        ";
-        contenedorBanderas.innerHTML+=htmlCheckbox;
-    }
-}
-// function crearFormularioEnvioDeProducto(checkbox){
-//     let contenedorFormularioProductosPaises=document.getElementById("contenedorFormularioProductosPaises")
-//     if(checkbox.checked){
-//         let formulario="<form id='form-"+checkbox.id+"' data-nombre-pais='"+checkbox.getAttribute("data-nombre-pais")+"'></form>";
-//         contenedorFormularioProductosPaises.innerHTML+=formulario;
-//     }
-//     else{
-//         let formularioProductosPaises=document.getElementById("form-"+checkbox.id)
-//         contenedorFormularioProductosPaises.removeChild(formularioProductosPaises)
-//     }
-// }
-
-function consultarCategoraisAsociadas(){
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodo'
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos categorias asociadas =>>> ",json.datos);
-            // insertarCategoriasSelect(json.datos);
-        },
-        error: () => {
-        }
-    });
-}
-
-function insertarCategoriasSelect(categorias){
-    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
-    selectCategoriaAsosiadas.innerHTML=""
-    let option="<option value='null'>Seleccion una categoria</option>";
-    for(let categoria of categorias){
-        option+="<option value='"+categoria.id_category+"'>"+categoria.name+"</option>";
-    }
-    selectCategoriaAsosiadas.innerHTML=option
-
 }
 
 
@@ -1168,25 +1363,7 @@ async function consultarCategorias(){
     return categorias;
 }
 
-function coonsultarTallasProPais(){
-    const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorTalla, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodotallasporpais',
-            pais:"fr"
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-        },
-        error: () => {
-        }
-    });
-}
+
 
 async function consultarCategoriaModelo(selectCategoria){
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
@@ -1397,15 +1574,6 @@ function campoCompuesto(campo){
 // 
 
 
-
-
-
-
-
-
-
-
-
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);
 $nombreProducto.addEventListener("keyup", filtrarProductos);
@@ -1418,7 +1586,7 @@ $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos
 botonTestEnvio.addEventListener("click",enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
-// botonConsultartallasAsociadasMasPais.addEventListener("click", coonsultarTallasProPais)
+// botonConsultartallasAsociadasMasPais.addEventListener("click", consultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 // consultarProductos();
 consultarPaisesZalando();

@@ -29,13 +29,11 @@
                                     Seleccione categoría de búsqueda
 								</label>
                                 <select id="categoriaProducto" name="categoriaProducto">
-                                    <span class="tree_categories_header margin-right">
                                     <option value="null">Seleccione Una Categoria</option>
                                     {foreach $categoriasProductos as $categoria}
                                         <option value="{$categoria["id_category"]}">{$categoria["name"]}</option>
                                     {/foreach}
                                 </select>
-                                </span>
 							</div>
                             <div class="row">
                                 <label class="control-label col-lg-12">
@@ -82,7 +80,8 @@
 
 								<!-- Search by creation date -->
 
-								<div class="col-sm-12 mt">
+                                <!--
+                                <div class="col-sm-12 mt">
 									<label class="control-label">
                                         Cuántas de mostrar los productos?
 									</label>
@@ -95,6 +94,7 @@
 										<option value="1000">1000</option>
 									</select>
 								</div>
+                                -->
 							</div>
 						</div>
 						<div class="col-lg-12 control_btn">

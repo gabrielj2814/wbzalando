@@ -382,13 +382,13 @@ class CategoriaController extends ModuleAdminController{
 
     public function consultarTodo(){
         // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria;";
+        // ps_wbzalando_asociacion_categoria.modelo,
         $SQL="
         SELECT 
         ps_wbzalando_asociacion_categoria.outline_name,
-        ps_wbzalando_asociacion_categoria.modelo,
         ps_wbzalando_asociacion_categoria.id_category,
         ps_wbzalando_asociacion_categoria.outline,
-        ps_wbzalando_asociacion_categoria.id_categoria_asociacion ,
+        ps_wbzalando_asociacion_categoria.id_categoria_asociacion,
         ps_category_lang.name
         FROM 
         ps_wbzalando_asociacion_categoria,
