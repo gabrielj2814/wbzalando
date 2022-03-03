@@ -114,6 +114,7 @@ class ModificarController extends ModuleAdminController{
         for($contador=0;$contador<count($respuestaPaginadaDB);$contador++){
             $ean=$respuestaPaginadaDB[$contador]["ean"];
             $respuestaPaginadaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
+            // $detallesDelProdcuto=$this->consultarProductos($ean);
             $respuestaPaginadaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
         }
         if(count($respuestaDB)>0){
@@ -134,7 +135,20 @@ class ModificarController extends ModuleAdminController{
     }
 
     function consultarProductos($ean){
-        $SQL="SELECT * FROM 
+        // $SQL="SELECT * FROM 
+        // ps_wbzalando_modelo_producto,
+        // ps_wbzalando_configuracion_producto,
+        // ps_wbzalando_simple_producto 
+        // WHERE 
+        // ps_wbzalando_simple_producto.ean='".$ean."' AND
+        // ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
+        // ps_wbzalando_modelo_producto.id_modelo_producto =ps_wbzalando_configuracion_producto.id_modelo_producto
+        // ;";
+        $SQL="SELECT 
+        ps_wbzalando_modelo_producto.id_modelo_producto,
+        ps_wbzalando_modelo_producto.json_modelo_producto,
+        ps_wbzalando_configuracion_producto.id_configuracion_producto
+        FROM 
         ps_wbzalando_modelo_producto,
         ps_wbzalando_configuracion_producto,
         ps_wbzalando_simple_producto 
@@ -142,7 +156,6 @@ class ModificarController extends ModuleAdminController{
         ps_wbzalando_simple_producto.ean='".$ean."' AND
         ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
         ps_wbzalando_modelo_producto.id_modelo_producto =ps_wbzalando_configuracion_producto.id_modelo_producto
-        
         ;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }

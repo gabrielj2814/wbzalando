@@ -5,6 +5,7 @@ let paises={}
 let productosRespaldo={}
 
 let productosModificados={}
+let preloader=document.getElementById("preloader")
 
 async function consultarProductosWBZalando(){
     const linkDeControladorProducto=document.getElementById("linkDeControladorProducto").value;
@@ -35,8 +36,8 @@ function insertarProductos(productos){
     for(let producto of productos){
         let infoStock=producto.datosStock[0]
         let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
-        let infoConfig=JSON.parse(producto.detallesDelProdcuto[0].json_configuracion_producto)
-        let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
+        // let infoConfig=JSON.parse(producto.detallesDelProdcuto[0].json_configuracion_producto)
+        // let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
         let infoPrecio=JSON.parse(producto.json_precio)
         // let arrayFecha=infoPrecio.scheduled_prices[0].end_time.split("T")[0].split("-")
         let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
@@ -215,7 +216,6 @@ function modificandoProducucto(a){
 async function eliminarProducto(e){
     // alert(e.id)
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     let idModelo=e.getAttribute("data-id-modelo")
     let idConfig=e.getAttribute("data-id-config")
@@ -250,7 +250,6 @@ async function eliminarProducto(e){
 
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
@@ -313,7 +312,6 @@ function consultarProductosPorPais(a){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
     }
     let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
@@ -431,7 +429,6 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
 function consultarProductosPorPais2(idPais){
     // alert(a.id)
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     let pagina=1
     preloader.style.opacity="1"
     $.ajax({
