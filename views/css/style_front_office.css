@@ -15,10 +15,13 @@ a:focus {
     -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
 }
-
-/* global; */
 .alignitem-tb {
     align-items: center;
+    display: flex;
+}
+/* global; */
+.flex-wrap {
+    flex-wrap: wrap;
     display: flex;
 }
 .justify-end-flex{
@@ -111,6 +114,12 @@ a:focus {
     float: left;
     margin-right: 10px;
 }
+#fieldset_0 .documento-input label{
+    padding-left: 0px !important;
+}
+#fieldset_0 .documento-input input{
+    margin-right: 10px !important;
+}
 
 
 /* carrusel */
@@ -154,13 +163,17 @@ a:focus {
     min-width: 150px;
     width: auto;
 }
+.slick-slide{
+    display: flex;
+    justify-content: center;
+}
 /* Preloader */
 .fat-pre{
-    width: 100%;
+    width: auto;
+    min-width: 100%;
     height: 100vh;
     position: absolute;
     top: 40px;
-    left: 210px;
     opacity: 0;
     transition: 0.6s;
     transition-timing-function: ease-out;
@@ -168,8 +181,9 @@ a:focus {
     z-index: 99;
 }
 .pre-loader{
+    transition: 0.6s;
     background: #EFF1F2;
-    width: 86%;
+    width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -198,24 +212,7 @@ a:focus {
     background: #0d8aa3;
     animation-delay: 0s;
 }
-@media (max-width: 1024px) {
-    .fat-pre {
-        left: 0 !important;
-    }
-    .pre-loader {
-        width: 100%;
-    }
-}
-@media (min-width: 1600px) {
-    .pre-loader {
-        width: 88%;
-    }
-}
-@media (min-width: 2200px) {
-    .pre-loader {
-        width: 91%;
-    }
-}
+
  
 
 /* modificar producto */

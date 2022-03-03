@@ -54,12 +54,12 @@ function insertarProductos(productos){
             }
         }
         html+="\
-        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
+        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input'>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_stock' data-propiedad='stock' value='"+infoStock.quantity+"'  onKeyup='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioRegular' data-propiedad='precioRegular' value='"+infoPrecio.regular_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaInicioPromocion' data-propiedad='fechaInicioPromocion' value='"+arrayFechaInicio+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaFinPromocion' data-propiedad='fechaFinPromocion' value='"+arrayFechaFinal+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
@@ -302,6 +302,56 @@ function crearCheckboxPaisTest(paises){
         ";
         sliderPaises.innerHTML+=htmlBotonPais
         contenedorBanderas.innerHTML+=htmlCheckbox;
+    }
+    iniciarSlick()
+}
+
+function iniciarSlick(){
+    var slider = document.querySelector('#slider-paises');
+    if(slider.children.length > 0){
+        $('#slider-paises').slick({
+            infinite: true,
+            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
+            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            responsive: [
+                {
+                  breakpoint: 1920,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1600,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                      slidesToShow: 1,
+                      slidesToScroll: 1,
+                      infinite: true
+                    }
+                  }
+              ]
+        })
+    }else {
+        iniciarSlick()
     }
 }
 

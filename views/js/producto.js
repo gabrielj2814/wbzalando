@@ -232,34 +232,152 @@ function consultarMaterialesDeConstruccion(){
 }
 
 function crearRadiosPaisTest(paises){
-    let contenedorBanderas=document.getElementById("paisesFormularioProducto");
-    contenedorBanderas.innerHTML="";
+    let contenedorBanderasProductos=document.getElementById("paisesFormularioProducto");
+    let sliderPaisesProductos=document.getElementById("slider-productos");
+    sliderPaisesProductos.innerHTML=""
+    contenedorBanderasProductos.innerHTML="";
     for(let pais of paises){
         let htmlCheckbox="\
-            <label>\
+            <div style='display:none;'>\
                 <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
                 "+pais.country_name+"\
-            </label>\
+            </div>\
         ";
-        contenedorBanderas.innerHTML+=htmlCheckbox;
+        let htmlBotonPais="\
+            <div class=''>\
+                <label for='"+pais.sales_channel_id+"' class='btn btn-primary'>\
+                "+pais.country_name+"\
+                </label>\
+            </div>\
+        ";
+        sliderPaisesProductos.innerHTML+=htmlBotonPais
+        contenedorBanderasProductos.innerHTML+=htmlCheckbox;
+    }
+    iniciarSlickTres()
+}
+function iniciarSlickTres(){
+    var sliderProductos = document.querySelector('#slider-productos');
+    if(sliderProductos.children.length > 0){
+        $('#slider-productos').slick({
+            infinite: true,
+            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
+            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            responsive: [
+                {
+                  breakpoint: 1920,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1600,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                      slidesToShow: 1,
+                      slidesToScroll: 1,
+                      infinite: true
+                    }
+                  }
+              ]
+        })
+    }else {
+        iniciarSlickTres()
     }
 }
 
 function crearRadiosPaisTestBorrarProdcuto(paises){
     // paisesBorrarProducto
-    let contenedorBanderas=document.getElementById("paisesBorrarProducto");
-    contenedorBanderas.innerHTML="";
+    let contenedorBanderasBorrar=document.getElementById("paisesBorrarProducto");
+    let sliderPaisesBorrar=document.getElementById("slider-dos");
+    sliderPaisesBorrar.innerHTML=""
+    contenedorBanderasBorrar.innerHTML="";
     for(let pais of paises){
         let htmlCheckbox="\
-            <label>\
+            <div style='display:none;'>\
                 <input type='radio'  class='radio-form-producto-borrar' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"_paises_borrar' name='radio-form-producto-borrar' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosHaEliminarPorPais(this)'/>\
                 "+pais.country_name+"\
-            </label>\
+            </div>\
         ";
-        contenedorBanderas.innerHTML+=htmlCheckbox;
+
+        let htmlBotonPais="\
+            <div class=''>\
+                <label for='"+pais.sales_channel_id+"' class='btn btn-primary'>\
+                "+pais.country_name+"\
+                </label>\
+            </div>\
+        ";
+        sliderPaisesBorrar.innerHTML+=htmlBotonPais
+        contenedorBanderasBorrar.innerHTML+=htmlCheckbox;
+    }
+    iniciarSlickDos()
+}
+function iniciarSlickDos(){
+    var sliderDos = document.querySelector('#slider-dos');
+    if(sliderDos.children.length > 0){
+        $('#slider-dos').slick({
+            infinite: true,
+            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
+            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            responsive: [
+                {
+                  breakpoint: 1920,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1600,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    infinite: true
+                  }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                      slidesToShow: 1,
+                      slidesToScroll: 1,
+                      infinite: true
+                    }
+                  }
+              ]
+        })
+    }else {
+        iniciarSlickDos()
     }
 }
-
 
 function filtrarProductos(e){
     e.preventDefault();
@@ -392,7 +510,7 @@ function insertarProductosVistaEnvio(idPais,productos){
         html+='\
         <div data-id-producto-form="'+codigoIdPaisIdproducto+'" class="contenedor_producto_backend">\
             <div class="row preview-info-producto">\
-                <div class="contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">\
+                <div class="col-xs-1 contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">\
                     <label id="'+codigoIdPaisIdproducto+'_check_true" class="ocultar" for="'+codigoIdPaisIdproducto+'_check_envio">\
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16">\
                             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>\
@@ -404,8 +522,8 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <input style="display:none;" id="'+codigoIdPaisIdproducto+'_check_envio" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="haEnviar" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>\
                 </div>\
                 <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">\
-                    <img class="imagen-producto" src="'+producto.urlImagen+'" alt=""/>\
-                    <h3 class="margin-0">'+producto.nombreProducto+'</h3>\
+                    <img class="col-xs-1 imagen-producto" src="'+producto.urlImagen+'" alt=""/>\
+                    <h3 class="margin-0 text-primary" style="margin-left: 15px !important;">'+producto.nombreProducto+'</h3>\
                 </div>\
                 <div class="contenedor-toggle-producto col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">\
                     <svg id="'+codigoIdPaisIdproducto+'-cerrar" data-id-producto="'+codigoIdPaisIdproducto+'" onClick="cerrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ocultar bi bi-arrow-up-short" viewBox="0 0 16 16">\
@@ -428,34 +546,8 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >brand</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
-                                <option>Default select</option>\
-                            </select>\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >target age groups</label>\
-                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-target-age-groups">\
-                                <option>Default select</option>\
-                            </select>\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >target genders</label>\
-                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-target-genders">\
-                                <option>Default select</option>\
-                            </select>\
-                        </div>\
-                    </div>\
-                </div>\
-                <div class="row">\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >season code</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
+                            <label >Categoria talla</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -474,27 +566,12 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label>Stock</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
-                        </div>\
-                    </div>\
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Categoria talla</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
-                                <option>Default select</option>\
-                            </select>\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >Tallas</label>\
-                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_tallas" class="form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
-                            </select>\
+                            <label>Stock</label>\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
@@ -509,14 +586,14 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
-                </div>\
-                <div class="row">\
-                 <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Descuento</label>\
                             <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
+                </div>\
+                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Inicio de Descuento</label>\
@@ -531,6 +608,14 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
+                            <label >material</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
                             <label >material percentage</label>\
                             <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
@@ -539,8 +624,41 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >material</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
+                            <label >Tallas</label>\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_tallas" class="class-select m-0 form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >target age groups</label>\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-age-groups">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >target genders</label>\
+                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-genders">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >brand</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="row">\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >season code</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -749,7 +867,7 @@ function cargarDatosSeasonCode(){
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_season_code=respuestaJson.datos;
             if(respuestaJson.datos.length>0){
-                let option="<option value='null'>Seleccione</option>"
+                let option="<option value='null'>Vacio</option>"
                 for(let datos of respuestaJson.datos){
                     datos=JSON.parse(datos)
                     option+="<option value='"+datos.label+"'>"+datos.value.localized.en+"</option>"
@@ -784,7 +902,7 @@ function cargarDatosEdicionGlobalTargetAgeGroups(){
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_target_age_groups=respuestaJson.datos
             if(respuestaJson.datos.length>0){
-                let option="<option value='null'>Seleccione</option>"
+                let option="<option value='null'>Vacio</option>"
                 for(let datos of respuestaJson.datos){
                     datos=JSON.parse(datos)
                     option+="<option value='"+datos.label+"'>"+datos.name.en+"</option>"
@@ -928,9 +1046,9 @@ function insertarProductos(idPais,productos){
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+productos[codigoIdPaisIdproducto].nombreProducto+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].stock+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].stock+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioRegular+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioPromocional+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioPromocional+"</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaInicioPromocion+"</h4></div></div>\
         <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaFinalPromocion+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-pais='"+idPais+"' data-id-producto='"+codigoIdPaisIdproducto+"'   onClick='cambiarEstadoDeEnvioDeProductoBorrarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\

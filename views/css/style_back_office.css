@@ -78,6 +78,28 @@
 
 .imagen-producto{
     width: 90px;
-    height: 120px;
+    height: 100px;
     margin-right: 20px !important;
+}
+
+/* Select multuple*/
+.class-select{
+    width: 100% !important;
+    border: 0 !important;
+    min-height: 100px !important;
+    max-height: 100px;
+    overflow-y: scroll;
+    -webkit-clip-path: inset(0 15px 0 0);
+    clip-path: inset(0 18px 0 0);
+    margin: 0;
+    padding: 0 !important;
+    border: 2px solid #bbcdd2 !important;
+}
+.class-select option{
+    white-space: initial;
+    color: #8B8B8B !important;
+    font-size: 13px;
+    padding: 10px !important;
+    padding-left: 15px !important;
+    width: 100% !important;
 }
