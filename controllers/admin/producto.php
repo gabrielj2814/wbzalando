@@ -293,7 +293,6 @@ class ProductoController extends ModuleAdminController{
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
-            print_r($producto["stock"]["items"]);
             // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
             $producto=$this->destructurarModeloDeProductoZalando($producto);
             // subir stocks de producto
