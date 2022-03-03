@@ -1,96 +1,4 @@
-// funciones que no se estan usando pero que pueden cer utiles borrar o comentar cuando se termene el desarrollo
-
-async function mostrarModalSubirProductos(){
-    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos");
-    let vistaInicial=document.querySelector(".vistaInicial");
-    formularioSubirProducto.classList.toggle("mostrarVista");
-    vistaInicial.classList.toggle("ocultar");
-    // ---------
-    // let formulariosProductos= document.getElementById("formulariosProductos");
-    let idsProducto=document.querySelectorAll(".producto_centrar_checkbox_tabla_celda:checked");
-    let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
-    productosSeleccionados=[];
-    for(let idProducto of idsProducto){
-        // productosSeleccionados.push(idProducto.value);
-        let producto=await consultarProducto(idProducto.value)
-        productosSeleccionados.push(producto);
-    }
-    console.log("lista de productos =>>> ",productosSeleccionados)
-    console.log("checkboxs Paises =>>> ",checkboxsPaises)
-    for(let paises of checkboxsPaises){
-        let formulario=document.getElementById("form-"+paises.value)
-        formulario.innerHTML="";
-        for(let producto of productosSeleccionados){
-            formulario.innerHTML+=htmlPorducto(producto)
-        }
-    }
-    // let htmlGenericoProductoFormulario=htmlGenericoProductosFormulario(productosSeleccionados);
-    // let categorias=await consultarCategorias();
-    // formulariosProductos.innerHTML=htmlGenericoProductoFormulario;
-    // insertarCategoriasSelect(categorias);
-
-}
-
-function cerrarModalSubirProducto(){
-    let formularioSubirProducto=document.getElementById("contenedorVistaSubirProductos");
-    let vistaInicial=document.querySelector(".vistaInicial");
-    formularioSubirProducto.classList.toggle("mostrarVista");
-    vistaInicial.classList.toggle("ocultar");
-}
-
-function htmlGenericoProductosFormulario(productosSeleccionados){
-    let html="";
-    for(let producto of productosSeleccionados){
-        html+="\
-            <div id='contenedor-form-producto-"+producto+"'>\
-                <select onBlur='consultarCategoriaModelo(this)' class='form-producto-categoria' id='form-producto-categoria-"+producto+"' data-form-producto='"+producto+"'></select>\
-                <form id='form-producto-"+producto+"' class='form-producto-"+producto+"'></form>\
-            </div>\
-            </br>\
-            </br>\
-        ";
-    }
-    return html;
-}
-
-function htmlPorducto(producto){
-    let html="\
-    <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 alignitem-tb p-10 global-input'>\
-    <div class='col-3 col-sm-3 col-md-3 col-lg-2 col-xl-3 col-xs-5 text-left'><div><h4 class='text-primary'>"+producto.name+"</h4></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='stock'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='text' id='precio'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div class='mx'><input class='input-tb' type='text' id='descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='input-tb' type='date' id='fecha-descuento'/></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-1 col-xl-2 col-xs-5 text-center'><div><select class='h35'>opciones</select></div></div>\
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5 text-center'><div><input class='w20 m-auto' type='checkbox' id='check1'></div></div></div>\
-    ";
-    return html;
-}
-
-async function consultarProducto(idProducto){
-    const linkControlador=document.getElementById("linkControlador").value;
-    let datosProducto=[];
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproducto',
-            id_producto:idProducto
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("producto consultado =>>> ",json);
-            datosProducto=json.datos[0]
-        },
-        error: () => {
-        }
-    });
-
-    return datosProducto;
-}
+// funciones que no se estan usando pero que pueden ser utiles borrar o comentar cuando se termene el desarrollo
 
 
 //====================================
@@ -123,6 +31,7 @@ let $botonIrHaformulario=document.getElementById("botonIrHaformulario")
 let $botonIrHaVistaInicial=document.getElementById("botonIrHaVistaInicial")
 let $botonIrHaVistaBorrarProductos=document.getElementById("botonIrHaVistaBorrarProductos")
 let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFormularioProductos")
+let $botonEnviarPoductos=document.getElementById("botonEnviarPoductos")
 // let obtenerProductos=document.getElementById("obtenerProductos");
 // let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
 // functiones
@@ -316,13 +225,15 @@ function irHaFormularioDeProductos(){
     for(let pais of radiosPaisesForm){
         datosResPaldoProductos[pais.value]={}
         for(let producto of productosFiltrados){
+            let descripcionProducto=producto.description.replace("<p>","").replace("</p>","").split("'").join("")
+            let nombrePro=producto.name.split("'").join("")
             datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
                 idProductoTienda:producto.id_product,
                 ean:producto.ean13,
-                nombreProducto:producto.name,
+                nombreProducto:nombrePro,
                 urlImagen:producto.urlImagen,
                 idUrlImagen:producto.id_product,
-                descripcion:producto.description.replace("<p>","").replace("</p>",""),
+                descripcion:descripcionProducto,
                 brand_code:"brand-code",
                 lenguaje:producto.iso_code,
                 outline:"bag",
@@ -520,13 +431,13 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Inicio de Descuento</label>\
-                            <input type="date" class="form-control " id="">\
+                            <input type="date" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaInicioPromocion" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Final de Descuento</label>\
-                            <input type="date" class="form-control " id="">\
+                            <input type="date" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaFinalPromocion" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
@@ -931,8 +842,8 @@ function insertarProductos(idPais,productos){
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].stock+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioRegular+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].moneda+" "+productos[codigoIdPaisIdproducto].precioPromocional+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaInicioPromocion+"</h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+productos[codigoIdPaisIdproducto].fechaFinalPromocion+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+moment(productos[codigoIdPaisIdproducto].fechaInicioPromocion,"YYYY-MM-DD").format("DD-MM-YYYY")+"</h4></div></div>\
+        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'>"+moment(productos[codigoIdPaisIdproducto].fechaFinalPromocion,"YYYY-MM-DD").format("DD-MM-YYYY")+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-pais='"+idPais+"' data-id-producto='"+codigoIdPaisIdproducto+"'   onClick='cambiarEstadoDeEnvioDeProductoBorrarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
         ";
        }
@@ -1006,108 +917,160 @@ function insertarDatosDeEnvioDeProduct(a){
     console.log(datosProductosForm)
 }
 
+//============================
+//============================
+//============================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//====================================
-//====================================
-//====================================
-
-function consultarProductos(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproductos'
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta.datos));
-            console.log("datos producto prestashop =>>> ",datos);
-            insertarDatosTablaProducto(datos);
-        },
-        error: () => {
-        }
-    });
-}
-
-function cargarProductoProcategoria(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    let selectCategoriaAsosiadas=document.getElementById("selectCategoriaAsosiadas")
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'consultarporcategoriasasociadas',
-            categoriaProducto:selectCategoriaAsosiadas.value
-        },
-        success: (respuesta) => {
-            let productos=JSON.parse(JSON.stringify(respuesta.datos));
-            console.log("datos categorias asociadas =>>> ",productos);
-            let formulariosProductos= document.getElementById("formulariosProductos");
-            formulariosProductos.innerHTML="";
-            let htmlproducto="";
-            for(let producto of productos){
-                htmlproducto+=htmlPorducto(producto);
+function generarFormatoZalado(){
+    let productosConFormato=[]
+    for(let pais in datosProductosForm){
+        for(let producto in datosProductosForm[pais]){
+            // haEnviar
+            if(datosProductosForm[pais][producto].haEnviar===false){
+                let modelo={
+                    "outline": datosProductosForm[pais][producto].outline,
+                    "product_model": {
+                        "merchant_product_model_id": "modelo-"+moment().format("x"),
+                        "product_model_attributes": {
+                            "name": datosProductosForm[pais][producto].nombreProducto,
+                            "brand_code": datosProductosForm[pais][producto].brand_code,
+                            "size_group": {
+                                "size": datosProductosForm[pais][producto].size_group,
+                            },
+                            "target_genders": datosProductosForm[pais][producto].target_genders,
+                            "target_age_groups": datosProductosForm[pais][producto].target_age_groups
+                        },
+                        "product_configs":[]
+                    }
+                }
+                let config={
+                    "merchant_product_config_id": "config-"+moment().format("x"),
+                    "product_config_attributes": {
+                        "media": {
+                            "media_path": datosProductosForm[pais][producto].urlImagen,
+                            "media_sort_key": parseInt(datosProductosForm[pais][producto].idUrlImagen)
+                        },
+                        "description": "LocalizedStringDefinition",
+                        "season_code": "LocalizedStringDefinition",
+                        "supplier_color": datosProductosForm[pais][producto].supplier_color,
+                        "color_code.primary": "LocalizedStringDefinition"
+                    },
+                    "product_simples":[]
+                }
+                config.product_config_attributes.description["en"]=datosProductosForm[pais][producto].descripcion
+                config.product_config_attributes.season_code["en"]=datosProductosForm[pais][producto].season_code
+                config.product_config_attributes["color_code.primary"]["en"]=datosProductosForm[pais][producto]["color_code.primary"]
+                modelo.product_model.product_configs.push(config)
+                for(let datoTallasProducto of datosProductosForm[pais][producto].size_codes){
+                    let simple= {
+                        "merchant_product_simple_id": "simple-"+datoTallasProducto+"-"+moment().format("x"),
+                        "product_simple_attributes": {
+                            "ean": datosProductosForm[pais][producto].ean,
+                            "size_codes": {
+                                "size": datoTallasProducto
+                            }
+                        }
+                    }
+                    modelo.product_model.product_configs[0].product_simples.push(simple)
+                }
+    
+                let precio={
+                    "ean": datosProductosForm[pais][producto].ean,
+                    "sales_channel_id": pais,
+                    "regular_price": {
+                        "amount": parseFloat(datosProductosForm[pais][producto].precioRegular),
+                        "currency": datosProductosForm[pais][producto].moneda
+                    },
+                    "promotional_price": {
+                        "amount": parseFloat(datosProductosForm[pais][producto].precioPromocional),
+                        "currency": datosProductosForm[pais][producto].moneda
+                    },
+                    "scheduled_prices": [
+                        {
+                            "regular_price": {
+                                "amount": parseFloat(datosProductosForm[pais][producto].precioRegular),
+                                "currency": datosProductosForm[pais][producto].moneda
+                            },
+                            "promotional_price": {
+                                "amount": parseFloat(datosProductosForm[pais][producto].precioPromocional),
+                                "currency": datosProductosForm[pais][producto].moneda
+                            },
+                            "start_time": datosProductosForm[pais][producto].fechaInicioPromocion+"T00:00:00.00Z",
+                            "end_time": datosProductosForm[pais][producto].fechaFinalPromocion+"T00:00:00.00Z"
+                        }
+                    ],
+                    "ignore_warnings": true
+                }
+                let stock= {
+                    "sales_channel_id": pais,
+                    "ean": datosProductosForm[pais][producto].ean,
+                    "quantity": parseInt(datosProductosForm[pais][producto].stock)
+                }
+                modelo["precio"]={
+                    product_prices:[]
+                }
+                modelo["stock"]={
+                    items:[]
+                }
+                modelo.precio.product_prices.push(precio)
+                modelo.stock.items.push(stock)
+                productosConFormato.push(modelo)
             }
-            formulariosProductos.innerHTML=htmlproducto
+        }
+    }
+    console.log("datos finales =>>>> ",productosConFormato)
+    enviarDatos(productosConFormato)
+}
+
+function enviarDatos(productos){
+    const linkControlador=document.getElementById("linkControlador").value;
+    preloader.style.opacity="1"
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'postenviarproductos',
+            productos:productos
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            console.log("datos envio =>>>>>>",datos);
+            preloader.style.opacity="0"
         },
         error: () => {
+            preloader.style.opacity="0"
+            // alert("error al conectar con el servidor");
         }
     });
+
 }
 
 
-function insertarDatosTablaProducto(datos){
-    let tabla=document.getElementById("tablaProductos");
-    tabla.innerHTML="";
-    let filasTablas=""
-    listaProductos={};
-    for(let producto of datos){
-        listaProductos[producto.id_product]=producto;
-        let html="\
-            <tr >\
-                <td class='producto_tabla_td_pdd_tb'><input type='checkbox' class='form-check-input producto_centrar_checkbox_tabla_celda' name='array_productos[]' value='"+producto.id_product+"'/></td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.id_product+"</td>\
-                <td class='producto_tabla_td_pdd_tb'><img style='width: 45px;height: 45px;display: inline-block;margin-right: 15px;' src='"+producto.urlImagen+"'/>"+producto.name+"</td>\
-                <td class='producto_tabla_td_pdd_tb'>"+producto.ean13+"</td>\
-            </tr>";
-        filasTablas+=html;
-    }
-    if(datos.length===0){
-        filasTablas="\
-            <tr >\
-                <td colspan='4' class='producto_tabla_td_pdd_tb'><center>Sin resultados</center></td>\
-            </tr>";
-    }
-    tabla.innerHTML=filasTablas;
-}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//====================================
+//====================================
+//====================================
 
 function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
@@ -1362,58 +1325,6 @@ function enviarProductos(){
     });
 }
 
-function coonsultarPedidos(e){
-    e.preventDefault();
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarpedidoszalando'
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            // console.log("pedidos consultados =>>> ",datos)
-        },
-        error: () => {
-        }
-    });
-}
-
-async function consultarCategorias(){
-    // console.clear()
-    let categorias=[];
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultartodo'
-        },
-        success: (respuesta) => {
-            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            categorias=json.datos;
-            // let categoria=json.datos[0]
-            // let jsonModeloProductoBase=JSON.parse(categoria.modelo);
-            // let jsonModeloProducto=JSON.parse(JSON.stringify(jsonModeloProductoBase));
-            // generarFormulario(jsonModeloProducto)
-            // console.log("modelo esquema =>>> ",JSON.parse(json.respuestaServidor.datos[0].modelo))
-        },
-        error: () => {
-        }
-    });
-    return categorias;
-}
-
-
-
 async function consultarCategoriaModelo(selectCategoria){
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let idFormulario=selectCategoria.getAttribute("data-form-producto");
@@ -1630,6 +1541,7 @@ $botonIrHaformulario.addEventListener("click",irHaFormularioDeProductos)
 $botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
 $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
+$botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
 botonTestEnvio.addEventListener("click",enviarProductos)
@@ -1637,5 +1549,4 @@ botonTestEnvio.addEventListener("click",enviarProductos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", consultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
-// consultarProductos();
 consultarPaisesZalando();

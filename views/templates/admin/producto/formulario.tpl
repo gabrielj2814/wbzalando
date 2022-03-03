@@ -633,7 +633,9 @@
             </div>
             <div id="listaDeProductosHaBorrar"></div>
         </div>
-
+         <button class="btn btn-primary" id="botonEnviarPoductos"">
+            enviar productos
+        </button>
         <div id="controlesPaginacion"></div>
     </div>
 </div>
@@ -648,6 +650,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="/modules/wbzalando/views/js/librerias/moment.js"></script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
