@@ -19,9 +19,8 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonConsultar=document.getElementById("botonConsultar");
 // let botonActualizar=document.getElementById("botonActualizar");
 // let botonEliminar=document.getElementById("botonEliminar");
-
+let preloader=document.getElementById("preloader")
 function registrar(){
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioCategoria").serializeArray()
@@ -123,7 +122,6 @@ function consultarEsquemasYCategorias(a=1){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
     }
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
