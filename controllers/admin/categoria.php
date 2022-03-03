@@ -559,7 +559,7 @@ class CategoriaController extends ModuleAdminController{
         }
         print(json_encode($respuesta_servidor));
     }
-
+    
     public function consultarDatosPropiedad($propiedad){
         $respuesta=[];
         $respuestaDB=$this->consultarExistenciaPropidad($propiedad);
@@ -571,7 +571,21 @@ class CategoriaController extends ModuleAdminController{
         }
         return $respuesta;
     }
+    
+    public function ajaxProcessGetConsultarInformacionPropiedadMaterial(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuesta=$this->consultarTipoDeDatoModeloZalando("material.upper_material_clothing");
+        $listaMateriales=[];
+        if(property_exists($respuesta["response"],"type_variants")){
+            foreach($respuesta["response"]->type_variants as $materiales){
+                $listaMateriales[$materiales->label]=$materiales->name->en;
+            }
+            $respuesta_servidor["respuestaServidor"]=$listaMateriales;
+        }
+        print(json_encode($respuesta_servidor));
+    }
 
+    
 
 
 

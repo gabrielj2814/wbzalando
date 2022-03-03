@@ -113,6 +113,7 @@ let datos_target_age_groups={}
 let datos_target_genders={}
 let datos_categorias_tallas_zalando=[]
 let datos_categorias=[]
+let datos_materiales_contruccion={}
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
@@ -125,7 +126,7 @@ let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFo
 // let obtenerProductos=document.getElementById("obtenerProductos");
 // let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
 // functiones
-
+// funciones anidadas peticiones al servidor consultarPaisesZalando,consultarCategoraisAsociadas,consultarCategoriasTalla,consultarMaterialesDeConstruccion
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
@@ -198,7 +199,30 @@ function consultarCategoriasTalla(){
             let datos=JSON.parse(JSON.stringify(respuesta));
             console.log("categorias de tallas filtrados =>>> ",datos.respuestaServidor);
             datos_categorias_tallas_zalando=datos.respuestaServidor
-            // cargarCategoriasTallasZalando(categoriaTallas)
+            consultarMaterialesDeConstruccion()
+            // preloader.style.opacity="0"
+        },
+        error: () => {
+            preloader.style.opacity="0"
+        }
+    });
+}
+
+function consultarMaterialesDeConstruccion(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultarinformacionpropiedadmaterial',
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta));
+            console.log("datos material.upper_material_clothing =>>> ",datos.respuestaServidor);
+            datos_materiales_contruccion=datos.respuestaServidor
             preloader.style.opacity="0"
         },
         error: () => {
@@ -294,30 +318,32 @@ function irHaFormularioDeProductos(){
         for(let producto of productosFiltrados){
             datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
                 idProductoTienda:producto.id_product,
+                ean:producto.ean13,
                 nombreProducto:producto.name,
-                lenguaje:producto.iso_code,
-                descripcion:producto.description.replace("<p>","").replace("</p>",""),
                 urlImagen:producto.urlImagen,
                 idUrlImagen:producto.id_product,
-                ean:producto.ean13,
+                descripcion:producto.description.replace("<p>","").replace("</p>",""),
+                brand_code:"brand-code",
+                lenguaje:producto.iso_code,
+                outline:"bag",
+                stock:"15",
+                size_group:"",
+                size_codes:[],
                 supplier_color:"supplier color",
                 "color_code.primary":"",
                 target_genders:[],
                 target_age_groups:[],
-                brand_code:"brand-code",
                 season_code:"season",
                 moneda:"USD",
                 precioRegular:"15",
                 precioPromocional:"11",
                 fechaInicioPromocion:"2022-02-27",
                 fechaFinalPromocion:"2022-02-27",
-                stock:"15",
-                outline:"bag",
-                size_group:"",
-                size_codes:[],
                 haEnviar:false,
                 how_to_use:null,
-                warnings:null
+                warnings:null,
+                material_percentage:null,
+                material_code:null
             }
         }
     }
@@ -505,8 +531,16 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >upper material clothing</label>\
-                            <select class="form-control margin-0">\
+                            <label >material percentage</label>\
+                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="row">\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >material</label>\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -640,6 +674,20 @@ function insertarTargetGendersCodeSelect(){
             html+=option
         }
         $campoTargetGenders.innerHTML=html
+    }
+}
+
+function insertarMaterialesContruccionCodeSelect(){
+    // datos_materiales_contruccion
+    let $camposMaterialCode=document.querySelectorAll(".campo-material-code")
+    for(let $campoMaterialCode of $camposMaterialCode){
+        $campoMaterialCode.innerHTML=""
+        let html="<option value='null'>Seleccione un material</option>"
+        for(let labelMaterialContruccion in datos_materiales_contruccion){
+            let option="<option value='"+labelMaterialContruccion+"'>"+datos_materiales_contruccion[labelMaterialContruccion]+"</option>"
+            html+=option
+        }
+        $campoMaterialCode.innerHTML=html
     }
 }
 
@@ -822,6 +870,7 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarCategoriasTallasZalando()
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
+                insertarMaterialesContruccionCodeSelect()
             }
             preloader.style.opacity="0"
         },
