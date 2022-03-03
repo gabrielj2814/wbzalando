@@ -6,10 +6,10 @@ let botonActualizar=document.getElementById("botonActualizar");
 let botonEliminar=document.getElementById("botonEliminar");
 let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 
+let preloader=document.getElementById("preloader")
 function registrar(){
     const linkControlador=document.getElementById("linkControlador").value;
     let atributo=document.getElementById("selectAtributoPrestashop")
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
@@ -70,7 +70,6 @@ function insertarAtributoSelect(atributos){
 
 function consultarTodos(){
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'GET',
@@ -161,7 +160,6 @@ function actualizar(){
 
 function eliminar(a){
     const linkControlador=document.getElementById("linkControlador").value;
-    let preloader=document.getElementById("preloader")
     preloader.style.opacity="1"
     $.ajax({
         type: 'POST',
