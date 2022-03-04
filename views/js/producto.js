@@ -24,6 +24,7 @@ let datos_categorias=[]
 let datos_materiales_contruccion={}
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
+let bodyPleloader=document.querySelector("body")
 let $botonFiltroProducto=document.getElementById("botonFiltroProducto");
 let $nombreProducto=document.getElementById("nombreProducto");
 let botonTestEnvio=document.getElementById("botonTestEnvio")
@@ -39,6 +40,7 @@ let $botonEnviarPoductos=document.getElementById("botonEnviarPoductos")
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -63,6 +65,7 @@ function consultarPaisesZalando(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // alert("error al conectar con el servidor");
         }
     });
@@ -89,6 +92,7 @@ function consultarCategoraisAsociadas(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -113,6 +117,7 @@ function consultarCategoriasTalla(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -133,9 +138,11 @@ function consultarMaterialesDeConstruccion(){
             console.log("datos material.upper_material_clothing =>>> ",datos.respuestaServidor);
             datos_materiales_contruccion=datos.respuestaServidor
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -382,6 +389,7 @@ function irHaFormularioDeProductos(){
     cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
     
 }
+
 
 function irHaVistaInicial(){
     let $vistaFormProductos=document.getElementById("vista-form-productos")
@@ -724,6 +732,7 @@ function insertarMaterialesContruccionCodeSelect(){
 // cargar de datos para los inputs de los formulario al cargar la vista formulario
 function cargarDatosBrandCode(){
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
     edicionGlobalBrandCode.innerHTML=""
@@ -754,6 +763,7 @@ function cargarDatosBrandCode(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -789,6 +799,7 @@ function cargarDatosSeasonCode(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -824,6 +835,7 @@ function cargarDatosEdicionGlobalTargetAgeGroups(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -861,6 +873,7 @@ function cargarDatosEdicionGlobalTargetGenders(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -902,9 +915,11 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarMaterialesContruccionCodeSelect()
             }
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -917,6 +932,7 @@ function consultarTallasPorPaisYCategoriaTalla(a){
     let isoCode=radiosPaisesForm.getAttribute("data-iso-code")
     let idProducto=a.getAttribute("data-id-producto")
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     if(a.value!==null){
         $.ajax({
             type: 'GET',
@@ -934,9 +950,11 @@ function consultarTallasPorPaisYCategoriaTalla(a){
                 console.log("datos talla consultar por categoria y pais =>>> ",respuestaJson.datos);
                 insertarTallaCodeSelect(idProducto,respuestaJson.datos)
                 preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             },
             error: () => {
                 preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             }
         });
     }
@@ -1147,6 +1165,7 @@ function generarFormatoZalado(){
 function enviarDatos(productos){
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'POST',
         cache: false,
@@ -1161,9 +1180,11 @@ function enviarDatos(productos){
             let datos=JSON.parse(JSON.stringify(respuesta));
             console.log("datos envio =>>>>>>",datos);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // alert("error al conectar con el servidor");
         }
     });
@@ -1179,6 +1200,7 @@ function enviarProductos(){
     // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
     // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let productos=[
         {
@@ -1420,9 +1442,11 @@ function enviarProductos(){
             let datos=JSON.parse(JSON.stringify(respuesta));
             console.log("datos envio =>>>>>>",datos);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // alert("error al conectar con el servidor");
         }
     });

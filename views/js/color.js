@@ -35,8 +35,10 @@ let paises=[];
 let colores=[];
 
 let preloader=document.getElementById("preloader")
+let bodyPleloader=document.querySelector("body")
 function registrar(){
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioColor").serializeArray()
     console.log("datos formulario =>>> ",datosFormulario)
@@ -78,11 +80,13 @@ function registrar(){
         success: (respuesta) => {
             console.log(respuesta);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -205,6 +209,7 @@ function actualizar(){
 
 function consultarAtributosPrestashop(){
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
         type: 'GET',
@@ -224,6 +229,7 @@ function consultarAtributosPrestashop(){
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -258,6 +264,7 @@ function consultarColorPrestashop(a){
         let controlesPaginacion=document.getElementById("controlesPaginacion")
         controlesPaginacion.innerHTML="";
         preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
         $.ajax({
             type: 'GET',
             cache: false,
@@ -299,6 +306,7 @@ function consultarColorPrestashop(a){
             },
             error: () => {
                 preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             }
         });
     }
@@ -415,9 +423,11 @@ function consultarPaises(){
             console.log("paises =>>> ",paises);
             cargarPaisesZalando(paises);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
     return paises;
@@ -425,6 +435,7 @@ function consultarPaises(){
 
 async function consultarColoresZalando(coloresPrestashop,pais){
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let colorZalando=[]
     await $.ajax({
@@ -439,15 +450,18 @@ async function consultarColoresZalando(coloresPrestashop,pais){
         },
         success: (respuesta) => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             let datos=JSON.parse(JSON.stringify(respuesta));
             let colores=datos["respuestaServidor"];
             // console.log("colores filtrados =>>> ",datos)
             // consultarColorPrestashop()
             crearElementosFormulario(coloresPrestashop,colores,pais)
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
     return colorZalando;

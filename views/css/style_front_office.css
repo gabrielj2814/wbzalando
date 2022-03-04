@@ -31,6 +31,12 @@ a:focus {
 .is-flex{
     display: flex;
 }
+.is-relative{
+    position: relative;
+}
+.is-absolute{
+    position: absolute;
+}
 .m-auto{
     margin: auto !important;
 }
@@ -179,6 +185,9 @@ a:focus {
     transition-timing-function: ease-out;
     pointer-events: none;
     z-index: 99;
+
+    left: 0;
+    bottom: 0;
 }
 .pre-loader{
     transition: 0.6s;

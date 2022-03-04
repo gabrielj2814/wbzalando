@@ -6,6 +6,7 @@ let productosRespaldo={}
 
 let productosModificados={}
 let preloader=document.getElementById("preloader")
+let bodyPleloader=document.querySelector("body")
 
 async function consultarProductosWBZalando(){
     const linkDeControladorProducto=document.getElementById("linkDeControladorProducto").value;
@@ -154,6 +155,7 @@ function guardarModificaciones(){
             },
             error: () => {
                 preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             }
         });
 
@@ -217,6 +219,7 @@ async function eliminarProducto(e){
     // alert(e.id)
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     let idModelo=e.getAttribute("data-id-modelo")
     let idConfig=e.getAttribute("data-id-config")
     let ean=e.getAttribute("data-ean")
@@ -240,10 +243,12 @@ async function eliminarProducto(e){
             console.log("producto Eliminado =>>>>> ",respuestaJson)
             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             consultarProductosPorPais2(checkboxsPaises[0].value)
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -251,6 +256,7 @@ async function eliminarProducto(e){
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -271,10 +277,12 @@ function consultarPaisesZalando(){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
             }
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             // alert("error al conectar con el servidor");
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -363,6 +371,7 @@ function consultarProductosPorPais(a){
     }
     let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     $.ajax({
         type: 'GET',
@@ -402,9 +411,11 @@ function consultarProductosPorPais(a){
                 insertarBotonesPaginasPaginacion(pagina,respuestaJson.respuestaServidor.totalDePagina)
             }
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // alert("error al conectar con el servidor");
         }
     });
@@ -481,6 +492,7 @@ function consultarProductosPorPais2(idPais){
     const linkControlador=document.getElementById("linkControlador").value;
     let pagina=1
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -519,10 +531,12 @@ function consultarProductosPorPais2(idPais){
                 insertarBotonesPaginasPaginacion(pagina,respuestaJson.respuestaServidor.totalDePagina)
             }
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             // alert("error al conectar con el servidor");
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }

@@ -20,8 +20,10 @@ let botonRegistrar=document.getElementById("botonRegistrar");
 // let botonActualizar=document.getElementById("botonActualizar");
 // let botonEliminar=document.getElementById("botonEliminar");
 let preloader=document.getElementById("preloader")
+let bodyPleloader=document.querySelector("body")
 function registrar(){
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioCategoria").serializeArray()
     let arrayCatgorias=[]
@@ -64,11 +66,13 @@ function registrar(){
         success: (respuesta) => {
             console.log(respuesta);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -123,6 +127,7 @@ function consultarEsquemasYCategorias(a=1){
     }
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -164,9 +169,11 @@ function consultarEsquemasYCategorias(a=1){
                 paginaAnt.style.display="none"
             }
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }

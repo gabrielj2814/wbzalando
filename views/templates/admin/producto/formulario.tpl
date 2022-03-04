@@ -125,7 +125,7 @@
 
 
 <!-- vista-form -->
-<div class="vista-form-productos" id="vista-form-productos" style="display:none;">
+<div class="vista-form-productos" id="vista-form-productos" style="display:none">
     <button class="btn btn-primary" id="botonIrHaVistaInicial" style="margin-bottom: 15px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
@@ -623,21 +623,25 @@
             <div id="listaDeProductosHaBorrar">
             </div>
         </div>
-         <button class="btn btn-primary" id="botonEnviarPoductos"">
-            enviar productos
-        </button>
+        
         <div id="controlesPaginacion"></div>
 
-        <div class="justify-end-flex well-lg">
-            <button  class="btn btnVistaOne btn-primary" id="">
-                Guardar
+        <div class="well-lg is-relative">
+            <button class="btn btn-primary is-absolute" id="botonEnviarPoductos">
+                enviar productos
             </button>
+            <button class="btn btn-primary is-absolute" id="botonTestEnvio" style="left: 15%;">
+                probar envio
+            </button>
+            <div class="justify-end-flex">
+                <button  class="btn btnVistaOne btn-primary" id="">
+                    Guardar
+                </button>
+            </div>
         </div>
     </div>
 </div>
- <button class="btn btn-primary" id="botonTestEnvio"">
-            probar envio
-        </button>
+ 
 <div id="preloader" class="col-12 fat-pre">
     <div class="pre-loader">
         <div></div>
