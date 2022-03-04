@@ -196,7 +196,23 @@ class ProductoController extends ModuleAdminController{
         }
         $productos=Db::getInstance()->executeS($SQL);
         $productos=$this->generarUrlProducto($productos);
+        $contador=0;
+        foreach($productos as $producto){
+            $productos[$contador]["atributos_producto"]=$this->consultarEansProductosCombinacion($productos[$contador]["id_product"]);
+            $contador++;
+        }
         print(json_encode(["datos" =>  $productos]));
+    }
+
+    public function consultarEansProductosCombinacion($idProducto){
+        $SQL="SELECT id_attribute,ean13 FROM
+        ps_product_attribute,
+        ps_product_attribute_combination
+        WHERE 
+        ps_product_attribute.id_product=".$idProducto." AND
+        ps_product_attribute.ean13<>'' AND
+        ps_product_attribute_combination.id_product_attribute=ps_product_attribute.id_product_attribute";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function ajaxProcessConsultarPorCategoriasAsociadas(){
