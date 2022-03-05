@@ -54,7 +54,6 @@ function consultarPaisesZalando(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 consultarCategoraisAsociadas();
-                console.log("paises zalando =>>> ",datos)
                 crearRadiosPaisTest(datos.respuestaServidor.items);
                 crearRadiosPaisTestBorrarProdcuto(datos.respuestaServidor.items)
             }
@@ -85,7 +84,6 @@ function consultarCategoraisAsociadas(){
         },
         success: (respuesta) => {
             let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos categorias asociadas =>>> ",json.datos);
             datos_categorias=json.datos
             // insertarCategoriasSelect(json.datos);
             consultarCategoriasTalla()
@@ -110,7 +108,6 @@ function consultarCategoriasTalla(){
         },
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
-            console.log("categorias de tallas filtrados =>>> ",datos.respuestaServidor);
             datos_categorias_tallas_zalando=datos.respuestaServidor
             consultarMaterialesDeConstruccion()
             // preloader.style.opacity="0"
@@ -135,7 +132,6 @@ function consultarMaterialesDeConstruccion(){
         },
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
-            console.log("datos material.upper_material_clothing =>>> ",datos.respuestaServidor);
             datos_materiales_contruccion=datos.respuestaServidor
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
@@ -317,9 +313,7 @@ function filtrarProductos(e){
             nombreProducto:$nombreProducto
         },
         success: (respuesta) => {
-            // console.log(respuesta);
             let datos=JSON.parse(JSON.stringify(respuesta.datos));
-            // console.log("productos filtrados =>>> ",datos);
             totalResultados.textContent=datos.length.toString()
             if(datos.length>0){
                 $botonIrHaformulario.removeAttribute("disabled")
@@ -344,7 +338,7 @@ function irHaFormularioDeProductos(){
     $vistaInicial.style.display="none"
     let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="block"
-    console.log("los datos que se deben de mostrar en esta vista =>>> ",productosFiltrados)
+    // console.log("los datos que se deben de mostrar en esta vista =>>> ",productosFiltrados)
     let radiosPaisesForm=document.querySelectorAll(".redio-paises-form");
 
     for(let pais of radiosPaisesForm){
@@ -359,16 +353,16 @@ function irHaFormularioDeProductos(){
                 urlImagen:producto.urlImagen,
                 idUrlImagen:producto.id_product,
                 descripcion:descripcionProducto,
-                brand_code:"brand-code",
+                brand_code:"null",
                 lenguaje:producto.iso_code,
-                outline:"bag",
-                stock:"15",
+                outline:"null",
+                stock:"0",
                 size_group:"",
-                supplier_color:"supplier color",
-                "color_code.primary":"",
+                supplier_color:"r",
+                "color_code.primary":"null",
                 target_genders:[],
                 target_age_groups:[],
-                season_code:"season",
+                season_code:"null",
                 moneda:"USD",
                 precioRegular:"15",
                 precioPromocional:"11",
@@ -376,16 +370,16 @@ function irHaFormularioDeProductos(){
                 fechaFinalPromocion:"",
                 datosTallas:{},
                 haEnviar:false,
-                how_to_use:null,
-                warnings:null,
-                material_percentage:null,
-                material_code:null,
+                how_to_use:"null",
+                warnings:"null",
+                material_percentage:"null",
+                material_code:"null",
                 atributos_producto:producto.atributos_producto
             }
         }
     }
-    console.log("lista ---- =>>>> ",productosFiltrados)
-    console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
+    // console.log("lista ---- =>>>> ",productosFiltrados)
+    // console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
     // datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
     radiosPaisesForm[0].setAttribute("checked",true)
     cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
@@ -421,6 +415,74 @@ function cargarProductosPorPaisSeleccionado(a){
     cargarDatosBrandCode();
     insertarProductosVistaEnvio(a.value,productos)
 }
+
+function cargarDatosGuardados(pais){
+    // alert("hola cargar datos guar")
+    console.log("aqiiiiiiiiiiiiiiiiiiii =>>> ",datosProductosForm[pais])
+    if(datosProductosForm[pais]){
+        // _categoria
+        for(let idProducto in datosProductosForm[pais]){
+            let datosProducto=datosProductosForm[pais][idProducto]
+            document.getElementById(idProducto+"_categoria").value=datosProducto.outline
+            document.getElementById(idProducto+"_categoria_talla").value=datosProducto.size_group
+            document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
+            document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
+            
+            document.getElementById(idProducto+"_moneda").value=datosProducto.moneda
+            document.getElementById(idProducto+"_precio_regular").value=datosProducto.precioRegular
+            document.getElementById(idProducto+"_precio_promocion").value=datosProducto.precioPromocional
+            document.getElementById(idProducto+"_fecha_inicio_promocion").value=datosProducto.fechaInicioPromocion
+            
+            document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
+            if(document.getElementById(idProducto+"_material")){
+                document.getElementById(idProducto+"_material").value=datosProducto.material_code
+                document.getElementById(idProducto+"_material_precentage").value=datosProducto.material_percentage
+            }
+            let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
+            seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
+
+            let setelctTargetGenders=document.getElementById(idProducto+"_target_genders")
+            seleccionarValoresSelectMultiples(setelctTargetGenders,datosProducto.target_genders)
+            document.getElementById(idProducto+"_brand").value=datosProducto.brand_code
+            document.getElementById(idProducto+"_season").value=datosProducto.season_code
+            
+            if(document.getElementById(idProducto+"_warnings")){
+                document.getElementById(idProducto+"_warnings").value=datosProducto.warnings
+            }
+            if(document.getElementById(idProducto+"_how_to_use")){
+                document.getElementById(idProducto+"_how_to_use").value=datosProducto.how_to_use
+            }
+            let datosTallas=Object.entries(JSON.parse(JSON.stringify(datosProducto.datosTallas)))
+            if(datosTallas.length>0){
+                document.getElementById(idProducto+"_tallas").value=datosTallas[0][0]
+                document.getElementById(idProducto+"_stock").value=datosTallas[0][1].stock
+            }
+            console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
+        }
+        // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
+    }
+}
+
+function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
+    let estado=false
+    for(let valor of valoresHaSeleccionar){
+        for(let option of select){
+            if(valor===option.value){
+                estado=true
+                option.selected=true
+            }
+        }
+    }
+    if(estado===false){
+        select[0].selected=true
+    }
+    else{
+        select[0].selected=false
+    }
+
+    
+}
+
 // creacion del formulario de producto
 function insertarProductosVistaEnvio(idPais,productos){
     let listaDeProductosForm=document.getElementById("listaDeProductosForm")
@@ -460,7 +522,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Cetegoria</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="outline" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-categoria">\
+                            <select id="'+codigoIdPaisIdproducto+'_categoria" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="outline" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-categoria">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -468,7 +530,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Categoria talla</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
+                            <select id="'+codigoIdPaisIdproducto+'_categoria_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -484,7 +546,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label for="">supplier color</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_supplier_color" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                 </div>\
@@ -492,25 +554,25 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Siglas Moneda</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_moneda" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Regular</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_precio_regular" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Descuento</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_precio_promocion" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Inicio de Descuento</label>\
-                            <input type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaInicioPromocion"  class="form-control campo-fecha-inicio-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_fecha_inicio_promocion" type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaInicioPromocion"  class="form-control campo-fecha-inicio-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                             </div>\
                         </div>\
                     </div>\
@@ -518,13 +580,13 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Final de Descuento</label>\
-                            <input type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaFinalPromocion"  class="form-control campo-fecha-fin-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_fecha_final_promocion" type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaFinalPromocion"  class="form-control campo-fecha-fin-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >material</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
+                            <select id="'+codigoIdPaisIdproducto+'_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -532,13 +594,13 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >material percentage</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_material_precentage" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target age groups</label>\
-                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-age-groups">\
+                            <select id="'+codigoIdPaisIdproducto+'_target_age_groups" multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-age-groups">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -548,7 +610,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target genders</label>\
-                            <select multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-genders">\
+                            <select id="'+codigoIdPaisIdproducto+'_target_genders" multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-genders">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -556,7 +618,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >brand</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
+                            <select id="'+codigoIdPaisIdproducto+'_brand" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -564,7 +626,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >season code</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
+                            <select id="'+codigoIdPaisIdproducto+'_season" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -579,14 +641,14 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Tallas</label>\
-                                <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="">\
+                                <select id="'+codigoIdPaisIdproducto+'_tallas" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="">\
                             </select>\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Stock</label>\
-                            <input type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="guardarDatosTalla(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_stock" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="guardarDatosTalla(this)">\
                         </div>\
                     </div>\
                 </div>\
@@ -594,7 +656,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="">warnings</label>\
-                            <textarea class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
+                            <textarea id="'+codigoIdPaisIdproducto+'_warnings" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -602,7 +664,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="">how to use</label>\
-                            <textarea class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
+                            <textarea id="'+codigoIdPaisIdproducto+'_how_to_use" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -920,6 +982,9 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
                 insertarMaterialesContruccionCodeSelect()
+                let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
+                cargarDatosGuardados(radiosPaisesForm.value)
+
             }
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
@@ -1032,7 +1097,8 @@ function cambiarEstadoDeEnvioDeProduct(a){
         datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
     }
     datosProductosForm[idPais][idProducto][campo]=a.checked
-    console.log(datosProductosForm)
+    // alert("hola")
+    // console.log(datosProductosForm)
 }
 
 function insertarDatosDeEnvioDeProduct(a){
@@ -1258,261 +1324,6 @@ function enviarDatos(productos){
 //====================================
 //====================================
 
-function enviarProductos(){
-    // id francia 733af55a-4133-4d7c-b5f3-d64d42c135fe
-    // id alemania 01924c48-49bb-40c2-9c32-ab582e6db6f4
-    preloader.style.opacity="1"
-    bodyPleloader.style.overflow="hidden"
-    const linkControlador=document.getElementById("linkControlador").value;
-    let productos=[
-        {
-            outline: "bag",
-            product_model: {
-                merchant_product_model_id: "modelo_producto_1",
-                product_model_attributes: {
-                    name: "Mi Producto 2",
-                    brand_code: "5FX",
-                    size_group: {
-                        size: "2MAE000A2A"
-                    },
-                    target_age_groups: [
-                        "target_age_group_kid",
-                        "target_age_group_baby"
-                    ],
-                    target_genders: [
-                        "target_gender_female",
-                        "target_gender_male"
-                    ]
-              },
-              product_configs: [
-                {
-                    merchant_product_config_id: "333666",
-                    product_config_attributes: {
-                        color_code: "802",
-                        season_code: "fs18",
-                        "color_code.primary": "fff",
-                        description: {
-                            en:"hello"
-                        },
-                        "supplier_color": "hola que tal 2",
-                        media: [
-                            {
-                                media_path: "https://zalando.com/1667531.jpg",
-                                url: "https://zalando.com/1667531.jpg",
-                                media_sort_key: 222
-                            }
-                        ]
-                  },
-                  product_simples: [
-                    {
-                        merchant_product_simple_id: "WTC741-XL",
-                        product_simple_attributes: {
-                            ean: "352369874563",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
-                    },
-                    {
-                        merchant_product_simple_id: "WTC742-S",
-                        product_simple_attributes: {
-                            ean: "352369874563",
-                            size_codes: {
-                                size: "S"
-                        }
-                      }
-                    },
-                    {
-                        merchant_product_simple_id: "WTC743-L",
-                        product_simple_attributes: {
-                            ean: "352369874563",
-                            size_codes: {
-                                size: "L"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                    merchant_product_config_id: "3336662",
-                    product_config_attributes: {
-                        color_code: "802",
-                        season_code: "fs18",
-                        "color_code.primary": "fff",
-                        description: {
-                            en:"hello"
-                        },
-                        "supplier_color": "hola que tal 2",
-                        media: [
-                            {
-                                media_path: "https://zalando.com/1667531.jpg",
-                                url: "https://zalando.com/1667531.jpg",
-                                media_sort_key: 222
-                            }
-                        ]
-                  },
-                  product_simples: [
-                    {
-                        merchant_product_simple_id: "WTC7412-XL",
-                        product_simple_attributes: {
-                            ean: "3523698745632",
-                            size_codes: {
-                                size: "XL"
-                        }
-                      }
-                    },
-                    {
-                        merchant_product_simple_id: "WTC7422-S",
-                        product_simple_attributes: {
-                            ean: "3523698745632",
-                            size_codes: {
-                                size: "S"
-                        }
-                      }
-                    },
-                    {
-                        merchant_product_simple_id: "WTC7432-L",
-                        product_simple_attributes: {
-                            ean: "3523698745632",
-                            size_codes: {
-                                size: "L"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            precio:{
-                "product_prices": [
-                    {
-                        "ean": "352369874563",
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "regular_price": {
-                            "amount": 89.95,
-                            "currency": "EUR"
-                        },
-                        "promotional_price": {
-                            "amount": 80.95,
-                            "currency": "EUR"
-                        },
-                        "scheduled_prices": [
-                            {
-                                "regular_price": {
-                                    "amount": 89.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
-                                    "amount": 80.95,
-                                    "currency": "EUR"
-                                },
-                                "start_time": "2022-01-25T00:00:00.00Z",
-                                "end_time": "2022-01-28T00:00:00.00Z"
-                            }
-                        ],
-                        "ignore_warnings": true
-                    },
-                    {
-                        "ean": "352369874563",
-                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-                        "regular_price": {
-                            "amount": 89.95,
-                            "currency": "EUR"
-                        },
-                        "promotional_price": {
-                            "amount": 80.95,
-                            "currency": "EUR"
-                        },
-                        "scheduled_prices": [
-                            {
-                                "regular_price": {
-                                    "amount": 89.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
-                                    "amount": 80.95,
-                                    "currency": "EUR"
-                                },
-                                "start_time": "2022-01-25T00:00:00.00Z",
-                                "end_time": "2022-01-28T00:00:00.00Z"
-                            }
-                        ],
-                        "ignore_warnings": true
-                    },
-                    {
-                        "ean": "3523698745632",
-                        "sales_channel_id": "00f2a393-6889-4fc0-8cd9-86e454e6dfa3",
-                        "regular_price": {
-                            "amount": 89.95,
-                            "currency": "EUR"
-                        },
-                        "promotional_price": {
-                            "amount": 80.95,
-                            "currency": "EUR"
-                        },
-                        "scheduled_prices": [
-                            {
-                                "regular_price": {
-                                    "amount": 89.95,
-                                    "currency": "EUR"
-                                },
-                                "promotional_price": {
-                                    "amount": 80.95,
-                                    "currency": "EUR"
-                                },
-                                "start_time": "2022-01-25T00:00:00.00Z",
-                                "end_time": "2022-01-28T00:00:00.00Z"
-                            }
-                        ],
-                        "ignore_warnings": true
-                    }
-                  ]
-            },
-            stock:{
-                items: [
-                    {
-                        "sales_channel_id": "733af55a-4133-4d7c-b5f3-d64d42c135fe",
-                        "ean": "352369874563",
-                        "quantity": 50
-                    },
-                    {
-                        "sales_channel_id": "01924c48-49bb-40c2-9c32-ab582e6db6f4",
-                        "ean": "352369874563",
-                        "quantity": 25
-                    },
-                    {
-                        "sales_channel_id": "00f2a393-6889-4fc0-8cd9-86e454e6dfa3",
-                        "ean": "3523698745632",
-                        "quantity": 25
-                    }
-                  ]
-            }
-          }
-    ]
-
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'postenviarproductos',
-            productos
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            console.log("datos envio =>>>>>>",datos);
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            // alert("error al conectar con el servidor");
-        }
-    });
-}
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);
 $nombreProducto.addEventListener("keyup", filtrarProductos);
