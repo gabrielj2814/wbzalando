@@ -300,12 +300,18 @@ class ProductoController extends ModuleAdminController{
         foreach($productos as $producto ){
             // enviar productos a zalando
             $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
-            $producto["precio"]["product_prices"][0]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][0]["regular_price"]["amount"];
-            $producto["precio"]["product_prices"][0]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][0]["promotional_price"]["amount"];
-            $producto["precio"]["product_prices"][0]["scheduled_prices"][0]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][0]["scheduled_prices"][0]["regular_price"]["amount"];
-            $producto["precio"]["product_prices"][0]["scheduled_prices"][0]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][0]["scheduled_prices"][0]["promotional_price"]["amount"];
-            $producto["precio"]["product_prices"][0]["ignore_warnings"]=(bool)$producto["precio"]["product_prices"][0]["ignore_warnings"];
-            $producto["stock"]["items"][0]["quantity"]=(int)$producto["stock"]["items"][0]["quantity"];
+            for($contador=0;$contador<count($producto["precio"]["product_prices"]);$contador++){
+                $producto["precio"]["product_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["regular_price"]["amount"];
+                if(array_key_exists("promotional_price",$producto["precio"]["product_prices"][$contador])){
+                    $producto["precio"]["product_prices"][$contador]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["promotional_price"]["amount"];
+                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["regular_price"]["amount"];
+                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["promotional_price"]["amount"];
+                    $producto["precio"]["product_prices"][$contador]["ignore_warnings"]=(bool)$producto["precio"]["product_prices"][$contador]["ignore_warnings"];
+                }
+            }
+            for($contador2=0;$contador2<count($producto["stock"]["items"]);$contador2++){
+                $producto["stock"]["items"][$contador2]["quantity"]=(int)$producto["stock"]["items"][$contador2]["quantity"];
+            }
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
             $respuesta=$curlController->ejecutarPeticion("post",true);
@@ -391,12 +397,6 @@ class ProductoController extends ModuleAdminController{
                     'Content-Type: application/json',
                     'Authorization: '.'Bearer '. $token
                 );
-                if($precio["ignore_warnings"]==="true"){
-                    $precio["ignore_warnings"]=true;
-                }
-                else if($precio["ignore_warnings"]==="false"){
-                    $precio["ignore_warnings"]=false;
-                }
                 $product_precio=["product_prices" => []];
                 $product_precio["product_prices"][]=$precio;
                 $curlController->setDatosPeticion($product_precio);

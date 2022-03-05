@@ -52,6 +52,7 @@ function consultarPaisesZalando(){
         },
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta))
+            console.log("datos paises =>>>> ",datos)
             if(datos.respuestaServidor.items){
                 consultarCategoraisAsociadas();
                 crearRadiosPaisTest(datos.respuestaServidor.items);
@@ -358,14 +359,14 @@ function irHaFormularioDeProductos(){
                 outline:"null",
                 stock:"0",
                 size_group:"",
-                supplier_color:"r",
+                supplier_color:"",
                 "color_code.primary":"null",
                 target_genders:[],
                 target_age_groups:[],
                 season_code:"null",
-                moneda:"USD",
-                precioRegular:"15",
-                precioPromocional:"11",
+                moneda:"",
+                precioRegular:"",
+                precioPromocional:"",
                 fechaInicioPromocion:"",
                 fechaFinalPromocion:"",
                 datosTallas:{},
@@ -424,7 +425,10 @@ function cargarDatosGuardados(pais){
         for(let idProducto in datosProductosForm[pais]){
             let datosProducto=datosProductosForm[pais][idProducto]
             document.getElementById(idProducto+"_categoria").value=datosProducto.outline
-            document.getElementById(idProducto+"_categoria_talla").value=datosProducto.size_group
+            let categoriaTalla=document.getElementById(idProducto+"_categoria_talla")
+            categoriaTalla.value=datosProducto.size_group
+            consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
+
             document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
             document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
             
@@ -436,7 +440,7 @@ function cargarDatosGuardados(pais){
             document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
             if(document.getElementById(idProducto+"_material")){
                 document.getElementById(idProducto+"_material").value=datosProducto.material_code
-                document.getElementById(idProducto+"_material_precentage").value=datosProducto.material_percentage
+                document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
             }
             let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
             seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
@@ -447,15 +451,10 @@ function cargarDatosGuardados(pais){
             document.getElementById(idProducto+"_season").value=datosProducto.season_code
             
             if(document.getElementById(idProducto+"_warnings")){
-                document.getElementById(idProducto+"_warnings").value=datosProducto.warnings
+                document.getElementById(idProducto+"_warnings").value=(datosProducto.warnings!=="null")?datosProducto.warnings:""
             }
             if(document.getElementById(idProducto+"_how_to_use")){
-                document.getElementById(idProducto+"_how_to_use").value=datosProducto.how_to_use
-            }
-            let datosTallas=Object.entries(JSON.parse(JSON.stringify(datosProducto.datosTallas)))
-            if(datosTallas.length>0){
-                document.getElementById(idProducto+"_tallas").value=datosTallas[0][0]
-                document.getElementById(idProducto+"_stock").value=datosTallas[0][1].stock
+                document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
             }
             console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
         }
@@ -481,6 +480,18 @@ function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
     }
 
     
+}
+
+function cargarStockTalla(e){
+    let idPais=e.getAttribute("data-id-pais")
+    let idProducto=e.getAttribute("data-id-producto")
+    let tallaCliente=e.value.split("-")[1]
+    if(datosProductosForm[idPais][idProducto].datosTallas[tallaCliente]){
+        document.getElementById(idProducto+"_stock").value=datosProductosForm[idPais][idProducto].datosTallas[tallaCliente].stock
+    }
+    else{
+        document.getElementById(idProducto+"_stock").value=""
+    }
 }
 
 // creacion del formulario de producto
@@ -521,7 +532,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Cetegoria</label>\
+                            <label >Categoria</label>\
                             <select id="'+codigoIdPaisIdproducto+'_categoria" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="outline" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-categoria">\
                                 <option>Default select</option>\
                             </select>\
@@ -641,7 +652,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Tallas</label>\
-                                <select id="'+codigoIdPaisIdproducto+'_tallas" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="">\
+                                <select id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="cargarStockTalla(this)">\
                             </select>\
                         </div>\
                     </div>\
@@ -1003,6 +1014,8 @@ function consultarTallasPorPaisYCategoriaTalla(a){
     let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
     let isoCode=radiosPaisesForm.getAttribute("data-iso-code")
     let idProducto=a.getAttribute("data-id-producto")
+    let idPais=a.getAttribute("data-id-pais")
+    datosProductosForm[idPais][idProducto].datosTallas={}
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
     if(a.value!==null){
@@ -1114,7 +1127,7 @@ function insertarDatosDeEnvioDeProduct(a){
     if(a.multiple){
         let opciones=[]
         for(let option of a){
-            if(option.selected){
+            if(option.selected===true){
                 opciones.push(option.value)
             }
         }
@@ -1334,7 +1347,6 @@ $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos
 $botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
 // obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
 // botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-botonTestEnvio.addEventListener("click",enviarProductos)
 // botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
 // botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
 // botonConsultartallasAsociadasMasPais.addEventListener("click", consultarTallasProPais)
