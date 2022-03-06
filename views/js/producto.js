@@ -456,6 +456,9 @@ function cargarDatosGuardados(pais){
             if(document.getElementById(idProducto+"_how_to_use")){
                 document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
             }
+            let radioFormulario=document.getElementById(idProducto+"_check_envio")
+            radioFormulario.checked=datosProducto.haEnviar
+            cambiarEstadoDeEnvioDeProduct(radioFormulario)
             console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
         }
         // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
@@ -1101,8 +1104,14 @@ function cambiarEstadoDeEnvioDeProduct(a){
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
     let campo=a.getAttribute("data-campo")
-    document.getElementById(idProducto+"_check_true").classList.toggle("ocultar")
-    document.getElementById(idProducto+"_check_false").classList.toggle("ocultar")
+    if(a.checked===true){
+        document.getElementById(idProducto+"_check_true").classList.remove("ocultar")
+        document.getElementById(idProducto+"_check_false").classList.add("ocultar")
+    }
+    else{
+        document.getElementById(idProducto+"_check_true").classList.add("ocultar")
+        document.getElementById(idProducto+"_check_false").classList.remove("ocultar")
+    }
     if(!datosProductosForm[idPais]){
         datosProductosForm[idPais]={}
     }

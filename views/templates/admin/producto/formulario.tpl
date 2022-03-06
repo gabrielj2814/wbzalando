@@ -82,7 +82,8 @@
 
 								<!-- Search by creation date -->
 
-								<div class="col-sm-12 mt">
+								<!--
+                                <div class="col-sm-12 mt">
 									<label class="control-label">
                                         Cuántas de mostrar los productos?
 									</label>
@@ -95,6 +96,7 @@
 										<option value="1000">1000</option>
 									</select>
 								</div>
+                                -->
 							</div>
 						</div>
 						<div class="col-lg-12 control_btn">
