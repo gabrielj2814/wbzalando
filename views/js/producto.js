@@ -1082,6 +1082,11 @@ function cambiarEstadoDeEnvioDeProductoBorrarProducto(a){
     let idProducto=a.getAttribute("data-id-producto")
     datosProductosForm[idPais][idProducto].haEnviar=true
     let radioPaisBorrarProducto=document.querySelectorAll(".radio-form-producto-borrar:checked")
+    if(document.getElementById(idProducto+"_check_envio")){
+        let radioFormulario=document.getElementById(idProducto+"_check_envio")
+        radioFormulario.checked=true
+        cambiarEstadoDeEnvioDeProduct(radioFormulario)
+    }
     cargarProductosHaEliminarPorPais(radioPaisBorrarProducto[0]);
 }
 
