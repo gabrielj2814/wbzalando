@@ -622,7 +622,7 @@
                 <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
                 </div>
             </div>
-            <div id="listaDeProductosHaBorrar">
+            <div id="listaDeProductosHaBorrar" style="width: 100%;">
             </div>
         </div>
         
