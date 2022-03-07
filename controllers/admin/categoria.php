@@ -585,6 +585,16 @@ class CategoriaController extends ModuleAdminController{
         print(json_encode($respuesta_servidor));
     }
 
+
+    public function ajaxProcessGetAtributosCategoria(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $datosEsquema=$this->consultarEsquema($_GET["outline"]);
+        $respuesta_servidor["respuestaServidor"]=[
+            "datos" => $datosEsquema
+        ];
+        print(json_encode($respuesta_servidor));
+    }
+
     
 
 

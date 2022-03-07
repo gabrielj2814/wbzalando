@@ -588,7 +588,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >material</label>\
-                            <select id="'+codigoIdPaisIdproducto+'_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
+                            <select disabled id="'+codigoIdPaisIdproducto+'_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -596,7 +596,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >material percentage</label>\
-                            <input id="'+codigoIdPaisIdproducto+'_material_precentage" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input disabled id="'+codigoIdPaisIdproducto+'_material_precentage" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
@@ -658,7 +658,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="">warnings</label>\
-                            <textarea id="'+codigoIdPaisIdproducto+'_warnings" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
+                            <textarea disabled id="'+codigoIdPaisIdproducto+'_warnings" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -666,7 +666,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
                         <div class="form-group">\
                             <label for="">how to use</label>\
-                            <textarea id="'+codigoIdPaisIdproducto+'_how_to_use" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
+                            <textarea disabled id="'+codigoIdPaisIdproducto+'_how_to_use" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -895,7 +895,7 @@ function cargarDatosEdicionGlobalTargetAgeGroups(){
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_target_age_groups=respuestaJson.datos
             if(respuestaJson.datos.length>0){
-                let option="<option value='null'>Vacio</option>"
+                let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
                     datos=JSON.parse(datos)
                     option+="<option value='"+datos.label+"'>"+datos.name.en+"</option>"
@@ -1139,7 +1139,73 @@ function insertarDatosDeEnvioDeProduct(a){
         datosProductosForm[idPais][idProducto][campo]=a.value
     }
     console.log(datosProductosForm)
+    if(campo==="outline"){
+        bloquearCampoPorCategoriaZalando(a.value,datosProductosForm[idPais][idProducto],idPais,idProducto)
+    }
 }
+
+function bloquearCampoPorCategoriaZalando(categoria,producto,idPais,idProducto){
+    alert(categoria)
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getatributoscategoria',
+            outline:categoria
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("propiedades categoria =>>> ",respuestaJson.datos);
+            // disabled
+            let busquedaConfig=respuestaJson.datos.config.mandatory_types.filter(propiedad => propiedad==="material.upper_material_clothing")
+            let busquedaModelo=respuestaJson.datos.model.mandatory_types.filter(propiedad =>  propiedad==="how_to_use" || propiedad==="warnings")
+            if(busquedaConfig.length>0){
+                let campoMaterial=document.getElementById(idProducto+"_material")
+                campoMaterial.removeAttribute("disabled")
+                producto["material_code"]=""
+                let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
+                campoMaterialPrecentege.removeAttribute("disabled")
+                producto["material_precentage"]=""
+            }
+            else{
+                let campoMaterial=document.getElementById(idProducto+"_material")
+                campoMaterial.setAttribute("disabled","disabled")
+                campoMaterial.value=""
+                producto["material_code"]="null"
+                let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
+                campoMaterialPrecentege.setAttribute("disabled","disabled")
+                campoMaterialPrecentege.value=""
+                producto["material_precentage"]="null"
+            }
+            if(busquedaModelo.length===2){
+                alert("lo encontre en modelo")
+                let campoWarning=document.getElementById(idProducto+"_warnings")
+                campoWarning.removeAttribute("disabled")
+                producto["warnings"]=""
+                let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
+                campoHowToUse.removeAttribute("disabled")
+                producto["how_to_use"]=""
+            }
+            else{
+                let campoWarning=document.getElementById(idProducto+"_warnings")
+                campoWarning.setAttribute("disabled","disabled")
+                campoWarning.value=""
+                producto["warnings"]="null"
+                let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
+                campoHowToUse.setAttribute("disabled","disabled")
+                campoHowToUse.value=""
+                producto["how_to_use"]="null"
+            }
+        },
+        error: () => {
+            console.log("error al consultar las propiedades de la categoria")
+        }
+    });
+} 
 
 function guardarDatosTalla(e){
     let idPais=e.getAttribute("data-id-pais")
@@ -1177,7 +1243,7 @@ function guardarDatosTalla(e){
             stock:e.value
         }
     }
-}
+} 
 
 //============================
 //============================
@@ -1206,6 +1272,10 @@ function generarFormatoZalado(){
                         "product_configs":[]
                     }
                 }
+                if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
+                    modelo.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
+                    modelo.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
+                }
                 let config={
                     "merchant_product_config_id": "config-"+moment().format("x"),
                     "product_config_attributes": {
@@ -1225,6 +1295,16 @@ function generarFormatoZalado(){
                 config.product_config_attributes.description["en"]=datosProductosForm[pais][producto].descripcion
                 config.product_config_attributes.season_code=datosProductosForm[pais][producto].season_code
                 config.product_config_attributes["color_code.primary"]=datosProductosForm[pais][producto]["color_code.primary"].split("-")[0]
+                if(datosProductosForm[pais][producto]["material_code"] !=="null" && datosProductosForm[pais][producto]["material_percentage"] !=="null"){
+                    // "material.upper_material_clothing":{"material_percentage":"DecimalDefinition","material_code":"LocalizedStringDefinition"}
+                    config.product_config_attributes["material.upper_material_clothing"]={
+                        material_percentage:datosProductosForm[pais][producto]["material_percentage"],
+                        material_code:{
+                            en:datosProductosForm[pais][producto]["material_code"]
+                        }
+                    }
+                }
+                
                 modelo.product_model.product_configs.push(config)
                 let precio=[]
                 let stock=[]

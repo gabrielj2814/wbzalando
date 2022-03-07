@@ -300,6 +300,9 @@ class ProductoController extends ModuleAdminController{
         foreach($productos as $producto ){
             // enviar productos a zalando
             $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            if(array_key_exists("material.upper_material_clothing",$producto["product_model"]["product_configs"][0])){
+                $producto["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
+            }
             for($contador=0;$contador<count($producto["precio"]["product_prices"]);$contador++){
                 $producto["precio"]["product_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["regular_price"]["amount"];
                 if(array_key_exists("promotional_price",$producto["precio"]["product_prices"][$contador])){
@@ -403,7 +406,7 @@ class ProductoController extends ModuleAdminController{
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
+                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0];
             }
             else{
                 $respuestasSubidaPrecio[$precio["ean"]]=false;
