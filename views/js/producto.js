@@ -725,7 +725,7 @@ function insertarColorCodeSelect(){
         let html="<option value='null'>Seleccione un color</option>"
         for(let color of datos_color_code){
             // season=JSON.parse(season)
-            let option="<option value='"+color.codigo_color+"-"+color.id_attribute+"'>"+color.color_zalando+"</option>"
+            let option="<option value='"+color.codigo_color+"-"+color.id_attribute+"'>"+color.name+"</option>"
             html+=option
         }
         $campoColorCode.innerHTML=html
@@ -973,7 +973,7 @@ function cargarDatosEdicionGlobalColor(pais){
                 let option="<option value='null'>Seleccione</option>"
                 datos_color_code=respuestaJson.datos
                 for(let datos of respuestaJson.datos){
-                    option+="<option value='"+datos.codigo_color+"'>"+datos.color_zalando+"</option>"
+                    option+="<option value='"+datos.codigo_color+"'>"+datos.name+"</option>"
                 }
                 edicionGlobalColor.innerHTML=option
                 insertarCategoriasSelect()
