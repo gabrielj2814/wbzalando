@@ -1,19 +1,9 @@
-// funciones que no se estan usando pero que pueden ser utiles borrar o comentar cuando se termene el desarrollo
-
-
-//====================================
-//====================================
-//====================================
-
 // variables globales
 let listaProductos={};
 let productosSeleccionados=[];
 let productosFiltrados=[];
 let datosResPaldoProductos={}
 let datosProductosForm={}
-//=======================
-//=======================
-//=======================
 let datos_brand_code=[]
 let datos_season_code={}
 let datos_color_code={}
@@ -33,8 +23,6 @@ let $botonIrHaVistaInicial=document.getElementById("botonIrHaVistaInicial")
 let $botonIrHaVistaBorrarProductos=document.getElementById("botonIrHaVistaBorrarProductos")
 let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFormularioProductos")
 let $botonEnviarPoductos=document.getElementById("botonEnviarPoductos")
-// let obtenerProductos=document.getElementById("obtenerProductos");
-// let botonSalirVistaSubirProducto=document.getElementById("botonSalirVistaSubirProducto");
 // functiones
 // funciones anidadas peticiones al servidor consultarPaisesZalando,consultarCategoraisAsociadas,consultarCategoriasTalla,consultarMaterialesDeConstruccion
 function consultarPaisesZalando(){
@@ -1346,7 +1334,6 @@ function enviarDatos(productos){
 
 }
 
-
 //====================================
 //====================================
 //====================================
@@ -1359,10 +1346,5 @@ $botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
 $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 $botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
-// obtenerProductos.addEventListener("click", mostrarModalSubirProductos);
-// botonSalirVistaSubirProducto.addEventListener("click", cerrarModalSubirProducto);
-// botonConsultarPedidos.addEventListener("click", coonsultarPedidos)
-// botonConsultarCategoriasAso.addEventListener("click", consultarCategorias)
-// botonConsultartallasAsociadasMasPais.addEventListener("click", consultarTallasProPais)
 // ejecuciones de funciones al cargar el archivo
 consultarPaisesZalando();
