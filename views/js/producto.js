@@ -320,12 +320,15 @@ function filtrarProductos(e){
     });
 }
 
+// slider
+let $vistaFormProductos=document.getElementById("vista-form-productos")
+let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
+let $vistaInicial=document.getElementById("vista-inicial")
+
 function irHaFormularioDeProductos(){
     datosResPaldoProductos={}
     datosProductosForm={}
-    let $vistaInicial=document.getElementById("vista-inicial")
     $vistaInicial.style.display="none"
-    let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="block"
     // console.log("los datos que se deben de mostrar en esta vista =>>> ",productosFiltrados)
     let radiosPaisesForm=document.querySelectorAll(".redio-paises-form");
@@ -375,28 +378,32 @@ function irHaFormularioDeProductos(){
     
 }
 
+window.onload = function(){
+    if($vistaFormProductos && $vistaBorrarProductos){ 
+        setTimeout(function(){
+            $vistaFormProductos.style.display="none"
+            $vistaFormProductos.style.opacity="1"
 
+            $vistaBorrarProductos.style.display="none"
+            $vistaBorrarProductos.style.opacity="1"
+        }, 2000);
+    }
+}
 function irHaVistaInicial(){
-    let $vistaFormProductos=document.getElementById("vista-form-productos")
-    $vistaFormProductos.style.display="none"
-    let $vistaInicial=document.getElementById("vista-inicial")
     $vistaInicial.style.display="block"
 }
 
 function irHaVistaBorrarProductos(e){
     e.preventDefault()
-    let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="none"
-    let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
     $vistaBorrarProductos.style.display="block"
 }
 
 function irHaVistaFormularioProductos(){
-    let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
-    $vistaBorrarProductos.style.display="none"
-    let $vistaFormProductos=document.getElementById("vista-form-productos")
     $vistaFormProductos.style.display="block"
 }
+
+
 
 function cargarProductosPorPaisSeleccionado(a){
     let productos=datosResPaldoProductos[a.value]
