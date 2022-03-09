@@ -147,6 +147,7 @@ class ModificarController extends ModuleAdminController{
         $SQL="SELECT 
         ps_wbzalando_modelo_producto.id_modelo_producto,
         ps_wbzalando_modelo_producto.json_modelo_producto,
+        ps_wbzalando_simple_producto.json_simple_producto,
         ps_wbzalando_configuracion_producto.id_configuracion_producto
         FROM 
         ps_wbzalando_modelo_producto,

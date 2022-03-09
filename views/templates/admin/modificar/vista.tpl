@@ -13,26 +13,8 @@
     </div>
     <div class="col-12" style="display: flex;">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 caj-product modal-header p-20"> 
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 txt-title">
+            <div class="col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11 col-xs-11 txt-title">
                 <label>Productos</label>
-            </div>
-            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
-                <label>Stock</label>
-            </div>
-            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
-                <label>Moneda</label>
-            </div>
-            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
-                <label>Precio</label>
-            </div>
-            <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
-                <label>Descuento</label>
-            </div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
-                <label>Fecha de inicio descuento</label>
-            </div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-2 text-center txt-title">
-                <label>Fecha de final descuento</label>
             </div>
             <div class="col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xs-1 text-center txt-title">
             </div>
@@ -49,6 +31,73 @@
             Guardar
         </button>
     </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="staticBackdropLabel">Detalles del Producto</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="formularioDatosProductos">
+        <div class="row">
+            <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="font-size:1.5rem;">
+                Nombre: <span id="nombreDelProductoDetalle">Nombre</span>
+            </div>
+        </div>
+       <div id="preciosProducto">
+       
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="">Precio Regular</label>
+                    <input type="text" class="form-control" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="">Precio Descuento</label>
+                    <input type="text" class="form-control" >
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="">Fecha Inicio Descuento</label>
+                    <input type="date" class="form-control" >
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="">Fecha Final Descuento</label>
+                    <input type="date" class="form-control" >
+                </div>
+            </div>
+       
+       </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="">Talla</label>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="">Stock</label>
+            </div>
+        </div>
+        <div id="tallasStock">
+            <div class="row" >
+                <div class="form-group col-md-4" style="margin-bottom: 0px;padding-top: 10px;">
+                    X
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" >
+                </div>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="col-12 fat-pre"  id="preloader">

@@ -3,6 +3,7 @@
 let paises={}
 
 let productosRespaldo={}
+let listaProducutosPorPais={}
 
 let productosModificados={}
 let preloader=document.getElementById("preloader")
@@ -34,43 +35,113 @@ function insertarProductos(productos){
     let listaDeProductosHaEliminar=document.getElementById("listaDeProductosHaEliminar");
     listaDeProductosHaEliminar.innerHTML="";
     let html="";
+    listaProducutosPorPais={}
     for(let producto of productos){
-        let infoStock=producto.datosStock[0]
-        let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
-        // let infoConfig=JSON.parse(producto.detallesDelProdcuto[0].json_configuracion_producto)
-        // let infoSimple=JSON.parse(producto.detallesDelProdcuto[0].json_simple_producto)
-        let infoPrecio=JSON.parse(producto.json_precio)
-        // let arrayFecha=infoPrecio.scheduled_prices[0].end_time.split("T")[0].split("-")
-        let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
-        let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
-        if(!productosRespaldo[producto.sales_channel_id+"_"+producto.ean]){
-            productosRespaldo[producto.sales_channel_id+"_"+producto.ean]={
-                ean:producto.ean,
-                sales_channel_id:producto.sales_channel_id,
-                stock:infoStock.quantity,
-                moneda:infoPrecio.regular_price.currency,
-                precioRegular:infoPrecio.regular_price.amount,
-                precioPromocion:infoPrecio.promotional_price.amount,
-                fechaInicioPromocion:arrayFechaInicio,
-                fechaFinPromocion:arrayFechaFinal
-            }
+        if(listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]){
+            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
         }
+        else{
+            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]=[]
+            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
+        }
+        listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]
+       
+    }
+
+    console.log("datos =>>>>>>>>>>>>>>>>>>> ",listaProducutosPorPais)
+    for(let idModeloProducto in listaProducutosPorPais){
+        let producto=listaProducutosPorPais[idModeloProducto][0]
+        let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
+        // let infoStock=producto.datosStock[0]
+        // let infoPrecio=JSON.parse(producto.json_precio)
+        // if(!productosRespaldo[idModeloProducto+"_"+producto.ean]){
+        //     productosRespaldo[idModeloProducto+"_"+producto.ean]={
+        //         ean:producto.ean,
+        //         sales_channel_id:producto.sales_channel_id,
+        //         stock:infoStock.quantity,
+        //         moneda:infoPrecio.regular_price.currency,
+        //         precioRegular:infoPrecio.regular_price.amount
+        //     }
+        //     if(producto.precioPromocion){
+        //         let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
+        //         let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
+        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
+        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
+        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
+        //     }
+        // }
         html+="\
-        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input'>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_stock' data-propiedad='stock' value='"+infoStock.quantity+"'  onKeyup='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'>"+infoPrecio.regular_price.currency+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioRegular' data-propiedad='precioRegular' value='"+infoPrecio.regular_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><h4 class='text-center'><input type='text' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_precioPromocion' data-propiedad='precioPromocion' value='"+infoPrecio.promotional_price.amount+"' onKeyup='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaInicioPromocion' data-propiedad='fechaInicioPromocion' value='"+arrayFechaInicio+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2  text-left'><div><h4 class='text-center'><input type='date' class='form-control' data-id-producto="+producto.sales_channel_id+"_"+producto.ean+" id='"+producto.sales_channel_id+"_"+producto.ean+"_fechaFinPromocion' data-propiedad='fechaFinPromocion' value='"+arrayFechaFinal+"' onBlur='modificandoProducucto(this)'/></h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
+        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input' style='cursor: pointer;' >\
+        <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger'>Borrar</button></div></div>\
+        </div>\
         ";
-        // html+=producto.ean+" - "+producto.sales_channel_id;
     }
     listaDeProductosHaEliminar.innerHTML=html
-    console.log("lista de respaldo de productos =>>>> ",productosRespaldo)
-    cargarDatosProductosModificados();
+}
+
+function mostrarModalDatosProducto(a){
+    let idModelo=a.getAttribute("data-id-modelo")
+    // alert(idModelo)
+    let detalleProducto=null
+    for(let idModeloProducto in listaProducutosPorPais){
+        if(idModeloProducto===idModelo){
+            detalleProducto=JSON.parse(JSON.stringify(listaProducutosPorPais[idModeloProducto]))
+        }
+    }
+    console.log("datalles producto =>>>>>> ",detalleProducto)
+    let preciosProducto=document.getElementById("preciosProducto")
+    let nombreDelProductoDetalle=document.getElementById("nombreDelProductoDetalle")
+    nombreDelProductoDetalle.textContent=JSON.parse(detalleProducto[0].detallesDelProdcuto[0].json_modelo_producto).product_model_attributes.name
+    let precio=JSON.parse(detalleProducto[0].json_precio)
+    let precioDescuento=""
+    let fechaInicioDescuento=""
+    let fechaFinalDescuento=""
+    if(precio.promotional_price){
+        precioDescuento=precio.promotional_price.amount
+        fechaInicioDescuento=precio.scheduled_prices[0].start_time.split("T")[0]
+        fechaFinalDescuento=precio.scheduled_prices[0].end_time.split("T")[0]
+    }
+    preciosProducto.innerHTML='\
+        <div class="row">\
+            <div class="form-group col-md-4">\
+                <label for="">Precio Regular</label>\
+                <input type="text" class="form-control" value="'+precio.regular_price.amount+'">\
+            </div>\
+        </div>\
+        <div class="row">\
+            <div class="form-group col-md-4">\
+                <label for="">Precio Descuento</label>\
+                <input type="text" class="form-control" value="'+precioDescuento+'">\
+            </div>\
+            <div class="form-group col-md-4">\
+                <label for="">Fecha Inicio Descuento</label>\
+                <input type="date" class="form-control" value="'+fechaInicioDescuento+'">\
+            </div>\
+            <div class="form-group col-md-4">\
+                <label for="">Fecha Final Descuento</label>\
+                <input type="date" class="form-control" value="'+fechaFinalDescuento+'">\
+            </div>\
+        </div>\
+    '
+    let tallasStock=document.getElementById("tallasStock")
+    tallasStock.innerHTML=""
+    let htmlTallaStock=""
+    for(let datosProducto of detalleProducto){
+        let stock=datosProducto.datosStock[0]
+        let talla=JSON.parse(datosProducto.detallesDelProdcuto[0].json_simple_producto)
+        // product_simple_attributes
+        htmlTallaStock+='\
+        <div class="row" >\
+            <div class="form-group col-md-4" style="margin-bottom: 0px;padding-top: 10px;">\
+                '+talla.product_simple_attributes.size_codes.size+'\
+            </div>\
+            <div class="form-group col-md-3">\
+                <input type="text" class="form-control" value="'+stock.quantity+'">\
+            </div>\
+        </div>'
+    }
+    tallasStock.innerHTML=htmlTallaStock
 
 }
 

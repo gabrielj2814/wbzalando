@@ -317,20 +317,20 @@ class ProductoController extends ModuleAdminController{
             }
             $curlController->setDatosPeticion($producto);
             $curlController->setdatosCabezera($header);
-            $respuesta=$curlController->ejecutarPeticion("post",true);
+            // $respuesta=$curlController->ejecutarPeticion("post",true);
             // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
             $producto=$this->destructurarModeloDeProductoZalando($producto);
-            // subir stocks de producto
-            $stocksSubidos=$this->subirStock($producto["stocks"]);
-            // subir precios de producto
-            $preciosSubidos=$this->subirPrecio($producto["precios"]);
-            // captura de respuestas de la api de zalandos 
-            $estadoDeProductos["productos_enviados"][]=[
-                "respuestaServidor" => $respuesta,
-                "estatuRespuestaApi" => $respuesta["estado"],
-                "stocksSubidos" => $stocksSubidos,
-                "preciosSubidos" => $preciosSubidos,
-            ];
+            // // subir stocks de producto
+            // $stocksSubidos=$this->subirStock($producto["stocks"]);
+            // // subir precios de producto
+            // $preciosSubidos=$this->subirPrecio($producto["precios"]);
+            // // captura de respuestas de la api de zalandos 
+            // $estadoDeProductos["productos_enviados"][]=[
+            //     "respuestaServidor" => $respuesta,
+            //     "estatuRespuestaApi" => $respuesta["estado"],
+            //     "stocksSubidos" => $stocksSubidos,
+            //     "preciosSubidos" => $preciosSubidos,
+            // ];
             $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);
