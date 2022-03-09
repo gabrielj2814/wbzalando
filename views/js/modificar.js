@@ -145,6 +145,14 @@ function mostrarModalDatosProducto(a){
 
 }
 
+function capturarPrecioProducto(){
+
+}
+
+function capturarStockDeTallasProductos(){
+
+}
+
 function cargarDatosProductosModificados(){
     for(let id in productosModificados){
         if(document.getElementById(id+"_stock")){
