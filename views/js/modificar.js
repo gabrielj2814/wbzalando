@@ -49,24 +49,6 @@ function insertarProductos(productos){
     for(let idModeloProducto in listaProducutosPorPais){
         let producto=listaProducutosPorPais[idModeloProducto][0]
         let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
-        // let infoStock=producto.datosStock[0]
-        // let infoPrecio=JSON.parse(producto.json_precio)
-        // if(!productosRespaldo[idModeloProducto+"_"+producto.ean]){
-        //     productosRespaldo[idModeloProducto+"_"+producto.ean]={
-        //         ean:producto.ean,
-        //         sales_channel_id:producto.sales_channel_id,
-        //         stock:infoStock.quantity,
-        //         moneda:infoPrecio.regular_price.currency,
-        //         precioRegular:infoPrecio.regular_price.amount
-        //     }
-        //     if(producto.precioPromocion){
-        //         let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
-        //         let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
-        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
-        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
-        //         productosRespaldo[idModeloProducto+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
-        //     }
-        // }
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input' style='cursor: pointer;' >\
         <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
@@ -107,17 +89,21 @@ function mostrarModalDatosProducto(a){
             </div>\
         </div>\
         <div class="row">\
-            <div class="form-group col-md-4">\
+            <div class="form-group col-md-3">\
                 <label for="">Precio Descuento</label>\
                 <input type="text" class="form-control" id="'+idModelo+'_precio_descuento" data-id-modelo="'+idModelo+'" data-campo="precioPromocion" onKeyup="capturarGeneral(this)" value="'+precioDescuento+'">\
             </div>\
-            <div class="form-group col-md-4">\
+            <div class="form-group col-md-3">\
                 <label for="">Fecha Inicio Descuento</label>\
                 <input type="date" class="form-control" id="'+idModelo+'_fecha_inicio_descuento" data-id-modelo="'+idModelo+'" data-campo="fechaInicioPromocion" onBlur="capturarGeneral(this)" value="'+fechaInicioDescuento+'">\
             </div>\
-            <div class="form-group col-md-4">\
+            <div class="form-group col-md-3">\
                 <label for="">Fecha Final Descuento</label>\
                 <input type="date" class="form-control" id="'+idModelo+'_fecha_final_descuento" data-id-modelo="'+idModelo+'" data-campo="fechaFinPromocion" onBlur="capturarGeneral(this)" value="'+fechaFinalDescuento+'">\
+            </div>\
+            <div class="form-group col-md-3">\
+                <label for="">Enviar descuento</label>\
+                <input type="checkbox" class="form-control" id="'+idModelo+'_enviar_descuento" data-id-modelo="'+idModelo+'" data-campo="enviar_descuento" onBlur="capturarGeneral(this)">\
             </div>\
         </div>\
     '
@@ -130,14 +116,23 @@ function mostrarModalDatosProducto(a){
         // product_simple_attributes
         htmlTallaStock+='\
         <div class="row" >\
-            <div class="form-group col-md-4" style="margin-bottom: 0px;padding-top: 10px;">\
+            <div class="form-group col-md-3" style="margin-bottom: 0px;padding-top: 10px;">\
                 '+talla.product_simple_attributes.size_codes.size+'\
             </div>\
             <div class="form-group col-md-3">\
                 <input type="text" class="form-control" id="'+idModelo+'_'+stock.ean+'_stock" data-id-modelo="'+idModelo+'" data-campo="stock" data-ean="'+stock.ean+'" onKeyup="capturarStockDeTallasProductos(this)" value="'+stock.quantity+'">\
             </div>\
+            <div class="form-group col-md-3" >\
+                <input type="checkbox" class="form-control" id="'+idModelo+'_'+stock.ean+'_enviar_stock" data-id-modelo="'+idModelo+'" data-ean="'+stock.ean+'" data-campo="enviar_stock" onClick="capturarStockDeTallasProductos(this)">\
+            </div>\
         </div>'
     }
+    let modalFooter=document.getElementById("modalFooter")
+    modalFooter.innerHTML='\
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>\
+    <button type="button" data-id-modelo="'+idModelo+'" id="guardarPrecio" onClick="guardarPrecioDeProducto(this)" class="btn btn-primary">Guardar Precio</button>\
+    <button type="button" data-id-modelo="'+idModelo+'" id="guardarStock" onClick="guardarStockDeProducto(this)" class="btn btn-primary">Guardar Stock</button>\
+    '
     tallasStock.innerHTML=htmlTallaStock
     mostrarDatosProductosModificados(idModelo)
 }
@@ -149,10 +144,22 @@ function mostrarDatosProductosModificados(idModelo){
             let producto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
             document.getElementById(idModelo+"_precio_regular").value=producto.precioRegular
             document.getElementById(idModelo+"_"+producto.ean+"_stock").value=producto.stock
+            document.getElementById(idModelo+"_"+producto.ean+"_enviar_stock").checked=producto.enviar_stock
             if(producto.precioPromocion){
-                document.getElementById(idModelo+"_precio_descuento").value=producto.precioPromocion
-                document.getElementById(idModelo+"_fecha_inicio_descuento").value=producto.fechaInicioPromocion
-                document.getElementById(idModelo+"_fecha_final_descuento").value=producto.fechaFinPromocion
+                if(parseFloat(producto.precioPromocion)>0 || producto.precioPromocion!=="") {
+                    document.getElementById(idModelo+"_precio_descuento").value=producto.precioPromocion
+                    document.getElementById(idModelo+"_fecha_inicio_descuento").value=producto.fechaInicioPromocion
+                    document.getElementById(idModelo+"_fecha_final_descuento").value=producto.fechaFinPromocion
+                    document.getElementById(idModelo+"_enviar_descuento").checked=producto.enviar_descuento
+                }
+                else{
+                    productosModificados[idProducto].fechaInicioPromocion=""
+                    productosModificados[idProducto].fechaFinPromocion=""
+                    productosModificados[idProducto].enviar_descuento=false
+                }
+            }
+            else{
+                productosModificados[idProducto].enviar_descuento=false
             }
         }
     }
@@ -169,14 +176,16 @@ function registrarndoProductosModificados(idModelo){
                 sales_channel_id:producto.sales_channel_id,
                 stock:infoStock.quantity,
                 moneda:infoPrecio.regular_price.currency,
-                precioRegular:infoPrecio.regular_price.amount
+                precioRegular:infoPrecio.regular_price.amount,
+                enviar_stock:false,
+                enviar_descuento:false
             }
-            if(producto.precioPromocion){
+            if(infoPrecio.promotional_price){
                 let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
                 let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
-                productosRespaldo[idModelo+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
-                productosRespaldo[idModelo+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
-                productosRespaldo[idModelo+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
+                productosModificados[idModelo+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
+                productosModificados[idModelo+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
+                productosModificados[idModelo+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
             }
         }
 
@@ -189,7 +198,12 @@ function capturarGeneral(a){
     registrarndoProductosModificados(idModelo)
     // productosModificados[]
     for(let producto of listaProducutosPorPais[idModelo]){
-        productosModificados[idModelo+"_"+producto.ean][campo]=a.value
+        if(a.type==="checkbox"){
+            productosModificados[idModelo+"_"+producto.ean][campo]=a.checked
+        }
+        else{
+            productosModificados[idModelo+"_"+producto.ean][campo]=a.value
+        }
     }
     console.log("productos registrados =>>>> ",productosModificados)
 
@@ -200,134 +214,222 @@ function capturarStockDeTallasProductos(a){
     let campo=a.getAttribute("data-campo")
     let ean=a.getAttribute("data-ean")
     registrarndoProductosModificados(idModelo)
-    productosModificados[idModelo+"_"+ean][campo]=a.value
+    if(a.type==="checkbox"){
+        productosModificados[idModelo+"_"+ean][campo]=a.checked
+    }
+    else{
+        productosModificados[idModelo+"_"+ean][campo]=a.value
+    }
     console.log("productos registrados =>>>> ",productosModificados)
 }
 
-// function cargarDatosProductosModificados(){
-//     for(let id in productosModificados){
-//         if(document.getElementById(id+"_stock")){
-//             document.getElementById(id+"_stock").value=productosModificados[id].stock
-//             document.getElementById(id+"_precioRegular").value=productosModificados[id].precioRegular
-//             document.getElementById(id+"_precioPromocion").value=productosModificados[id].precioPromocion
-//             document.getElementById(id+"_fechaInicioPromocion").value=productosModificados[id].fechaInicioPromocion
-//             document.getElementById(id+"_fechaFinPromocion").value=productosModificados[id].fechaFinPromocion
-//         }
-//     }
-// }
+function  guardarStockDeProducto(a){
+    const linkControlador=document.getElementById("linkControlador").value;
+    let idModelo=a.getAttribute("data-id-modelo")
+    // alert("id modelo "+idModelo)
+    let stocks=[]
+    for(let idProducto in productosModificados){
+        let idModeloProducto=idProducto.split("_")[0]
+        if(idModelo===idModeloProducto){
+            let datosProducto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
+            if(datosProducto.enviar_stock===true){
+                let stock={
+                    "sales_channel_id": datosProducto.sales_channel_id,
+                    "ean": datosProducto.ean,
+                    "quantity": parseInt(datosProducto.stock)
+                }
+                stocks.push(JSON.stringify(stock))
+            }
+        }
+    }
+    console.log("stocks a enviar =>>>> ",stocks)
+    if(stocks.length>0){
+        preloader.style.opacity="1"
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postmodificarProductos',
+                stocks
+            },
+            success: (respuesta) => {
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("stock de producto modificado =>>>>> ",respuestaJson)
+                preloader.style.opacity="0"
+            },
+            error: () => {
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+            }
+        });
+    }
+    else{
+        alert("no stocks para enviar en este producto")
+    }
+    
+}
 
-// function guardarModificaciones(){
-//     // alert("guardando")
-//     let productosModificadosValidados=obtenerSoloProductosModificados()
-//     console.log("estado validacion producto =>>> ",productosModificadosValidados)
-//     if(productosModificadosValidados.length>0){
-//         let precios=[]
-//         let stocks=[]
-//         for(let datos of productosModificadosValidados){
-//             if(datos.enviarStock===true){
-//                 let formatoStock={
-//                     "sales_channel_id": datos.sales_channel_id,
-//                     "ean": datos.ean,
-//                     "quantity": parseInt(datos.stock)
-//                 }
-//                 stocks.push(JSON.stringify(formatoStock))
-//             }
-//             if(datos.enviarPrecio===true){
-//                 let formatoPrecio={
-//                     "ean": datos.ean,
-//                     "sales_channel_id": datos.sales_channel_id,
-//                     "regular_price": {
-//                         "amount": parseFloat(datos.precioRegular),
-//                         "currency": datos.moneda
-//                     },
-//                     "promotional_price": {
-//                         "amount": parseFloat(datos.precioPromocion),
-//                         "currency": datos.moneda
-//                     },
-//                     "scheduled_prices": [
-//                         {
-//                             "regular_price": {
-//                                 "amount": parseFloat(datos.precioRegular),
-//                                 "currency": datos.moneda
-//                             },
-//                             "promotional_price": {
-//                                 "amount": parseFloat(datos.precioPromocion),
-//                                 "currency": datos.moneda
-//                             },
-//                             "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
-//                             "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
-//                         }
-//                     ],
-//                     "ignore_warnings": true
-//                 }
-//                 precios.push(JSON.stringify(formatoPrecio))
-//             }
+function  guardarPrecioDeProducto(a){
+    const linkControlador=document.getElementById("linkControlador").value;
+    let idModelo=a.getAttribute("data-id-modelo")
+    // alert("id modelo "+idModelo)
+    let precios=[]
+    for(let idProducto in productosModificados){
+        let idModeloProducto=idProducto.split("_")[0]
+        if(idModelo===idModeloProducto){
+            let datosProducto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
+            if(datosProducto.enviar_descuento===true){
+                let precio={
+                    "ean": datosProducto.ean,
+                    "sales_channel_id": datosProducto.sales_channel_id,
+                    "regular_price": {
+                        "amount": parseFloat(datosProducto.precioRegular),
+                        "currency": datosProducto.moneda
+                    },
+                    "promotional_price": {
+                        "amount": parseFloat(datosProducto.precioPromocion),
+                        "currency": datosProducto.moneda
+                    },
+                    "scheduled_prices": [
+                        {
+                            "regular_price": {
+                                "amount": parseFloat(datosProducto.precioRegular),
+                                "currency": datosProducto.moneda
+                            },
+                            "promotional_price": {
+                                "amount": parseFloat(datosProducto.precioPromocion),
+                                "currency": datosProducto.moneda
+                            },
+                            "start_time": `${datosProducto.fechaInicioPromocion}T00:00:00.00Z`,
+                            "end_time": `${datosProducto.fechaFinPromocion}T00:00:00.00Z`
+                        }
+                    ],
+                    "ignore_warnings": true
+                }
+                precios.push(JSON.stringify(precio))
+            }
+            else{
+                let precio={
+                    "ean": datosProducto.ean,
+                    "sales_channel_id": datosProducto.sales_channel_id,
+                    "regular_price": {
+                        "amount": parseFloat(datosProducto.precioRegular),
+                        "currency": datosProducto.moneda
+                    }
+                }
+                precios.push(JSON.stringify(precio))
+            }
+        }
+    }
+    console.log("precios a enviar =>>>> ",precios)
+    if(precios.length>0){
+        preloader.style.opacity="1"
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postmodificarProductos',
+                precios
+            },
+            success: (respuesta) => {
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("precios de producto modificado =>>>>> ",respuestaJson)
+                preloader.style.opacity="0"
+            },
+            error: () => {
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+            }
+        });
+    }
+    else{
+        alert("no precios para enviar en este producto")
+    }
+
+}
+
+function guardarModificaciones(){
+    console.log("estado validacion producto =>>> ",productosModificadosValidados)
+    if(productosModificadosValidados.length>0){
+        let precios=[]
+        let stocks=[]
+        for(let datos of productosModificadosValidados){
+            if(datos.enviarStock===true){
+                let formatoStock={
+                    "sales_channel_id": datos.sales_channel_id,
+                    "ean": datos.ean,
+                    "quantity": parseInt(datos.stock)
+                }
+                stocks.push(JSON.stringify(formatoStock))
+            }
+            if(datos.enviarPrecio===true){
+                let formatoPrecio={
+                    "ean": datos.ean,
+                    "sales_channel_id": datos.sales_channel_id,
+                    "regular_price": {
+                        "amount": parseFloat(datos.precioRegular),
+                        "currency": datos.moneda
+                    },
+                    "promotional_price": {
+                        "amount": parseFloat(datos.precioPromocion),
+                        "currency": datos.moneda
+                    },
+                    "scheduled_prices": [
+                        {
+                            "regular_price": {
+                                "amount": parseFloat(datos.precioRegular),
+                                "currency": datos.moneda
+                            },
+                            "promotional_price": {
+                                "amount": parseFloat(datos.precioPromocion),
+                                "currency": datos.moneda
+                            },
+                            "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
+                            "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
+                        }
+                    ],
+                    "ignore_warnings": true
+                }
+                precios.push(JSON.stringify(formatoPrecio))
+            }
             
-//         }
-//         console.log("stocks listo para enviar =>>>> ",stocks)
-//         console.log("precios listo para enviar =>>>> ",precios)
-//         const linkControlador=document.getElementById("linkControlador").value;
-//         $.ajax({
-//             type: 'POST',
-//             cache: false,
-//             dataType: 'json',
-//             url: linkControlador, 
-//             data: {
-//                 ajax: true,
-//                 action: 'postmodificarProductos',
-//                 stocks,
-//                 precios
-//             },
-//             success: (respuesta) => {
-//                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-//                 console.log("producto Eliminado =>>>>> ",respuestaJson)
-//             },
-//             error: () => {
-//                 preloader.style.opacity="0"
-//                 bodyPleloader.style.overflow="auto"
-//             }
-//         });
+        }
+        console.log("stocks listo para enviar =>>>> ",stocks)
+        console.log("precios listo para enviar =>>>> ",precios)
+        const linkControlador=document.getElementById("linkControlador").value;
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postmodificarProductos',
+                stocks,
+                precios
+            },
+            success: (respuesta) => {
+                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+                console.log("producto Eliminado =>>>>> ",respuestaJson)
+            },
+            error: () => {
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+            }
+        });
 
-//     }
-//     else{
-//         alert("no hay productos modificados")
-//     }
+    }
+    else{
+        alert("no hay productos modificados")
+    }
 
-// }
-
-// function obtenerSoloProductosModificados(){
-//     let listaDeProductosModificados=[]
-//     for(let id in productosRespaldo){
-//         if(productosRespaldo[id] && productosModificados[id]){
-//             let productoRespaldo=productosRespaldo[id]
-//             let productoModificado=productosModificados[id]
-//             productoModificado["enviarStock"]=false
-//             productoModificado["enviarPrecio"]=false
-//             // if(
-//             //     productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
-//             //     productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
-//             //     !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
-//             //     !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
-//             //     productoModificado.stock!==productoRespaldo.stock
-//             // ){
-//             //     listaDeProductosModificados.push(productoModificado)
-//             // }
-//             if(productoModificado.stock!==productoRespaldo.stock){
-//                 productoModificado["enviarStock"]=true
-//             }
-//             if(
-//                 productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
-//                 productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
-//                 !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
-//                 !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) 
-//             ){
-//                 productoModificado["enviarPrecio"]=true
-//             }
-//             listaDeProductosModificados.push(productoModificado)
-//         }
-//     }
-//     return listaDeProductosModificados
-// }
+}
 
 
 

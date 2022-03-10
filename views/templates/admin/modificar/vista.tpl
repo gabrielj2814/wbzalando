@@ -50,51 +50,25 @@
         </div>
        <div id="preciosProducto">
        
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label for="">Precio Regular</label>
-                    <input type="text" class="form-control" >
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label for="">Precio Descuento</label>
-                    <input type="text" class="form-control" >
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Fecha Inicio Descuento</label>
-                    <input type="date" class="form-control" >
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Fecha Final Descuento</label>
-                    <input type="date" class="form-control" >
-                </div>
-            </div>
-       
        </div>
         <div class="row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="">Talla</label>
             </div>
             <div class="form-group col-md-3">
                 <label for="">Stock</label>
             </div>
+            <div class="form-group col-md-3">
+                <label for="">Enviar</label>
+            </div>
         </div>
         <div id="tallasStock">
-            <div class="row" >
-                <div class="form-group col-md-4" style="margin-bottom: 0px;padding-top: 10px;">
-                    X
-                </div>
-                <div class="form-group col-md-3">
-                    <input type="text" class="form-control" >
-                </div>
-            </div>
+            
         </div>
 
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+      <div id="modalFooter" class="modal-footer">
+
       </div>
     </div>
   </div>
