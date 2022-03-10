@@ -7,27 +7,6 @@ let productosModificados={}
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
 
-async function consultarProductosWBZalando(){
-    const linkDeControladorProducto=document.getElementById("linkDeControladorProducto").value;
-    await $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorProducto, 
-        data: {
-            ajax: true,
-            action: 'getconsultarproductoswbzalando',
-        },
-        success: (respuesta) => {
-            // console.log(respuesta);
-            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            // insertarProductos(respuestaJson.datos);
-        },
-        error: () => {
-        }
-    });
-}
-
 function insertarProductos(productos){
     let listaDeProductosHaEliminar=document.getElementById("listaDeProductosHaEliminar");
     listaDeProductosHaEliminar.innerHTML="";
@@ -52,7 +31,7 @@ function insertarProductos(productos){
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input' style='cursor: pointer;' >\
         <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
-        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger'>Borrar</button></div></div>\
+        <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>Borrar</button></div></div>\
         </div>\
         ";
     }
@@ -245,6 +224,7 @@ function  guardarStockDeProducto(a){
     console.log("stocks a enviar =>>>> ",stocks)
     if(stocks.length>0){
         preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
         $.ajax({
             type: 'POST',
             cache: false,
@@ -327,6 +307,7 @@ function  guardarPrecioDeProducto(a){
     console.log("precios a enviar =>>>> ",precios)
     if(precios.length>0){
         preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
         $.ajax({
             type: 'POST',
             cache: false,
@@ -354,119 +335,29 @@ function  guardarPrecioDeProducto(a){
 
 }
 
-function guardarModificaciones(){
-    console.log("estado validacion producto =>>> ",productosModificadosValidados)
-    if(productosModificadosValidados.length>0){
-        let precios=[]
-        let stocks=[]
-        for(let datos of productosModificadosValidados){
-            if(datos.enviarStock===true){
-                let formatoStock={
-                    "sales_channel_id": datos.sales_channel_id,
-                    "ean": datos.ean,
-                    "quantity": parseInt(datos.stock)
-                }
-                stocks.push(JSON.stringify(formatoStock))
-            }
-            if(datos.enviarPrecio===true){
-                let formatoPrecio={
-                    "ean": datos.ean,
-                    "sales_channel_id": datos.sales_channel_id,
-                    "regular_price": {
-                        "amount": parseFloat(datos.precioRegular),
-                        "currency": datos.moneda
-                    },
-                    "promotional_price": {
-                        "amount": parseFloat(datos.precioPromocion),
-                        "currency": datos.moneda
-                    },
-                    "scheduled_prices": [
-                        {
-                            "regular_price": {
-                                "amount": parseFloat(datos.precioRegular),
-                                "currency": datos.moneda
-                            },
-                            "promotional_price": {
-                                "amount": parseFloat(datos.precioPromocion),
-                                "currency": datos.moneda
-                            },
-                            "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
-                            "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
-                        }
-                    ],
-                    "ignore_warnings": true
-                }
-                precios.push(JSON.stringify(formatoPrecio))
-            }
-            
-        }
-        console.log("stocks listo para enviar =>>>> ",stocks)
-        console.log("precios listo para enviar =>>>> ",precios)
-        const linkControlador=document.getElementById("linkControlador").value;
-        $.ajax({
-            type: 'POST',
-            cache: false,
-            dataType: 'json',
-            url: linkControlador, 
-            data: {
-                ajax: true,
-                action: 'postmodificarProductos',
-                stocks,
-                precios
-            },
-            success: (respuesta) => {
-                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-                console.log("producto Eliminado =>>>>> ",respuestaJson)
-            },
-            error: () => {
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
-            }
-        });
-
+function eliminarProducto(a){
+    let idModelo=a.getAttribute("data-id-modelo")
+    let listaEansProductos=[]
+    for(let producto of listaProducutosPorPais[idModelo]){
+        listaEansProductos.push({
+            ean:producto.ean,
+            idPais:producto.sales_channel_id
+        })
     }
-    else{
-        alert("no hay productos modificados")
-    }
-
-}
-
-
-
-// function modificandoProducucto(a){
-//     // productosModificados
-//     let idProducto=a.getAttribute("data-id-producto")
-//     let propiedad=a.getAttribute("data-propiedad")
-//     if(!productosModificados[idProducto]){
-//         // alert("no existe por eso se crea")
-//         let copiaDeProducto=JSON.parse(JSON.stringify(productosRespaldo[idProducto]))
-//         productosModificados[idProducto]=copiaDeProducto;
-//     }
-//     productosModificados[idProducto][propiedad]=a.value;
-//     console.log("producto =>>>>> ",productosModificados[idProducto])
-// }
-
-async function eliminarProducto(e){
-    // alert(e.id)
+    console.log("productos a eliminar =>>>> ",listaEansProductos)
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
-    let idModelo=e.getAttribute("data-id-modelo")
-    let idConfig=e.getAttribute("data-id-config")
-    let ean=e.getAttribute("data-ean")
-    let idPais=e.getAttribute("data-id-pais")
-    await $.ajax({
-        type: 'GET',
+    $.ajax({
+        type: 'POST',
         cache: false,
         dataType: 'json',
         url: linkControlador, 
         data: {
             ajax: true,
-            action: 'geteliminarproducto',
-            idModelo,
-            idConfig,
-            ean,
-            idPais
+            action: 'posteliminarproducto',
+            id_modelo:idModelo,
+            eans:listaEansProductos
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
@@ -483,6 +374,43 @@ async function eliminarProducto(e){
     });
 }
 
+// async function eliminarProducto(e){
+//     // alert(e.id)
+//     const linkControlador=document.getElementById("linkControlador").value;
+//     preloader.style.opacity="1"
+//     bodyPleloader.style.overflow="hidden"
+//     let idModelo=e.getAttribute("data-id-modelo")
+//     let idConfig=e.getAttribute("data-id-config")
+//     let ean=e.getAttribute("data-ean")
+//     let idPais=e.getAttribute("data-id-pais")
+//     await $.ajax({
+//         type: 'GET',
+//         cache: false,
+//         dataType: 'json',
+//         url: linkControlador, 
+//         data: {
+//             ajax: true,
+//             action: 'geteliminarproducto',
+//             idModelo,
+//             idConfig,
+//             ean,
+//             idPais
+//         },
+//         success: (respuesta) => {
+//             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+//             console.log("producto Eliminado =>>>>> ",respuestaJson)
+//             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
+//             preloader.style.opacity="0"
+//             bodyPleloader.style.overflow="auto"
+//             consultarProductosPorPais2(checkboxsPaises[0].value)
+//         },
+//         error: () => {
+//             preloader.style.opacity="0"
+//             bodyPleloader.style.overflow="auto"
+//         }
+//     });
+// }
+
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
@@ -497,7 +425,6 @@ function consultarPaisesZalando(){
             action: 'getconsultarpaiseszalando'
         },
         success: (respuesta) => {
-            // consultarProductosWBZalando();
             let datos=JSON.parse(JSON.stringify(respuesta))
             if(datos.respuestaServidor.items){
                 console.log("paises zalando =>>> ",datos)
