@@ -574,9 +574,9 @@ input{
 .modal-content{
     padding: 10px;
 }
-button.close{
+button.close {
     position: absolute;
     right: 5px;
     top: 0px;
-    font-size: 40px;
+    font-size: 40px !important;
 }
