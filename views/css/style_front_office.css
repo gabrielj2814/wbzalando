@@ -563,3 +563,20 @@ input{
 .vista-2.is-active .is-flex{
     display: block;
 } */
+
+
+@media (min-width: 768px){
+    .modal-dialog {
+        width: 60vw !important;
+        margin: 30px auto;
+    }
+}
+.modal-content{
+    padding: 10px;
+}
+button.close{
+    position: absolute;
+    right: 5px;
+    top: 0px;
+    font-size: 40px;
+}
