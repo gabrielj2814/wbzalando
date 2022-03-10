@@ -1,5 +1,3 @@
-// console.log("print('hola en mundo en python pero es realmente en javascript XD')")
-
 let paises={}
 
 let productosRespaldo={}
@@ -23,7 +21,6 @@ async function consultarProductosWBZalando(){
         success: (respuesta) => {
             // console.log(respuesta);
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos consultados productos zalando =>>>>> ",respuestaJson)
             // insertarProductos(respuestaJson.datos);
         },
         error: () => {
@@ -106,21 +103,21 @@ function mostrarModalDatosProducto(a){
         <div class="row">\
             <div class="form-group col-md-4">\
                 <label for="">Precio Regular</label>\
-                <input type="text" class="form-control" value="'+precio.regular_price.amount+'">\
+                <input type="text" class="form-control" id="'+idModelo+'_precio_regular" data-id-modelo="'+idModelo+'" data-campo="precioRegular" onKeyup="capturarGeneral(this)" value="'+precio.regular_price.amount+'">\
             </div>\
         </div>\
         <div class="row">\
             <div class="form-group col-md-4">\
                 <label for="">Precio Descuento</label>\
-                <input type="text" class="form-control" value="'+precioDescuento+'">\
+                <input type="text" class="form-control" id="'+idModelo+'_precio_descuento" data-id-modelo="'+idModelo+'" data-campo="precioPromocion" onKeyup="capturarGeneral(this)" value="'+precioDescuento+'">\
             </div>\
             <div class="form-group col-md-4">\
                 <label for="">Fecha Inicio Descuento</label>\
-                <input type="date" class="form-control" value="'+fechaInicioDescuento+'">\
+                <input type="date" class="form-control" id="'+idModelo+'_fecha_inicio_descuento" data-id-modelo="'+idModelo+'" data-campo="fechaInicioPromocion" onBlur="capturarGeneral(this)" value="'+fechaInicioDescuento+'">\
             </div>\
             <div class="form-group col-md-4">\
                 <label for="">Fecha Final Descuento</label>\
-                <input type="date" class="form-control" value="'+fechaFinalDescuento+'">\
+                <input type="date" class="form-control" id="'+idModelo+'_fecha_final_descuento" data-id-modelo="'+idModelo+'" data-campo="fechaFinPromocion" onBlur="capturarGeneral(this)" value="'+fechaFinalDescuento+'">\
             </div>\
         </div>\
     '
@@ -137,162 +134,215 @@ function mostrarModalDatosProducto(a){
                 '+talla.product_simple_attributes.size_codes.size+'\
             </div>\
             <div class="form-group col-md-3">\
-                <input type="text" class="form-control" value="'+stock.quantity+'">\
+                <input type="text" class="form-control" id="'+idModelo+'_'+stock.ean+'_stock" data-id-modelo="'+idModelo+'" data-campo="stock" data-ean="'+stock.ean+'" onKeyup="capturarStockDeTallasProductos(this)" value="'+stock.quantity+'">\
             </div>\
         </div>'
     }
     tallasStock.innerHTML=htmlTallaStock
-
+    mostrarDatosProductosModificados(idModelo)
 }
 
-function capturarPrecioProducto(){
-
-}
-
-function capturarStockDeTallasProductos(){
-
-}
-
-function cargarDatosProductosModificados(){
-    for(let id in productosModificados){
-        if(document.getElementById(id+"_stock")){
-            document.getElementById(id+"_stock").value=productosModificados[id].stock
-            document.getElementById(id+"_precioRegular").value=productosModificados[id].precioRegular
-            document.getElementById(id+"_precioPromocion").value=productosModificados[id].precioPromocion
-            document.getElementById(id+"_fechaInicioPromocion").value=productosModificados[id].fechaInicioPromocion
-            document.getElementById(id+"_fechaFinPromocion").value=productosModificados[id].fechaFinPromocion
+function mostrarDatosProductosModificados(idModelo){
+    for(let idProducto in productosModificados){
+        let idModeloProducto=idProducto.split("_")[0]
+        if(idModelo===idModeloProducto){
+            let producto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
+            document.getElementById(idModelo+"_precio_regular").value=producto.precioRegular
+            document.getElementById(idModelo+"_"+producto.ean+"_stock").value=producto.stock
+            if(producto.precioPromocion){
+                document.getElementById(idModelo+"_precio_descuento").value=producto.precioPromocion
+                document.getElementById(idModelo+"_fecha_inicio_descuento").value=producto.fechaInicioPromocion
+                document.getElementById(idModelo+"_fecha_final_descuento").value=producto.fechaFinPromocion
+            }
         }
     }
 }
 
-function guardarModificaciones(){
-    // alert("guardando")
-    let productosModificadosValidados=obtenerSoloProductosModificados()
-    console.log("estado validacion producto =>>> ",productosModificadosValidados)
-    if(productosModificadosValidados.length>0){
-        let precios=[]
-        let stocks=[]
-        for(let datos of productosModificadosValidados){
-            if(datos.enviarStock===true){
-                let formatoStock={
-                    "sales_channel_id": datos.sales_channel_id,
-                    "ean": datos.ean,
-                    "quantity": parseInt(datos.stock)
-                }
-                stocks.push(JSON.stringify(formatoStock))
+function registrarndoProductosModificados(idModelo){
+    for(let producto of listaProducutosPorPais[idModelo]){
+        if(!productosModificados[idModelo+"_"+producto.ean]){
+            producto=JSON.parse(JSON.stringify(producto))
+            let infoStock=producto.datosStock[0]
+            let infoPrecio=JSON.parse(producto.json_precio)
+            productosModificados[idModelo+"_"+producto.ean]={
+                ean:producto.ean,
+                sales_channel_id:producto.sales_channel_id,
+                stock:infoStock.quantity,
+                moneda:infoPrecio.regular_price.currency,
+                precioRegular:infoPrecio.regular_price.amount
             }
-            if(datos.enviarPrecio===true){
-                let formatoPrecio={
-                    "ean": datos.ean,
-                    "sales_channel_id": datos.sales_channel_id,
-                    "regular_price": {
-                        "amount": parseFloat(datos.precioRegular),
-                        "currency": datos.moneda
-                    },
-                    "promotional_price": {
-                        "amount": parseFloat(datos.precioPromocion),
-                        "currency": datos.moneda
-                    },
-                    "scheduled_prices": [
-                        {
-                            "regular_price": {
-                                "amount": parseFloat(datos.precioRegular),
-                                "currency": datos.moneda
-                            },
-                            "promotional_price": {
-                                "amount": parseFloat(datos.precioPromocion),
-                                "currency": datos.moneda
-                            },
-                            "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
-                            "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
-                        }
-                    ],
-                    "ignore_warnings": true
-                }
-                precios.push(JSON.stringify(formatoPrecio))
+            if(producto.precioPromocion){
+                let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
+                let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
+                productosRespaldo[idModelo+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
+                productosRespaldo[idModelo+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
+                productosRespaldo[idModelo+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
             }
+        }
+
+    }
+}
+
+function capturarGeneral(a){
+    let idModelo=a.getAttribute("data-id-modelo")
+    let campo=a.getAttribute("data-campo")
+    registrarndoProductosModificados(idModelo)
+    // productosModificados[]
+    for(let producto of listaProducutosPorPais[idModelo]){
+        productosModificados[idModelo+"_"+producto.ean][campo]=a.value
+    }
+    console.log("productos registrados =>>>> ",productosModificados)
+
+}
+
+function capturarStockDeTallasProductos(a){
+    let idModelo=a.getAttribute("data-id-modelo")
+    let campo=a.getAttribute("data-campo")
+    let ean=a.getAttribute("data-ean")
+    registrarndoProductosModificados(idModelo)
+    productosModificados[idModelo+"_"+ean][campo]=a.value
+    console.log("productos registrados =>>>> ",productosModificados)
+}
+
+// function cargarDatosProductosModificados(){
+//     for(let id in productosModificados){
+//         if(document.getElementById(id+"_stock")){
+//             document.getElementById(id+"_stock").value=productosModificados[id].stock
+//             document.getElementById(id+"_precioRegular").value=productosModificados[id].precioRegular
+//             document.getElementById(id+"_precioPromocion").value=productosModificados[id].precioPromocion
+//             document.getElementById(id+"_fechaInicioPromocion").value=productosModificados[id].fechaInicioPromocion
+//             document.getElementById(id+"_fechaFinPromocion").value=productosModificados[id].fechaFinPromocion
+//         }
+//     }
+// }
+
+// function guardarModificaciones(){
+//     // alert("guardando")
+//     let productosModificadosValidados=obtenerSoloProductosModificados()
+//     console.log("estado validacion producto =>>> ",productosModificadosValidados)
+//     if(productosModificadosValidados.length>0){
+//         let precios=[]
+//         let stocks=[]
+//         for(let datos of productosModificadosValidados){
+//             if(datos.enviarStock===true){
+//                 let formatoStock={
+//                     "sales_channel_id": datos.sales_channel_id,
+//                     "ean": datos.ean,
+//                     "quantity": parseInt(datos.stock)
+//                 }
+//                 stocks.push(JSON.stringify(formatoStock))
+//             }
+//             if(datos.enviarPrecio===true){
+//                 let formatoPrecio={
+//                     "ean": datos.ean,
+//                     "sales_channel_id": datos.sales_channel_id,
+//                     "regular_price": {
+//                         "amount": parseFloat(datos.precioRegular),
+//                         "currency": datos.moneda
+//                     },
+//                     "promotional_price": {
+//                         "amount": parseFloat(datos.precioPromocion),
+//                         "currency": datos.moneda
+//                     },
+//                     "scheduled_prices": [
+//                         {
+//                             "regular_price": {
+//                                 "amount": parseFloat(datos.precioRegular),
+//                                 "currency": datos.moneda
+//                             },
+//                             "promotional_price": {
+//                                 "amount": parseFloat(datos.precioPromocion),
+//                                 "currency": datos.moneda
+//                             },
+//                             "start_time": `${datos.fechaInicioPromocion}T00:00:00.00Z`,
+//                             "end_time": `${datos.fechaFinPromocion}T00:00:00.00Z`
+//                         }
+//                     ],
+//                     "ignore_warnings": true
+//                 }
+//                 precios.push(JSON.stringify(formatoPrecio))
+//             }
             
-        }
-        console.log("stocks listo para enviar =>>>> ",stocks)
-        console.log("precios listo para enviar =>>>> ",precios)
-        const linkControlador=document.getElementById("linkControlador").value;
-        $.ajax({
-            type: 'POST',
-            cache: false,
-            dataType: 'json',
-            url: linkControlador, 
-            data: {
-                ajax: true,
-                action: 'postmodificarProductos',
-                stocks,
-                precios
-            },
-            success: (respuesta) => {
-                // console.log(respuesta);
-                let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-                console.log("producto Eliminado =>>>>> ",respuestaJson)
-            },
-            error: () => {
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
-            }
-        });
+//         }
+//         console.log("stocks listo para enviar =>>>> ",stocks)
+//         console.log("precios listo para enviar =>>>> ",precios)
+//         const linkControlador=document.getElementById("linkControlador").value;
+//         $.ajax({
+//             type: 'POST',
+//             cache: false,
+//             dataType: 'json',
+//             url: linkControlador, 
+//             data: {
+//                 ajax: true,
+//                 action: 'postmodificarProductos',
+//                 stocks,
+//                 precios
+//             },
+//             success: (respuesta) => {
+//                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+//                 console.log("producto Eliminado =>>>>> ",respuestaJson)
+//             },
+//             error: () => {
+//                 preloader.style.opacity="0"
+//                 bodyPleloader.style.overflow="auto"
+//             }
+//         });
 
-    }
-    else{
-        alert("no hay productos modificados")
-    }
+//     }
+//     else{
+//         alert("no hay productos modificados")
+//     }
 
-}
+// }
 
-function obtenerSoloProductosModificados(){
-    let listaDeProductosModificados=[]
-    for(let id in productosRespaldo){
-        if(productosRespaldo[id] && productosModificados[id]){
-            let productoRespaldo=productosRespaldo[id]
-            let productoModificado=productosModificados[id]
-            productoModificado["enviarStock"]=false
-            productoModificado["enviarPrecio"]=false
-            // if(
-            //     productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
-            //     productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
-            //     !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
-            //     !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
-            //     productoModificado.stock!==productoRespaldo.stock
-            // ){
-            //     listaDeProductosModificados.push(productoModificado)
-            // }
-            if(productoModificado.stock!==productoRespaldo.stock){
-                productoModificado["enviarStock"]=true
-            }
-            if(
-                productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
-                productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
-                !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
-                !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) 
-            ){
-                productoModificado["enviarPrecio"]=true
-            }
-            listaDeProductosModificados.push(productoModificado)
-        }
-    }
-    return listaDeProductosModificados
-}
-
+// function obtenerSoloProductosModificados(){
+//     let listaDeProductosModificados=[]
+//     for(let id in productosRespaldo){
+//         if(productosRespaldo[id] && productosModificados[id]){
+//             let productoRespaldo=productosRespaldo[id]
+//             let productoModificado=productosModificados[id]
+//             productoModificado["enviarStock"]=false
+//             productoModificado["enviarPrecio"]=false
+//             // if(
+//             //     productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
+//             //     productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
+//             //     !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
+//             //     !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) ||
+//             //     productoModificado.stock!==productoRespaldo.stock
+//             // ){
+//             //     listaDeProductosModificados.push(productoModificado)
+//             // }
+//             if(productoModificado.stock!==productoRespaldo.stock){
+//                 productoModificado["enviarStock"]=true
+//             }
+//             if(
+//                 productoModificado.precioPromocion!==productoRespaldo.precioPromocion ||  
+//                 productoModificado.precioRegular!==productoRespaldo.precioRegular  ||
+//                 !moment(productoRespaldo.fechaInicioPromocion).isSame(productoModificado.fechaInicioPromocion) ||
+//                 !moment(productoRespaldo.fechaFinPromocion).isSame(productoModificado.fechaFinPromocion) 
+//             ){
+//                 productoModificado["enviarPrecio"]=true
+//             }
+//             listaDeProductosModificados.push(productoModificado)
+//         }
+//     }
+//     return listaDeProductosModificados
+// }
 
 
-function modificandoProducucto(a){
-    // productosModificados
-    let idProducto=a.getAttribute("data-id-producto")
-    let propiedad=a.getAttribute("data-propiedad")
-    if(!productosModificados[idProducto]){
-        // alert("no existe por eso se crea")
-        let copiaDeProducto=JSON.parse(JSON.stringify(productosRespaldo[idProducto]))
-        productosModificados[idProducto]=copiaDeProducto;
-    }
-    productosModificados[idProducto][propiedad]=a.value;
-    console.log("producto =>>>>> ",productosModificados[idProducto])
-}
+
+// function modificandoProducucto(a){
+//     // productosModificados
+//     let idProducto=a.getAttribute("data-id-producto")
+//     let propiedad=a.getAttribute("data-propiedad")
+//     if(!productosModificados[idProducto]){
+//         // alert("no existe por eso se crea")
+//         let copiaDeProducto=JSON.parse(JSON.stringify(productosRespaldo[idProducto]))
+//         productosModificados[idProducto]=copiaDeProducto;
+//     }
+//     productosModificados[idProducto][propiedad]=a.value;
+//     console.log("producto =>>>>> ",productosModificados[idProducto])
+// }
 
 async function eliminarProducto(e){
     // alert(e.id)
@@ -317,7 +367,6 @@ async function eliminarProducto(e){
             idPais
         },
         success: (respuesta) => {
-            // console.log(respuesta);
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("producto Eliminado =>>>>> ",respuestaJson)
             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
@@ -465,7 +514,6 @@ function consultarProductosPorPais(a){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
-            console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
             if(respuestaJson.respuestaServidor.totalRegistros>1){
                 insertarControlesPaginacion();
@@ -585,7 +633,6 @@ function consultarProductosPorPais2(idPais){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
-            console.log("productos filtrados por pais =>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
             if(respuestaJson.respuestaServidor.totalRegistros>1){
                 insertarControlesPaginacion();
