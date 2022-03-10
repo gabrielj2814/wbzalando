@@ -307,8 +307,8 @@ class ProductoController extends ModuleAdminController{
                 $producto["precio"]["product_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["regular_price"]["amount"];
                 if(array_key_exists("promotional_price",$producto["precio"]["product_prices"][$contador])){
                     $producto["precio"]["product_prices"][$contador]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["promotional_price"]["amount"];
-                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["regular_price"]["amount"];
-                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][$contador]["promotional_price"]["amount"];
+                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][0]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][0]["regular_price"]["amount"];
+                    $producto["precio"]["product_prices"][$contador]["scheduled_prices"][0]["promotional_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["scheduled_prices"][0]["promotional_price"]["amount"];
                     $producto["precio"]["product_prices"][$contador]["ignore_warnings"]=(bool)$producto["precio"]["product_prices"][$contador]["ignore_warnings"];
                 }
             }

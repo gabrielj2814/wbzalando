@@ -25,12 +25,6 @@
     </div>
 
     <div id="controlesPaginacion"></div>
-
-    <div class="justify-end-flex well-lg" >
-        <button id="" class="btn btn-primary"  id="guardarModificaciones" onClick="guardarModificaciones()">
-            Guardar
-        </button>
-    </div>
 </div>
 
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
