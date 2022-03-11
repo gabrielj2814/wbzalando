@@ -67,12 +67,14 @@ function registrar(){
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             console.log(respuesta);
+            mostrarAlerta("alert-success","Tallas registradas")
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -260,9 +262,9 @@ async function consultarTodosAtributos(){
             // cargarCategoriasTallasZalando(categoriasTallasZalando)
         },
         error: () => {
-            console.log("no entre")
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -300,6 +302,7 @@ async function consultarCategoriasTalla(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
     return categoriaTallas
@@ -339,6 +342,7 @@ async function consultarPaises(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
     return paises
@@ -385,11 +389,18 @@ function traerTallas(tallasPrestashop,codigoPais,codigoTalla){
 
 }
 
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
+}
+
 consultarTodosAtributos();
-// consultarCategoriasTalla();
 botonRegistrar.addEventListener("click",registrar)
-// botonConsultarTodos.addEventListener("click",consultarTodos)
-// botonConsultar.addEventListener("click",consultar)
-// botonActualizar.addEventListener("click",actualizar)
-// botonEliminar.addEventListener("click",eliminar)
-// botonConsultarTallas.addEventListener("click",traerTallas)

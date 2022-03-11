@@ -1,5 +1,6 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorAtributoTalla" value="{$linkDeControladorAtributoTalla}"/>
+<div id="contenedorAlerta"></div>
 <!--
 <button id="botonRegistrar">registrar</button>
 <button id="botonConsultarTodos">consultar todos</button>
