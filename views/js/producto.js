@@ -48,12 +48,14 @@ function consultarPaisesZalando(){
             }
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
+                mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
             }
 
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
             // alert("error al conectar con el servidor");
         }
     });
@@ -80,6 +82,7 @@ function consultarCategoraisAsociadas(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -104,6 +107,7 @@ function consultarCategoriasTalla(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -128,6 +132,7 @@ function consultarMaterialesDeConstruccion(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -316,6 +321,7 @@ function filtrarProductos(e){
         },
         error: () => {
             totalResultados.textContent="0"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -391,6 +397,7 @@ window.onload = function(){
 }
 function irHaVistaInicial(){
     $vistaInicial.style.display="block"
+    $vistaFormProductos.style.display="none"
 }
 
 function irHaVistaBorrarProductos(e){
@@ -401,6 +408,7 @@ function irHaVistaBorrarProductos(e){
 
 function irHaVistaFormularioProductos(){
     $vistaFormProductos.style.display="block"
+    $vistaBorrarProductos.style.display="none"
 }
 
 
@@ -842,6 +850,7 @@ function cargarDatosBrandCode(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -878,6 +887,7 @@ function cargarDatosSeasonCode(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -914,6 +924,7 @@ function cargarDatosEdicionGlobalTargetAgeGroups(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -952,6 +963,7 @@ function cargarDatosEdicionGlobalTargetGenders(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -1001,6 +1013,7 @@ function cargarDatosEdicionGlobalColor(pais){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -1038,6 +1051,7 @@ function consultarTallasPorPaisYCategoriaTalla(a){
             error: () => {
                 preloader.style.opacity="0"
                 bodyPleloader.style.overflow="auto"
+                mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
             }
         });
     }
@@ -1209,7 +1223,8 @@ function bloquearCampoPorCategoriaZalando(categoria,producto,idPais,idProducto){
             }
         },
         error: () => {
-            console.log("error al consultar las propiedades de la categoria")
+            // console.log("error al consultar las propiedades de la categoria")
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 } 
@@ -1411,14 +1426,29 @@ function enviarDatos(productos){
             console.log("datos envio =>>>>>>",datos);
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-success","Productos enviados")
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
             // alert("error al conectar con el servidor");
         }
     });
 
+}
+
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
 }
 
 //====================================

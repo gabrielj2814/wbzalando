@@ -6,7 +6,7 @@
 <input type="hidden" id="linkDeControladorColor" value="{$linkDeControladorColor}"/>
 
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
-
+<div id="contenedorAlerta"></div>
 
 <div class="custom_bootstrap">
 
@@ -632,14 +632,6 @@
             <button class="btn btn-primary is-absolute" id="botonEnviarPoductos">
                 enviar productos
             </button>
-            <button class="btn btn-primary is-absolute" id="botonTestEnvio" style="left: 15%;">
-                probar envio
-            </button>
-            <div class="justify-end-flex">
-                <button  class="btn btnVistaOne btn-primary" id="">
-                    Guardar
-                </button>
-            </div>
         </div>
     </div>
 </div>
