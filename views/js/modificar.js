@@ -239,15 +239,18 @@ function  guardarStockDeProducto(a){
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 console.log("stock de producto modificado =>>>>> ",respuestaJson)
                 preloader.style.opacity="0"
+                mostrarAlerta("alert-success","El stock a sido enviado correctamente")
             },
             error: () => {
                 preloader.style.opacity="0"
                 bodyPleloader.style.overflow="auto"
+                mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
             }
         });
     }
     else{
-        alert("no stocks para enviar en este producto")
+        // alert("no stocks para enviar en este producto")
+        mostrarAlerta("alert-danger","no hay stock para enviar en este producto")
     }
     
 }
@@ -322,15 +325,18 @@ function  guardarPrecioDeProducto(a){
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 console.log("precios de producto modificado =>>>>> ",respuestaJson)
                 preloader.style.opacity="0"
+                mostrarAlerta("alert-success","El precio a sido enviado correctamente")
             },
             error: () => {
                 preloader.style.opacity="0"
                 bodyPleloader.style.overflow="auto"
+                mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
             }
         });
     }
     else{
-        alert("no precios para enviar en este producto")
+        // alert("no precios para enviar en este producto")
+        mostrarAlerta("alert-danger","no hay precios de producto para enviar")
     }
 
 }
@@ -366,50 +372,15 @@ function eliminarProducto(a){
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             consultarProductosPorPais2(checkboxsPaises[0].value)
+            mostrarAlerta("alert-success","Eliminación Completada")
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
 }
-
-// async function eliminarProducto(e){
-//     // alert(e.id)
-//     const linkControlador=document.getElementById("linkControlador").value;
-//     preloader.style.opacity="1"
-//     bodyPleloader.style.overflow="hidden"
-//     let idModelo=e.getAttribute("data-id-modelo")
-//     let idConfig=e.getAttribute("data-id-config")
-//     let ean=e.getAttribute("data-ean")
-//     let idPais=e.getAttribute("data-id-pais")
-//     await $.ajax({
-//         type: 'GET',
-//         cache: false,
-//         dataType: 'json',
-//         url: linkControlador, 
-//         data: {
-//             ajax: true,
-//             action: 'geteliminarproducto',
-//             idModelo,
-//             idConfig,
-//             ean,
-//             idPais
-//         },
-//         success: (respuesta) => {
-//             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-//             console.log("producto Eliminado =>>>>> ",respuestaJson)
-//             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
-//             preloader.style.opacity="0"
-//             bodyPleloader.style.overflow="auto"
-//             consultarProductosPorPais2(checkboxsPaises[0].value)
-//         },
-//         error: () => {
-//             preloader.style.opacity="0"
-//             bodyPleloader.style.overflow="auto"
-//         }
-//     });
-// }
 
 function consultarPaisesZalando(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -440,6 +411,7 @@ function consultarPaisesZalando(){
             // alert("error al conectar con el servidor");
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
 }
@@ -573,6 +545,7 @@ function consultarProductosPorPais(a){
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             // alert("error al conectar con el servidor");
+            mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
 }
@@ -692,8 +665,22 @@ function consultarProductosPorPais2(idPais){
             // alert("error al conectar con el servidor");
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
+}
+
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
 }
 
 consultarPaisesZalando();

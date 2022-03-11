@@ -1,7 +1,7 @@
 <style><link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" type="text/css" /></style>
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <input type="hidden" id="linkDeControladorProducto" value="{$linkDeControladorProducto}"/>
-
+<div id="contenedorAlerta"></div>
 
 <div class="panel">
     
