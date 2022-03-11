@@ -23,6 +23,7 @@ let $botonIrHaVistaInicial=document.getElementById("botonIrHaVistaInicial")
 let $botonIrHaVistaBorrarProductos=document.getElementById("botonIrHaVistaBorrarProductos")
 let $botonIrHaVistaFormularioProductos=document.getElementById("botonIrHaVistaFormularioProductos")
 let $botonEnviarPoductos=document.getElementById("botonEnviarPoductos")
+let $botonEdicionGlobal=document.getElementById("botonEdicionGlobal")
 // functiones
 // funciones anidadas peticiones al servidor consultarPaisesZalando,consultarCategoraisAsociadas,consultarCategoriasTalla,consultarMaterialesDeConstruccion
 function consultarPaisesZalando(){
@@ -410,8 +411,6 @@ function irHaVistaFormularioProductos(){
     $vistaFormProductos.style.display="block"
     $vistaBorrarProductos.style.display="none"
 }
-
-
 
 function cargarProductosPorPaisSeleccionado(a){
     let productos=datosResPaldoProductos[a.value]
@@ -875,7 +874,7 @@ function cargarDatosSeasonCode(){
             console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_season_code=respuestaJson.datos;
             if(respuestaJson.datos.length>0){
-                let option="<option value='null'>Vacio</option>"
+                let option="<option value='null'>Seleccione</option>"
                 for(let datos of respuestaJson.datos){
                     datos=JSON.parse(datos)
                     option+="<option value='"+datos.label+"'>"+datos.value.localized.en+"</option>"
@@ -1265,8 +1264,103 @@ function guardarDatosTalla(e){
             stock:e.value
         }
     }
-} 
+}
 
+function aplicarEdicionGlobal(){
+    let $edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
+    let $edicionGlobalSeasonCode=document.getElementById("edicionGlobalSeasonCode")
+    let $edicionGlobalColor=document.getElementById("edicionGlobalColor")
+    let $edicionGlobalTargetAgeGroups=document.getElementById("edicionGlobalTargetAgeGroups")
+    let $edicionGlobalTargetGenders=document.getElementById("edicionGlobalTargetGenders")
+    let $camposColorCode=document.querySelectorAll(".campo-color-code")
+    let $camposSeasonCode=document.querySelectorAll(".campo-season-code")
+    let $camposBrandCode=document.querySelectorAll(".campo-brand-code")
+    let $camposTargetAgeGroupsCode=document.querySelectorAll(".campo-target-age-groups")
+    let $camposTargetGendersCode=document.querySelectorAll(".campo-target-genders")
+    let estadoColor=false
+    $camposColorCode.forEach( campoColor => {
+        for(let option of campoColor){
+            let colorZalando=option.value.split("-")[0]
+            if(colorZalando===$edicionGlobalColor.value){
+                option.selected=true
+                estadoColor=true
+            }
+            else{
+                option.selected=false
+            }
+        }
+    })
+    // console.log("ddddddddddddddddddddddd =>  ",$edicionGlobalTargetAgeGroups)
+    let estadoEdicionGlobalSeason=seleccionSeleccionUnicaEdicionGlobal($camposSeasonCode,$edicionGlobalSeasonCode.value)
+    let estadoEdicionGlobalBrand=seleccionSeleccionUnicaEdicionGlobal($camposBrandCode,$edicionGlobalBrandCode.value)
+    let estadoEdicionGlobalTargetAge=seleccionSeleccionMultipleEdicionGlobal($camposTargetAgeGroupsCode,$edicionGlobalTargetAgeGroups)
+    let estadoEdicionGlobalTargetG=seleccionSeleccionMultipleEdicionGlobal($camposTargetGendersCode,$edicionGlobalTargetGenders)
+    if(estadoEdicionGlobalBrand===true){
+        $camposBrandCode.forEach(select => {
+            insertarDatosDeEnvioDeProduct(select)
+        })
+    }
+    if(estadoEdicionGlobalSeason===true){
+        $camposSeasonCode.forEach(select => {
+            insertarDatosDeEnvioDeProduct(select)
+        })
+    }
+    if(estadoColor===true){
+        $camposColorCode.forEach(select => {
+            insertarDatosDeEnvioDeProduct(select)
+        })
+    }
+    if(estadoEdicionGlobalTargetAge===true){
+        $camposTargetAgeGroupsCode.forEach(select => {
+            insertarDatosDeEnvioDeProduct(select)
+        })
+    }
+    if(estadoEdicionGlobalTargetG===true){
+        $camposTargetGendersCode.forEach(select => {
+            insertarDatosDeEnvioDeProduct(select)
+        })
+    }
+}
+
+function seleccionSeleccionUnicaEdicionGlobal(selects,valor){
+    let estado=false
+    selects.forEach( select => {
+        for(let option of select){
+            if(option.value===valor){
+                option.selected=true
+                estado=true
+            }
+            else{
+                option.selected=false
+            }
+        }
+    })
+    return estado
+}
+
+function seleccionSeleccionMultipleEdicionGlobal(selects,selectEdicion){
+    let estado=false
+    selects.forEach( select => {
+        for(let option of select){
+            option.selected=false
+        }
+    })
+    for(let optionEdicion of selectEdicion){
+        // console.log(optionEdicion)
+        if(optionEdicion.selected===true){
+            selects.forEach( select => {
+                for(let option of select){
+                    if(option.value===optionEdicion.value){
+                        option.selected=true
+                        estado=true
+                    }
+                }
+            })
+        }
+    }
+    return estado
+  
+}
 //============================
 //============================
 //============================
@@ -1279,24 +1373,26 @@ function generarFormatoZalado(){
             if(datosProductosForm[pais][producto].haEnviar===false){
                 
                 let modelo={
-                    "outline": datosProductosForm[pais][producto].outline,
-                    "product_model": {
-                        "merchant_product_model_id": "modelo-"+moment().format("x"),
-                        "product_model_attributes": {
-                            "name": datosProductosForm[pais][producto].nombreProducto,
-                            "brand_code": datosProductosForm[pais][producto].brand_code,
-                            "size_group": {
-                                "size": datosProductosForm[pais][producto].size_group,
+                   "producto":{
+                        "outline": datosProductosForm[pais][producto].outline,
+                        "product_model": {
+                            "merchant_product_model_id": "modelo-"+moment().format("x"),
+                            "product_model_attributes": {
+                                "name": datosProductosForm[pais][producto].nombreProducto,
+                                "brand_code": datosProductosForm[pais][producto].brand_code,
+                                "size_group": {
+                                    "size": datosProductosForm[pais][producto].size_group,
+                                },
+                                "target_genders": datosProductosForm[pais][producto].target_genders,
+                                "target_age_groups": datosProductosForm[pais][producto].target_age_groups
                             },
-                            "target_genders": datosProductosForm[pais][producto].target_genders,
-                            "target_age_groups": datosProductosForm[pais][producto].target_age_groups
-                        },
-                        "product_configs":[]
-                    }
+                            "product_configs":[]
+                        }
+                   }
                 }
                 if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
-                    modelo.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
-                    modelo.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
+                    modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
+                    modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
                 }
                 let config={
                     "merchant_product_config_id": "config-"+moment().format("x"),
@@ -1327,7 +1423,7 @@ function generarFormatoZalado(){
                     }
                 }
                 
-                modelo.product_model.product_configs.push(config)
+                modelo.producto.product_model.product_configs.push(config)
                 let precio=[]
                 let stock=[]
                 for(let idAtributoTalla in datosProductosForm[pais][producto].datosTallas){
@@ -1341,7 +1437,7 @@ function generarFormatoZalado(){
                             }
                         }
                     }
-                    modelo.product_model.product_configs[0].product_simples.push(simple)
+                    modelo.producto.product_model.product_configs[0].product_simples.push(simple)
                     if(datosProductosForm[pais][producto].precioPromocional!=="" && parseFloat(datosProductosForm[pais][producto].precioPromocional)>0){
                         precio.push({
                             "ean": datosTalla.ean,
@@ -1451,10 +1547,6 @@ function mostrarAlerta(colorAlerta,mensaje){
     $contenedorAlerta.innerHTML+=htmlAlert
 }
 
-//====================================
-//====================================
-//====================================
-
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);
 $nombreProducto.addEventListener("keyup", filtrarProductos);
@@ -1463,5 +1555,6 @@ $botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
 $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 $botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
+$botonEdicionGlobal.addEventListener("click",aplicarEdicionGlobal)
 // ejecuciones de funciones al cargar el archivo
 consultarPaisesZalando();

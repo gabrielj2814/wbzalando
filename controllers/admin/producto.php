@@ -299,9 +299,9 @@ class ProductoController extends ModuleAdminController{
         ];
         foreach($productos as $producto ){
             // enviar productos a zalando
-            $producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
-            if(array_key_exists("material.upper_material_clothing",$producto["product_model"]["product_configs"][0])){
-                $producto["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
+            $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            if(array_key_exists("material.upper_material_clothing",$producto["producto"]["product_model"]["product_configs"][0])){
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
             }
             for($contador=0;$contador<count($producto["precio"]["product_prices"]);$contador++){
                 $producto["precio"]["product_prices"][$contador]["regular_price"]["amount"]=(float)$producto["precio"]["product_prices"][$contador]["regular_price"]["amount"];
@@ -315,7 +315,7 @@ class ProductoController extends ModuleAdminController{
             for($contador2=0;$contador2<count($producto["stock"]["items"]);$contador2++){
                 $producto["stock"]["items"][$contador2]["quantity"]=(int)$producto["stock"]["items"][$contador2]["quantity"];
             }
-            $curlController->setDatosPeticion($producto);
+            $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
             // $respuesta=$curlController->ejecutarPeticion("post",true);
             // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
@@ -541,14 +541,14 @@ class ProductoController extends ModuleAdminController{
             "precios" => [],
             "stocks" => []
         ];
-        $merchant_product_model_id=$modeloProducto["product_model"]["merchant_product_model_id"];
-        $datosProducto["outline"]=$modeloProducto["outline"];
-        $datosProducto["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
-        $datosProducto["product_model"]["merchant_product_model_id"]=$modeloProducto["product_model"]["merchant_product_model_id"];
-        $datosProducto["product_model"]["product_model_attributes"]=$modeloProducto["product_model"]["product_model_attributes"];
+        $merchant_product_model_id=$modeloProducto["producto"]["product_model"]["merchant_product_model_id"];
+        $datosProducto["outline"]=$modeloProducto["producto"]["outline"];
+        $datosProducto["merchant_product_model_id"]=$modeloProducto["producto"]["product_model"]["merchant_product_model_id"];
+        $datosProducto["product_model"]["merchant_product_model_id"]=$modeloProducto["producto"]["product_model"]["merchant_product_model_id"];
+        $datosProducto["product_model"]["product_model_attributes"]=$modeloProducto["producto"]["product_model"]["product_model_attributes"];
         $datosProducto["precios"]=$modeloProducto["precio"]["product_prices"];
         $datosProducto["stocks"]=$modeloProducto["stock"]["items"];
-        foreach($modeloProducto["product_model"]["product_configs"] as $datosModeloProductoNivel3){
+        foreach($modeloProducto["producto"]["product_model"]["product_configs"] as $datosModeloProductoNivel3){
             $configModelo=[];
             foreach($datosModeloProductoNivel3 as $key2 => $datosModeloProductoNivel4){
                 if($key2!=="product_simples"){
