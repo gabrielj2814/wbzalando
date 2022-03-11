@@ -27,6 +27,8 @@ function registrar(){
         success: (respuesta) => {
             console.log(respuesta);
             preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-success","registro completado")
             consultarTodos()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
@@ -34,12 +36,15 @@ function registrar(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
 
 function consultarAtributosPrestashop(){
     const linkControlador=document.getElementById("linkControlador").value;
+    preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -54,8 +59,13 @@ function consultarAtributosPrestashop(){
             let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
             insertarAtributoSelect(datos)
             consultarTodos()
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         },
         error: () => {
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
         }
     });
 }
@@ -96,6 +106,7 @@ function consultarTodos(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -184,6 +195,7 @@ function eliminar(a){
             console.log(respuesta);
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","Atributo eliminado")
             consultarTodos()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
@@ -191,8 +203,22 @@ function eliminar(a){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
+}
+
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
 }
 
 consultarAtributosPrestashop()
