@@ -65,6 +65,7 @@ function registrar(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            mostrarAlerta("alert-success","Asociación completada")
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
@@ -73,6 +74,7 @@ function registrar(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -174,8 +176,22 @@ function consultarEsquemasYCategorias(a=1){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
+}
+
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
