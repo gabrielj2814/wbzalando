@@ -81,12 +81,14 @@ function registrar(){
             console.log(respuesta);
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-success","Color asociado")
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -230,6 +232,7 @@ function consultarAtributosPrestashop(){
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -419,15 +422,21 @@ function consultarPaises(){
         },
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
-            paises=datos["respuestaServidor"]["items"];
-            console.log("paises =>>> ",paises);
-            cargarPaisesZalando(paises);
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            if(datos["respuestaServidor"]["items"]){
+                paises=datos["respuestaServidor"]["items"];
+                console.log("paises =>>> ",paises);
+                cargarPaisesZalando(paises);
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+            }
+            else{
+                mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+            }
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
     return paises;
@@ -465,6 +474,19 @@ async function consultarColoresZalando(coloresPrestashop,pais){
         }
     });
     return colorZalando;
+}
+
+function mostrarAlerta(colorAlerta,mensaje){
+    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+    let htmlAlert='\
+    <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
+        '+mensaje+' .\
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+            <span aria-hidden="true">&times;</span>\
+        </button>\
+    </div>\
+    '
+    $contenedorAlerta.innerHTML+=htmlAlert
 }
 
 consultarAtributosPrestashop()

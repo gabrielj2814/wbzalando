@@ -1,4 +1,5 @@
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
+<div id="contenedorAlerta"></div>
 <!--
 <button id="botonRegistrar">registrar</button>
 <button id="botonConsultarTodos">consultar todos</button>
