@@ -285,7 +285,7 @@ function iniciarSlickDos(){
         iniciarSlickDos()
     }
 }
-
+// function para filtrar los productos de la primera vista
 function filtrarProductos(e){
     e.preventDefault()
     const linkControlador=document.getElementById("linkControlador").value;
@@ -337,7 +337,6 @@ function irHaFormularioDeProductos(){
     datosProductosForm={}
     $vistaInicial.style.display="none"
     $vistaFormProductos.style.display="block"
-    // console.log("los datos que se deben de mostrar en esta vista =>>> ",productosFiltrados)
     let radiosPaisesForm=document.querySelectorAll(".redio-paises-form");
 
     for(let pais of radiosPaisesForm){
@@ -346,6 +345,7 @@ function irHaFormularioDeProductos(){
             let descripcionProducto=producto.description.replace("<p>","").replace("</p>","").split("'").join("")
             let nombrePro=producto.name.split("'").join("")
             datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
+                paisTalla:"",
                 idProductoTienda:producto.id_product,
                 ean:producto.ean13,
                 nombreProducto:nombrePro,
@@ -396,6 +396,10 @@ window.onload = function(){
         }, 2000);
     }
 }
+//  ====================================
+//  ====================================
+//  ====================================
+// navegación entre paginas
 function irHaVistaInicial(){
     $vistaInicial.style.display="block"
     $vistaFormProductos.style.display="none"
@@ -418,7 +422,10 @@ function cargarProductosPorPaisSeleccionado(a){
     cargarDatosBrandCode();
     insertarProductosVistaEnvio(a.value,productos)
 }
-
+//  ====================================
+//  ====================================
+//  ====================================
+// cargar los datos de los productos que an sido ingresados en el formulario 
 function cargarDatosGuardados(pais){
     // alert("hola cargar datos guar")
     console.log("aqiiiiiiiiiiiiiiiiiiii =>>> ",datosProductosForm[pais])
@@ -428,7 +435,9 @@ function cargarDatosGuardados(pais){
             let datosProducto=datosProductosForm[pais][idProducto]
             document.getElementById(idProducto+"_categoria").value=datosProducto.outline
             let categoriaTalla=document.getElementById(idProducto+"_categoria_talla")
+            let paisTalla=document.getElementById(idProducto+"_pais_talla")
             categoriaTalla.value=datosProducto.size_group
+            paisTalla.value=datosProducto.paisTalla
             consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
 
             document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
@@ -466,7 +475,7 @@ function cargarDatosGuardados(pais){
         // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
     }
 }
-
+// funcion para hacer la seleccion en select multiples al cargar los datos en el formulario
 function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
     let estado=false
     for(let valor of valoresHaSeleccionar){
@@ -486,7 +495,7 @@ function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
 
     
 }
-
+// cargar el stock de las tallas guardadas
 function cargarStockTalla(e){
     let idPais=e.getAttribute("data-id-pais")
     let idProducto=e.getAttribute("data-id-producto")
@@ -553,20 +562,33 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
+                            <label >Talla Pais</label>\
+                            <select  id="'+codigoIdPaisIdproducto+'_pais_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="paisTalla" onBlur="consultarTallasPorPaisYCategoriaTalla(this)"  class="form-control margin-0 ">\
+                                <option value="null">Seleccione</option>\
+                                <option value="eu">Europa</option>\
+                                <option value="fr">Francia</option>\
+                                <option value="it">Italia</option>\
+                                <option value="uk">Reino Unido</option>\
+                                <option value="us">Estados Unidos</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
                             <label >color</label>\
                             <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="color_code.primary" id="'+codigoIdPaisIdproducto+'_color" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-color-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
                     </div>\
+                </div>\
+                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label for="">supplier color</label>\
                             <input id="'+codigoIdPaisIdproducto+'_supplier_color" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
-                </div>\
-                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Siglas Moneda</label>\
@@ -585,14 +607,13 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input id="'+codigoIdPaisIdproducto+'_precio_promocion" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
+                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Inicio de Descuento</label>\
                             <input id="'+codigoIdPaisIdproducto+'_fecha_inicio_promocion" type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaInicioPromocion"  class="form-control campo-fecha-inicio-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
-                            </div>\
                         </div>\
                     </div>\
-                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Fecha de Final de Descuento</label>\
@@ -613,6 +634,8 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input disabled id="'+codigoIdPaisIdproducto+'_material_precentage" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
+                </div>\
+                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target age groups</label>\
@@ -621,8 +644,6 @@ function insertarProductosVistaEnvio(idPais,productos){
                             </select>\
                         </div>\
                     </div>\
-                </div>\
-                <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >target genders</label>\
@@ -1021,14 +1042,14 @@ function cargarDatosEdicionGlobalColor(pais){
 function consultarTallasPorPaisYCategoriaTalla(a){
     insertarDatosDeEnvioDeProduct(a)
     const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
-    let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
-    let isoCode=radiosPaisesForm.getAttribute("data-iso-code")
     let idProducto=a.getAttribute("data-id-producto")
+    let isoCode=document.getElementById(idProducto+"_pais_talla")
+    let grupo=document.getElementById(idProducto+"_categoria_talla")
     let idPais=a.getAttribute("data-id-pais")
     datosProductosForm[idPais][idProducto].datosTallas={}
-    preloader.style.opacity="1"
-    bodyPleloader.style.overflow="hidden"
-    if(a.value!==null){
+    if(grupo.value!=="null" && isoCode.value!=="null"){
+        preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
         $.ajax({
             type: 'GET',
             cache: false,
@@ -1037,8 +1058,8 @@ function consultarTallasPorPaisYCategoriaTalla(a){
             data: {
                 ajax: true,
                 action: 'getConsultartodotallasporpaisycategoriatallazalando',
-                pais:isoCode,
-                grupo:a.value
+                pais:isoCode.value,
+                grupo:grupo.value
             },
             success: (respuesta) => {
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
@@ -1290,7 +1311,6 @@ function aplicarEdicionGlobal(){
             }
         }
     })
-    // console.log("ddddddddddddddddddddddd =>  ",$edicionGlobalTargetAgeGroups)
     let estadoEdicionGlobalSeason=seleccionSeleccionUnicaEdicionGlobal($camposSeasonCode,$edicionGlobalSeasonCode.value)
     let estadoEdicionGlobalBrand=seleccionSeleccionUnicaEdicionGlobal($camposBrandCode,$edicionGlobalBrandCode.value)
     let estadoEdicionGlobalTargetAge=seleccionSeleccionMultipleEdicionGlobal($camposTargetAgeGroupsCode,$edicionGlobalTargetAgeGroups)
