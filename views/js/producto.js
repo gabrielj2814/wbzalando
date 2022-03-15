@@ -992,7 +992,7 @@ function cargarDatosEdicionGlobalColor(pais){
     const linkDeControladorColor=document.getElementById("linkDeControladorColor").value;
     let edicionGlobalColor=document.getElementById("edicionGlobalColor")
     edicionGlobalColor.innerHTML=""
-    let isoCode=pais.getAttribute("data-iso-code")
+    // let isoCode=pais.getAttribute("data-iso-code")
     // alert(isoCode)
     $.ajax({
         type: 'GET',
@@ -1002,7 +1002,7 @@ function cargarDatosEdicionGlobalColor(pais){
         data: {
             ajax: true,
             action: 'getconsultartodoporpais',
-            isoCode
+            isoCode:"es"
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
@@ -1186,7 +1186,7 @@ function insertarDatosDeEnvioDeProduct(a){
 }
 
 function bloquearCampoPorCategoriaZalando(categoria,producto,idPais,idProducto){
-    alert(categoria)
+    // alert(categoria)
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     $.ajax({
         type: 'GET',
