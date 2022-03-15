@@ -30,7 +30,14 @@
         <select id='campoCategoriaTallasZalando' name='campoCategoriaTallasZalando' ></select>
     </div>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
-        <select id='campoPais' name='campoPais' ></select>
+        <select id='campoPais' name='campoPais' >
+            <option value="null">Seleccione</option>
+            <option value="eu">Europa</option>
+            <option value="fr">Francia</option>
+            <option value="it">Italia</option>
+            <option value="uk">Reino Unido</option>
+            <option value="us">Estados Unidos</option>
+        </select>
     </div>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-3'>
         <button class="btn btn-primary" onClick="consultarConsultarTallaPorAtributoTalla()">
