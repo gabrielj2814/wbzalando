@@ -226,7 +226,9 @@ function consultarAtributosPrestashop(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             let colores=datos["respuestaServidor"]
             cargarAtributosPrestashop(colores);
-            consultarPaises();
+            // consultarPaises();
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             
         },
         error: () => {
@@ -244,15 +246,6 @@ function cargarAtributosPrestashop(datos){
         option+="<option value='"+atributo.id_attribute_group+"' >"+atributo.name+"</option>";
     }
     campoAtributo.innerHTML=option
-}
-
-function cargarPaisesZalando(paises){
-    let campoPais=document.getElementById("campoPais")
-    let option="<option value='null' >Seleccione</option>";
-    for(let pais of paises){
-        option+="<option value='"+pais.country_code+"' >"+pais.country_name+"</option>";
-    }
-    campoPais.innerHTML=option
 }
 
 function consultarColorPrestashop(a){
@@ -408,46 +401,12 @@ function crearElementosFormulario(colores,coloresZalando,pais){
     formularioColor.innerHTML=html;
 }
 
-function consultarPaises(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    let paises=[]
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'getconsultarpaiseszalando'
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            if(datos["respuestaServidor"]["items"]){
-                paises=datos["respuestaServidor"]["items"];
-                console.log("paises =>>> ",paises);
-                cargarPaisesZalando(paises);
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
-            }
-            else{
-                mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
-            }
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
-        }
-    });
-    return paises;
-}
-
-async function consultarColoresZalando(coloresPrestashop,pais){
+function consultarColoresZalando(coloresPrestashop,pais){
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let colorZalando=[]
-    await $.ajax({
+    $.ajax({
         type: 'GET',
         cache: false,
         dataType: 'json',

@@ -319,46 +319,6 @@ function cargarCategoriasTallasZalando(datos){
     campoCategoriaTallasZalando.innerHTML=option
 }
 
-// async function consultarPaises(){
-//     preloader.style.opacity="1"
-//     bodyPleloader.style.overflow="hidden"
-//     const linkControlador=document.getElementById("linkControlador").value;
-//     let paises=[];
-//     await $.ajax({
-//         type: 'GET',
-//         cache: false,
-//         dataType: 'json',
-//         url: linkControlador, 
-//         data: {
-//             ajax: true,
-//             action: 'getconsultarpaiseszalando'
-//         },
-//         success: (respuesta) => {
-//             console.log(respuesta);
-//             let datos=JSON.parse(JSON.stringify(respuesta))
-//             paises=datos["respuestaServidor"]["items"]
-//             cargarPaisesZalando(paises)
-//             preloader.style.opacity="0"
-//             bodyPleloader.style.overflow="auto"
-//         },
-//         error: () => {
-//             preloader.style.opacity="0"
-//             bodyPleloader.style.overflow="auto"
-//             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
-//         }
-//     });
-//     return paises
-// }
-
-// function cargarPaisesZalando(paises){
-//     let campoPais=document.getElementById("campoPais")
-//     let option="<option value='null' >Seleccione</option>";
-//     for(let pais of paises){
-//         option+="<option value='"+pais.country_code+"' >"+pais.country_name+"</option>";
-//     }
-//     campoPais.innerHTML=option
-// }
-
 function traerTallas(tallasPrestashop,codigoPais,codigoTalla){
     const linkControlador=document.getElementById("linkControlador").value;
     let tallas=[];

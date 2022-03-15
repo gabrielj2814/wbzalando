@@ -12,18 +12,13 @@
     <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-5'>
         <label>Atributo</label>
     </div>
-    <div class='col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xs-5'>
-        <label>Pais</label>
-    </div>
 </div>
 
 <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'>
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
         <select id='campoAtributo' name='campoAtributo'></select>
     </div>
-    <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
-        <select id='campoPais' name='campoPais'></select>
-    </div>
+    <input type="hidden" id="campoPais" name="campoPais" value="es">
     <div class='col-2 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xs-5'>
         <button class="btn btn-primary" onClick="consultarColorPrestashop(this)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
