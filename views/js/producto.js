@@ -409,6 +409,10 @@ function irHaVistaBorrarProductos(e){
     e.preventDefault()
     $vistaFormProductos.style.display="none"
     $vistaBorrarProductos.style.display="block"
+    let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
+    if(radiosPaisesHaEliminar.length===1){
+        cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
+    }
 }
 
 function irHaVistaFormularioProductos(){
@@ -428,7 +432,7 @@ function cargarProductosPorPaisSeleccionado(a){
 // cargar los datos de los productos que an sido ingresados en el formulario 
 function cargarDatosGuardados(pais){
     // alert("hola cargar datos guar")
-    console.log("aqiiiiiiiiiiiiiiiiiiii =>>> ",datosProductosForm[pais])
+    // console.log("aqiiiiiiiiiiiiiiiiiiii =>>> ",datosProductosForm[pais])
     if(datosProductosForm[pais]){
         // _categoria
         for(let idProducto in datosProductosForm[pais]){
