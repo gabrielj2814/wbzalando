@@ -1327,6 +1327,8 @@ function cargarImagenProducto(a){
     let $inputFile=document.getElementById(idProducto+"_files_imagen")
     // console.log("input file =>>>> ",$inputFile.files[0])
     if($inputFile.files.length>0){
+        preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
         let datosImagen=$inputFile.files[0]
         let extencion=null;
         if(datosImagen.type==="image/jpeg"){
@@ -1368,11 +1370,15 @@ function cargarImagenProducto(a){
                     }
                 }
                 else{
-                    alert("error al subir el archivo")
+                    alert("error al subir la imagen")
                 }
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             },
             error:() => {
                 alert("error al subir el archivo")
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
             }
         });
         
