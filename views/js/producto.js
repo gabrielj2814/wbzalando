@@ -12,6 +12,7 @@ let datos_target_genders={}
 let datos_categorias_tallas_zalando=[]
 let datos_categorias=[]
 let datos_materiales_contruccion={}
+let imagenSubidaAlServidor=[]
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
@@ -373,7 +374,9 @@ function irHaFormularioDeProductos(){
                 warnings:"null",
                 material_percentage:"null",
                 material_code:"null",
-                atributos_producto:producto.atributos_producto
+                atributos_producto:producto.atributos_producto,
+                imagenCliente:null,
+                imagenServer:null,
             }
         }
     }
@@ -474,6 +477,11 @@ function cargarDatosGuardados(pais){
             let radioFormulario=document.getElementById(idProducto+"_check_envio")
             radioFormulario.checked=datosProducto.haEnviar
             cambiarEstadoDeEnvioDeProduct(radioFormulario)
+            if(datosProducto.imagenCliente!==null){
+                let imagen=document.getElementById(idProducto+"_imagen")
+                imagen.style.display="block"
+                imagen.src=datosProducto.imagenCliente
+            }
             console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
         }
         // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
@@ -611,6 +619,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input id="'+codigoIdPaisIdproducto+'_precio_promocion" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
+                </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
@@ -672,14 +681,6 @@ function insertarProductosVistaEnvio(idPais,productos){
                             </select>\
                         </div>\
                     </div>\
-                    </div>\
-                <div class="row">\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >Files</label>\
-                            <input type="file" id="'+codigoIdPaisIdproducto+'_files_imagen">\
-                        </div>\
-                    </div>\
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
@@ -715,6 +716,20 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <label for="">how to use</label>\
                             <textarea disabled id="'+codigoIdPaisIdproducto+'_how_to_use" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
+                    </div>\
+                </div>\
+                <div class="row" style="padding-bottom:30px;">\
+                    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
+                        <div class="form-group">\
+                            <label for="'+codigoIdPaisIdproducto+'_files_imagen" class="btn btn-primary">seleccionar imagen</label>\
+                            <form id="'+codigoIdPaisIdproducto+'_formulario_imagen" style="display:none;">\
+                                <input type="file" id="'+codigoIdPaisIdproducto+'_files_imagen" name="imagenProducto" accept="image/png, image/jpeg" >\
+                            </form>\
+                            <button class="btn btn-primary" data-id-pais="'+idPais+'" data-id-producto="'+codigoIdPaisIdproducto+'" onClick="cargarImagenProducto(this)" >Cargar Imagen</button>\
+                        </div>\
+                    </div>\
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">\
+                        <img id="'+codigoIdPaisIdproducto+'_imagen" src="" alt="imagen del producto '+codigoIdPaisIdproducto+'" style="display:none;height: 400px;width: 300px;"/>\
                     </div>\
                 </div>\
             </div>\
@@ -1298,6 +1313,79 @@ function guardarDatosTalla(e){
     }
 }
 
+function cargarImagenProducto(a){
+    // a.preventDefault()
+    // imagenCliente
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+    if(!datosProductosForm[idPais]){
+        datosProductosForm[idPais]={}
+    }
+    if(!datosProductosForm[idPais][idProducto]){
+        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
+    }
+    let $inputFile=document.getElementById(idProducto+"_files_imagen")
+    // console.log("input file =>>>> ",$inputFile.files[0])
+    if($inputFile.files.length>0){
+        let datosImagen=$inputFile.files[0]
+        let extencion=null;
+        if(datosImagen.type==="image/jpeg"){
+            extencion="jpeg"
+        }
+        if(datosImagen.type==="image/jpg"){
+            extencion="jpg"
+        }
+        const linkControlador=document.getElementById("linkControlador").value;
+        let formularioImagen=document.getElementById(idProducto+"_formulario_imagen")
+        let formtoFormularioImagen=new FormData(formularioImagen)
+        console.log("datos formulario imagen =>>>> ",formtoFormularioImagen.get("imagenProducto"))
+        formtoFormularioImagen.set("ajax",true)
+        formtoFormularioImagen.set("action","postsubirimagen")
+        formtoFormularioImagen.set("NombreImagenTmp",moment().format("x"))
+        formtoFormularioImagen.set("extencion",extencion)
+        $.ajax({
+            url:linkControlador,
+            type: 'post',
+            data: formtoFormularioImagen,
+            contentType: false,
+            processData: false,
+            success: function(respuesta) {
+                console.log(respuesta)
+                let respuestaJson=JSON.parse(respuesta).respuestaServidor
+                if(respuestaJson.estado===true){
+                    let imagen=document.getElementById(idProducto+"_imagen")
+                    if(datosImagen.type==="image/jpeg" || datosImagen.type==="image/jpg"){
+                        let objctURL=URL.createObjectURL(datosImagen)
+                        console.log("URL IMAGEN =>>>> ",objctURL)
+                        imagen.src=objctURL
+                        imagen.style.display="block"
+                        datosProductosForm[idPais][idProducto].imagenCliente=objctURL
+                        datosProductosForm[idPais][idProducto].imagenServer=respuestaJson.NombreImagenTmp
+                        imagenSubidaAlServidor.push(respuestaJson.NombreImagenTmp)
+                    }
+                    else{
+                        alert("extención de imagen invalido")
+                    }
+                }
+                else{
+                    alert("error al subir el archivo")
+                }
+            },
+            error:() => {
+                alert("error al subir el archivo")
+            }
+        });
+        
+        
+    }
+    else{
+        alert("no hay imagen selccionada")
+        imagen.style.display="none"
+    }
+    console.log(datosProductosForm)
+
+}
+
 function aplicarEdicionGlobal(){
     let $edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
     let $edicionGlobalSeasonCode=document.getElementById("edicionGlobalSeasonCode")
@@ -1430,7 +1518,7 @@ function generarFormatoZalado(){
                     "product_config_attributes": {
                         "media": [
                             {
-                                "media_path": datosProductosForm[pais][producto].urlImagen,
+                                "media_path": datosProductosForm[pais][producto].imagenServer,
                                 "media_sort_key": parseInt(datosProductosForm[pais][producto].idUrlImagen)
                             }
                         ],
@@ -1526,6 +1614,7 @@ function generarFormatoZalado(){
                 modelo["stock"]={
                     items:stock
                 }
+                modelo["borrarImagenes"]=imagenSubidaAlServidor
                 productosConFormato.push(modelo)
             }
         }

@@ -2,11 +2,13 @@
 include("curlController.php");
 include("logger.php");
 use Clases\CurlController;
+use PrestaShop\PrestaShop\Adapter\Entity\Module as EntityModule;
 
 class ProductoController extends ModuleAdminController{
 
     private $id_idioma;
     private $nombreTabla;
+    private $modulo;
 
     public function __construct()
     {
@@ -14,6 +16,7 @@ class ProductoController extends ModuleAdminController{
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
         $this->nombreTabla="ps_wbzalando_esquemas"; 
+        $this->modulo= EntityModule::getInstanceByName("wbzalando");; 
     }
 
     public function init()
@@ -23,6 +26,7 @@ class ProductoController extends ModuleAdminController{
 
     public function initContent(){
         parent::initContent();
+        $this->borrarImagenesBasuraReciduos();
         $esquemasDB=$this->chequearEsquemasDeHoyDB();
         if(count($esquemasDB)===0){
             $datosEsquemas=$this->consultarEsquemasDeProducto();
@@ -298,7 +302,7 @@ class ProductoController extends ModuleAdminController{
             "productos_enviados" =>[]
         ];
         foreach($productos as $producto ){
-            // enviar productos a zalando
+            // re asignar tipos de datos a las propiedades
             $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             if(array_key_exists("material.upper_material_clothing",$producto["producto"]["product_model"]["product_configs"][0])){
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
@@ -315,10 +319,19 @@ class ProductoController extends ModuleAdminController{
             for($contador2=0;$contador2<count($producto["stock"]["items"]);$contador2++){
                 $producto["stock"]["items"][$contador2]["quantity"]=(int)$producto["stock"]["items"][$contador2]["quantity"];
             }
+            // asignar path a las imagen
+            if($this->copiarImagen($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"])){
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"]=_PS_MODULE_DIR_.$this->modulo->name."/upload/".$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"];
+            }
+            // // borrar imagenes basura
+            $this->borrarImagenesBasura($producto["borrarImagenes"]);
+            // // set datos para el envio
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
+            // // enviar producto
             // $respuesta=$curlController->ejecutarPeticion("post",true);
             // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            // // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto);
             // // subir stocks de producto
             // $stocksSubidos=$this->subirStock($producto["stocks"]);
@@ -339,6 +352,7 @@ class ProductoController extends ModuleAdminController{
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
+        
         return $estadoDeProductos;
     }
     
@@ -706,6 +720,80 @@ class ProductoController extends ModuleAdminController{
     function consultarStock($ean){
         $SQL="SELECT * FROM ps_wbzalando_stock WHERE ean='".$ean."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    public function ajaxProcessPostSubirImagen(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        if(array_key_exists("imagenProducto",$_FILES)){
+            if($_FILES["imagenProducto"]["type"] == "image/jpeg" || $_FILES["imagenProducto"]["type"] == "image/jpg"){
+                $dir=_PS_MODULE_DIR_.$this->modulo->name."/tmp/";
+                $_FILES["imagenProducto"]["name"]=date("Y-m-d")."_".$_POST["NombreImagenTmp"].".".$_POST["extencion"];
+                // move_uploaded_file($_FILES["imagenProducto"]["tmp_name"],$dir.$_FILES["imagenProducto"]["name"]);
+                if(move_uploaded_file($_FILES["imagenProducto"]["tmp_name"],$dir.$_FILES["imagenProducto"]["name"])){
+                    $respuesta_servidor["respuestaServidor"]=[
+                        "estado" => true,
+                        "NombreImagenTmp" => $_FILES["imagenProducto"]["name"],
+                        "urlFull" => $dir.$_FILES["imagenProducto"]["name"]
+                    ];
+                }
+            }
+        }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "estado" => false
+            ];
+        }
+        print(json_encode($respuesta_servidor));
+        
+        // function limpiarTmp($dir){
+            // $totalDeArchivosEliminados=0;
+            // $archivos=scandir($dir);
+            // foreach($archivos as $archivo){
+            //     if($dir.$archivo!==$dir.".gitkeep"){
+            //         if(is_file($dir.$archivo)){
+            //             if(unlink($dir.$archivo)){
+            //                 $totalDeArchivosEliminados++;
+            //             }
+            //         }
+            //     }
+            // }
+        //     return $totalDeArchivosEliminados;
+        // }
+        
+    }
+
+    public function copiarImagen($nombreImagen){
+        return rename(_PS_MODULE_DIR_.$this->modulo->name."/tmp/".$nombreImagen,_PS_MODULE_DIR_.$this->modulo->name."/upload/".$nombreImagen);
+    }
+
+    
+    public function borrarImagenesBasura($listaDeImagenes){
+        $dir=_PS_MODULE_DIR_.$this->modulo->name."/tmp/";
+        $totalDeArchivosEliminados=0;
+        foreach($listaDeImagenes as $imagen){
+            if(file_exists($dir.$imagen)){
+                unlink($dir.$imagen);
+            }
+        }
+    }
+
+    public function borrarImagenesBasuraReciduos(){
+        $totalDeArchivosEliminados=0;
+        $dir=_PS_MODULE_DIR_.$this->modulo->name."/tmp/";
+        $archivos=scandir($dir);
+        foreach($archivos as $archivo){
+            if($dir.$archivo!==$dir.".gitkeep"){
+                if(is_file($dir.$archivo)){
+                    $fechaHoy=strtotime(date("y-m-d"));
+                    $fechaImagen=strtotime(date(explode("_",$archivo)[0]));
+                    if($fechaHoy!==$fechaImagen){
+                        if(unlink($dir.$archivo)){
+                            $totalDeArchivosEliminados++;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //==============

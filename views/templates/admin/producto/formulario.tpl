@@ -151,7 +151,7 @@
                 <button class="btn btn-primary" id="botonEdicionGlobal">aplicar edicion global</button>
             </div>
         </div>
-        <form id="formTablaProductos">
+        <div id="formTablaProductos">
             <div style="display: flex;margin-bottom:30px;">
                 <div class="col-sm-2">
                     <label class="control-label col-xs-12 mt" style="width: auto; min-width: 100px;padding-right: 0 !important;">
@@ -355,7 +355,7 @@
 
             </div>
             
-        </form>
+        </div>
     </div>
 </div>
 
