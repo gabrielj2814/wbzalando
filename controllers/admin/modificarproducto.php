@@ -124,5 +124,4 @@ class ModificarproductoController extends ModuleAdminController{
 
 
 ?>
-<?php
 

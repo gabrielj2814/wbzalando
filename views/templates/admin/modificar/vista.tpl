@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div id="listaDeProductosHaEliminar">
+    <div id="listaDeProductosHaEliminar" style="display: flex;">
 
     </div>
 
@@ -78,4 +78,3 @@
 <script type="text/javascript" src="/modules/wbzalando/views/js/librerias/moment.js"></script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/modificar.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script>

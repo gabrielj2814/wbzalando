@@ -1,1 +1,5 @@
 /controllers/admin/logs/*.log
+/upload/*.jpg
+/upload/*.jpeg
+/tmp/*.jpg
+/tmp/*.jpeg

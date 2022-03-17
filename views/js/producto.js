@@ -1497,6 +1497,7 @@ function seleccionSeleccionMultipleEdicionGlobal(selects,selectEdicion){
 
 function generarFormatoZalado(){
     let productosConFormato=[]
+    let id=parseInt(moment().format("x"))
     for(let pais in datosProductosForm){
         for(let producto in datosProductosForm[pais]){
             // haEnviar
@@ -1506,7 +1507,7 @@ function generarFormatoZalado(){
                    "producto":{
                         "outline": datosProductosForm[pais][producto].outline,
                         "product_model": {
-                            "merchant_product_model_id": "modelo-"+moment().format("x"),
+                            "merchant_product_model_id": "modelo-"+id,
                             "product_model_attributes": {
                                 "name": datosProductosForm[pais][producto].nombreProducto,
                                 "brand_code": datosProductosForm[pais][producto].brand_code,
@@ -1520,12 +1521,13 @@ function generarFormatoZalado(){
                         }
                    }
                 }
+                modelo["idPais"]=pais;
                 if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
                     modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
                     modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
                 }
                 let config={
-                    "merchant_product_config_id": "config-"+moment().format("x"),
+                    "merchant_product_config_id": "config-"+id,
                     "product_config_attributes": {
                         "media": [
                             {
@@ -1559,7 +1561,7 @@ function generarFormatoZalado(){
                 for(let idAtributoTalla in datosProductosForm[pais][producto].datosTallas){
                     let datosTalla=datosProductosForm[pais][producto].datosTallas[idAtributoTalla]
                     let simple= {
-                        "merchant_product_simple_id": "simple-"+datosTalla.talla+"-"+moment().format("x"),
+                        "merchant_product_simple_id": "simple-"+datosTalla.talla+"-"+id,
                         "product_simple_attributes": {
                             "ean": datosTalla.ean,
                             "size_codes": {
@@ -1628,6 +1630,7 @@ function generarFormatoZalado(){
                 modelo["borrarImagenes"]=imagenSubidaAlServidor
                 productosConFormato.push(modelo)
             }
+            id+=1
         }
     }
     console.log("datos finales =>>>> ",productosConFormato)

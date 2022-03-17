@@ -301,6 +301,7 @@ class ProductoController extends ModuleAdminController{
             "productos_guardados_db" => [],
             "productos_enviados" =>[]
         ];
+        $imagenes=[];
         foreach($productos as $producto ){
             // re asignar tipos de datos a las propiedades
             $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
@@ -323,8 +324,10 @@ class ProductoController extends ModuleAdminController{
             if($this->copiarImagen($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"])){
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"]=_PS_MODULE_DIR_.$this->modulo->name."/upload/".$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"];
             }
-            // // borrar imagenes basura
-            $this->borrarImagenesBasura($producto["borrarImagenes"]);
+            // // capturar imagenes basura
+            foreach($producto["borrarImagenes"] as $imagenBasura){
+                $imagenes[]=$imagenBasura;
+            }
             // // set datos para el envio
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
@@ -352,7 +355,8 @@ class ProductoController extends ModuleAdminController{
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
-        
+        // borrar imagenes basura 
+        $this->borrarImagenesBasura($imagenes);
         return $estadoDeProductos;
     }
     
@@ -434,11 +438,13 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_modelo_producto(
                 id_modelo_producto, 
                 outline, 
+                sales_channel_id, 
                 json_modelo_producto
                 ) 
             VALUES (
                 '".$producto["merchant_product_model_id"]."',
                 '".$producto["outline"]."',
+                '".$producto["id_pais"]."',
                 '".json_encode($producto["product_model"])."'
             );
         ";
@@ -548,6 +554,7 @@ class ProductoController extends ModuleAdminController{
         $merchant_product_model_id=null;
         $datosProducto=[
             "outline"=> null,
+            "id_pais"=> null,
             "merchant_product_model_id"=> null,
             "product_model" => [],
             "product_configs" => [],
@@ -555,6 +562,7 @@ class ProductoController extends ModuleAdminController{
             "precios" => [],
             "stocks" => []
         ];
+        $datosProducto["id_pais"]=$modeloProducto["idPais"];
         $merchant_product_model_id=$modeloProducto["producto"]["product_model"]["merchant_product_model_id"];
         $datosProducto["outline"]=$modeloProducto["producto"]["outline"];
         $datosProducto["merchant_product_model_id"]=$modeloProducto["producto"]["product_model"]["merchant_product_model_id"];
@@ -744,21 +752,6 @@ class ProductoController extends ModuleAdminController{
             ];
         }
         print(json_encode($respuesta_servidor));
-        
-        // function limpiarTmp($dir){
-            // $totalDeArchivosEliminados=0;
-            // $archivos=scandir($dir);
-            // foreach($archivos as $archivo){
-            //     if($dir.$archivo!==$dir.".gitkeep"){
-            //         if(is_file($dir.$archivo)){
-            //             if(unlink($dir.$archivo)){
-            //                 $totalDeArchivosEliminados++;
-            //             }
-            //         }
-            //     }
-            // }
-        //     return $totalDeArchivosEliminados;
-        // }
         
     }
 

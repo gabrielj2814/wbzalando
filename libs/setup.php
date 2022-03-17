@@ -195,6 +195,7 @@ if (!class_exists("SetupWbZalando")) {
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_modelo_producto(
                     id_modelo_producto VARCHAR(150) NOT NULL,
                     outline VARCHAR(150) NOT NULL,
+                    sales_channel_id VARCHAR(150) NOT NULL,
                     json_modelo_producto LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_modelo_producto`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',

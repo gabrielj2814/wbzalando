@@ -13,22 +13,39 @@ function insertarProductos(productos){
     let html="";
     listaProducutosPorPais={}
     for(let producto of productos){
-        if(listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]){
-            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
-        }
-        else{
-            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]=[]
-            listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
-        }
-        listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]
+        // if(listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]){
+        //     listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
+        // }
+        // else{
+        //     listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]=[]
+        //     listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto].push(producto)
+        // }
+        // listaProducutosPorPais[producto.detallesDelProdcuto[0].id_modelo_producto]
+        listaProducutosPorPais[producto.id_modelo_producto]=producto
+        
        
     }
 
     console.log("datos =>>>>>>>>>>>>>>>>>>> ",listaProducutosPorPais)
+    // for(let idModeloProducto in listaProducutosPorPais){
+    //     let producto=listaProducutosPorPais[idModeloProducto][0]
+    //     let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
+    //     // <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>Borrar</button></div></div>\
+    //     html+="\
+    //     <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input fila-producto-eliminar' style='cursor: pointer;' >\
+    //     <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
+    //     <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>\
+    //         <svg data-id-modelo='"+idModeloProducto+"' xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-trash-fill' viewBox='0 0 16 16'>\
+    //             <path data-id-modelo='"+idModeloProducto+"' d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z'/>\
+    //         </svg>\
+    //     </button></div></div>\
+    //     </div>\
+    //     ";
+    // }
+    // listaDeProductosHaEliminar.innerHTML=html
     for(let idModeloProducto in listaProducutosPorPais){
-        let producto=listaProducutosPorPais[idModeloProducto][0]
-        let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
-        // <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>Borrar</button></div></div>\
+        let producto=listaProducutosPorPais[idModeloProducto]
+        let infoModelo=JSON.parse(producto.json_modelo_producto)
         html+="\
         <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input fila-producto-eliminar' style='cursor: pointer;' >\
         <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
@@ -55,8 +72,8 @@ function mostrarModalDatosProducto(a){
     console.log("datalles producto =>>>>>> ",detalleProducto)
     let preciosProducto=document.getElementById("preciosProducto")
     let nombreDelProductoDetalle=document.getElementById("nombreDelProductoDetalle")
-    nombreDelProductoDetalle.textContent=JSON.parse(detalleProducto[0].detallesDelProdcuto[0].json_modelo_producto).product_model_attributes.name
-    let precio=JSON.parse(detalleProducto[0].json_precio)
+    nombreDelProductoDetalle.textContent=JSON.parse(detalleProducto.json_modelo_producto).product_model_attributes.name
+    let precio=JSON.parse(detalleProducto.simples[0].precio.json_precio)
     let precioDescuento=""
     let fechaInicioDescuento=""
     let fechaFinalDescuento=""
@@ -91,12 +108,17 @@ function mostrarModalDatosProducto(a){
             </div>\
         </div>\
     '
+    if(precioDescuento!=="" && parseFloat(precioDescuento)>0){
+        let enviarDescuento=document.getElementById(idModelo+"_enviar_descuento")
+        enviarDescuento.setAttribute("checked",true)
+        capturarGeneral(enviarDescuento)
+    }
     let tallasStock=document.getElementById("tallasStock")
     tallasStock.innerHTML=""
     let htmlTallaStock=""
-    for(let datosProducto of detalleProducto){
-        let stock=datosProducto.datosStock[0]
-        let talla=JSON.parse(datosProducto.detallesDelProdcuto[0].json_simple_producto)
+    for(let simple of detalleProducto.simples){
+        let stock=simple.stock
+        let talla=JSON.parse(simple.json_simple_producto)
         // product_simple_attributes
         htmlTallaStock+='\
         <div class="row" >\
@@ -150,14 +172,15 @@ function mostrarDatosProductosModificados(idModelo){
 }
 
 function registrarndoProductosModificados(idModelo){
-    for(let producto of listaProducutosPorPais[idModelo]){
-        if(!productosModificados[idModelo+"_"+producto.ean]){
-            producto=JSON.parse(JSON.stringify(producto))
-            let infoStock=producto.datosStock[0]
-            let infoPrecio=JSON.parse(producto.json_precio)
-            productosModificados[idModelo+"_"+producto.ean]={
-                ean:producto.ean,
-                sales_channel_id:producto.sales_channel_id,
+    for(let simple of listaProducutosPorPais[idModelo].simples){
+        if(!productosModificados[idModelo+"_"+simple.ean]){
+            simple=JSON.parse(JSON.stringify(simple))
+            console.log("simple =>>>> ",simple)
+            let infoStock=simple.stock
+            let infoPrecio=JSON.parse(simple.precio.json_precio)
+            productosModificados[idModelo+"_"+infoPrecio.ean]={
+                ean:simple.ean,
+                sales_channel_id:infoPrecio.sales_channel_id,
                 stock:infoStock.quantity,
                 moneda:infoPrecio.regular_price.currency,
                 precioRegular:infoPrecio.regular_price.amount,
@@ -167,13 +190,16 @@ function registrarndoProductosModificados(idModelo){
             if(infoPrecio.promotional_price){
                 let arrayFechaInicio=infoPrecio.scheduled_prices[0].start_time.split("T")[0]
                 let arrayFechaFinal=infoPrecio.scheduled_prices[0].end_time.split("T")[0]
-                productosModificados[idModelo+"_"+producto.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
-                productosModificados[idModelo+"_"+producto.ean]["fechaInicioPromocion"]=arrayFechaInicio
-                productosModificados[idModelo+"_"+producto.ean]["fechaFinPromocion"]=arrayFechaFinal
+                productosModificados[idModelo+"_"+infoPrecio.ean]["precioPromocion"]=infoPrecio.promotional_price.amount
+                productosModificados[idModelo+"_"+infoPrecio.ean]["fechaInicioPromocion"]=arrayFechaInicio
+                productosModificados[idModelo+"_"+infoPrecio.ean]["fechaFinPromocion"]=arrayFechaFinal
+                // productosModificados[idModelo+"_"+infoPrecio.ean].enviar_descuento=true
             }
         }
 
     }
+
+    
 }
 
 function capturarGeneral(a){
@@ -181,12 +207,12 @@ function capturarGeneral(a){
     let campo=a.getAttribute("data-campo")
     registrarndoProductosModificados(idModelo)
     // productosModificados[]
-    for(let producto of listaProducutosPorPais[idModelo]){
+    for(let simple of listaProducutosPorPais[idModelo].simples){
         if(a.type==="checkbox"){
-            productosModificados[idModelo+"_"+producto.ean][campo]=a.checked
+            productosModificados[idModelo+"_"+simple.ean][campo]=a.checked
         }
         else{
-            productosModificados[idModelo+"_"+producto.ean][campo]=a.value
+            productosModificados[idModelo+"_"+simple.ean][campo]=a.value
         }
     }
     console.log("productos registrados =>>>> ",productosModificados)
@@ -269,6 +295,7 @@ function  guardarPrecioDeProducto(a){
         let idModeloProducto=idProducto.split("_")[0]
         if(idModelo===idModeloProducto){
             let datosProducto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
+            
             if(datosProducto.enviar_descuento===true){
                 let precio={
                     "ean": datosProducto.ean,
@@ -450,6 +477,10 @@ function crearCheckboxPaisTest(paises){
     consultarProductosPorPais(paisesRadio[0])
 }
 
+function activarBoton(a){
+    alert("boton activado")
+}
+
 function iniciarSlick(){
     var slider = document.querySelector('#slider-paises');
     if(slider.children.length > 0){
@@ -500,13 +531,13 @@ function iniciarSlick(){
 }
 
 function consultarProductosPorPais(a){
+    let checkboxsPaises=document.querySelector(".checkbox-paises:checked");
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     controlesPaginacion.innerHTML="";
     let pagina=1;
     if(a!=1){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
     }
-    let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
@@ -518,11 +549,12 @@ function consultarProductosPorPais(a){
         data: {
             ajax: true,
             action: 'getconsultarproductosporpais',
-            codigoPais:checkboxsPaises[0].value,
+            codigoPais:checkboxsPaises.value,
             pagina
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
+            console.log("datos =>>>>>>>>>>>>>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
             if(respuestaJson.respuestaServidor.totalRegistros>1){
                 insertarControlesPaginacion();

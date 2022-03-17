@@ -98,31 +98,55 @@ class ModificarController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarProductosPorPais(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $minimoRegistros=2;
+        $minimoRegistros=10;
         $pagina=$_GET["pagina"];
-        $respuestaDB=$this->consultarPrecio($_GET["codigoPais"]);
-        $respuestaPaginadaDB=$this->paginarPrecio($pagina,$minimoRegistros,$_GET["codigoPais"]);
-        for($contador=0;$contador<count($respuestaPaginadaDB);$contador++){
-            $ean=$respuestaPaginadaDB[$contador]["ean"];
-            $respuestaPaginadaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
-            // $detallesDelProdcuto=$this->consultarProductos($ean);
-            $respuestaPaginadaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
+        $respuestaProductoModeloFull=$this->consultarProductosModeloProPaisFull($_GET["codigoPais"]);
+        $respuestaProductoModelo=$this->consultarProductosModeloProPais($pagina,$minimoRegistros,$_GET["codigoPais"]);
+        if(count($respuestaProductoModeloFull)>0){
+            for($contador=0;$contador<count($respuestaProductoModelo);$contador++){
+                $respuestaProductoConfig=$this->consultarConfigPorModelo($respuestaProductoModelo[$contador]["id_modelo_producto"]);
+                $respuestaProductoSimples=$this->consultarSimplePorConfig($respuestaProductoConfig[0]["id_configuracion_producto"]);
+                for($contador2=0;$contador2<count($respuestaProductoSimples);$contador2++){
+                    $respuestaProductoPrecios=$this->consultarPrecio($_GET["codigoPais"],$respuestaProductoSimples[$contador2]["ean"]);
+                    $respuestaProductoSimples[$contador2]["precio"]=$respuestaProductoPrecios[0];
+                }
+                for($contador3=0;$contador3<count($respuestaProductoSimples);$contador3++){
+                    $respuestaProductoStock=$this->consultarStock($respuestaProductoSimples[$contador3]["ean"],$_GET["codigoPais"]);
+                    $respuestaProductoSimples[$contador3]["stock"]=$respuestaProductoStock[0];
+                }
+                $respuestaProductoModelo[$contador]["config"]=$respuestaProductoConfig[0];
+                $respuestaProductoModelo[$contador]["simples"]=$respuestaProductoSimples;
+            }
+
+
         }
-        if(count($respuestaDB)>0){
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "consulta completada",
-                "datos" => $respuestaPaginadaDB,
-                "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
-                "totalRegistros" => count($respuestaDB),
-            ];
-        }
-        else{
-            $respuesta_servidor["respuestaServidor"]=[
-                "mensaje" => "consulta completada",
-                "datos" => []
-            ];
-        }
-        print(json_encode($respuesta_servidor));
+        // $respuestaDB=$this->consultarPrecio($_GET["codigoPais"]);
+        // $respuestaPaginadaDB=$this->paginarPrecio($pagina,$minimoRegistros,$_GET["codigoPais"]);
+        // for($contador=0;$contador<count($respuestaPaginadaDB);$contador++){
+        //     $ean=$respuestaPaginadaDB[$contador]["ean"];
+        //     $respuestaPaginadaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
+        //     // $detallesDelProdcuto=$this->consultarProductos($ean);
+        //     $respuestaPaginadaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
+        // }
+        // if(count($respuestaDB)>0){
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "consulta completada",
+        //         "datos" => $respuestaPaginadaDB,
+        //         "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
+        //         "totalRegistros" => count($respuestaDB),
+        //     ];
+        // }
+        // else{
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "consulta completada",
+        //         "datos" => []
+        //     ];
+        // }
+        $respuesta_servidor["respuestaServidor"]=[
+            "mensaje" => "consulta completada",
+            "datos" => $respuestaProductoModelo
+        ];
+        echo json_encode($respuesta_servidor);
     }
 
     function consultarProductos($ean){
@@ -136,6 +160,7 @@ class ModificarController extends ModuleAdminController{
         // ps_wbzalando_modelo_producto.id_modelo_producto =ps_wbzalando_configuracion_producto.id_modelo_producto
         // ;";
         $SQL="SELECT 
+        ps_wbzalando_modelo_producto.sales_channel_id,
         ps_wbzalando_modelo_producto.id_modelo_producto,
         ps_wbzalando_modelo_producto.json_modelo_producto,
         ps_wbzalando_simple_producto.json_simple_producto,
@@ -152,14 +177,38 @@ class ModificarController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarPrecio($pais){
-        $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' ;";
+    function consultarProductosModeloProPaisFull($pais){
+        $SQL="SELECT * FROM 
+        ps_wbzalando_modelo_producto 
+        WHERE 
+        sales_channel_id='$pais';
+        ";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
+    
+    function consultarProductosModeloProPais($pagina,$minimoRegistros,$pais){
+        $empezarPor=($pagina-1) * $minimoRegistros;
+        $SQL="SELECT * FROM 
+        ps_wbzalando_modelo_producto 
+        WHERE 
+        sales_channel_id='$pais' LIMIT ".$empezarPor.",".$minimoRegistros.";
+        ";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    // function consultarPrecio($pais){
+    //     $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' ;";
+    //     return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    // }
     
     function paginarPrecio($pagina,$minimoRegistros,$pais){
         $empezarPor=($pagina-1) * $minimoRegistros;
         $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' LIMIT ".$empezarPor.",".$minimoRegistros.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function consultarPrecio($pais,$ean){
+        $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' AND ean='$ean'";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
@@ -175,6 +224,11 @@ class ModificarController extends ModuleAdminController{
     
     function consultarConfigPorModelo($idModelo){
         $SQL="SELECT * FROM ps_wbzalando_configuracion_producto WHERE id_modelo_producto='".$idModelo."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+    
+    function consultarSimplePorConfig($idCondfig){
+        $SQL="SELECT * FROM ps_wbzalando_simple_producto WHERE id_configuracion_producto ='".$idCondfig."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
