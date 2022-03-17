@@ -30,7 +30,7 @@ function insertarProductos(productos){
         let infoModelo=JSON.parse(producto.detallesDelProdcuto[0].json_modelo_producto)
         // <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>Borrar</button></div></div>\
         html+="\
-        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input' style='cursor: pointer;' >\
+        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer caj-product alignitem-tb p-10 global-input fila-producto-eliminar' style='cursor: pointer;' >\
         <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left' data-id-modelo='"+idModeloProducto+"' onClick='mostrarModalDatosProducto(this)' data-toggle='modal' data-target='#staticBackdrop'><div><h4 class='text-primary'>"+infoModelo.product_model_attributes.name+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><div><button class='btn btn-danger' data-id-modelo='"+idModeloProducto+"' onClick='eliminarProducto(this)'>\
             <svg data-id-modelo='"+idModeloProducto+"' xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-trash-fill' viewBox='0 0 16 16'>\
@@ -445,6 +445,9 @@ function crearCheckboxPaisTest(paises){
         contenedorBanderas.innerHTML+=htmlCheckbox;
     }
     iniciarSlick()
+    let paisesRadio=document.querySelectorAll(".checkbox-paises")
+    paisesRadio[0].setAttribute("checked",true)
+    consultarProductosPorPais(paisesRadio[0])
 }
 
 function iniciarSlick(){

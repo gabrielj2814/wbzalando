@@ -103,3 +103,7 @@
     padding-left: 15px !important;
     width: 100% !important;
 }
+
+.fila-producto-eliminar:hover{
+    background-color: rgb(212, 212, 212);
+}

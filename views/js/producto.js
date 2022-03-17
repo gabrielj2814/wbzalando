@@ -412,8 +412,13 @@ function irHaVistaBorrarProductos(e){
     e.preventDefault()
     $vistaFormProductos.style.display="none"
     $vistaBorrarProductos.style.display="block"
-    let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
-    if(radiosPaisesHaEliminar.length===1){
+    let radioPaiseHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
+    if(radioPaiseHaEliminar.length===1){
+        cargarProductosHaEliminarPorPais(radioPaiseHaEliminar[0])
+    }
+    else{
+        let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar")
+        radiosPaisesHaEliminar[0].setAttribute("checked",true)
         cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
     }
 }
@@ -1117,7 +1122,7 @@ function insertarProductos(idPais,productos){
         // <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' data-id-modelo='"+producto.detallesDelProdcuto[0].id_modelo_producto+"' data-id-config='"+producto.detallesDelProdcuto[0].id_configuracion_producto+"' data-ean='"+producto.detallesDelProdcuto[0].ean+"' data-id-pais='"+producto.sales_channel_id+"' onClick='eliminarProducto(this)'><img src='https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-delete-miscellaneous-kiranshastry-lineal-kiranshastry.png' width='24px'/></button></div></div>\
         if(productos[codigoIdPaisIdproducto].haEnviar!=true){
         html+="\
-        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input'>\
+        <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 modal-footer alignitem-tb p-10 global-input fila-producto-eliminar'>\
         <div class='col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11  text-left'><div><h4 class='text-primary'>"+productos[codigoIdPaisIdproducto].nombreProducto+"</h4></div></div>\
         <div class='col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1  text-left'><button style='border: unset;' class='btn btn-danger' data-id-pais='"+idPais+"' data-id-producto='"+codigoIdPaisIdproducto+"'   onClick='cambiarEstadoDeEnvioDeProductoBorrarProducto(this)'>\
             <svg data-id-pais='"+idPais+"' data-id-producto='"+codigoIdPaisIdproducto+"' xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-trash-fill' viewBox='0 0 16 16'>\
