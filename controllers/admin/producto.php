@@ -511,11 +511,13 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_precio(
                 ean,
                 sales_channel_id,
+                live_producto,
                 json_precio
                     ) 
                 VALUES (
                     '". $precioProducto["ean"]."',
                     '". $precioProducto["sales_channel_id"]."',
+                    '0',
                     '".json_encode($precioProducto)."'
                 );
             ";
@@ -534,11 +536,13 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_stock(
                 ean,
                 sales_channel_id,
+                live_producto,
                 quantity
                 ) 
                 VALUES (
                     '". $stockProducto["ean"]."',
                     '". $stockProducto["sales_channel_id"]."',
+                    '0',
                     ". $stockProducto["quantity"]."
                 );
             ";

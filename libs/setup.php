@@ -73,6 +73,11 @@ if (!class_exists("SetupWbZalando")) {
                     "nombreControladorFull" => "ModificarController",
                     "nombreControlador" => "Modificar",
                 ],
+                [
+                    "nombre" => "Precios & Stock en espera",
+                    "nombreControladorFull" => "PendienteController",
+                    "nombreControlador" => "Pendiente",
+                ],
             ];
         }
 
@@ -221,6 +226,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_stock int(11) NOT NULL AUTO_INCREMENT,
                     ean VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
+                    live_producto VARCHAR(1) NOT NULL,
                     quantity int(11) NOT NULL,
                     PRIMARY KEY (`id_stock`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -229,6 +235,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_precio int(11) NOT NULL AUTO_INCREMENT,
                     ean VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
+                    live_producto VARCHAR(1) NOT NULL,
                     json_precio LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_precio`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'

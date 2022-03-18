@@ -376,13 +376,13 @@ function  guardarPrecioDeProducto(a){
 function eliminarProducto(a){
     let idModelo=a.getAttribute("data-id-modelo")
     let listaEansProductos=[]
-    for(let producto of listaProducutosPorPais[idModelo]){
+    for(let producto of listaProducutosPorPais[idModelo].simples){
         listaEansProductos.push({
             ean:producto.ean,
-            idPais:producto.sales_channel_id
+            idPais:listaProducutosPorPais[idModelo].sales_channel_id
         })
     }
-    console.log("productos a eliminar =>>>> ",listaEansProductos)
+    console.log("eans capturados =>>>> ",listaEansProductos)
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"

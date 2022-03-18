@@ -150,15 +150,6 @@ class ModificarController extends ModuleAdminController{
     }
 
     function consultarProductos($ean){
-        // $SQL="SELECT * FROM 
-        // ps_wbzalando_modelo_producto,
-        // ps_wbzalando_configuracion_producto,
-        // ps_wbzalando_simple_producto 
-        // WHERE 
-        // ps_wbzalando_simple_producto.ean='".$ean."' AND
-        // ps_wbzalando_configuracion_producto.id_configuracion_producto=ps_wbzalando_simple_producto.id_configuracion_producto AND
-        // ps_wbzalando_modelo_producto.id_modelo_producto =ps_wbzalando_configuracion_producto.id_modelo_producto
-        // ;";
         $SQL="SELECT 
         ps_wbzalando_modelo_producto.sales_channel_id,
         ps_wbzalando_modelo_producto.id_modelo_producto,
