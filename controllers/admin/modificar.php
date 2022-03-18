@@ -82,31 +82,13 @@ class ModificarController extends ModuleAdminController{
                 $respuestaProductoModelo[$contador]["config"]=$respuestaProductoConfig[0];
                 $respuestaProductoModelo[$contador]["simples"]=$respuestaProductoSimples;
             }
-
-
         }
-        // $respuestaDB=$this->consultarPrecio($_GET["codigoPais"]);
-        // $respuestaPaginadaDB=$this->paginarPrecio($pagina,$minimoRegistros,$_GET["codigoPais"]);
-        // for($contador=0;$contador<count($respuestaPaginadaDB);$contador++){
-        //     $ean=$respuestaPaginadaDB[$contador]["ean"];
-        //     $respuestaPaginadaDB[$contador]["datosStock"]=$this->consultarStock($ean,$_GET["codigoPais"]);
-        //     // $detallesDelProdcuto=$this->consultarProductos($ean);
-        //     $respuestaPaginadaDB[$contador]["detallesDelProdcuto"]=$this->consultarProductos($ean);
-        // }
-        // if(count($respuestaDB)>0){
-        //     $respuesta_servidor["respuestaServidor"]=[
-        //         "mensaje" => "consulta completada",
-        //         "datos" => $respuestaPaginadaDB,
-        //         "totalDePagina" => ceil(count($respuestaDB)/$minimoRegistros),
-        //         "totalRegistros" => count($respuestaDB),
-        //     ];
-        // }
-        // else{
-        //     $respuesta_servidor["respuestaServidor"]=[
-        //         "mensaje" => "consulta completada",
-        //         "datos" => []
-        //     ];
-        // }
+        else{
+            $respuesta_servidor["respuestaServidor"]=[
+                "mensaje" => "consulta completada",
+                "datos" => []
+            ];
+        }
         $respuesta_servidor["respuestaServidor"]=[
             "mensaje" => "consulta completada",
             "datos" => $respuestaProductoModelo

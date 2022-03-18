@@ -202,6 +202,7 @@ if (!class_exists("SetupWbZalando")) {
                     outline VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
                     nombre_imagen VARCHAR(150) NOT NULL,
+                    live_producto VARCHAR(1) NOT NULL,
                     json_modelo_producto LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_modelo_producto`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -227,7 +228,6 @@ if (!class_exists("SetupWbZalando")) {
                     id_stock int(11) NOT NULL AUTO_INCREMENT,
                     ean VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
-                    live_producto VARCHAR(1) NOT NULL,
                     quantity int(11) NOT NULL,
                     PRIMARY KEY (`id_stock`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
@@ -236,7 +236,6 @@ if (!class_exists("SetupWbZalando")) {
                     id_precio int(11) NOT NULL AUTO_INCREMENT,
                     ean VARCHAR(150) NOT NULL,
                     sales_channel_id VARCHAR(150) NOT NULL,
-                    live_producto VARCHAR(1) NOT NULL,
                     json_precio LONGTEXT NOT NULL,
                     PRIMARY KEY (`id_precio`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'

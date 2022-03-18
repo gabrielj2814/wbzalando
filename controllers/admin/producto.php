@@ -442,6 +442,7 @@ class ProductoController extends ModuleAdminController{
                 outline, 
                 sales_channel_id, 
                 nombre_imagen, 
+                live_producto,
                 json_modelo_producto
                 ) 
             VALUES (
@@ -449,6 +450,7 @@ class ProductoController extends ModuleAdminController{
                 '".$producto["outline"]."',
                 '".$producto["id_pais"]."',
                 '$nombreImagen',
+                '0',
                 '".json_encode($producto["product_model"])."'
             );
         ";
@@ -515,13 +517,11 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_precio(
                 ean,
                 sales_channel_id,
-                live_producto,
                 json_precio
                     ) 
                 VALUES (
                     '". $precioProducto["ean"]."',
                     '". $precioProducto["sales_channel_id"]."',
-                    '0',
                     '".json_encode($precioProducto)."'
                 );
             ";
@@ -540,13 +540,11 @@ class ProductoController extends ModuleAdminController{
             INSERT INTO ps_wbzalando_stock(
                 ean,
                 sales_channel_id,
-                live_producto,
                 quantity
                 ) 
                 VALUES (
                     '". $stockProducto["ean"]."',
                     '". $stockProducto["sales_channel_id"]."',
-                    '0',
                     ". $stockProducto["quantity"]."
                 );
             ";
