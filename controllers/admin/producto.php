@@ -16,7 +16,7 @@ class ProductoController extends ModuleAdminController{
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
         $this->nombreTabla="ps_wbzalando_esquemas"; 
-        $this->modulo= EntityModule::getInstanceByName("wbzalando");; 
+        $this->modulo= EntityModule::getInstanceByName("wbzalando"); 
     }
 
     public function init()
@@ -321,8 +321,10 @@ class ProductoController extends ModuleAdminController{
                 $producto["stock"]["items"][$contador2]["quantity"]=(int)$producto["stock"]["items"][$contador2]["quantity"];
             }
             // asignar path a las imagen
+            $nombreImagenProducto=null;
             if($this->copiarImagen($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"])){
-                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"]=_PS_MODULE_DIR_.$this->modulo->name."/upload/".$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"];
+                $nombreImagenProducto=$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"];
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"]=_PS_MODULE_DIR_.$this->modulo->name."/upload/".$nombreImagenProducto;
             }
             // // capturar imagenes basura
             foreach($producto["borrarImagenes"] as $imagenBasura){
@@ -347,7 +349,7 @@ class ProductoController extends ModuleAdminController{
             //     "stocksSubidos" => $stocksSubidos,
             //     "preciosSubidos" => $preciosSubidos,
             // ];
-            $respuestaModelo=$this->guardarModeloProducto($producto);
+            $respuestaModelo=$this->guardarModeloProducto($producto,$nombreImagenProducto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);
             $respuestaPrecio=$this->guardarPrecioProducto($producto);
@@ -433,18 +435,20 @@ class ProductoController extends ModuleAdminController{
         return $respuestasSubidaPrecio;
     }
 
-    public function guardarModeloProducto($producto){
+    public function guardarModeloProducto($producto,$nombreImagen){
         $SQL="
             INSERT INTO ps_wbzalando_modelo_producto(
                 id_modelo_producto, 
                 outline, 
                 sales_channel_id, 
+                nombre_imagen, 
                 json_modelo_producto
                 ) 
             VALUES (
                 '".$producto["merchant_product_model_id"]."',
                 '".$producto["outline"]."',
                 '".$producto["id_pais"]."',
+                '$nombreImagen',
                 '".json_encode($producto["product_model"])."'
             );
         ";
