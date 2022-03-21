@@ -115,7 +115,7 @@ class PendienteController extends ModuleAdminController{
         $SQL="SELECT * FROM 
         ps_wbzalando_modelo_producto 
         WHERE 
-        sales_channel_id='$pais';
+        sales_channel_id='$pais' AND live_producto='0';
         ";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
@@ -125,7 +125,7 @@ class PendienteController extends ModuleAdminController{
         $SQL="SELECT * FROM 
         ps_wbzalando_modelo_producto 
         WHERE 
-        sales_channel_id='$pais' LIMIT ".$empezarPor.",".$minimoRegistros.";
+        sales_channel_id='$pais' AND live_producto='0' LIMIT ".$empezarPor.",".$minimoRegistros.";
         ";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
@@ -190,6 +190,28 @@ class PendienteController extends ModuleAdminController{
             }
         }
         return $estado;
+    }
+
+    public function ajaxProcessPostModificarProductos(){
+        //  $_POST["precios"] $_POST["stocks"]
+        $respuesta_servidor=["respuestaServidor" => []];
+        $resuestaModificarPrecioProducto=false;
+        $resuestaModificarPrecioProductoZalando=false;
+        $resuestaModificarStockProducto=false;
+        $resuestaModificarStockProductoZalando=false;
+        if(array_key_exists("precios",$_POST)){
+            // $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
+        }
+        if(array_key_exists("stocks",$_POST)){
+            // $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
+        }
+        $respuesta_servidor["respuestaServidor"]=[
+            "precio" => $resuestaModificarPrecioProducto,
+            "precioZalando" => $resuestaModificarPrecioProductoZalando,
+            "stock" => $resuestaModificarStockProducto,
+            "stockZalando" => $resuestaModificarStockProductoZalando,
+        ];
+        print(json_encode($respuesta_servidor));
     }
 
     public function subirStock($stocks){
@@ -282,5 +304,9 @@ class PendienteController extends ModuleAdminController{
         }
         return $respuestasSubidaPrecio;
     }
+
+
+
+
 
 }
