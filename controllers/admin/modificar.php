@@ -63,7 +63,7 @@ class ModificarController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarProductosPorPais(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $minimoRegistros=10;
+        $minimoRegistros=20;
         $pagina=$_GET["pagina"];
         $respuestaProductoModeloFull=$this->consultarProductosModeloProPaisFull($_GET["codigoPais"]);
         $respuestaProductoModelo=$this->consultarProductosModeloProPais($pagina,$minimoRegistros,$_GET["codigoPais"]);
@@ -93,6 +93,8 @@ class ModificarController extends ModuleAdminController{
             "mensaje" => "consulta completada",
             "datos" => $respuestaProductoModelo
         ];
+        $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($respuestaProductoModelo)/$minimoRegistros);
+        $respuesta_servidor["respuestaServidor"]["totalRegistros"]=count($respuestaProductoModelo);
         echo json_encode($respuesta_servidor);
     }
 
@@ -287,7 +289,7 @@ class ModificarController extends ModuleAdminController{
                 $respuestasSubidaStocks[]=[
                     "ean" => $objStock->ean,
                     "existencia" => true,
-                    "respuestaZalando" => $respuesta["response"]
+                    "respuestaZalando" => $respuesta["response"]->results[0]->result
                 ];
             }
             else{
@@ -364,7 +366,7 @@ class ModificarController extends ModuleAdminController{
                 $respuestasSubidaPrecio[]=[
                     "ean" => $objPrecio->ean,
                     "existencia" => true,
-                    "respuestaZalando" => $respuesta["response"]
+                    "respuestaZalando" => $respuesta["response"]->results[0]
                 ];
             }
             else{

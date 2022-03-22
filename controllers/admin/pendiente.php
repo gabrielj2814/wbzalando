@@ -2,6 +2,7 @@
 include("curlController.php");
 include("logger.php");
 use Clases\CurlController;
+use PrestaShop\PrestaShop\Adapter\Entity\Module as EntityModule;
 
 class PendienteController extends ModuleAdminController{
 
@@ -12,6 +13,7 @@ class PendienteController extends ModuleAdminController{
         parent::__construct();
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
+        $this->modulo= EntityModule::getInstanceByName("wbzalando");
     }
 
     public function init()
@@ -78,7 +80,7 @@ class PendienteController extends ModuleAdminController{
 
     public function ajaxProcessGetConsultarProductosPorPais(){
         $respuesta_servidor=["respuestaServidor" => []];
-        $minimoRegistros=10;
+        $minimoRegistros=20;
         $pagina=$_GET["pagina"];
         $respuestaProductoModeloFull=$this->consultarProductosModeloProPaisFull($_GET["codigoPais"]);
         $respuestaProductoModelo=$this->consultarProductosModeloProPais($pagina,$minimoRegistros,$_GET["codigoPais"]);
@@ -97,6 +99,7 @@ class PendienteController extends ModuleAdminController{
                 $respuestaProductoModelo[$contador]["config"]=$respuestaProductoConfig[0];
                 $respuestaProductoModelo[$contador]["simples"]=$respuestaProductoSimples;
             }
+
         }
         else{
             $respuesta_servidor["respuestaServidor"]=[
@@ -108,6 +111,8 @@ class PendienteController extends ModuleAdminController{
             "mensaje" => "consulta completada",
             "datos" => $respuestaProductoModelo
         ];
+        $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($respuestaProductoModelo)/$minimoRegistros);
+        $respuesta_servidor["respuestaServidor"]["totalRegistros"]=count($respuestaProductoModelo);
         echo json_encode($respuesta_servidor);
     }
 
@@ -163,7 +168,7 @@ class PendienteController extends ModuleAdminController{
             $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
             foreach($resuestaModificarPrecioProductoZalando as $datosSubidaPrecio){
                 if($datosSubidaPrecio["existencia"]===true){
-                    if($datosSubidaPrecio["result"]->code===0){
+                    if($datosSubidaPrecio["respuestaZalando"]->code===0){
                         $numeroTotalPrecios-=1;
                     }
                     else{
@@ -179,7 +184,7 @@ class PendienteController extends ModuleAdminController{
             $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
             foreach($resuestaModificarStockProductoZalando as $datosSubidaStock){
                 if($datosSubidaStock["existencia"]===true){
-                    if($datosSubidaStock["result"]->code===0){
+                    if($datosSubidaStock["respuestaZalando"]->code===0){
                         $numeroTotalStock-=1;
                     }
                     else{
@@ -230,7 +235,7 @@ class PendienteController extends ModuleAdminController{
                 $respuestasSubidaStocks[]=[
                     "ean" => $objStock->ean,
                     "existencia" => true,
-                    "respuestaZalando" => $respuesta["response"]
+                    "respuestaZalando" => $respuesta["response"]->results[0]->result
                 ];
             }
             else{
@@ -305,11 +310,10 @@ class PendienteController extends ModuleAdminController{
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
-                // $respuestasSubidaPrecio[]=$respuesta["response"];
                 $respuestasSubidaPrecio[]=[
                     "ean" => $objPrecio->ean,
                     "existencia" => true,
-                    "respuestaZalando" => $respuesta["response"]
+                    "respuestaZalando" => $respuesta["response"]->results[0]
                 ];
             }
             else{
@@ -324,6 +328,43 @@ class PendienteController extends ModuleAdminController{
 
     public function cambiarEstadoLiveProducto($idModelo){
         $SQL="UPDATE ps_wbzalando_modelo_producto SET live_producto='1' WHERE id_modelo_producto='$idModelo';";
+        return Db::getInstance()->execute($SQL);
+    }
+
+    public function ajaxProcessPostEliminarProducto(){
+        $respuesta_servidor=["respuestaServidor" => []];
+        $respuestaEliminarProducto=$this->eliminarProducto($_POST["id_modelo"]);
+        if($respuestaEliminarProducto){
+            $nombreImagen=$_POST["nombre_imagen"];
+            $dir=_PS_MODULE_DIR_.$this->modulo->name."/upload/";
+            if(file_exists($dir.$nombreImagen)){
+                unlink($dir.$nombreImagen);
+            }
+        }
+        if($respuestaEliminarProducto){
+            foreach($_POST["eans"] as $ean){
+                $this->eliminarStock($ean["ean"],$ean["idPais"]);
+                $this->eliminarPrecio($ean["ean"],$ean["idPais"]);
+            }
+        }
+        $respuesta_servidor["respuestaServidor"]=[
+            "producto_eliminada" => $respuestaEliminarProducto
+        ];
+        print(json_encode($respuesta_servidor));
+    }
+
+    function eliminarProducto($id){
+        $SQL="DELETE FROM ps_wbzalando_modelo_producto WHERE id_modelo_producto ='".$id."';";
+        return Db::getInstance()->execute($SQL);
+    }
+
+    function eliminarPrecio($ean,$idPais){
+        $SQL="DELETE FROM ps_wbzalando_precio WHERE ean='".$ean."' AND sales_channel_id ='".$idPais."';";
+        return Db::getInstance()->execute($SQL);
+    }
+    
+    function eliminarStock($ean,$idPais){
+        $SQL="DELETE FROM ps_wbzalando_stock WHERE ean='".$ean."' AND sales_channel_id ='".$idPais."';";
         return Db::getInstance()->execute($SQL);
     }
 
