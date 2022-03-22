@@ -268,8 +268,9 @@ function enviarProducto(a){
                     mostrarAlerta("alert-danger","codigo error "+errorStock.respuestaZalando.code+" : "+errorStock.respuestaZalando.description)
                     
                 });
-                console.log("errores precios =>>>>>> ",erroresAlSubirPrecio)
-                console.log("errores stocks =>>>>>> ",erroresAlSubirPrecio)
+                if(erroresAlSubirPrecio.length===0 && erroresAlSubirStock.length===0){
+                    mostrarAlerta("alert-success","stocks y precios enviados a zalando con exito")
+                }
             }
             else{
                 let listEans=respuestaJson.precioZalando.map( datos => datos.ean).join(", ")
