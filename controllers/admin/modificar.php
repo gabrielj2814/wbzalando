@@ -264,7 +264,7 @@ class ModificarController extends ModuleAdminController{
         foreach($stocks as $stock){
             $objStock=json_decode($stock);
             $respuestaExistencia= $this->verificarExistenciaProducto($objStock->ean);
-            if($respuestaExistencia["estado"]===200){
+            if(count($respuestaExistencia["response"]->items)===1){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
                 $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -284,10 +284,17 @@ class ModificarController extends ModuleAdminController{
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el stock =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaStocks[]=$respuesta["response"]->results[0];
+                $respuestasSubidaStocks[]=[
+                    "ean" => $objStock->ean,
+                    "existencia" => true,
+                    "respuestaZalando" => $respuesta["response"]
+                ];
             }
             else{
-                $respuestasSubidaStocks[$objStock->ean]=false;
+                $respuestasSubidaStocks[]=[
+                    "ean" => $objStock->ean,
+                    "existencia" => false
+                ];
             }
         }
         return $respuestasSubidaStocks;
@@ -298,7 +305,7 @@ class ModificarController extends ModuleAdminController{
         foreach($precios as $precio){
             $objPrecio=json_decode($precio);
             $respuestaExistencia= $this->verificarExistenciaProducto($objPrecio->ean);
-            if($respuestaExistencia["estado"]===200){
+            if(count($respuestaExistencia["response"]->items)===1){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
                 $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -308,43 +315,63 @@ class ModificarController extends ModuleAdminController{
                     'Content-Type: application/json',
                     'Authorization: '.'Bearer '. $token
                 );
-                $precioEnviar=[
-                    "ean"=> $objPrecio->ean,
-                    "sales_channel_id"=> $objPrecio->sales_channel_id,
-                    "regular_price"=> [
-                        "amount"=> (float)$objPrecio->regular_price->amount,
-                        "currency"=> $objPrecio->regular_price->currency
-                    ],
-                    "promotional_price"=> [
-                        "amount"=> (float)$objPrecio->promotional_price->amount,
-                        "currency"=> $objPrecio->promotional_price->currency,
-                    ],
-                    "scheduled_prices"=> [
-                        [
-                            "regular_price"=> [
-                                "amount"=> (float)$objPrecio->regular_price->amount,
-                                "currency"=> $objPrecio->regular_price->currency
-                            ],
-                            "promotional_price"=> [
-                                "amount"=> (float)$objPrecio->promotional_price->amount,
-                                "currency"=> $objPrecio->promotional_price->currency,
-                            ],
-                            "start_time"=> $objPrecio->scheduled_prices[0]->start_time,
-                            "end_time"=> $objPrecio->scheduled_prices[0]->end_time
+                $precioEnviar=null;
+                if(property_exists($objPrecio,"scheduled_prices")){
+                    $precioEnviar=[
+                        "ean"=> $objPrecio->ean,
+                        "sales_channel_id"=> $objPrecio->sales_channel_id,
+                        "regular_price"=> [
+                            "amount"=> (float)$objPrecio->regular_price->amount,
+                            "currency"=> $objPrecio->regular_price->currency
+                        ],
+                        "promotional_price"=> [
+                            "amount"=> (float)$objPrecio->promotional_price->amount,
+                            "currency"=> $objPrecio->promotional_price->currency,
+                        ],
+                        "scheduled_prices"=> [
+                            [
+                                "regular_price"=> [
+                                    "amount"=> (float)$objPrecio->regular_price->amount,
+                                    "currency"=> $objPrecio->regular_price->currency
+                                ],
+                                "promotional_price"=> [
+                                    "amount"=> (float)$objPrecio->promotional_price->amount,
+                                    "currency"=> $objPrecio->promotional_price->currency,
+                                ],
+                                "start_time"=> $objPrecio->scheduled_prices[0]->start_time,
+                                "end_time"=> $objPrecio->scheduled_prices[0]->end_time
+                            ]
+                        ],
+                        "ignore_warnings"=> $objPrecio->ignore_warnings
+                    ];
+                }
+                else{
+                    $precioEnviar=[
+                        "ean"=> $objPrecio->ean,
+                        "sales_channel_id"=> $objPrecio->sales_channel_id,
+                        "regular_price"=> [
+                            "amount"=> (float)$objPrecio->regular_price->amount,
+                            "currency"=> $objPrecio->regular_price->currency
                         ]
-                    ],
-                    "ignore_warnings"=> $objPrecio->ignore_warnings
-                ];
+                    ];
+                }
                 $product_precio=["product_prices" => []];
                 $product_precio["product_prices"][]=$precioEnviar;
                 $curlController->setDatosPeticion($product_precio);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
+                $respuestasSubidaPrecio[]=[
+                    "ean" => $objPrecio->ean,
+                    "existencia" => true,
+                    "respuestaZalando" => $respuesta["response"]
+                ];
             }
             else{
-                $respuestasSubidaPrecio[$precio["ean"]]=false;
+                $respuestasSubidaPrecio[]=[
+                    "ean" => $objPrecio->ean,
+                    "existencia" => false
+                ];
             }
         }
         return $respuestasSubidaPrecio;

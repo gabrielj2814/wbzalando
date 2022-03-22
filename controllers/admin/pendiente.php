@@ -111,7 +111,7 @@ class PendienteController extends ModuleAdminController{
         echo json_encode($respuesta_servidor);
     }
 
-    function consultarProductosModeloProPaisFull($pais){
+    public function consultarProductosModeloProPaisFull($pais){
         $SQL="SELECT * FROM 
         ps_wbzalando_modelo_producto 
         WHERE 
@@ -120,7 +120,7 @@ class PendienteController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarProductosModeloProPais($pagina,$minimoRegistros,$pais){
+    public function consultarProductosModeloProPais($pagina,$minimoRegistros,$pais){
         $empezarPor=($pagina-1) * $minimoRegistros;
         $SQL="SELECT * FROM 
         ps_wbzalando_modelo_producto 
@@ -130,86 +130,74 @@ class PendienteController extends ModuleAdminController{
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarConfigPorModelo($idModelo){
+    public function consultarConfigPorModelo($idModelo){
         $SQL="SELECT * FROM ps_wbzalando_configuracion_producto WHERE id_modelo_producto='".$idModelo."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarSimplePorConfig($idCondfig){
+    public function consultarSimplePorConfig($idCondfig){
         $SQL="SELECT * FROM ps_wbzalando_simple_producto WHERE id_configuracion_producto ='".$idCondfig."';";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarPrecio($pais,$ean){
+    public function consultarPrecio($pais,$ean){
         $SQL="SELECT * FROM ps_wbzalando_precio WHERE sales_channel_id='".$pais."' AND ean='$ean'";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    function consultarStock($ean,$pais){
+    public function consultarStock($ean,$pais){
         $SQL="SELECT * FROM ps_wbzalando_stock WHERE sales_channel_id='".$pais."' AND ean='".$ean."' ;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
-    // estas funciones solo cambiaran el estado de live_producto
-    public function cambiarEstadoLivePrecioProducto($precios){
-        $estado=true;
-        foreach($precios as $precio){
-            $objPrecio=json_decode($precio);
-            $SQL="
-            UPDATE ps_wbzalando_precio SET
-                json_precio='".$precio."'
-                WHERE 
-                ean='".$objPrecio->ean."' AND 
-                sales_channel_id='".$objPrecio->sales_channel_id."';
-            ";
-            if(!Db::getInstance()->execute($SQL)){
-                $estado=false;
-                break;
-            }
-        }
-        return $estado;
-    }
-
-    // estas funciones solo cambiaran el estado de live_producto
-    public function cambiarEstadoLiveStockProducto($stocks){
-        $estado=true;
-        foreach($stocks as $stock){
-            $objStock=json_decode($stock);
-            $SQL="
-            UPDATE ps_wbzalando_stock SET
-                ean='".$objStock->ean."',
-                sales_channel_id='".$objStock->sales_channel_id."',
-                quantity=".$objStock->quantity."
-                WHERE 
-                ean='".$objStock->ean."' AND 
-                sales_channel_id='".$objStock->sales_channel_id."';
-            ";
-            if(!Db::getInstance()->execute($SQL)){
-                $estado=false;
-                break;
-            }
-        }
-        return $estado;
-    }
 
     public function ajaxProcessPostModificarProductos(){
         //  $_POST["precios"] $_POST["stocks"]
         $respuesta_servidor=["respuestaServidor" => []];
-        $resuestaModificarPrecioProducto=false;
-        $resuestaModificarPrecioProductoZalando=false;
-        $resuestaModificarStockProducto=false;
-        $resuestaModificarStockProductoZalando=false;
+        $resuestaModificarPrecioProductoZalando=null;
+        $resuestaModificarStockProductoZalando=null;
+        $respuestaLiveProducto=false;
+        $numeroTotalStock=count($_POST["stocks"]);
+        $numeroTotalPrecios=count($_POST["precios"]);
         if(array_key_exists("precios",$_POST)){
-            // $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
+            $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
+            foreach($resuestaModificarPrecioProductoZalando as $datosSubidaPrecio){
+                if($datosSubidaPrecio["existencia"]===true){
+                    if($datosSubidaPrecio["result"]->code===0){
+                        $numeroTotalPrecios-=1;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                else{
+                    break;
+                }
+            }
         }
         if(array_key_exists("stocks",$_POST)){
-            // $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
+            $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
+            foreach($resuestaModificarStockProductoZalando as $datosSubidaStock){
+                if($datosSubidaStock["existencia"]===true){
+                    if($datosSubidaStock["result"]->code===0){
+                        $numeroTotalStock-=1;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        if($numeroTotalStock===0 && $numeroTotalPrecios===0){
+            $respuestaLiveProducto=$this->cambiarEstadoLiveProducto($_POST["idModelo"]);
         }
         $respuesta_servidor["respuestaServidor"]=[
-            "precio" => $resuestaModificarPrecioProducto,
             "precioZalando" => $resuestaModificarPrecioProductoZalando,
-            "stock" => $resuestaModificarStockProducto,
             "stockZalando" => $resuestaModificarStockProductoZalando,
+            "respuestaLiveProducto" => $respuestaLiveProducto
         ];
         print(json_encode($respuesta_servidor));
     }
@@ -219,7 +207,7 @@ class PendienteController extends ModuleAdminController{
         foreach($stocks as $stock){
             $objStock=json_decode($stock);
             $respuestaExistencia= $this->verificarExistenciaProducto($objStock->ean);
-            if($respuestaExistencia["estado"]===200){
+            if(count($respuestaExistencia["response"]->items)===1){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
                 $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -239,10 +227,17 @@ class PendienteController extends ModuleAdminController{
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el stock =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaStocks[]=$respuesta["response"]->results[0];
+                $respuestasSubidaStocks[]=[
+                    "ean" => $objStock->ean,
+                    "existencia" => true,
+                    "respuestaZalando" => $respuesta["response"]
+                ];
             }
             else{
-                $respuestasSubidaStocks[$objStock->ean]=false;
+                $respuestasSubidaStocks[]=[
+                    "ean" => $objStock->ean,
+                    "existencia" => false
+                ];
             }
         }
         return $respuestasSubidaStocks;
@@ -253,7 +248,7 @@ class PendienteController extends ModuleAdminController{
         foreach($precios as $precio){
             $objPrecio=json_decode($precio);
             $respuestaExistencia= $this->verificarExistenciaProducto($objPrecio->ean);
-            if($respuestaExistencia["estado"]===200){
+            if(count($respuestaExistencia["response"]->items)===1){
                 $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
                 $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
                 $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -263,46 +258,73 @@ class PendienteController extends ModuleAdminController{
                     'Content-Type: application/json',
                     'Authorization: '.'Bearer '. $token
                 );
-                $precioEnviar=[
-                    "ean"=> $objPrecio->ean,
-                    "sales_channel_id"=> $objPrecio->sales_channel_id,
-                    "regular_price"=> [
-                        "amount"=> (float)$objPrecio->regular_price->amount,
-                        "currency"=> $objPrecio->regular_price->currency
-                    ],
-                    "promotional_price"=> [
-                        "amount"=> (float)$objPrecio->promotional_price->amount,
-                        "currency"=> $objPrecio->promotional_price->currency,
-                    ],
-                    "scheduled_prices"=> [
-                        [
-                            "regular_price"=> [
-                                "amount"=> (float)$objPrecio->regular_price->amount,
-                                "currency"=> $objPrecio->regular_price->currency
-                            ],
-                            "promotional_price"=> [
-                                "amount"=> (float)$objPrecio->promotional_price->amount,
-                                "currency"=> $objPrecio->promotional_price->currency,
-                            ],
-                            "start_time"=> $objPrecio->scheduled_prices[0]->start_time,
-                            "end_time"=> $objPrecio->scheduled_prices[0]->end_time
+                $precioEnviar=null;
+                if(property_exists($objPrecio,"promotional_price")){
+                    $precioEnviar=[
+                        "ean"=> $objPrecio->ean,
+                        "sales_channel_id"=> $objPrecio->sales_channel_id,
+                        "regular_price"=> [
+                            "amount"=> (float)$objPrecio->regular_price->amount,
+                            "currency"=> $objPrecio->regular_price->currency
+                        ],
+                        "promotional_price"=> [
+                            "amount"=> (float)$objPrecio->promotional_price->amount,
+                            "currency"=> $objPrecio->promotional_price->currency,
+                        ],
+                        "scheduled_prices"=> [
+                            [
+                                "regular_price"=> [
+                                    "amount"=> (float)$objPrecio->regular_price->amount,
+                                    "currency"=> $objPrecio->regular_price->currency
+                                ],
+                                "promotional_price"=> [
+                                    "amount"=> (float)$objPrecio->promotional_price->amount,
+                                    "currency"=> $objPrecio->promotional_price->currency,
+                                ],
+                                "start_time"=> $objPrecio->scheduled_prices[0]->start_time,
+                                "end_time"=> $objPrecio->scheduled_prices[0]->end_time
+                            ]
+                        ],
+                        "ignore_warnings"=> (bool)$objPrecio->ignore_warnings
+                    ];
+                }
+                else{
+                    $precioEnviar=[
+                        "ean"=> $objPrecio->ean,
+                        "sales_channel_id"=> $objPrecio->sales_channel_id,
+                        "regular_price"=> [
+                            "amount"=> (float)$objPrecio->regular_price->amount,
+                            "currency"=> $objPrecio->regular_price->currency
                         ]
-                    ],
-                    "ignore_warnings"=> $objPrecio->ignore_warnings
-                ];
+                    ];
+                }
+                
                 $product_precio=["product_prices" => []];
                 $product_precio["product_prices"][]=$precioEnviar;
                 $curlController->setDatosPeticion($product_precio);
                 $curlController->setdatosCabezera($header);
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el precio =>>>>  " . var_export($respuesta, true));
-                $respuestasSubidaPrecio[]=$respuesta["response"]->results[0]->description;
+                // $respuestasSubidaPrecio[]=$respuesta["response"];
+                $respuestasSubidaPrecio[]=[
+                    "ean" => $objPrecio->ean,
+                    "existencia" => true,
+                    "respuestaZalando" => $respuesta["response"]
+                ];
             }
             else{
-                $respuestasSubidaPrecio[$precio["ean"]]=false;
+                $respuestasSubidaPrecio[]=[
+                    "ean" => $objPrecio->ean,
+                    "existencia" => false
+                ];
             }
         }
         return $respuestasSubidaPrecio;
+    }
+
+    public function cambiarEstadoLiveProducto($idModelo){
+        $SQL="UPDATE ps_wbzalando_modelo_producto SET live_producto='1' WHERE id_modelo_producto='$idModelo';";
+        return Db::getInstance()->execute($SQL);
     }
 
 

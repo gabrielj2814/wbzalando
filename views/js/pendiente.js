@@ -181,6 +181,7 @@ function mostrarModalDatosProducto(a){
 }
 
 function enviarProducto(a){
+    const linkControlador=document.getElementById("linkControlador").value;
     let idModelo=a.getAttribute("data-id-modelo")
     let precios=[]
     let stocks=[]
@@ -207,8 +208,8 @@ function enviarProducto(a){
                             "amount": parseFloat(datos.precioPromocion),
                             "currency": datos.moneda
                         },
-                        "start_time": `${datos.fechaInicioPromocio}T00:00:00.00Z`,
-                        "end_time": `${datos.fechaFinalPromocio}T00:00:00.00Z`
+                        "start_time": `${datos.fechaInicioPromocio}`,
+                        "end_time": `${datos.fechaFinalPromocio}`
                     }
                 ],
                 "ignore_warnings": true
@@ -253,10 +254,10 @@ function enviarProducto(a){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             console.log("stock de producto modificado =>>>>> ",respuestaJson)
-            let paisRadio=document.querySelector(".checkbox-paises:checked")
-            paisRadio.setAttribute("checked",true)
-            consultarProductosPorPais(paisRadio)
-            mostrarAlerta("alert-success","El stock a sido enviado correctamente")
+            // let paisRadio=document.querySelector(".checkbox-paises:checked")
+            // paisRadio.setAttribute("checked",true)
+            // consultarProductosPorPais(paisRadio)
+            // mostrarAlerta("alert-success","El stock a sido enviado correctamente")
         },
         error: () => {
             preloader.style.opacity="0"
