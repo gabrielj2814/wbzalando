@@ -145,7 +145,8 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarProductoConFiltros(){
-        $SQL="";
+        $SQL1="";
+        $SQL2="";
         $productos=[];
         $fracmetoConsulta=[];
         if($_POST["categoriaProducto"]!="null"){
@@ -164,9 +165,29 @@ class ProductoController extends ModuleAdminController{
         else if(count($fracmetoConsulta)===1){
             $condicion= "(".$fracmetoConsulta[0].") AND ";
         }
-
+        $minimoRegistros=$_POST["minimo"];
+        $pagina=$_POST["pagina"];
+        $empezarPor=($pagina-1) * $minimoRegistros;
         if($_POST["categoriaProducto"]!="null"){
-            $SQL="
+            
+            $SQL1="
+            SELECT 
+            ps_product_lang.name,
+            ps_product_lang.description,
+            ps_product.id_product,
+            ps_product.ean13,
+            ps_lang.iso_code
+            FROM 
+            ps_category_product,ps_product_lang,ps_product,ps_lang
+            WHERE
+            ".$condicion."
+            ps_product_lang.id_lang=".$this->id_idioma." AND
+            ps_product.id_product=ps_category_product.id_product AND
+            ps_product_lang.id_lang=ps_lang.id_lang AND
+            ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."
+            ";
+
+            $SQL2="
             SELECT 
             ps_product_lang.name,
             ps_product_lang.description,
@@ -183,7 +204,22 @@ class ProductoController extends ModuleAdminController{
             ps_product_lang.id_product=ps_product.id_product";
         }
         else{
-            $SQL="
+            
+            $SQL1="
+            SELECT 
+            ps_product_lang.name,
+            ps_product_lang.description,
+            ps_product.id_product,
+            ps_product.ean13,
+            ps_lang.iso_code
+            FROM ps_product_lang,ps_product,ps_lang
+            WHERE
+            ".$condicion."
+            ps_product_lang.id_lang=".$this->id_idioma." AND
+            ps_product_lang.id_lang=ps_lang.id_lang AND
+            ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
+
+            $SQL2="
             SELECT 
             ps_product_lang.name,
             ps_product_lang.description,
@@ -198,14 +234,20 @@ class ProductoController extends ModuleAdminController{
             ps_product_lang.id_product=ps_product.id_product";
             
         }
-        $productos=Db::getInstance()->executeS($SQL);
-        $productos=$this->generarUrlProducto($productos);
+        $productos=Db::getInstance()->executeS($SQL2);
+        $productosPaginados=Db::getInstance()->executeS($SQL1);
+        $productosPaginados=$this->generarUrlProducto($productosPaginados);
         $contador=0;
-        foreach($productos as $producto){
-            $productos[$contador]["atributos_producto"]=$this->consultarEansProductosCombinacion($productos[$contador]["id_product"]);
+        foreach($productosPaginados as $producto){
+            $productosPaginados[$contador]["atributos_producto"]=$this->consultarEansProductosCombinacion($productosPaginados[$contador]["id_product"]);
             $contador++;
         }
-        print(json_encode(["datos" =>  $productos]));
+        print(json_encode([
+            // "datos" =>  $productos,
+            "productosPaginados" =>  $productosPaginados,
+            "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
+            "totalRegistros" =>  count($productos),
+        ]));
     }
 
     public function consultarEansProductosCombinacion($idProducto){

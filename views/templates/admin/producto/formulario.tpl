@@ -84,15 +84,15 @@
 
                                 <div class="col-sm-12 mt">
 									<label class="control-label">
-                                        Cuántas de mostrar los productos?
+                                        Cuántos productos a mostrar por pagina?
 									</label>
-									<select id='' name=''>
+									<select id='numeroDeProductos' name=''>
 										<option selected value="20">20</option>
-										<option value="50">50</option>
-										<option value="100">100</option>
-										<option value="300">300</option>
-										<option value="500">500</option>
-										<option value="1000">1000</option>
+										<option value="5">5</option>
+										<option value="15">15</option>
+										<option value="25">25</option>
+										<option value="35">35</option>
+										<option value="55">55</option>
 									</select>
 								</div>
 							</div>
@@ -125,7 +125,7 @@
 
 
 <!-- vista-form -->
-<div class="vista-form-productos" id="vista-form-productos" style="opacity:0">
+<div class="vista-form-productos" id="vista-form-productos" style="display:none;">
     <button class="btn btn-primary" id="botonIrHaVistaInicial" style="margin-bottom: 15px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
@@ -203,146 +203,6 @@
             </div>
             
             <div id="listaDeProductosForm">
-                <div data-id-producto-form="idpaisIdProdocuto" class="contenedor_producto_backend">
-                    <div class="row preview-info-producto">
-                        <div class="contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
-                            <input data-id-producto="idproducto" data-id-pais="idpais" onClick="cambiarEstadoDeEnvioDeProduct(this)" type="checkbox" class="haEnviar"/>
-                        </div>
-                        <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                            <img class="imagen-producto" src="https://www.xtrafondos.com/wallpapers/chica-anime-pensando-4699.jpg" alt=""/>
-                            <h3 class="margin-0">nombre del producto</h3>
-                        </div>
-                        <div class="contenedor-toggle-producto col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
-                            <svg id="idPais-idProducto-cerrar" data-id-producto="idPais-idProducto" onClick="cerrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ocultar bi bi-arrow-up-short" viewBox="0 0 16 16">
-                                <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
-                            </svg>
-
-                            <svg id="idPais-idProducto-abrir" data-id-producto="idPais-idProducto" onClick="mostrarFormularioProducto(this)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
-                                <path data-id-producto="idPais-idProducto" fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="contenedor-formulario-producto ocultar" id="idPais-idProducto-contenedor-formulario-producto">
-                        <div class="row">
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >Cetegoria</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >brand</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >target age groups</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >target genders</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        
-                        </div>
-                        <div class="row">
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >season code</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >color</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label >upper material clothing</label>
-                                    <select class="form-control margin-0">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>supplier color</label>
-                                    <input type="text" class="form-control " id="" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>Siglas Moneda</label>
-                                    <input type="text" class="form-control " id="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>Stock</label>
-                                    <input type="text" class="form-control " id="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>Precio Regular</label>
-                                    <input type="text" class="form-control " id="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>Fecha de Inicio de Descuento</label>
-                                    <input type="date" class="form-control " id="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                                <div class="form-group">
-                                    <label>Fecha de Final de Descuento</label>
-                                    <input type="date" class="form-control " id="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">warnings</label>
-                                    <textarea class="form-control" id="" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">how to use</label>
-                                    <textarea class="form-control" id="" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             
             </div>
             <div class="justify-end-flex well-lg col-lg-12 col-xs-11">
@@ -351,10 +211,10 @@
                 </button>
             </div>
 
-            </div>
+        </div>
             
         </div>
-    </div>
+<div id="controlesPaginacion"></div>
 </div>
 
 
@@ -372,7 +232,7 @@
 
 
 <!-- vista-borrar-productos -->
-<div class="vista-2" id="vista-borrar-productos" style="width: 100%;opacity:0">
+<div class="vista-2" id="vista-borrar-productos" style="width: 100%;display:none;">
 
     <button class="btn btn-primary" id="botonIrHaVistaFormularioProductos" style="margin-bottom: 15px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">

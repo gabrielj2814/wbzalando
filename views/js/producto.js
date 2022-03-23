@@ -297,8 +297,10 @@ function filtrarProductos(e){
     let marcaProducto=document.getElementById("marcaProducto").value;
     let $nombreProducto=document.getElementById("nombreProducto").value;
     let totalResultados=document.getElementById("totalResultados")
+    let numeroDeProductos=document.getElementById("numeroDeProductos")
     $botonIrHaformulario.setAttribute("disabled","disabled")
     totalResultados.textContent="cargando... "
+    let pagina=1
     $.ajax({
         type: 'POST',
         cache: false,
@@ -309,14 +311,39 @@ function filtrarProductos(e){
             action: 'getconsultarproductoconfiltros',
             categoriaProducto,
             marcaProducto,
-            nombreProducto:$nombreProducto
+            nombreProducto:$nombreProducto,
+            minimo:numeroDeProductos.value,
+            pagina
         },
         success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta.datos));
-            totalResultados.textContent=datos.length.toString()
-            if(datos.length>0){
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta));
+            totalResultados.textContent=respuestaJson.totalRegistros.toString()
+            console.log("datosssssssssssssssssssssssssssssssss =>>>>>>>>>>>>>>>>> ",respuestaJson)
+            if(respuestaJson.totalRegistros>0){
                 $botonIrHaformulario.removeAttribute("disabled")
-                productosFiltrados=datos
+                productosFiltrados=respuestaJson.productosPaginados
+                if(respuestaJson.totalRegistros>0){
+                    insertarControlesPaginacion();
+                    let paginaAnt=document.getElementById("pagina-ant")
+                    let paginaSig=document.getElementById("pagina-sig")
+                    paginaSig.style.display="block"
+                    paginaAnt.style.display="block"
+                    if(parseInt(pagina)===respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                        paginaSig.style.display="none"
+                    }
+                    else if(parseInt(pagina)<respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                    }
+                    if(parseInt(pagina)===1){
+                        paginaAnt.setAttribute("data-numero-pagina",1)
+                        paginaAnt.style.display="none"
+                    }
+                    else if(parseInt(pagina)<=respuestaJson.totalDePagina){
+                        paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                    }
+                    insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                }
                 
             }
             else{
@@ -329,7 +356,149 @@ function filtrarProductos(e){
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
+    datosProductosForm={}
+
 }
+
+function insertarControlesPaginacion(){
+    let controlesPaginacion=document.getElementById("controlesPaginacion")
+    // controlesPaginacion.innerHTML="";
+    let html="\
+        <div class='estructura-paginador'>\
+        <button id='pagina-ant' onClick='filtrarProductosPaginar(this)'>\
+            <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-left-circle-fill' viewBox='0 0 16 16'>\
+            <path d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z'/>\
+            </svg>\
+        </button>\
+        <div id='lista-paginas'></div>\
+        <button id='pagina-sig' onClick='filtrarProductosPaginar(this)'>\
+        <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='currentColor' class='bi bi-arrow-right-circle-fill' viewBox='0 0 16 16'>\
+        <path d='M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z'/>\
+        </svg>\
+        </button></div>"
+    controlesPaginacion.innerHTML=html;
+}
+
+function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    let minimoPagina=5
+    pagina=parseInt(pagina)
+    let listaPaginas=document.getElementById("lista-paginas")
+    listaPaginas.innerHTML=""
+    let contador=0;
+    let htmlBotonesPaginacion="";
+    let agregarPrimeraPagina=false
+    let agregarUltimaPagina=false
+    while(contador<totalDePagina){
+        let paginaBoton=(contador+1)
+        let boton=""
+        if(paginaBoton===pagina){
+            boton+="<button onClick='filtrarProductosPaginar(this)' style='color: #1900e7 !important; text-decoration: underline;' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+            if((totalDePagina-1)===pagina){
+                agregarUltimaPagina=true
+            }
+            if(pagina>2){
+                agregarPrimeraPagina=true
+            }
+            else{
+                if(document.getElementById("primera-pagina")){
+                    let primeraPagina=document.getElementById("primera-pagina")
+                    primeraPagina.remove()
+                }
+            }
+        }
+        if(paginaBoton===pagina+1){
+            boton+="<button onClick='filtrarProductosPaginar(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        if(paginaBoton===pagina-1 && paginaBoton!==0){
+            boton+="<button onClick='filtrarProductosPaginar(this)' data-numero-pagina='"+paginaBoton+"'>"+paginaBoton+"</button>"
+            htmlBotonesPaginacion+=boton;
+        }
+        contador++
+    }
+    if(totalDePagina>pagina && agregarUltimaPagina===false){
+        htmlBotonesPaginacion+="<button onClick='filtrarProductosPaginar(this)' id='ultima-pagina' class='ultima-pagina' data-numero-pagina='"+totalDePagina+"'>"+totalDePagina+"</button>";
+    }
+    if(agregarPrimeraPagina){
+        listaPaginas.insertAdjacentHTML("afterBegin","<button onClick='filtrarProductosPaginar(this)' id='primera-pagina' class='primera-pagina' data-numero-pagina='"+1+"'>"+1+"</button>")
+    }
+    listaPaginas.innerHTML+=htmlBotonesPaginacion;
+}
+
+function filtrarProductosPaginar(a){
+    let pagina=1;
+    if(a!=1){
+        pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
+    }
+    const linkControlador=document.getElementById("linkControlador").value;
+    let categoriaProducto=document.getElementById("categoriaProducto").value;
+    let marcaProducto=document.getElementById("marcaProducto").value;
+    let $nombreProducto=document.getElementById("nombreProducto").value;
+    let totalResultados=document.getElementById("totalResultados")
+    let numeroDeProductos=document.getElementById("numeroDeProductos")
+    $botonIrHaformulario.setAttribute("disabled","disabled")
+    totalResultados.textContent="cargando... "
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultarproductoconfiltros',
+            categoriaProducto,
+            marcaProducto,
+            nombreProducto:$nombreProducto,
+            minimo:numeroDeProductos.value,
+            pagina
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta));
+            totalResultados.textContent=respuestaJson.totalRegistros.toString()
+            console.log("datosssssssssssssssssssssssssssssssss =>>>>>>>>>>>>>>>>> ",respuestaJson)
+            if(respuestaJson.totalRegistros>0){
+                $botonIrHaformulario.removeAttribute("disabled")
+                productosFiltrados=respuestaJson.productosPaginados
+                irHaFormularioDeProductos()
+                if(respuestaJson.totalRegistros>0){
+                    insertarControlesPaginacion();
+                    let paginaAnt=document.getElementById("pagina-ant")
+                    let paginaSig=document.getElementById("pagina-sig")
+                    paginaSig.style.display="block"
+                    paginaAnt.style.display="block"
+                    if(parseInt(pagina)===respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                        paginaSig.style.display="none"
+                    }
+                    else if(parseInt(pagina)<respuestaJson.totalDePagina){
+                        paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                    }
+                    if(parseInt(pagina)===1){
+                        paginaAnt.setAttribute("data-numero-pagina",1)
+                        paginaAnt.style.display="none"
+                    }
+                    else if(parseInt(pagina)<=respuestaJson.totalDePagina){
+                        paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                    }
+                    insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                }
+                
+            }
+            else{
+                totalResultados.textContent="0"
+            }
+            // insertarDatosTablaProducto(datos);
+        },
+        error: () => {
+            totalResultados.textContent="0"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+
+}
+
+
 
 // slider
 let $vistaFormProductos=document.getElementById("vista-form-productos")
@@ -338,7 +507,7 @@ let $vistaInicial=document.getElementById("vista-inicial")
 
 function irHaFormularioDeProductos(){
     datosResPaldoProductos={}
-    datosProductosForm={}
+    // datosProductosForm={}
     $vistaInicial.style.display="none"
     $vistaFormProductos.style.display="block"
     let radiosPaisesForm=document.querySelectorAll(".redio-paises-form");
@@ -348,46 +517,55 @@ function irHaFormularioDeProductos(){
         for(let producto of productosFiltrados){
             let descripcionProducto=producto.description.replace("<p>","").replace("</p>","").split("'").join("")
             let nombrePro=producto.name.split("'").join("")
-            datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
-                paisTalla:"",
-                idProductoTienda:producto.id_product,
-                ean:producto.ean13,
-                nombreProducto:nombrePro,
-                urlImagen:producto.urlImagen,
-                idUrlImagen:producto.id_product,
-                descripcion:descripcionProducto,
-                brand_code:"null",
-                lenguaje:producto.iso_code,
-                outline:"null",
-                stock:"0",
-                size_group:"",
-                supplier_color:"",
-                "color_code.primary":"null",
-                target_genders:[],
-                target_age_groups:[],
-                season_code:"null",
-                moneda:"",
-                precioRegular:"",
-                precioPromocional:"",
-                fechaInicioPromocion:"",
-                fechaFinalPromocion:"",
-                datosTallas:{},
-                haEnviar:false,
-                how_to_use:"null",
-                warnings:"null",
-                material_percentage:"null",
-                material_code:"null",
-                atributos_producto:producto.atributos_producto,
-                imagenCliente:null,
-                imagenServer:null
+            if(datosResPaldoProductos[pais.value]){
+                datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
+                    paisTalla:"",
+                    idProductoTienda:producto.id_product,
+                    ean:producto.ean13,
+                    nombreProducto:nombrePro,
+                    urlImagen:producto.urlImagen,
+                    idUrlImagen:producto.id_product,
+                    descripcion:descripcionProducto,
+                    brand_code:"null",
+                    lenguaje:producto.iso_code,
+                    outline:"null",
+                    stock:"0",
+                    size_group:"",
+                    supplier_color:"",
+                    "color_code.primary":"null",
+                    target_genders:[],
+                    target_age_groups:[],
+                    season_code:"null",
+                    moneda:"",
+                    precioRegular:"",
+                    precioPromocional:"",
+                    fechaInicioPromocion:"",
+                    fechaFinalPromocion:"",
+                    datosTallas:{},
+                    haEnviar:false,
+                    how_to_use:"null",
+                    warnings:"null",
+                    material_percentage:"null",
+                    material_code:"null",
+                    atributos_producto:producto.atributos_producto,
+                    imagenCliente:null,
+                    imagenServer:null
+                }
             }
+            
         }
     }
+    console.log("hoooooooooooooooooooooooooooooo =>>>",productosFiltrados)
+    console.log("hoooooooooooooooooooooooooooooo =>>>",datosResPaldoProductos)
     // console.log("lista ---- =>>>> ",productosFiltrados)
     // console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
     // datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
-    radiosPaisesForm[0].setAttribute("checked",true)
-    cargarProductosPorPaisSeleccionado(radiosPaisesForm[0]);
+    if(document.querySelector(".redio-paises-form:checked")){
+        cargarProductosPorPaisSeleccionado(document.querySelector(".redio-paises-form:checked"));
+    }
+    else{
+        cargarProductosPorPaisSeleccionado(document.querySelectorAll(".redio-paises-form")[0]);
+    }
     
 }
 
@@ -549,6 +727,7 @@ function validarProducto(){
 function irHaVistaFormularioProductos(){
     $vistaFormProductos.style.display="block"
     $vistaBorrarProductos.style.display="none"
+    
 }
 
 function cargarProductosPorPaisSeleccionado(a){
@@ -567,50 +746,57 @@ function cargarDatosGuardados(pais){
     if(datosProductosForm[pais]){
         // _categoria
         for(let idProducto in datosProductosForm[pais]){
-            let datosProducto=datosProductosForm[pais][idProducto]
-            document.getElementById(idProducto+"_categoria").value=datosProducto.outline
-            let categoriaTalla=document.getElementById(idProducto+"_categoria_talla")
-            let paisTalla=document.getElementById(idProducto+"_pais_talla")
-            categoriaTalla.value=datosProducto.size_group
-            paisTalla.value=datosProducto.paisTalla
-            consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
-
-            document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
-            document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
-            
-            document.getElementById(idProducto+"_moneda").value=datosProducto.moneda
-            document.getElementById(idProducto+"_precio_regular").value=datosProducto.precioRegular
-            document.getElementById(idProducto+"_precio_promocion").value=datosProducto.precioPromocional
-            document.getElementById(idProducto+"_fecha_inicio_promocion").value=datosProducto.fechaInicioPromocion
-            
-            document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
-            if(document.getElementById(idProducto+"_material")){
-                document.getElementById(idProducto+"_material").value=datosProducto.material_code
-                document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
+            if(datosProductosForm[pais][idProducto]){
+                if(document.getElementById(idProducto+"_categoria")){
+                    let datosProducto=datosProductosForm[pais][idProducto]
+                    document.getElementById(idProducto+"_categoria").value=datosProducto.outline
+                    let categoriaTalla=document.getElementById(idProducto+"_categoria_talla")
+                    let paisTalla=document.getElementById(idProducto+"_pais_talla")
+                    categoriaTalla.value=datosProducto.size_group
+                    paisTalla.value=datosProducto.paisTalla
+                    consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
+        
+                    document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
+                    document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
+                    
+                    document.getElementById(idProducto+"_moneda").value=datosProducto.moneda
+                    document.getElementById(idProducto+"_precio_regular").value=datosProducto.precioRegular
+                    document.getElementById(idProducto+"_precio_promocion").value=datosProducto.precioPromocional
+                    document.getElementById(idProducto+"_fecha_inicio_promocion").value=datosProducto.fechaInicioPromocion
+                    
+                    document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
+                    if(document.getElementById(idProducto+"_material")){
+                        document.getElementById(idProducto+"_material").value=datosProducto.material_code
+                        document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
+                    }
+                    let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
+                    seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
+        
+                    let setelctTargetGenders=document.getElementById(idProducto+"_target_genders")
+                    seleccionarValoresSelectMultiples(setelctTargetGenders,datosProducto.target_genders)
+                    document.getElementById(idProducto+"_brand").value=datosProducto.brand_code
+                    document.getElementById(idProducto+"_season").value=datosProducto.season_code
+                    
+                    if(document.getElementById(idProducto+"_warnings")){
+                        document.getElementById(idProducto+"_warnings").value=(datosProducto.warnings!=="null")?datosProducto.warnings:""
+                    }
+                    if(document.getElementById(idProducto+"_how_to_use")){
+                        document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
+                    }
+                    let radioFormulario=document.getElementById(idProducto+"_check_envio")
+                    radioFormulario.checked=datosProducto.haEnviar
+                    cambiarEstadoDeEnvioDeProduct(radioFormulario)
+                    if(datosProducto.imagenCliente!==null){
+                        let imagen=document.getElementById(idProducto+"_imagen")
+                        imagen.style.display="block"
+                        imagen.src=datosProducto.imagenCliente
+                    }
+                    console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
+                }
+               
+                
             }
-            let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
-            seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
-
-            let setelctTargetGenders=document.getElementById(idProducto+"_target_genders")
-            seleccionarValoresSelectMultiples(setelctTargetGenders,datosProducto.target_genders)
-            document.getElementById(idProducto+"_brand").value=datosProducto.brand_code
-            document.getElementById(idProducto+"_season").value=datosProducto.season_code
-            
-            if(document.getElementById(idProducto+"_warnings")){
-                document.getElementById(idProducto+"_warnings").value=(datosProducto.warnings!=="null")?datosProducto.warnings:""
-            }
-            if(document.getElementById(idProducto+"_how_to_use")){
-                document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
-            }
-            let radioFormulario=document.getElementById(idProducto+"_check_envio")
-            radioFormulario.checked=datosProducto.haEnviar
-            cambiarEstadoDeEnvioDeProduct(radioFormulario)
-            if(datosProducto.imagenCliente!==null){
-                let imagen=document.getElementById(idProducto+"_imagen")
-                imagen.style.display="block"
-                imagen.src=datosProducto.imagenCliente
-            }
-            console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
+           
         }
         // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
     }
@@ -1179,7 +1365,7 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarTargetAgeGroupsCodeSelect()
                 insertarMaterialesContruccionCodeSelect()
                 let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
-                cargarDatosGuardados(radiosPaisesForm.value)
+                cargarDatosGuardados(radiosPaisesForm)
 
             }
             preloader.style.opacity="0"
