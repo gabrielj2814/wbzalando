@@ -379,7 +379,7 @@ function irHaFormularioDeProductos(){
                 material_code:"null",
                 atributos_producto:producto.atributos_producto,
                 imagenCliente:null,
-                imagenServer:null,
+                imagenServer:null
             }
         }
     }
@@ -413,133 +413,136 @@ function irHaVistaInicial(){
 
 function irHaVistaBorrarProductos(e){
     e.preventDefault()
-    $vistaFormProductos.style.display="none"
-    $vistaBorrarProductos.style.display="block"
-    let radioPaiseHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
-    alert("KO")
-    console.log("validarrrrrrrrrrr =>>>>>>>>>>>>>>>>>",validarProducto())
-    // if(radioPaiseHaEliminar.length===1){
-    //     cargarProductosHaEliminarPorPais(radioPaiseHaEliminar[0])
-    // }
-    // else{
-    //     let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar")
-    //     radiosPaisesHaEliminar[0].setAttribute("checked",true)
-    //     cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
-    // }
+    let validacion=validarProducto()
+    if(validacion){
+        $vistaFormProductos.style.display="none"
+        $vistaBorrarProductos.style.display="block"
+        let radioPaiseHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
+        if(radioPaiseHaEliminar.length===1){
+            cargarProductosHaEliminarPorPais(radioPaiseHaEliminar[0])
+        }
+        else{
+            let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar")
+            radiosPaisesHaEliminar[0].setAttribute("checked",true)
+            cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
+        }
+    }
 }
 
 function validarProducto(){
     let estado=true
     let error="NULL"
     let productoError="null"
+    let paisProductoError="null"
     for(let pais in datosProductosForm){
         for(let idProducto in datosProductosForm[pais]){
             let producto=datosProductosForm[pais][idProducto]
-            if(producto.outline==="null"){
-                error="TIENE QUE SELECIONAR UNA CATEGORIA DE PRODUCTO"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.brand_code==="null"){
-                error="TIENE QUE SELECIONAR UNA BRAND"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.moneda===""){
-                error="TIENE QUE SELECIONAR UNA ESCRIBIR UNA MONEDA PARA EL PRECIO"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.season_code==="null"){
-                error="TIENE QUE SELECIONAR UNA TEMPORADA"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.size_group==="null"){
-                error="TIENE QUE SELECIONAR UNA CATEGORIA DE TALLA"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.supplier_color===""){
-                error="NO PUEDE ESTAR VACIO EL CAMPO SUPPLIR COLOR"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto["color_code.primary"]==="null"){
-                error="TIENE QUE SELECIONAR UNA COLOR"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.precioRegular===""){
-                error="NO PUEDE ESTAR VACIO EL PRECIO REGULAR"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.target_age_groups.length<=0){
-                error="TIENES QUE SELECIONAR AL MENOS UN TARGET AGE GROUPS"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.target_genders.length<=0){
-                error="TIENES QUE SELECIONAR AL MENOS UN TARGET GENDERS"
-                productoError=producto
-                estado=false
-                break
-            }
-            if(producto.precioPromocional!=="" || parseFloat(producto.precioPromocional)){
-                // error="NO PUEDE ESTAR VACIO EL PRECIO PROMOCIONAL"
-                // productoError=producto
-                // estado=false
-                // break
-                if(parseFloat(producto.precioPromocional)<=0){
-                    error="EL PRECIO PROMOCIONAL NO PUEDE SER MENOR A CERO"
+            if(producto.haEnviar===false){
+                paisProductoError=pais
+                if(producto.outline==="null"){
+                    error="TIENE QUE SELECIONAR UNA CATEGORIA DE PRODUCTO"
                     productoError=producto
                     estado=false
                     break
                 }
-                if(parseFloat(producto.precioPromocional)>=parseFloat(producto.precioRegular)){
-                    error="EL PRECIO PROMOCIONAL NO PUEDE MAYO O IGUAL AL PRECIO REGULAR"
+                if(producto.imagenCliente===null){
+                    error="NO PUDE ENVIAR UN PRODUCTO SIN IMAGEN"
                     productoError=producto
                     estado=false
                     break
                 }
-                if(moment(producto.fechaInicioPromocion).isAfter(moment().format("YYYY-MM-DD"))){
-                    if(moment(producto.fechaInicioPromocion).isAfter(producto.fechaFinalPromocion)){
-                        error="LA FECHA DE INICIO NO PUEDE SER POSTERIO A LA FECHA FINAL DE LA PROMOCION"
+                if(producto.brand_code==="null"){
+                    error="TIENE QUE SELECIONAR UNA BRAND"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.moneda===""){
+                    error="TIENE QUE SELECIONAR UNA ESCRIBIR UNA MONEDA PARA EL PRECIO"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.season_code==="null"){
+                    error="TIENE QUE SELECIONAR UNA TEMPORADA"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.size_group==="null"){
+                    error="TIENE QUE SELECIONAR UNA CATEGORIA DE TALLA"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.supplier_color===""){
+                    error="NO PUEDE ESTAR VACIO EL CAMPO SUPPLIR COLOR"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto["color_code.primary"]==="null"){
+                    error="TIENE QUE SELECIONAR UNA COLOR"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.precioRegular===""){
+                    error="NO PUEDE ESTAR VACIO EL PRECIO REGULAR"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.target_age_groups.length<=0){
+                    error="TIENES QUE SELECIONAR AL MENOS UN TARGET AGE GROUPS"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.target_genders.length<=0){
+                    error="TIENES QUE SELECIONAR AL MENOS UN TARGET GENDERS"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.precioPromocional!=="" || parseFloat(producto.precioPromocional)){
+                    if(parseFloat(producto.precioPromocional)<=0){
+                        error="EL PRECIO PROMOCIONAL NO PUEDE SER MENOR A CERO"
+                        productoError=producto
+                        estado=false
+                        break
+                    }
+                    if(parseFloat(producto.precioPromocional)>=parseFloat(producto.precioRegular)){
+                        error="EL PRECIO PROMOCIONAL NO PUEDE MAYO O IGUAL AL PRECIO REGULAR"
+                        productoError=producto
+                        estado=false
+                        break
+                    }
+                    if(moment(producto.fechaInicioPromocion).isAfter(moment().format("YYYY-MM-DD"))){
+                        if(moment(producto.fechaInicioPromocion).isAfter(producto.fechaFinalPromocion)){
+                            error="LA FECHA DE INICIO NO PUEDE SER POSTERIO A LA FECHA FINAL DE LA PROMOCION"
+                            productoError=producto
+                            estado=false
+                            break
+                        }
+                    }
+                    else{
+                        error="LA FECHA DE INICIO DE PROMOCION NO PUEDE COMENZAR HOY, PUEDE COMENZAR APARTIR DE MAÑANA"
                         productoError=producto
                         estado=false
                         break
                     }
                 }
-                else{
-                    error="LA FECHA DE INICIO DE PROMOCION NO PUEDE COMENZAR HOY, PUEDE COMENZAR APARTIR DE MAÑANA"
-                    productoError=producto
-                    estado=false
-                    break
-                }
             }
-            // let stocks=Object.entries(producto.datosTallas)
-            // if(stocks.length<3){
-            //     error="TIENE QUE HA VER MINIMO TRES O CINCO TALLAS COMO MIMO"
-            //     productoError=producto
-            //     estado=false
-            //     break
-            // }
         }
         if(!estado){
             break
         }
     }
-    alert(error)
+    if(estado===false){
+        let errorCompleto=`el producto ${productoError.nombreProducto} que decea enviar a ${listaDePaises[paisProductoError]} tiene el siguiente error :${error}`
+        mostrarAlerta("alert-danger",errorCompleto)
+    }
     return estado
 }
 
