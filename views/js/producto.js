@@ -654,7 +654,7 @@ function validarProducto(){
                     break
                 }
                 if(producto.supplier_color===""){
-                    error="NO PUEDE ESTAR VACIO EL CAMPO SUPPLIR COLOR"
+                    error="El porducto no tine un proveedor de color"
                     productoError=producto
                     estado=false
                     break
