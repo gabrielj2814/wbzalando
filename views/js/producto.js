@@ -427,6 +427,8 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
 }
 
 function filtrarProductosPaginar(a){
+    preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     let pagina=1;
     if(a!=1){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
@@ -492,6 +494,8 @@ function filtrarProductosPaginar(a){
         },
         error: () => {
             totalResultados.textContent="0"
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
