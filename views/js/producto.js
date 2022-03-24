@@ -754,7 +754,9 @@ function cargarDatosGuardados(pais){
                     let paisTalla=document.getElementById(idProducto+"_pais_talla")
                     categoriaTalla.value=datosProducto.size_group
                     paisTalla.value=datosProducto.paisTalla
+                    let tallasRespaldo=JSON.parse(JSON.stringify(datosProductosForm[pais][idProducto].datosTallas))
                     consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
+                    datosProductosForm[pais][idProducto].datosTallas=tallasRespaldo
         
                     document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
                     document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
@@ -1364,8 +1366,10 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
                 insertarMaterialesContruccionCodeSelect()
-                let radiosPaisesForm=document.querySelectorAll(".redio-paises-form:checked")[0];
-                cargarDatosGuardados(radiosPaisesForm)
+                if(document.querySelector(".redio-paises-form:checked")){
+                    let radiosPaisesForm=document.querySelector(".redio-paises-form:checked");
+                    cargarDatosGuardados(radiosPaisesForm.value)
+                }
 
             }
             preloader.style.opacity="0"
