@@ -618,37 +618,37 @@ function validarProducto(){
             if(producto.haEnviar===false){
                 paisProductoError=pais
                 if(producto.outline==="null"){
-                    error="TIENE QUE SELECIONAR UNA CATEGORIA DE PRODUCTO"
+                    error="El porducto no tiene una categoria seleccionada"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.imagenCliente===null){
-                    error="NO PUDE ENVIAR UN PRODUCTO SIN IMAGEN"
+                    error="El produtoc no pude estar sin una imagen porfavor subir y cargar una imagen de producto"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.brand_code==="null"){
-                    error="TIENE QUE SELECIONAR UNA BRAND"
+                    error="El porducto no tine un brand seleccionado"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.moneda===""){
-                    error="TIENE QUE SELECIONAR UNA ESCRIBIR UNA MONEDA PARA EL PRECIO"
+                    error="TIENE QUE SELECIONAR UNA MONEDA PARA EL PRECIO"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.season_code==="null"){
-                    error="TIENE QUE SELECIONAR UNA TEMPORADA"
+                    error="El porducto no tine una temporada seleccionada"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.size_group==="null"){
-                    error="TIENE QUE SELECIONAR UNA CATEGORIA DE TALLA"
+                    error="El porducto no tine un size grouo seleccionado"
                     productoError=producto
                     estado=false
                     break
@@ -660,52 +660,52 @@ function validarProducto(){
                     break
                 }
                 if(producto["color_code.primary"]==="null"){
-                    error="TIENE QUE SELECIONAR UNA COLOR"
+                    error="El porducto no tine un color seleccionado"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.precioRegular===""){
-                    error="NO PUEDE ESTAR VACIO EL PRECIO REGULAR"
+                    error="El porducto no puede estar sin un precio regular"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.target_age_groups.length<=0){
-                    error="TIENES QUE SELECIONAR AL MENOS UN TARGET AGE GROUPS"
+                    error="El porducto no tine un target age groups seleccionado"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.target_genders.length<=0){
-                    error="TIENES QUE SELECIONAR AL MENOS UN TARGET GENDERS"
+                    error="El porducto no tine un target genders seleccionado"
                     productoError=producto
                     estado=false
                     break
                 }
                 if(producto.precioPromocional!=="" || parseFloat(producto.precioPromocional)){
                     if(parseFloat(producto.precioPromocional)<=0){
-                        error="EL PRECIO PROMOCIONAL NO PUEDE SER MENOR A CERO"
+                        error="El precio promocinal de producto no puede ser 0"
                         productoError=producto
                         estado=false
                         break
                     }
                     if(parseFloat(producto.precioPromocional)>=parseFloat(producto.precioRegular)){
-                        error="EL PRECIO PROMOCIONAL NO PUEDE MAYO O IGUAL AL PRECIO REGULAR"
+                        error="El precio promocinal de producto no puede ser igual o mayor al precio regular"
                         productoError=producto
                         estado=false
                         break
                     }
                     if(moment(producto.fechaInicioPromocion).isAfter(moment().format("YYYY-MM-DD"))){
                         if(moment(producto.fechaInicioPromocion).isAfter(producto.fechaFinalPromocion)){
-                            error="LA FECHA DE INICIO NO PUEDE SER POSTERIO A LA FECHA FINAL DE LA PROMOCION"
+                            error="La fecha de inicio de promoción del productos no puede ser posterios a la fecha final de promocion"
                             productoError=producto
                             estado=false
                             break
                         }
                     }
                     else{
-                        error="LA FECHA DE INICIO DE PROMOCION NO PUEDE COMENZAR HOY, PUEDE COMENZAR APARTIR DE MAÑANA"
+                        error="La fecha de inicio de promocion no pude ser hoy pude comenzar apartir de mañana"
                         productoError=producto
                         estado=false
                         break
