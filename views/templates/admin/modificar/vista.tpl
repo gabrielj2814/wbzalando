@@ -38,6 +38,9 @@
       </div>
       <div class="modal-body" id="formularioDatosProductos">
         <div class="row">
+          <div id="contenedorAlerta2"></div>
+        </div>
+        <div class="row">
             <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="font-size:1.2rem;">
                 Nombre: <span id="nombreDelProductoDetalle" class="text-primary">Nombre</span>
             </div>

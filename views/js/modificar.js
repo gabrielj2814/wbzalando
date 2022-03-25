@@ -207,6 +207,28 @@ function capturarStockDeTallasProductos(a){
     console.log("productos registrados =>>>> ",productosModificados)
 }
 
+function validarStock(datosProducto){
+    let error ="NULL"
+    let estadoError=false
+    if(parseInt(datosProducto.stock)>0){
+        if(parseInt(datosProducto.stock)<1000){
+            estadoError=true
+        }
+        else{
+            error ="una talla no puede supesar el stock 999 es el stock mino"
+        }
+    }
+    else{
+        error ="no se pude enviar una talla con un stock 0"
+    }
+
+    if(estadoError===false){
+        // alert(error)
+        mostrarAlerta("alert-danger",error,"contenedorAlerta2")
+    }
+    return estadoError
+}
+
 function  guardarStockDeProducto(a){
     const linkControlador=document.getElementById("linkControlador").value;
     let idModelo=a.getAttribute("data-id-modelo")
@@ -217,12 +239,15 @@ function  guardarStockDeProducto(a){
         if(idModelo===idModeloProducto){
             let datosProducto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
             if(datosProducto.enviar_stock===true){
-                let stock={
-                    "sales_channel_id": datosProducto.sales_channel_id,
-                    "ean": datosProducto.ean,
-                    "quantity": parseInt(datosProducto.stock)
+
+                if(validarStock(datosProducto)){
+                    let stock={
+                        "sales_channel_id": datosProducto.sales_channel_id,
+                        "ean": datosProducto.ean,
+                        "quantity": parseInt(datosProducto.stock)
+                    }
+                    stocks.push(JSON.stringify(stock))
                 }
-                stocks.push(JSON.stringify(stock))
             }
         }
     }
@@ -255,9 +280,58 @@ function  guardarStockDeProducto(a){
     }
     else{
         // alert("no stocks para enviar en este producto")
-        mostrarAlerta("alert-danger","no hay stock para enviar en este producto")
+        mostrarAlerta("alert-danger","no hay stock para enviar en este producto","contenedorAlerta2")
+        // mostrarAlerta("alert-danger","no hay stock para enviar en este producto")
     }
     
+}
+
+function validarPrecioPromocion(datosProducto){
+    let error ="NULL"
+    let estadoError=false
+    if(parseFloat(datosProducto.precioPromocion)>0){
+        if(parseFloat(datosProducto.precioPromocion) < parseFloat(datosProducto.precioRegular)){
+            if(moment(datosProducto.fechaInicioPromocion).isAfter(moment().format("YYYY-MM-DD"))){
+                if(moment(datosProducto.fechaFinPromocion).isAfter(datosProducto.fechaInicioPromocion)){
+                    estadoError=true
+                }
+                else{
+                    error ="la fecha inicio de promocion no pude ser posterior a la fecha final"
+                }
+            }
+            else{
+                error = "la fecha de inicio de promocion no pude comezar hoy pude comenzar a partir de mañana"
+            }
+            
+        }
+        else{
+            error ="el precio promocional no pude ser mayor o igual al precio regular"
+        }
+    }
+    else{
+        error ="el precio promocional no pude ser cero"
+    }
+    if(estadoError===false){
+        // alert(error)
+        mostrarAlerta("alert-danger",error,"contenedorAlerta2")
+    }
+    return estadoError
+}
+
+function validarPrecioRegular(datosProducto){
+    let error ="NULL"
+    let estadoError=false
+    if(parseFloat(datosProducto.precioRegular)>0){
+        estadoError=true
+    }
+    else{
+        error ="el precio regular no pude ser cero"
+    }
+    if(estadoError===false){
+        // alert(error)
+        mostrarAlerta("alert-danger",error,"contenedorAlerta2")
+    }
+    return estadoError
 }
 
 function  guardarPrecioDeProducto(a){
@@ -271,45 +345,53 @@ function  guardarPrecioDeProducto(a){
             let datosProducto=JSON.parse(JSON.stringify(productosModificados[idProducto]))
             
             if(datosProducto.enviar_descuento===true){
-                let precio={
-                    "ean": datosProducto.ean,
-                    "sales_channel_id": datosProducto.sales_channel_id,
-                    "regular_price": {
-                        "amount": parseFloat(datosProducto.precioRegular),
-                        "currency": datosProducto.moneda
-                    },
-                    "promotional_price": {
-                        "amount": parseFloat(datosProducto.precioPromocion),
-                        "currency": datosProducto.moneda
-                    },
-                    "scheduled_prices": [
-                        {
-                            "regular_price": {
-                                "amount": parseFloat(datosProducto.precioRegular),
-                                "currency": datosProducto.moneda
-                            },
-                            "promotional_price": {
-                                "amount": parseFloat(datosProducto.precioPromocion),
-                                "currency": datosProducto.moneda
-                            },
-                            "start_time": `${datosProducto.fechaInicioPromocion}T00:00:00.00Z`,
-                            "end_time": `${datosProducto.fechaFinPromocion}T00:00:00.00Z`
-                        }
-                    ],
-                    "ignore_warnings": true
+                if(validarPrecioRegular(datosProducto) && validarPrecioPromocion(datosProducto)){
+                    let precio={
+                        "ean": datosProducto.ean,
+                        "sales_channel_id": datosProducto.sales_channel_id,
+                        "regular_price": {
+                            "amount": parseFloat(datosProducto.precioRegular),
+                            "currency": datosProducto.moneda
+                        },
+                        "promotional_price": {
+                            "amount": parseFloat(datosProducto.precioPromocion),
+                            "currency": datosProducto.moneda
+                        },
+                        "scheduled_prices": [
+                            {
+                                "regular_price": {
+                                    "amount": parseFloat(datosProducto.precioRegular),
+                                    "currency": datosProducto.moneda
+                                },
+                                "promotional_price": {
+                                    "amount": parseFloat(datosProducto.precioPromocion),
+                                    "currency": datosProducto.moneda
+                                },
+                                "start_time": `${datosProducto.fechaInicioPromocion}T00:00:00.00Z`,
+                                "end_time": `${datosProducto.fechaFinPromocion}T00:00:00.00Z`
+                            }
+                        ],
+                        "ignore_warnings": true
+                    }
+                    precios.push(JSON.stringify(precio))
                 }
-                precios.push(JSON.stringify(precio))
+                else{
+                    break
+                }
+                
             }
             else{
-                let precio={
-                    "ean": datosProducto.ean,
-                    "sales_channel_id": datosProducto.sales_channel_id,
-                    "regular_price": {
-                        "amount": parseFloat(datosProducto.precioRegular),
-                        "currency": datosProducto.moneda
+               if(validarPrecioRegular(datosProducto)){
+                    let precio={
+                        "ean": datosProducto.ean,
+                        "sales_channel_id": datosProducto.sales_channel_id,
+                        "regular_price": {
+                            "amount": parseFloat(datosProducto.precioRegular),
+                            "currency": datosProducto.moneda
+                        }
                     }
-                }
-                precios.push(JSON.stringify(precio))
+                    precios.push(JSON.stringify(precio))
+               }
             }
         }
     }
@@ -342,7 +424,8 @@ function  guardarPrecioDeProducto(a){
     }
     else{
         // alert("no precios para enviar en este producto")
-        mostrarAlerta("alert-danger","no hay precios de producto para enviar")
+        // mostrarAlerta("alert-danger","no hay precios de producto para enviar")
+        mostrarAlerta("alert-danger","no hay precios de producto para enviar","contenedorAlerta2")
     }
 
 }
@@ -686,8 +769,8 @@ function consultarProductosPorPais2(idPais){
     });
 }
 
-function mostrarAlerta(colorAlerta,mensaje){
-    let $contenedorAlerta=document.getElementById("contenedorAlerta")
+function mostrarAlerta(colorAlerta,mensaje,contenedorAlerta="contenedorAlerta"){
+    let $contenedorAlerta=document.getElementById(contenedorAlerta)
     let htmlAlert='\
     <div id="alerta" class="alert '+colorAlerta+' alert-dismissible show" role="alert">\
         '+mensaje+' .\
