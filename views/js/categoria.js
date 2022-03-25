@@ -1,29 +1,9 @@
-// datos test
-let datosTest=[
-    {
-        "id_categoria_asociacion":"",
-        "id_category":"3",
-        "outline_name":"Bag",
-        "outline":"bag"
-    },
-    {
-        "id_categoria_asociacion":"",
-        "id_category":"2",
-        "outline_name":"other accessoires",
-        "outline":"other_accessoires"
-    }
-]
+
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
-// let botonConsultarTodos=document.getElementById("botonConsultarTodos");
-// let botonConsultar=document.getElementById("botonConsultar");
-// let botonActualizar=document.getElementById("botonActualizar");
-// let botonEliminar=document.getElementById("botonEliminar");
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
 function registrar(){
-    preloader.style.opacity="1"
-    bodyPleloader.style.overflow="hidden"
     const linkControlador=document.getElementById("linkControlador").value;
     let datosFormulario=$("#formularioCategoria").serializeArray()
     let arrayCatgorias=[]
@@ -37,46 +17,52 @@ function registrar(){
             idsCategoriaPresta.push(categoria.value);
         }
     }
-    let contador=0;
-    while(contador<idsCategoriaPresta.length){
-        let jsonFormato={
-            "id_categoria_asociacion":"",
-            "id_category":"",
-            "outline_name":"",
-            "outline":""
+    if(categoriasZalando.length>0){
+        preloader.style.opacity="1"
+        bodyPleloader.style.overflow="hidden"
+        let contador=0;
+        while(contador<idsCategoriaPresta.length){
+            let jsonFormato={
+                "id_categoria_asociacion":"",
+                "id_category":"",
+                "outline_name":"",
+                "outline":""
+            }
+            if(categoriasZalando[contador]!=="null"){
+                jsonFormato.id_category=idsCategoriaPresta[contador]
+                jsonFormato.outline_name=categoriasZalando[contador].split("-")[0]
+                jsonFormato.outline=categoriasZalando[contador].split("-")[1]
+                arrayCatgorias.push(jsonFormato)
+            }
+            contador++
         }
-        jsonFormato.id_category=idsCategoriaPresta[contador]
-        jsonFormato.outline_name=categoriasZalando[contador].split("-")[0]
-        jsonFormato.outline=categoriasZalando[contador].split("-")[1]
-        arrayCatgorias.push(jsonFormato)
-        contador++
+
+        console.log("array final =>>>> ",arrayCatgorias)
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: linkControlador, 
+            data: {
+                ajax: true,
+                action: 'postguardarasociacion',
+                asociacion:arrayCatgorias
+            },
+            success: (respuesta) => {
+                console.log(respuesta);
+                mostrarAlerta("alert-success","Asociación completada")
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+                // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+                // console.log("productos filtrados =>>> ",datos)
+            },
+            error: () => {
+                preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
+                mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+            }
+        });
     }
-    // console.log("array final =>>>> ",arrayCatgorias)
-    
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'postguardarasociacion',
-            asociacion:arrayCatgorias
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-            mostrarAlerta("alert-success","Asociación completada")
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
-            // console.log("productos filtrados =>>> ",datos)
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
-        }
-    });
 }
 function consultarTodos(){
     const linkControlador=document.getElementById("linkControlador").value;
@@ -246,7 +232,7 @@ function crearElementosFormulario(datos){
     let html="";
     let contador=0;
     for(let categoriasPrestashop of datos.categorias){
-        let opciones="";
+        let opciones="<option value='null'>seleccione</option>";
         for(let categoriaZalando of datos.esquemas){
             let label=categoriaZalando.split("-")[1];
             let name=categoriaZalando.split("-")[0];
@@ -315,7 +301,3 @@ function eliminar(){
 }
 consultarEsquemasYCategorias();
 botonRegistrar.addEventListener("click",registrar)
-// botonConsultarTodos.addEventListener("click",consultarTodos)
-// botonConsultar.addEventListener("click",consultar)
-// botonActualizar.addEventListener("click",actualizar)
-// botonEliminar.addEventListener("click",eliminar)
