@@ -223,15 +223,15 @@ class CategoriaController extends ModuleAdminController{
             }
             $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_obligatorias_config]=$respuesta;
         }
-        // foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
-        //     $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
-        //     if(is_array($respuesta)){
-        //         foreach($respuesta as $key => $valor){
-        //             $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
-        //         }
-        //     }
-        //     $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
-        // }
+        foreach($esquema["config"]["optional_types"] as $propiedades_opcionales_config){
+            $respuesta=$this->validarTipoDeDatoModelo($propiedades_opcionales_config);
+            if(is_array($respuesta)){
+                foreach($respuesta as $key => $valor){
+                    $respuesta[$key]=$this->validarTipoDeDatoModelo($key);
+                }
+            }
+            $modeloBase["product_model"]["product_configs"][0]["product_config_attributes"][$propiedades_opcionales_config]=$respuesta;
+        }
         // simple
         foreach($esquema["simple"]["mandatory_types"] as $propiedades_obligatorias_simple){
             $respuesta=$this->validarTipoDeDatoModelo($propiedades_obligatorias_simple);
@@ -312,13 +312,16 @@ class CategoriaController extends ModuleAdminController{
     
     public function guardarDatosPropidad($id_propiedad_modelo,$datosPropiedad){
         foreach($datosPropiedad["response"]->items as $datos){
+            $buscar=["'"];
+            $remplazar=[""];
+            $speceText=str_replace($buscar,$remplazar,json_encode($datos));
             $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
                 id_propiedad_modelo,
                 json_datos_propiedad
             )
             VALUES(
                 ".$id_propiedad_modelo.",
-                '".json_encode($datos)."'
+                '".$speceText."'
             );";
             Db::getInstance()->execute($SQL);
         }
