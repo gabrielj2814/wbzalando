@@ -14,6 +14,10 @@ let datos_categorias=[]
 let datos_materiales_contruccion={}
 let imagenSubidaAlServidor=[]
 let listaDePaises={}
+let datos_futter={}
+let datos_upper_material={}
+let datos_sole_material={}
+let datos_decksohle={}
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
@@ -129,8 +133,8 @@ function consultarMaterialesDeConstruccion(){
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
             datos_materiales_contruccion=datos.respuestaServidor
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            cargarDatosfutter();
+
         },
         error: () => {
             preloader.style.opacity="0"
@@ -140,6 +144,119 @@ function consultarMaterialesDeConstruccion(){
     });
 }
 
+function cargarDatosfutter(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let propiedad="futter"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_futter=respuestaJson.datos
+            cargarDatosUpperMaterial()
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+function cargarDatosUpperMaterial(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let propiedad="upper_material"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_upper_material=respuestaJson.datos
+            cargarDatosSoleMaterial()
+            
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+function cargarDatosSoleMaterial(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let propiedad="sole_material"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_sole_material=respuestaJson.datos
+            cargarDatosdecksohle()
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+function cargarDatosdecksohle(){
+    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+    let propiedad="decksohle"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkDeControladorCategoria, 
+        data: {
+            ajax: true,
+            action: 'getconsultardatospropiedad',
+            propiedad
+        },
+        success: (respuesta) => {
+            let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            datos_decksohle=respuestaJson.datos
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+// =====================
+// =====================
+// =====================
 function crearRadiosPaisTest(paises){
     let contenedorBanderasProductos=document.getElementById("paisesFormularioProducto");
     let sliderPaisesProductos=document.getElementById("slider-productos");
@@ -490,7 +607,6 @@ function filtrarProductosPaginar(a){
             else{
                 totalResultados.textContent="0"
             }
-            // insertarDatosTablaProducto(datos);
         },
         error: () => {
             totalResultados.textContent="0"
@@ -539,6 +655,10 @@ function irHaFormularioDeProductos(){
                     "color_code.primary":"null",
                     target_genders:[],
                     target_age_groups:[],
+                    futter:[],
+                    upper_material:[],
+                    sole_material:[],
+                    decksohle:[],
                     season_code:"null",
                     moneda:"",
                     precioRegular:"",
@@ -559,11 +679,6 @@ function irHaFormularioDeProductos(){
             
         }
     }
-    console.log("hoooooooooooooooooooooooooooooo =>>>",productosFiltrados)
-    console.log("hoooooooooooooooooooooooooooooo =>>>",datosResPaldoProductos)
-    // console.log("lista ---- =>>>> ",productosFiltrados)
-    // console.log("productos aginados por pais =>>>> ",datosResPaldoProductos)
-    // datosProductosForm=JSON.parse(JSON.stringify(datosResPaldoProductos))
     if(document.querySelector(".redio-paises-form:checked")){
         cargarProductosPorPaisSeleccionado(document.querySelector(".redio-paises-form:checked"));
     }
@@ -610,7 +725,7 @@ function irHaVistaBorrarProductos(e){
         }
     }
 }
-
+// validar datos de productos antes de pasar a la ultima pagina
 function validarProducto(){
     let estado=true
     let error="NULL"
@@ -745,10 +860,7 @@ function cargarProductosPorPaisSeleccionado(a){
 //  ====================================
 // cargar los datos de los productos que an sido ingresados en el formulario 
 function cargarDatosGuardados(pais){
-    // alert("hola cargar datos guar")
-    // console.log("aqiiiiiiiiiiiiiiiiiiii =>>> ",datosProductosForm[pais])
     if(datosProductosForm[pais]){
-        // _categoria
         for(let idProducto in datosProductosForm[pais]){
             if(datosProductosForm[pais][idProducto]){
                 if(document.getElementById(idProducto+"_categoria")){
@@ -775,11 +887,25 @@ function cargarDatosGuardados(pais){
                         document.getElementById(idProducto+"_material").value=datosProducto.material_code
                         document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
                     }
+
                     let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
                     seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
-        
+                    // ==============
                     let setelctTargetGenders=document.getElementById(idProducto+"_target_genders")
                     seleccionarValoresSelectMultiples(setelctTargetGenders,datosProducto.target_genders)
+                    // ==============
+                    let setelctfutter=document.getElementById(idProducto+"_futter")
+                    seleccionarValoresSelectMultiples(setelctfutter,datosProducto.futter)
+                    // ==============
+                    let setelctUpperMaterial=document.getElementById(idProducto+"_upper_material")
+                    seleccionarValoresSelectMultiples(setelctUpperMaterial,datosProducto.upper_material)
+                    // ==============
+                    let setelctSoleMaterial=document.getElementById(idProducto+"_sole_material")
+                    seleccionarValoresSelectMultiples(setelctSoleMaterial,datosProducto.sole_material)
+                    // ==============
+                    let setelctSecksohle=document.getElementById(idProducto+"_decksohle")
+                    seleccionarValoresSelectMultiples(setelctSecksohle,datosProducto.decksohle)
+
                     document.getElementById(idProducto+"_brand").value=datosProducto.brand_code
                     document.getElementById(idProducto+"_season").value=datosProducto.season_code
                     
@@ -824,8 +950,6 @@ function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
     else{
         select[0].selected=false
     }
-
-    
 }
 // cargar el stock de las tallas guardadas
 function cargarStockTalla(e){
@@ -1017,6 +1141,40 @@ function insertarProductosVistaEnvio(idPais,productos){
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >futter</label>\
+                            <select multiple id="'+codigoIdPaisIdproducto+'_futter" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="futter" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-futter">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >upper material</label>\
+                            <select multiple id="'+codigoIdPaisIdproducto+'_upper_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="upper_material" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-upper-material">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >sole material</label>\
+                            <select multiple id="'+codigoIdPaisIdproducto+'_sole_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="sole_material" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-sole-material">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label >decksohle</label>\
+                            <select multiple id="'+codigoIdPaisIdproducto+'_decksohle" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="decksohle" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-decksohle">\
+                                <option>Default select</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="row">\
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <h2>Tallas</h2>\
                     </div>\
                 </div>\
@@ -1191,6 +1349,62 @@ function insertarMaterialesContruccionCodeSelect(){
             html+=option
         }
         $campoMaterialCode.innerHTML=html
+    }
+}
+
+function insertarFutter(){
+    let $camposFutters=document.querySelectorAll(".campo-futter")
+    for(let $camposFutter of $camposFutters){
+        $camposFutter.innerHTML=""
+        let html="<option value='null'>Seleccione</option>"
+        for(let futter of datos_futter){
+            futter=JSON.parse(futter)
+            let option='<option value="'+futter.label+'">'+futter.value.localized.es+'</option>'
+            html+=option
+        }
+        $camposFutter.innerHTML=html
+    }
+}
+
+function insertarUpperMaterial(){
+    let $camposUpperMaterials=document.querySelectorAll(".campo-upper-material")
+    for(let $camposUpperMaterial of $camposUpperMaterials){
+        $camposUpperMaterial.innerHTML=""
+        let html="<option value='null'>Seleccione</option>"
+        for(let upper_material of datos_upper_material){
+            upper_material=JSON.parse(upper_material)
+            let option='<option value="'+upper_material.label+'">'+upper_material.value.localized.es+'</option>'
+            html+=option
+        }
+        $camposUpperMaterial.innerHTML=html
+    }
+}
+
+function insertarSoleMaterial(){
+    let $camposSoleMaterials=document.querySelectorAll(".campo-sole-material")
+    for(let $camposSoleMaterial of $camposSoleMaterials){
+        $camposSoleMaterial.innerHTML=""
+        let html="<option value='null'>Seleccione</option>"
+        for(let sole_material of datos_sole_material){
+            sole_material=JSON.parse(sole_material)
+            let option='<option value="'+sole_material.label+'">'+sole_material.value.localized.es+'</option>'
+            html+=option
+        }
+        $camposSoleMaterial.innerHTML=html
+    }
+}
+
+function insertarDecksohle(){
+    let $camposDecksohles=document.querySelectorAll(".campo-decksohle")
+    for(let $camposDecksohle of $camposDecksohles){
+        $camposDecksohle.innerHTML=""
+        let html="<option value='null'>Seleccione</option>"
+        for(let decksohle of datos_decksohle){
+            decksohle=JSON.parse(decksohle)
+            let option='<option value="'+decksohle.label+'">'+decksohle.value.localized.es+'</option>'
+            html+=option
+        }
+        $camposDecksohle.innerHTML=html
     }
 }
 
@@ -1383,6 +1597,10 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
                 insertarMaterialesContruccionCodeSelect()
+                insertarFutter()
+                insertarUpperMaterial()
+                insertarSoleMaterial()
+                insertarDecksohle()
                 if(document.querySelector(".redio-paises-form:checked")){
                     let radiosPaisesForm=document.querySelector(".redio-paises-form:checked");
                     cargarDatosGuardados(radiosPaisesForm.value)
