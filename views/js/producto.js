@@ -802,6 +802,30 @@ function validarProducto(){
                     estado=false
                     break
                 }
+                if(producto.upper_material.length<=0){
+                    error="El porducto no tine no tiene upper material"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.sole_material.length<=0){
+                    error="El porducto no tine no tiene sole material"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.futter.length<=0){
+                    error="El porducto no tine futter"
+                    productoError=producto
+                    estado=false
+                    break
+                }
+                if(producto.decksohle.length<=0){
+                    error="El porducto no tine decksohle"
+                    productoError=producto
+                    estado=false
+                    break
+                }
                 if(producto.precioPromocional!=="" || parseFloat(producto.precioPromocional)){
                     if(parseFloat(producto.precioPromocional)<=0){
                         error="El precio promocinal de producto no puede ser 0"
@@ -2088,7 +2112,11 @@ function generarFormatoZalado(){
                         "description": {},
                         "season_code": "",
                         "supplier_color": datosProductosForm[pais][producto].supplier_color,
-                        "color_code.primary": ""
+                        "color_code.primary": "",
+                        "decksohle":datosProductosForm[pais][producto].decksohle,
+                        "sole_material":datosProductosForm[pais][producto].sole_material,
+                        "upper_material":datosProductosForm[pais][producto].upper_material,
+                        "futter":datosProductosForm[pais][producto].futter
                     },
                     "product_simples":[]
                 }
@@ -2159,15 +2187,22 @@ function generarFormatoZalado(){
                             }
                         })
                     }
-                    if(parseInt(datosTalla.stock)>0 && datosTalla.stock!==""){
-                        stock.push(
-                            {
-                                "sales_channel_id": pais,
-                                "ean": datosTalla.ean,
-                                "quantity": parseInt(datosTalla.stock)
-                            }
-                        )
-                    }
+                    // if(parseInt(datosTalla.stock)>0 && datosTalla.stock!==""){
+                    //     stock.push(
+                    //         {
+                    //             "sales_channel_id": pais,
+                    //             "ean": datosTalla.ean,
+                    //             "quantity": parseInt(datosTalla.stock)
+                    //         }
+                    //     )
+                    // }
+                    stock.push(
+                        {
+                            "sales_channel_id": pais,
+                            "ean": datosTalla.ean,
+                            "quantity": parseInt(datosTalla.stock)
+                        }
+                    )
                     
 
                 }
