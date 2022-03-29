@@ -130,7 +130,14 @@
 </div>
 
 
-
+<!--
+                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
+                        <div class="form-group">\
+                            <label>Siglas Moneda</label>\
+                            <input id="'+codigoIdPaisIdproducto+'_moneda" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                        </div>\
+                    </div>\
+-->
 
 
 

@@ -923,8 +923,21 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label>Siglas Moneda</label>\
-                            <input id="'+codigoIdPaisIdproducto+'_moneda" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <label >Siglas Moneda</label>\
+                            <select id="'+codigoIdPaisIdproducto+'_moneda" class="form-control margin-0" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                                <option value="null">Seccionar moneda</option>\
+                                <option value="EUR">EUR</option>\
+                                <option value="PLN">PLN</option>\
+                                <option value="SEK">SEK</option>\
+                                <option value="CZK">CZK</option>\
+                                <option value="GBP">GBP</option>\
+                                <option value="CHF">CHF</option>\
+                                <option value="RON">RON</option>\
+                                <option value="DKK">DKK</option>\
+                                <option value="HUF">HUF</option>\
+                                <option value="NOK">NOK</option>\
+                                <option value="HRK">HRK</option>\
+                            </select>\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
