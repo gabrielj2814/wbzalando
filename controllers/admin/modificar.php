@@ -191,7 +191,7 @@ class ModificarController extends ModuleAdminController{
         $resuestaModificarStockProductoZalando=false;
         if(array_key_exists("precios",$_POST)){
             $resuestaModificarPrecioProducto=$this->editarPrecioProducto($_POST["precios"]);
-            // $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
+            $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
         }
         if(array_key_exists("stocks",$_POST)){
             $resuestaModificarStockProducto=$this->editarStockProducto($_POST["stocks"]);
