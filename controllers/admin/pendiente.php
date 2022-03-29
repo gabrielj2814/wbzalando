@@ -162,7 +162,7 @@ class PendienteController extends ModuleAdminController{
         $resuestaModificarPrecioProductoZalando=null;
         $resuestaModificarStockProductoZalando=null;
         $respuestaLiveProducto=false;
-        $numeroTotalStock=count($_POST["stocks"]);
+        // $numeroTotalStock=count($_POST["stocks"]);
         $numeroTotalPrecios=count($_POST["precios"]);
         if(array_key_exists("precios",$_POST)){
             $resuestaModificarPrecioProductoZalando=$this->subirPrecio($_POST["precios"]);
@@ -180,23 +180,26 @@ class PendienteController extends ModuleAdminController{
                 }
             }
         }
-        if(array_key_exists("stocks",$_POST)){
-            $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
-            foreach($resuestaModificarStockProductoZalando as $datosSubidaStock){
-                if($datosSubidaStock["existencia"]===true){
-                    if($datosSubidaStock["respuestaZalando"]->code===0){
-                        $numeroTotalStock-=1;
-                    }
-                    else{
-                        break;
-                    }
-                }
-                else{
-                    break;
-                }
-            }
-        }
-        if($numeroTotalStock===0 && $numeroTotalPrecios===0){
+        // if(array_key_exists("stocks",$_POST)){
+        //     $resuestaModificarStockProductoZalando=$this->subirStock($_POST["stocks"]);
+        //     foreach($resuestaModificarStockProductoZalando as $datosSubidaStock){
+        //         if($datosSubidaStock["existencia"]===true){
+        //             if($datosSubidaStock["respuestaZalando"]->code===0){
+        //                 $numeroTotalStock-=1;
+        //             }
+        //             else{
+        //                 break;
+        //             }
+        //         }
+        //         else{
+        //             break;
+        //         }
+        //     }
+        // }
+        // if($numeroTotalStock===0 && $numeroTotalPrecios===0){
+        //     $respuestaLiveProducto=$this->cambiarEstadoLiveProducto($_POST["idModelo"]);
+        // }
+        if($numeroTotalPrecios===0){
             $respuestaLiveProducto=$this->cambiarEstadoLiveProducto($_POST["idModelo"]);
         }
         $respuesta_servidor["respuestaServidor"]=[

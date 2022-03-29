@@ -248,8 +248,7 @@ function enviarProducto(a){
             ajax: true,
             action: 'postmodificarProductos',
             idModelo,
-            precios,
-            stocks
+            precios
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
@@ -259,17 +258,20 @@ function enviarProducto(a){
                 consultarProductosPorPais(paisRadio)
                 // respuestaJson.precioZalando
                 let erroresAlSubirPrecio=respuestaJson.precioZalando.filter(datosPrecios => datosPrecios.respuestaZalando.code!==0)
-                let erroresAlSubirStock=respuestaJson.stockZalando.filter(datosStock => datosStock.respuestaZalando.code!==0)
                 erroresAlSubirPrecio.forEach(errorPrecio => {
                     mostrarAlerta("alert-danger","codigo error "+errorPrecio.respuestaZalando.code+" : "+errorPrecio.respuestaZalando.description)
                     
                 });
-                erroresAlSubirStock.forEach(errorStock => {
-                    mostrarAlerta("alert-danger","codigo error "+errorStock.respuestaZalando.code+" : "+errorStock.respuestaZalando.description)
+                // let erroresAlSubirStock=respuestaJson.stockZalando.filter(datosStock => datosStock.respuestaZalando.code!==0)
+                // erroresAlSubirStock.forEach(errorStock => {
+                //     mostrarAlerta("alert-danger","codigo error "+errorStock.respuestaZalando.code+" : "+errorStock.respuestaZalando.description)
                     
-                });
-                if(erroresAlSubirPrecio.length===0 && erroresAlSubirStock.length===0){
-                    mostrarAlerta("alert-success","stocks y precios enviados a zalando con exito")
+                // });
+                // if(erroresAlSubirPrecio.length===0 && erroresAlSubirStock.length===0){
+                //     mostrarAlerta("alert-success","stocks y precios enviados a zalando con exito")
+                // }
+                if(erroresAlSubirPrecio.length===0){
+                    mostrarAlerta("alert-success","precios enviados a zalando con exito")
                 }
             }
             else{
