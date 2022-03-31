@@ -673,7 +673,9 @@ function irHaFormularioDeProductos(){
                     material_code:"null",
                     atributos_producto:producto.atributos_producto,
                     imagenCliente:null,
-                    imagenServer:null
+                    imagenServer:null,
+                    combinaciones:[],
+                    tallas:[]
                 }
             }
             
@@ -717,11 +719,13 @@ function irHaVistaBorrarProductos(e){
         let radioPaiseHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
         if(radioPaiseHaEliminar.length===1){
             cargarProductosHaEliminarPorPais(radioPaiseHaEliminar[0])
+            duplicarDatos()
         }
         else{
             let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar")
             radiosPaisesHaEliminar[0].setAttribute("checked",true)
             cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
+            duplicarDatos()
         }
     }
 }
@@ -1108,7 +1112,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >color</label>\
-                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="color_code.primary" id="'+codigoIdPaisIdproducto+'_color" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-color-code">\
+                            <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="color_code.primary" id="'+codigoIdPaisIdproducto+'_color" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-color-code">\
                                 <option>Default select</option>\
                             </select>\
                         </div>\
@@ -1260,7 +1264,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Tallas</label>\
-                                <select id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_codes" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="cargarStockTalla(this)">\
+                                <select multiple id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="tallas" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                             </select>\
                         </div>\
                     </div>\
@@ -1704,9 +1708,11 @@ function consultarTallasPorPaisYCategoriaTalla(a){
     let idProducto=a.getAttribute("data-id-producto")
     let isoCode=document.getElementById(idProducto+"_pais_talla")
     let grupo=document.getElementById(idProducto+"_categoria_talla")
+    let color=document.getElementById(idProducto+"_color")
     let idPais=a.getAttribute("data-id-pais")
     datosProductosForm[idPais][idProducto].datosTallas={}
-    if(grupo.value!=="null" && isoCode.value!=="null"){
+    if(grupo.value!=="null" && isoCode.value!=="null" && color.value!=="null"){
+        // alert("funciona")
         preloader.style.opacity="1"
         bodyPleloader.style.overflow="hidden"
         $.ajax({
@@ -1723,7 +1729,9 @@ function consultarTallasPorPaisYCategoriaTalla(a){
             success: (respuesta) => {
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 console.log("datos talla consultar por categoria y pais =>>> ",respuestaJson.datos);
-                insertarTallaCodeSelect(idProducto,respuestaJson.datos)
+                let tallas=capturasDeTallasProducto(color.value,respuestaJson.datos,idPais,idProducto)
+                insertarTallaCodeSelect(idProducto,tallas.listaTallas)
+                // insertarTallaCodeSelect(idProducto,respuestaJson.datos)
                 preloader.style.opacity="0"
                 bodyPleloader.style.overflow="auto"
             },
@@ -1944,6 +1952,38 @@ function guardarDatosTalla(e){
             ean:combinacionEncontrada[0].ean13,
             stock:e.value
         }
+    }
+}
+
+function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
+
+    colorCliente=colorCliente.split("-")[1]
+    let combinaciones=[]
+    let listaTallas=[]
+    let datosAtributos=JSON.parse(JSON.stringify(datosProductosForm[idPais][idProducto].atributos_producto));
+    combinaciones=datosAtributos.filter(color => color.id_attribute===colorCliente)
+    for(let contador=0;contador<combinaciones.length;contador++){
+        for(let atributo3 of datosAtributos){
+            if(combinaciones[contador].ean13===atributo3.ean13 && combinaciones[contador].id_attribute!==atributo3.id_attribute){
+                combinaciones[contador]["id_atributo_talla"]=atributo3.id_attribute
+            }
+        }
+    }
+    console.log("busqueda de combinaciones =>>>>> ",combinaciones)
+    for(let combinacion of combinaciones){
+        let tallaSelect=misTallas.filter(talla => talla.id_attribute===combinacion.id_atributo_talla)
+        if(tallaSelect.length>0){
+            listaTallas.push(tallaSelect[0])
+        }
+    }
+    if(combinaciones.length>0){
+        datosProductosForm[idPais][idProducto].combinaciones=combinaciones
+
+    }
+    console.log("tallas a mostrar =>>>> ",listaTallas)
+    return {
+        listaTallas,
+        combinaciones
     }
 }
 
@@ -2191,21 +2231,28 @@ function generarFormatoZalado(){
                 modelo.producto.product_model.product_configs.push(config)
                 let precio=[]
                 let stock=[]
-                for(let idAtributoTalla in datosProductosForm[pais][producto].datosTallas){
-                    let datosTalla=datosProductosForm[pais][producto].datosTallas[idAtributoTalla]
+                for(let idAtributoTalla of datosProductosForm[pais][producto].tallas){
+                    // let datosTalla=datosProductosForm[pais][producto].datosTallas.split("_")[0]
+                    // console.log("talla id  =>>>> ",idAtributoTalla)
+                    let idTalla=idAtributoTalla.split("-")[1]
+                    let tallaZalando=idAtributoTalla.split("-")[0]
+                    // console.log("talla =>>>> ",idTalla)
+                    // console.log("combinaciones del productos =>>>> ",datosProductosForm[pais][producto].combinaciones)
+                    let combinacionTalla=datosProductosForm[pais][producto].combinaciones.filter(combinacion => combinacion.id_atributo_talla===idTalla)
+                    // console.log("filter talla =>>>>>>> ",combinacionTalla)
                     let simple= {
-                        "merchant_product_simple_id": "simple-"+datosTalla.talla+"-"+id,
+                        "merchant_product_simple_id": "simple-"+tallaZalando+"-"+id,
                         "product_simple_attributes": {
-                            "ean": datosTalla.ean,
+                            "ean": combinacionTalla[0].ean13,
                             "size_codes": {
-                                "size": datosTalla.talla
+                                "size": tallaZalando
                             }
                         }
                     }
                     modelo.producto.product_model.product_configs[0].product_simples.push(simple)
                     if(datosProductosForm[pais][producto].precioPromocional!=="" && parseFloat(datosProductosForm[pais][producto].precioPromocional)>0){
                         precio.push({
-                            "ean": datosTalla.ean,
+                            "ean": combinacionTalla[0].ean13,
                             "sales_channel_id": pais,
                             "regular_price": {
                                 "amount": parseFloat(datosProductosForm[pais][producto].precioRegular),
@@ -2234,7 +2281,7 @@ function generarFormatoZalado(){
                     }
                     else{
                         precio.push({
-                            "ean": datosTalla.ean,
+                            "ean": combinacionTalla[0].ean13,
                             "sales_channel_id": pais,
                             "regular_price": {
                                 "amount": parseFloat(datosProductosForm[pais][producto].precioRegular),
@@ -2254,8 +2301,8 @@ function generarFormatoZalado(){
                     stock.push(
                         {
                             "sales_channel_id": pais,
-                            "ean": datosTalla.ean,
-                            "quantity": parseInt(datosTalla.stock)
+                            "ean": combinacionTalla[0].ean13,
+                            "quantity": 0
                         }
                     )
                     
