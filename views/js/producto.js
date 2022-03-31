@@ -159,7 +159,7 @@ function cargarDatosfutter(){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            // console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_futter=respuestaJson.datos
             cargarDatosUpperMaterial()
         },
@@ -185,7 +185,7 @@ function cargarDatosUpperMaterial(){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            // console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_upper_material=respuestaJson.datos
             cargarDatosSoleMaterial()
             
@@ -213,7 +213,7 @@ function cargarDatosSoleMaterial(){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            // console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_sole_material=respuestaJson.datos
             cargarDatosdecksohle()
         },
@@ -240,7 +240,7 @@ function cargarDatosdecksohle(){
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
-            console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
+            // console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_decksohle=respuestaJson.datos
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
@@ -661,7 +661,7 @@ function irHaFormularioDeProductos(){
                     decksohle:[],
                     season_code:"null",
                     moneda:"",
-                    precioRegular:"",
+                    precioRegular:producto.price,
                     precioPromocional:"",
                     fechaInicioPromocion:"",
                     fechaFinalPromocion:"",
@@ -957,6 +957,58 @@ function cargarDatosGuardados(pais){
         // let datosProductosPais=JSON.parse(JSON.stringify(datosProductosForm[pais]))
     }
 }
+
+function duplicarDatos(){
+    // primero tener el paises que tiene el numero mayor de productos
+    let totalProductosPaises={}
+    for(let pais in listaDePaises){
+        totalProductosPaises[pais]=0
+        for(let idProducto in datosProductosForm[pais]){
+            totalProductosPaises[pais]+=1
+        }
+    }
+    console.log("total de productos por pais =>>>>>>>>> ",totalProductosPaises)
+    let paisConMayorProductos=obtenerIdPaisConMayorProductos(totalProductosPaises)
+    if(datosProductosForm[paisConMayorProductos.id]){
+        let copiarDatosPaises=JSON.parse(JSON.stringify(datosProductosForm[paisConMayorProductos.id]))
+        console.log("copias de datos =>>>> ",copiarDatosPaises)
+        for(let idProductoCopia in copiarDatosPaises){
+            let id=idProductoCopia.split("_")[1]
+            for(let pais in listaDePaises){
+                if(datosProductosForm[pais]){
+                    let idPaisMasProducto=pais+"_"+id
+                    if(!datosProductosForm[pais][idPaisMasProducto]){
+                        datosProductosForm[pais][idPaisMasProducto]=copiarDatosPaises[idProductoCopia]
+                    }
+                }
+                else{
+                    datosProductosForm[pais]={}
+                    let idPaisMasProducto=pais+"_"+id
+                    if(!datosProductosForm[pais][idPaisMasProducto]){
+                        datosProductosForm[pais][idPaisMasProducto]=copiarDatosPaises[idProductoCopia]
+                    }
+                }
+            }
+        }
+
+    }
+    console.log("copia final =>>>>> ",datosProductosForm)
+
+}
+
+function obtenerIdPaisConMayorProductos(totalProductosPaises){
+    let paisMayor={id:"",total:0}
+    let mayor=-1
+    for(let pais in totalProductosPaises){
+        if(totalProductosPaises[pais]>mayor){
+            paisMayor={id:pais,total:totalProductosPaises[pais]}
+            mayor=totalProductosPaises[pais]
+        }
+    }
+    console.log("pais mayor =>>>> ",paisMayor)
+    return paisMayor
+}
+
 // funcion para hacer la seleccion en select multiples al cargar los datos en el formulario
 function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
     let estado=false
@@ -1091,13 +1143,15 @@ function insertarProductosVistaEnvio(idPais,productos){
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Regular</label>\
-                            <input id="'+codigoIdPaisIdproducto+'_precio_regular" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <input id="'+codigoIdPaisIdproducto+'_precio_regular" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'"value="'+producto.precioRegular+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <span>Los decimales del precio se indican mediante el "."</span>\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label>Precio Descuento</label>\
                             <input id="'+codigoIdPaisIdproducto+'_precio_promocion" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="precioPromocional" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
+                            <span>Los decimales del precio se indican mediante el "."</span>\
                         </div>\
                     </div>\
                 </div>\
@@ -1625,6 +1679,7 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarUpperMaterial()
                 insertarSoleMaterial()
                 insertarDecksohle()
+                duplicarDatos()
                 if(document.querySelector(".redio-paises-form:checked")){
                     let radiosPaisesForm=document.querySelector(".redio-paises-form:checked");
                     cargarDatosGuardados(radiosPaisesForm.value)
