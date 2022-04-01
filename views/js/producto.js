@@ -678,7 +678,6 @@ function irHaFormularioDeProductos(){
                     brand_code:"null",
                     lenguaje:producto.iso_code,
                     outline:"null",
-                    stock:"0",
                     size_group:"",
                     supplier_color:"",
                     "color_code.primary":"null",
@@ -694,15 +693,13 @@ function irHaFormularioDeProductos(){
                     precioPromocional:"",
                     fechaInicioPromocion:"",
                     fechaFinalPromocion:"",
-                    datosTallas:{},
+                    // datosTallas:{},
                     haEnviar:false,
                     how_to_use:"null",
                     warnings:"null",
                     material_percentage:"null",
                     material_code:"null",
                     atributos_producto:producto.atributos_producto,
-                    imagenCliente:null,
-                    imagenServer:null,
                     //============
                     combinaciones:[],
                     tallas:[],
@@ -771,18 +768,18 @@ function validarProducto(){
             let producto=datosProductosForm[pais][idProducto]
             if(producto.haEnviar===false){
                 paisProductoError=pais
+                if(producto.listIdImagenesGaleria.length<=0){
+                    error="no se puede subir un producto sin imagen"
+                    productoError=producto
+                    estado=false
+                    break
+                }
                 if(producto.outline==="null"){
                     error="El porducto no tiene una categoria seleccionada"
                     productoError=producto
                     estado=false
                     break
                 }
-                // if(producto.imagenCliente===null){
-                //     error="El produtoc no pude estar sin una imagen porfavor subir y cargar una imagen de producto"
-                //     productoError=producto
-                //     estado=false
-                //     break
-                // }
                 if(producto.brand_code==="null"){
                     error="El porducto no tine un brand seleccionado"
                     productoError=producto
@@ -918,6 +915,24 @@ function cargarProductosPorPaisSeleccionado(a){
 //  ====================================
 //  ====================================
 // cargar los datos de los productos que an sido ingresados en el formulario 
+
+function recurcibaMostrarTallas(idProducto,datosProducto){
+    if(document.getElementById(idProducto+"_talla").children.length>0){
+        let selectTallas=document.getElementById(idProducto+"_talla")
+        for(let talla of datosProducto.tallas){
+            for(let opcion of selectTallas){
+                console.log("que verga mano =>>>>> ",opcion)
+                if(opcion.value===talla){
+                    opcion.selected=true
+                }
+            }
+        }
+    }
+    else{
+        recurcibaMostrarTallas(idProducto,datosProducto)
+    }
+}
+
 function cargarDatosGuardados(pais){
     if(datosProductosForm[pais]){
         for(let idProducto in datosProductosForm[pais]){
@@ -929,13 +944,17 @@ function cargarDatosGuardados(pais){
                     let paisTalla=document.getElementById(idProducto+"_pais_talla")
                     categoriaTalla.value=datosProducto.size_group
                     paisTalla.value=datosProducto.paisTalla
-                    let tallasRespaldo=JSON.parse(JSON.stringify(datosProductosForm[pais][idProducto].datosTallas))
-                    consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
-                    datosProductosForm[pais][idProducto].datosTallas=tallasRespaldo
-        
+                    let tallasRespaldo=[...datosProductosForm[pais][idProducto].tallas]
                     document.getElementById(idProducto+"_color").value=datosProducto["color_code.primary"]
+                    consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
+                    datosProductosForm[pais][idProducto].tallas=tallasRespaldo
                     document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
+                    // let selectTallas=document.getElementById(idProducto+"_talla")
+                    // console.log("select =>>>>> ",selectTallas)
+                    // recurcibaMostrarTallas(idProducto,datosProducto)
+
                     
+
                     document.getElementById(idProducto+"_moneda").value=datosProducto.moneda
                     document.getElementById(idProducto+"_precio_regular").value=datosProducto.precioRegular
                     document.getElementById(idProducto+"_precio_promocion").value=datosProducto.precioPromocional
@@ -977,11 +996,6 @@ function cargarDatosGuardados(pais){
                     let radioFormulario=document.getElementById(idProducto+"_check_envio")
                     radioFormulario.checked=datosProducto.haEnviar
                     cambiarEstadoDeEnvioDeProduct(radioFormulario)
-                    if(datosProducto.imagenCliente!==null){
-                        let imagen=document.getElementById(idProducto+"_imagen")
-                        imagen.style.display="block"
-                        imagen.src=datosProducto.imagenCliente
-                    }
                     console.log("xxxxx =>>>> ",datosProductosForm[pais][idProducto])
                 }
                
@@ -1063,17 +1077,17 @@ function seleccionarValoresSelectMultiples(select,valoresHaSeleccionar){
     }
 }
 // cargar el stock de las tallas guardadas
-function cargarStockTalla(e){
-    let idPais=e.getAttribute("data-id-pais")
-    let idProducto=e.getAttribute("data-id-producto")
-    let tallaCliente=e.value.split("-")[1]
-    if(datosProductosForm[idPais][idProducto].datosTallas[tallaCliente]){
-        document.getElementById(idProducto+"_stock").value=datosProductosForm[idPais][idProducto].datosTallas[tallaCliente].stock
-    }
-    else{
-        document.getElementById(idProducto+"_stock").value=""
-    }
-}
+// function cargarStockTalla(e){
+//     let idPais=e.getAttribute("data-id-pais")
+//     let idProducto=e.getAttribute("data-id-producto")
+//     let tallaCliente=e.value.split("-")[1]
+//     if(datosProductosForm[idPais][idProducto].datosTallas[tallaCliente]){
+//         document.getElementById(idProducto+"_stock").value=datosProductosForm[idPais][idProducto].datosTallas[tallaCliente].stock
+//     }
+//     else{
+//         document.getElementById(idProducto+"_stock").value=""
+//     }
+// }
 
 // creacion del formulario de producto
 function insertarProductosVistaEnvio(idPais,productos){
@@ -1288,21 +1302,10 @@ function insertarProductosVistaEnvio(idPais,productos){
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <h2>Tallas</h2>\
-                    </div>\
-                </div>\
-                <div class="row">\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
                             <label >Tallas</label>\
-                                <select multiple id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="tallas" id="'+codigoIdPaisIdproducto+'_talla" class="form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
+                                <select multiple id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="tallas" id="'+codigoIdPaisIdproducto+'_talla" class="class-select form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                             </select>\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label>Stock</label>\
-                            <input id="'+codigoIdPaisIdproducto+'_stock" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="stock" placeholder="" onKeyup="guardarDatosTalla(this)">\
                         </div>\
                     </div>\
                 </div>\
@@ -1324,20 +1327,6 @@ function insertarProductosVistaEnvio(idPais,productos){
                 </div>\
                 <div class="row" style="padding-bottom:30px;">\
                     <button data-id-pais="'+idPais+'" data-id-producto="'+codigoIdPaisIdproducto+'" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" onClick="insertarFotosModal(this)">Seleccionar Fotos</button>\
-                </div>\
-                <div class="row" style="padding-bottom:30px;">\
-                    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
-                        <div class="form-group">\
-                            <label for="'+codigoIdPaisIdproducto+'_files_imagen" class="btn btn-primary">seleccionar imagen</label>\
-                            <form id="'+codigoIdPaisIdproducto+'_formulario_imagen" style="display:none;">\
-                                <input type="file" id="'+codigoIdPaisIdproducto+'_files_imagen" name="imagenProducto" accept="image/png, image/jpeg" >\
-                            </form>\
-                            <button class="btn btn-primary" data-id-pais="'+idPais+'" data-id-producto="'+codigoIdPaisIdproducto+'" onClick="cargarImagenProducto(this)" >Cargar Imagen</button>\
-                        </div>\
-                    </div>\
-                    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">\
-                        <img id="'+codigoIdPaisIdproducto+'_imagen" src="" alt="imagen del producto '+codigoIdPaisIdproducto+'" style="display:none;height: 400px;width: 300px;"/>\
-                    </div>\
                 </div>\
             </div>\
         </div>\
@@ -1804,8 +1793,8 @@ function consultarTallasPorPaisYCategoriaTalla(a){
     let grupo=document.getElementById(idProducto+"_categoria_talla")
     let color=document.getElementById(idProducto+"_color")
     let idPais=a.getAttribute("data-id-pais")
-    datosProductosForm[idPais][idProducto].datosTallas={}
     if(grupo.value!=="null" && isoCode.value!=="null" && color.value!=="null"){
+        datosProductosForm[idPais][idProducto].tallas=[]
         // alert("funciona")
         preloader.style.opacity="1"
         bodyPleloader.style.overflow="hidden"
@@ -1825,6 +1814,16 @@ function consultarTallasPorPaisYCategoriaTalla(a){
                 console.log("datos talla consultar por categoria y pais =>>> ",respuestaJson.datos);
                 let tallas=capturasDeTallasProducto(color.value,respuestaJson.datos,idPais,idProducto)
                 insertarTallaCodeSelect(idProducto,tallas.listaTallas)
+                if(datosProductosForm[idPais][idProducto].tallas.length>0){
+                    let select=document.getElementById(idProducto+"_talla")
+                    for(let talla of datosProductosForm[idPais][idProducto].tallas){
+                        for(let option of select){
+                            if(option.value===talla){
+                                option.selected=true
+                            }
+                        }
+                    }
+                }
                 // insertarTallaCodeSelect(idProducto,respuestaJson.datos)
                 preloader.style.opacity="0"
                 bodyPleloader.style.overflow="auto"
@@ -2011,44 +2010,6 @@ function bloquearCampoPorCategoriaZalando(categoria,producto,idPais,idProducto){
     
 } 
 
-function guardarDatosTalla(e){
-    let idPais=e.getAttribute("data-id-pais")
-    let idProducto=e.getAttribute("data-id-producto")
-    if(!datosProductosForm[idPais]){
-        datosProductosForm[idPais]={}
-    }
-    if(!datosProductosForm[idPais][idProducto]){
-        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
-    }
-    // let campo=a.getAttribute("data-campo")
-    let tallaZalando=document.getElementById(idProducto+"_talla").value.split("-")[0]
-    let tallaCliente=document.getElementById(idProducto+"_talla").value.split("-")[1]
-    let colorCliente=document.getElementById(idProducto+"_color").value.split("-")[1]
-    let listaColores=[]
-    let datosAtributos=JSON.parse(JSON.stringify(datosProductosForm[idPais][idProducto].atributos_producto));
-    for(let atributo of datosAtributos){
-        if(colorCliente===atributo.id_attribute){
-            listaColores.push(JSON.parse(JSON.stringify(atributo)))
-        }
-    }
-    for(let contador=0;contador<listaColores.length;contador++){
-        for(let atributo3 of datosAtributos){
-            if(listaColores[contador].ean13===atributo3.ean13 && listaColores[contador].id_attribute!==atributo3.id_attribute){
-                listaColores[contador]["id_atributo_talla"]=atributo3.id_attribute
-            }
-        }
-    }
-    let combinacionEncontrada=listaColores.filter(combinacion => combinacion.id_attribute===colorCliente && combinacion.id_atributo_talla===tallaCliente)
-    console.log("encontrado =>>",combinacionEncontrada)
-    if(combinacionEncontrada.length===1){
-        datosProductosForm[idPais][idProducto].datosTallas[tallaCliente]={
-            talla:tallaZalando,
-            ean:combinacionEncontrada[0].ean13,
-            stock:e.value
-        }
-    }
-}
-
 function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
 
     colorCliente=colorCliente.split("-")[1]
@@ -2079,85 +2040,6 @@ function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
         listaTallas,
         combinaciones
     }
-}
-
-function cargarImagenProducto(a){
-    // a.preventDefault()
-    // imagenCliente
-    let idPais=a.getAttribute("data-id-pais")
-    let idProducto=a.getAttribute("data-id-producto")
-    if(!datosProductosForm[idPais]){
-        datosProductosForm[idPais]={}
-    }
-    if(!datosProductosForm[idPais][idProducto]){
-        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
-    }
-    let $inputFile=document.getElementById(idProducto+"_files_imagen")
-    // console.log("input file =>>>> ",$inputFile.files[0])
-    if($inputFile.files.length>0){
-        preloader.style.opacity="1"
-        bodyPleloader.style.overflow="hidden"
-        let datosImagen=$inputFile.files[0]
-        let extencion=null;
-        if(datosImagen.type==="image/jpeg"){
-            extencion="jpeg"
-        }
-        if(datosImagen.type==="image/jpg"){
-            extencion="jpg"
-        }
-        const linkControlador=document.getElementById("linkControlador").value;
-        let formularioImagen=document.getElementById(idProducto+"_formulario_imagen")
-        let formtoFormularioImagen=new FormData(formularioImagen)
-        console.log("datos formulario imagen =>>>> ",formtoFormularioImagen.get("imagenProducto"))
-        formtoFormularioImagen.set("ajax",true)
-        formtoFormularioImagen.set("action","postsubirimagen")
-        formtoFormularioImagen.set("NombreImagenTmp",moment().format("x"))
-        formtoFormularioImagen.set("extencion",extencion)
-        $.ajax({
-            url:linkControlador,
-            type: 'post',
-            data: formtoFormularioImagen,
-            contentType: false,
-            processData: false,
-            success: function(respuesta) {
-                console.log(respuesta)
-                let respuestaJson=JSON.parse(respuesta).respuestaServidor
-                if(respuestaJson.estado===true){
-                    let imagen=document.getElementById(idProducto+"_imagen")
-                    if(datosImagen.type==="image/jpeg" || datosImagen.type==="image/jpg"){
-                        let objctURL=URL.createObjectURL(datosImagen)
-                        console.log("URL IMAGEN =>>>> ",objctURL)
-                        imagen.src=objctURL
-                        imagen.style.display="block"
-                        datosProductosForm[idPais][idProducto].imagenCliente=objctURL
-                        datosProductosForm[idPais][idProducto].imagenServer=respuestaJson.NombreImagenTmp
-                        imagenSubidaAlServidor.push(respuestaJson.NombreImagenTmp)
-                    }
-                    else{
-                        alert("extención de imagen invalido")
-                    }
-                }
-                else{
-                    alert("error al subir la imagen")
-                }
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
-            },
-            error:() => {
-                alert("error al subir el archivo")
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
-            }
-        });
-        
-        
-    }
-    else{
-        alert("no hay imagen selccionada")
-        imagen.style.display="none"
-    }
-    console.log(datosProductosForm)
-
 }
 
 function aplicarEdicionGlobal(){
@@ -2332,7 +2214,6 @@ function generarFormatoZalado(){
                 let precio=[]
                 let stock=[]
                 for(let idAtributoTalla of datosProductosForm[pais][producto].tallas){
-                    // let datosTalla=datosProductosForm[pais][producto].datosTallas.split("_")[0]
                     // console.log("talla id  =>>>> ",idAtributoTalla)
                     let idTalla=idAtributoTalla.split("-")[1]
                     let tallaZalando=idAtributoTalla.split("-")[0]
