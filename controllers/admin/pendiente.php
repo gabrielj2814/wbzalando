@@ -337,13 +337,13 @@ class PendienteController extends ModuleAdminController{
     public function ajaxProcessPostEliminarProducto(){
         $respuesta_servidor=["respuestaServidor" => []];
         $respuestaEliminarProducto=$this->eliminarProducto($_POST["id_modelo"]);
-        if($respuestaEliminarProducto){
-            $nombreImagen=$_POST["nombre_imagen"];
-            $dir=_PS_MODULE_DIR_.$this->modulo->name."/upload/";
-            if(file_exists($dir.$nombreImagen)){
-                unlink($dir.$nombreImagen);
-            }
-        }
+        // if($respuestaEliminarProducto){
+        //     $nombreImagen=$_POST["nombre_imagen"];
+        //     $dir=_PS_MODULE_DIR_.$this->modulo->name."/upload/";
+        //     if(file_exists($dir.$nombreImagen)){
+        //         unlink($dir.$nombreImagen);
+        //     }
+        // }
         if($respuestaEliminarProducto){
             foreach($_POST["eans"] as $ean){
                 $this->eliminarStock($ean["ean"],$ean["idPais"]);
