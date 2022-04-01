@@ -178,7 +178,7 @@ class GaleriaController extends ModuleAdminController{
     }
     
     public function consultarTodo(){
-        $SQL="SELECT * FROM ps_wbzalando_imagen_producto;";
+        $SQL="SELECT * FROM ps_wbzalando_imagen_producto ORDER BY id_imagen DESC;";
         return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
     

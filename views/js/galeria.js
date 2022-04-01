@@ -99,6 +99,9 @@ function guardarImagen(){
         success: (respuesta) => {
             let responseJson=respuesta.respuestaServidor
             console.log("datos =>>>>>> ",responseJson)
+            let imagen=document.getElementById("imagen")
+            imagen.src=""
+            imagen.style.display="none"
             consultarTodo()
             // mostrarAlerta("alert-success","El precio a sido enviado correctamente")
         },
