@@ -4,11 +4,31 @@
 <input type="hidden" id="linkDeControladorCategoria" value="{$linkDeControladorCategoria}"/>
 <input type="hidden" id="linkDeControladorTalla" value="{$linkDeControladorTalla}"/>
 <input type="hidden" id="linkDeControladorColor" value="{$linkDeControladorColor}"/>
+<input type="hidden" id="linkDeControladorGaleria" value="{$linkDeControladorGaleria}"/>
 
 <input type="hidden" id="linkControlador" value="{$linkControlador}"/>
 <div id="contenedorAlerta"></div>
 
 <div class="custom_bootstrap">
+
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="staticBackdropLabel">Fotos de galeria</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="galeriaFotosProductos" style="display: flex;flex-wrap: wrap;flex-direction: row;justify-content: space-evenly;">
+
+      </div>
+      <div id="modalFooter" class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

@@ -18,6 +18,8 @@ let datos_futter={}
 let datos_upper_material={}
 let datos_sole_material={}
 let datos_decksohle={}
+let imagenesProductos=[]
+let imagenesProductosFiltradas=[]
 // ------ referencia a elementos html
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
@@ -242,14 +244,41 @@ function cargarDatosdecksohle(){
             let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
             // console.log("datos propiedad "+propiedad+" =>>> ",respuestaJson.datos);
             datos_decksohle=respuestaJson.datos
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            consultarTodasLasImagenes()
             
         },
         error: () => {
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+function consultarTodasLasImagenes(){
+    const linkControlador=document.getElementById("linkDeControladorGaleria").value;
+
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let responseJson=respuesta.respuestaServidor
+            console.log("consultar iamgenes todos =>>>>>> ",responseJson)
+            imagenesProductos=responseJson.datos
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            // mostrarAlerta("alert-success","El precio a sido enviado correctamente")
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            // mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
 }
@@ -674,8 +703,10 @@ function irHaFormularioDeProductos(){
                     atributos_producto:producto.atributos_producto,
                     imagenCliente:null,
                     imagenServer:null,
+                    //============
                     combinaciones:[],
-                    tallas:[]
+                    tallas:[],
+                    listIdImagenesGaleria:[]
                 }
             }
             
@@ -746,12 +777,12 @@ function validarProducto(){
                     estado=false
                     break
                 }
-                if(producto.imagenCliente===null){
-                    error="El produtoc no pude estar sin una imagen porfavor subir y cargar una imagen de producto"
-                    productoError=producto
-                    estado=false
-                    break
-                }
+                // if(producto.imagenCliente===null){
+                //     error="El produtoc no pude estar sin una imagen porfavor subir y cargar una imagen de producto"
+                //     productoError=producto
+                //     estado=false
+                //     break
+                // }
                 if(producto.brand_code==="null"){
                     error="El porducto no tine un brand seleccionado"
                     productoError=producto
@@ -1292,6 +1323,9 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                 </div>\
                 <div class="row" style="padding-bottom:30px;">\
+                    <button data-id-pais="'+idPais+'" data-id-producto="'+codigoIdPaisIdproducto+'" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" onClick="insertarFotosModal(this)">Seleccionar Fotos</button>\
+                </div>\
+                <div class="row" style="padding-bottom:30px;">\
                     <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
                         <div class="form-group">\
                             <label for="'+codigoIdPaisIdproducto+'_files_imagen" class="btn btn-primary">seleccionar imagen</label>\
@@ -1311,7 +1345,67 @@ function insertarProductosVistaEnvio(idPais,productos){
     }
     listaDeProductosForm.innerHTML=html
 }
+
+function capturarImagenGaleria(a){
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+    if(!datosProductosForm[idPais]){
+        datosProductosForm[idPais]={}
+    }
+    if(!datosProductosForm[idPais][idProducto]){
+        datosProductosForm[idPais][idProducto]=datosResPaldoProductos[idPais][idProducto]
+    }
+    let checkImagen=document.getElementById("check-"+a.value)
+    if(a.checked===true){
+        checkImagen.style.display="block"
+    }
+    else{
+        checkImagen.style.display="none"
+    }
+    let checkboxImagesGaleria=document.querySelectorAll(".checkebox-imagen-galeria:checked")
+    let listaIdImagenes=[]
+    for(let checkbox of checkboxImagesGaleria){
+        listaIdImagenes.push(checkbox.value)
+    }
+    console.log("imagenes selecionadas =>>>> ",listaIdImagenes)
+    datosProductosForm[idPais][idProducto].listIdImagenesGaleria=listaIdImagenes
+}
+
 // insertar elementos html a los select de los formulario de prodcuto
+function insertarFotosModal(a){
+    let idPais=a.getAttribute("data-id-pais")
+    let idProducto=a.getAttribute("data-id-producto")
+    let galeriaFotosProductos=document.getElementById("galeriaFotosProductos")
+    galeriaFotosProductos.innerHTML=""
+    let listaImagenes=""
+    for(let imagen of imagenesProductos){
+        listaImagenes+="\
+        <div class='col-auto' style='position: relative;'>\
+            <svg  id='check-"+imagen.id_imagen+"' style='display:none;position: absolute;top:15px;right:15px;color: grey;width: 20px;height: 20px;' xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-check-circle-fill' viewBox='0 0 16 16'>\
+                <path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/>\
+            </svg>\
+            <label for='"+imagen.id_imagen+"-imagen' style='margin:0;'>\
+                <img id='"+imagen.id_imagen+"' src='"+imagen.url_imagen+"' alt='"+imagen.nombre_imagen+"' style='display:block;height: 240px;width: 200px;margin-bottom: 25px;'/>\
+            </label>\
+            <input type='checkbox' value='"+imagen.id_imagen+"' data-id-pais='"+idPais+"' data-id-producto='"+idProducto+"' id='"+imagen.id_imagen+"-imagen'  class='checkebox-imagen-galeria' onClick='capturarImagenGaleria(this)' hidden>\
+        </div>\
+        "
+    }
+    galeriaFotosProductos.innerHTML=listaImagenes
+    if(datosProductosForm[idPais][idProducto].listIdImagenesGaleria.length>0){
+        for(let idImagen of datosProductosForm[idPais][idProducto].listIdImagenesGaleria){
+            let checkboxImagenesGaleria=document.querySelectorAll(".checkebox-imagen-galeria")
+            for(let checkbox of checkboxImagenesGaleria){
+                if(idImagen===checkbox.value){
+                    checkbox.checked=true
+                    let checkImagen=document.getElementById("check-"+checkbox.value)
+                    checkImagen.style.display="block"
+                }
+            }
+        }
+    }
+}
+
 function insertarCategoriasSelect(){
     let $camposCategorias=document.querySelectorAll(".campo-categoria")
     for(let $campoCategorias of $camposCategorias){
@@ -2195,15 +2289,21 @@ function generarFormatoZalado(){
                     modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
                     modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
                 }
+                let medias=[]
+                for(let imagenes of datosProductosForm[pais][producto].listIdImagenesGaleria){
+                    let busquedaImagen=imagenesProductos.filter(magenFilter=> magenFilter.id_imagen===imagenes)
+                    if(busquedaImagen.length>0){
+                        let media= {
+                            "media_path": busquedaImagen[0].url_imagen,
+                            "media_sort_key": busquedaImagen[0].id_imagen
+                        }
+                        medias.push(media)
+                    }
+                }
                 let config={
                     "merchant_product_config_id": "config-"+id,
                     "product_config_attributes": {
-                        "media": [
-                            {
-                                "media_path": datosProductosForm[pais][producto].imagenServer,
-                                "media_sort_key": parseInt(datosProductosForm[pais][producto].idUrlImagen)
-                            }
-                        ],
+                        "media": medias,
                         "description": {},
                         "season_code": "",
                         "supplier_color": datosProductosForm[pais][producto].supplier_color,

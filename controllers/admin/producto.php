@@ -38,11 +38,13 @@ class ProductoController extends ModuleAdminController{
         $linkDeControladorTalla=$this->context->link->getAdminLink("Talla",true);
         $linkDeControladorCategoria=$this->context->link->getAdminLink("Categoria",true);
         $linkDeControladorColor=$this->context->link->getAdminLink("Color",true);
+        $linkDeControladorGaleria=$this->context->link->getAdminLink("Galeria",true);
         $variablesSmarty=[
             "linkControlador" => $linkDeControlador,
             "linkDeControladorColor" => $linkDeControladorColor,
             "linkDeControladorCategoria" => $linkDeControladorCategoria,
             "linkDeControladorTalla" => $linkDeControladorTalla,
+            "linkDeControladorGaleria" => $linkDeControladorGaleria
         ];
         $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
         $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
@@ -347,10 +349,9 @@ class ProductoController extends ModuleAdminController{
             "productos_guardados_db" => [],
             "productos_enviados" =>[]
         ];
-        $imagenes=[];
         foreach($productos as $producto ){
             // re asignar tipos de datos a las propiedades
-            $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
+            // $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             if(array_key_exists("material.upper_material_clothing",$producto["producto"]["product_model"]["product_configs"][0])){
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
             }
@@ -366,29 +367,22 @@ class ProductoController extends ModuleAdminController{
             for($contador2=0;$contador2<count($producto["stock"]["items"]);$contador2++){
                 $producto["stock"]["items"][$contador2]["quantity"]=(int)$producto["stock"]["items"][$contador2]["quantity"];
             }
-            // asignar path a las imagen
-            $nombreImagenProducto=null;
-            if($this->copiarImagen($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"])){
-                $nombreImagenProducto=$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"];
-                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_path"]=_PS_MODULE_DIR_.$this->modulo->name."/upload/".$nombreImagenProducto;
-            }
-            // // capturar imagenes basura
-            foreach($producto["borrarImagenes"] as $imagenBasura){
-                $imagenes[]=$imagenBasura;
+            for($contador3=0;$contador3<count($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"]);$contador3++){
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"];
             }
             // set datos para el envio
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
             // enviar producto
             $respuesta=$curlController->ejecutarPeticion("post",true);
-            // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
             // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
             $estadoDeProductos["productos_enviados"][]=[
                 "respuestaServidor" => $respuesta,
                 "estatuRespuestaApi" => $respuesta["estado"]
             ];
-            $respuestaModelo=$this->guardarModeloProducto($producto,$nombreImagenProducto);
+            $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);
             $respuestaPrecio=$this->guardarPrecioProducto($producto);
@@ -396,8 +390,6 @@ class ProductoController extends ModuleAdminController{
 
             $estadoDeProductos["productos_guardados_db"][]=$producto;
         }
-        // borrar imagenes basura 
-        $this->borrarImagenesBasura($imagenes);
         return $estadoDeProductos;
     }
     
@@ -474,7 +466,7 @@ class ProductoController extends ModuleAdminController{
         return $respuestasSubidaPrecio;
     }
 
-    public function guardarModeloProducto($producto,$nombreImagen){
+    public function guardarModeloProducto($producto){
         $SQL="
             INSERT INTO ps_wbzalando_modelo_producto(
                 id_modelo_producto, 
@@ -488,7 +480,7 @@ class ProductoController extends ModuleAdminController{
                 '".$producto["merchant_product_model_id"]."',
                 '".$producto["outline"]."',
                 '".$producto["id_pais"]."',
-                '$nombreImagen',
+                '-',
                 '0',
                 '".json_encode($producto["product_model"])."'
             );
