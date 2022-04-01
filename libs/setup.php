@@ -38,6 +38,11 @@ if (!class_exists("SetupWbZalando")) {
                     "nombreControladorFull" => "ProductoController",
                     "nombreControlador" => "Producto",
                 ],
+                [
+                    "nombre" => "Galeria",
+                    "nombreControladorFull" => "GaleriaController",
+                    "nombreControlador" => "Galeria",
+                ],
                 // [
                 //     "nombre" => "Modificar productos",
                 //     "nombreControladorFull" => "ModificarproductoController",
@@ -196,6 +201,16 @@ if (!class_exists("SetupWbZalando")) {
                     esquemas_full LONGTEXT NOT NULL,
                     PRIMARY KEY (`id`)
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+
+                'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_imagen_producto(
+                    id_imagen int(11) NOT NULL AUTO_INCREMENT,
+                    nombre_imagen VARCHAR(250) NOT NULL,
+                    nombre_id VARCHAR(250) NOT NULL,
+                    extencion_imagen VARCHAR(250) NOT NULL,
+                    url_imagen VARCHAR(3000) NOT NULL,
+                    fecha_subida DATE NOT NULL,
+                    PRIMARY KEY (`id_imagen`)
+                ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
     
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_modelo_producto(
                     id_modelo_producto VARCHAR(150) NOT NULL,
@@ -257,6 +272,7 @@ if (!class_exists("SetupWbZalando")) {
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_simple_producto',
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_configuracion_producto',
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_modelo_producto',
+                'DROP TABLE IF EXISTS '.$prefijoTabla.'_imagen_producto',
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_asociacion_categoria',
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_datos_propiedad',
                 'DROP TABLE IF EXISTS '.$prefijoTabla.'_propiedad_modelo',
