@@ -65,7 +65,7 @@ function crearCheckboxPaisTest(paises){
     iniciarSlick()
     let paisesRadio=document.querySelectorAll(".checkbox-paises")
     paisesRadio[0].setAttribute("checked",true)
-    consultarProductosPorPais(paisesRadio[0])
+    consultarProductosPorPais()
 }
 
 
@@ -255,7 +255,7 @@ function enviarProducto(a){
             console.log("stock de producto modificado =>>>>> ",respuestaJson)
             if(respuestaJson.respuestaLiveProducto===true){
                 let paisRadio=document.querySelector(".checkbox-paises:checked")
-                consultarProductosPorPais(paisRadio)
+                consultarProductosPorPais()
                 // respuestaJson.precioZalando
                 let erroresAlSubirPrecio=respuestaJson.precioZalando.filter(datosPrecios => datosPrecios.respuestaZalando.code!==0)
                 erroresAlSubirPrecio.forEach(errorPrecio => {
@@ -323,7 +323,7 @@ function eliminarProducto(a){
             let checkboxsPaises=document.querySelectorAll(".checkbox-paises:checked");
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
-            consultarProductosPorPais2(checkboxsPaises[0].value)
+            consultarProductosPorPais()
             mostrarAlerta("alert-success","Eliminación Completada")
         },
         error: () => {
@@ -383,7 +383,7 @@ function iniciarSlick(){
     }
 }
 
-function consultarProductosPorPais(a){
+function consultarProductosPorPais(a=1){
     let checkboxsPaises=document.querySelector(".checkbox-paises:checked");
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     controlesPaginacion.innerHTML="";
