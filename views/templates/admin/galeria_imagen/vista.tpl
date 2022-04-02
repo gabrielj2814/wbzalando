@@ -3,13 +3,14 @@
 
 <div class="panel">
     <form id="formulario_imagen" style="display:none;">\
-        <input type="file" id="files_imagen" name="imagenProducto" accept="image/png, image/jpeg" >
+        <input type="file" id="files_imagen" name="imagenProducto[]" accept="image/png, image/jpeg" multiple>
     </form>
     <div class="row" style="margin-bottom:30px;">
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-            <input type="text" id="nombre_imagen_db" name="nombre_imagen_db" placeholder="Nombre de la imagen"/>
-            <input type="hidden" id="nombre_tmp" name="nombre_tmp" data-nombre-tmp="" data-extencion=""/>
-        </div>
+        <form id="imagensTmp">
+        
+        
+        </form>
+        <input type="hidden" id="nombre_tmp" name="nombre_tmp" data-nombre-tmp="" data-extencion=""/>
         <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
             <label for="files_imagen" class="btn btn-primary" id="">Subir Imagen</label>
         </div>
