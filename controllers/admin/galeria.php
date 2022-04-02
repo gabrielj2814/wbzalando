@@ -119,9 +119,29 @@ class GaleriaController extends ModuleAdminController{
 
 
     public function ajaxProcessPostGuardarImagen(){
+        // $respuesta_servidor=["respuestaServidor" => []];
+        // $pathUrlImagen=$this->copiarImagen($_POST["nombre_tmp"]);
+        // $resultImagen=$this->registrarImagen($_POST,$pathUrlImagen);
+        // if($resultImagen){
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "imagen guardada con existo",
+        //         "estado" => true
+        //     ];
+        // }
+        // else{
+        //     $respuesta_servidor["respuestaServidor"]=[
+        //         "mensaje" => "error al guardar la imagen",
+        //         "estado" => false
+        //     ];
+        // }
+        // print_r(json_encode($respuesta_servidor));
         $respuesta_servidor=["respuestaServidor" => []];
-        $pathUrlImagen=$this->copiarImagen($_POST["nombre_tmp"]);
-        $resultImagen=$this->registrarImagen($_POST,$pathUrlImagen);
+        foreach($_POST["listaJsonImagenes"] as $imagen){
+            $imagen=json_decode($imagen);
+            $pathUrlImagen=$this->copiarImagen($imagen->nombre_tmp);
+            $resultImagen=$this->registrarImagen($imagen,$pathUrlImagen);
+        }
+        
         if($resultImagen){
             $respuesta_servidor["respuestaServidor"]=[
                 "mensaje" => "imagen guardada con existo",
@@ -137,19 +157,17 @@ class GaleriaController extends ModuleAdminController{
         print_r(json_encode($respuesta_servidor));
     }
 
-    public function registrarImagen($datos,$url){
+    public function registrarImagen($imagen,$url){
         $fecha=date("y-m-d");
-        $extencion=explode("/",$datos["extencion"])[1];
+        $extencion=explode("/",$imagen->extencion)[1];
         $SQL="INSERT INTO ps_wbzalando_imagen_producto(
-            nombre_imagen,
             nombre_id,
             extencion_imagen,
             url_imagen,
             fecha_subida
         )
         VALUES(
-            '".$datos["nombre_imagen_db"]."',
-            '".$datos["nombre_tmp"]."',
+            '".$imagen->nombre_tmp."',
             '".$extencion."',
             '$url',
             '$fecha'

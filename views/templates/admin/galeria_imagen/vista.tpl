@@ -34,9 +34,13 @@
 </div>
 
 <div class="panel">
-    <div class="row" id="filaImagenProducto" style="display: flex;flex-wrap: wrap;flex-direction: row;justify-content: space-evenly;">
+    <div style="">
+        <!-- sel le agrego el max-width: 1100px; para centrar el contenedor teniendo en cuenta que cada colunna de imagen tiene un ancho de 200 mas dos margenes de 10 dando un total de 210 por imagene que 210 x 5 es igual a 1100px -->
+        <div class="row" id="filaImagenProducto" style="display: flex;flex-wrap: wrap;flex-direction: row;max-width: 1100px;margin-left: auto;margin-right: auto;">
 
+        </div>
     </div>
+
 
 </div>
 

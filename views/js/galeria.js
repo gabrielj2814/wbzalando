@@ -3,11 +3,8 @@ let bodyPleloader=document.querySelector("body")
 
 
 function cargarImagenProducto(a){
-    // a.preventDefault()
-    // imagenCliente
-    // let imagensTmp=document.getElementById("imagensTmp")
     let $inputFile=document.getElementById("files_imagen")
-    if($inputFile.files.length>0){
+    if($inputFile.files.length>=1){
         let imagensTmp=document.getElementById("imagensTmp")
         imagensTmp.innerHTML=""
         let imagenesTotalesSubidas=document.getElementById("imagenesTotalesSubidas")
@@ -16,9 +13,11 @@ function cargarImagenProducto(a){
         totalDeImagenesHaSubir.textContent=$inputFile.files.length.toString()
         subirImagen($inputFile.files.length,0)
     }
+    else{
+        alert("no hay imaganes seleccionadas, como minimo tiene que seleccionar 1 imagen")
+    }
 
 }
-
 
 function subirImagen(totalImagenes,indice){
     if(indice<totalImagenes){
@@ -54,7 +53,7 @@ function subirImagen(totalImagenes,indice){
                 
                 if(respuestaJson.estado===true){
                     let inptuHiddenHtml="\
-                    <input type='hidden' id='nombre_tmp_"+indice+"' name='nombre_tmp' data-nombre-tmp='"+respuestaJson.NombreImagenTmp+"' data-extencion='"+file.type+"'/>\
+                    <input class='imagenes-subidas' value='"+respuestaJson.urlFull+"' type='hidden' id='nombre_tmp_"+indice+"' name='nombre_tmp' data-nombre-tmp='"+respuestaJson.NombreImagenTmp+"' data-extencion='"+file.type+"'/>\
                     "
                     imagensTmp.innerHTML+=inptuHiddenHtml
                 }
@@ -70,45 +69,60 @@ function subirImagen(totalImagenes,indice){
             }
         });
     }
-    else{
-
-    }
 }
 
 function guardarImagen(){
     const linkControlador=document.getElementById("linkControlador").value;
-    preloader.style.opacity="1"
-    bodyPleloader.style.overflow="hidden"
-    let nombre_tmp=document.getElementById("nombre_tmp")
-    // alert(nombre_tmp.value)
-
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'postguardarimagen',
-            nombre_tmp:nombre_tmp.getAttribute("data-nombre-tmp"),
-            extencion:nombre_tmp.getAttribute("data-extencion"),
-            url:nombre_tmp.value,
-        },
-        success: (respuesta) => {
-            let responseJson=respuesta.respuestaServidor
-            console.log("datos =>>>>>> ",responseJson)
-            let imagen=document.getElementById("imagen")
-            imagen.src=""
-            imagen.style.display="none"
-            consultarTodo()
-            // mostrarAlerta("alert-success","El precio a sido enviado correctamente")
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            // mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
+    let $inputFile=document.getElementById("files_imagen")
+    if($inputFile.files.length>=1){
+        let imagenesSubidas=document.querySelectorAll(".imagenes-subidas")
+        if(imagenesSubidas.length>0){
+            preloader.style.opacity="1"
+            bodyPleloader.style.overflow="hidden"
+            let listaJsonImagenes=[]
+            for(let datosImagen of imagenesSubidas){
+                let jsonImagen={
+                    nombre_tmp:datosImagen.getAttribute("data-nombre-tmp"),
+                    url:datosImagen.value,
+                    extencion:datosImagen.getAttribute("data-extencion")
+                }
+                listaJsonImagenes.push(JSON.stringify(jsonImagen))
+            }
+            console.log("json iomagenes enviar =>>>>> ",listaJsonImagenes)
+            $.ajax({
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                url: linkControlador, 
+                data: {
+                    ajax: true,
+                    action: 'postguardarimagen',
+                    listaJsonImagenes
+                },
+                success: (respuesta) => {
+                    let responseJson=respuesta.respuestaServidor
+                    console.log("datos =>>>>>> ",responseJson)
+                    let imagenesTotalesSubidas=document.getElementById("imagenesTotalesSubidas")
+                    imagenesTotalesSubidas.innerHTML="0"
+                    let totalDeImagenesHaSubir=document.getElementById("totalDeImagenesHaSubir")
+                    totalDeImagenesHaSubir.textContent="0"
+                    consultarTodo()
+                    // mostrarAlerta("alert-success","El precio a sido enviado correctamente")
+                },
+                error: () => {
+                    preloader.style.opacity="0"
+                    bodyPleloader.style.overflow="auto"
+                    // mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
+                }
+            });
         }
-    });
+        else{
+            alert("no hay imaganes cargas en el servidor, como minimo tiene que cargar 1 imagen")
+        }
+    }
+    else{
+        alert("no hay imaganes seleccionadas, como minimo tiene que seleccionar 1 imagen")
+    }
 }
 
 function consultarTodo(){
@@ -147,7 +161,7 @@ function mostrarImagenes(imagenes){
     filaImagenProducto.innerHTML=""
     for(let imagen of imagenes){
         listaImagenes+="\
-        <div class='col-auto'>\
+        <div class='col-auto' style='margin-bottom: 30px;margin-left: 10px;margin-right: 10px;'>\
             <img id='"+imagen.id_imagen+"' src='"+imagen.url_imagen+"' alt='"+imagen.nombre_imagen+"' style='display:block;height: 240px;width: 200px;margin-bottom: 10px;'/>\
             <button class='btn btn-danger btn-block' id='"+imagen.id_imagen+"' onClick='borrarImagen(this)'>Borrar</button>\
         </div>\

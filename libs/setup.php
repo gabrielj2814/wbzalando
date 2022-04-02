@@ -204,7 +204,6 @@ if (!class_exists("SetupWbZalando")) {
 
                 'CREATE TABLE IF NOT EXISTS '.$prefijoTabla.'_imagen_producto(
                     id_imagen int(11) NOT NULL AUTO_INCREMENT,
-                    nombre_imagen VARCHAR(250) NOT NULL,
                     nombre_id VARCHAR(250) NOT NULL,
                     extencion_imagen VARCHAR(250) NOT NULL,
                     url_imagen VARCHAR(3000) NOT NULL,
