@@ -533,7 +533,7 @@ function crearCheckboxPaisTest(paises){
     iniciarSlick()
     let paisesRadio=document.querySelectorAll(".checkbox-paises")
     paisesRadio[0].setAttribute("checked",true)
-    consultarProductosPorPais(paisesRadio[0])
+    consultarProductosPorPais()
 }
 
 function activarBoton(a){
@@ -589,7 +589,7 @@ function iniciarSlick(){
     }
 }
 
-function consultarProductosPorPais(a){
+function consultarProductosPorPais(a=1){
     let checkboxsPaises=document.querySelector(".checkbox-paises:checked");
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     controlesPaginacion.innerHTML="";
