@@ -374,14 +374,14 @@ class ProductoController extends ModuleAdminController{
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
             // enviar producto
-            // $respuesta=$curlController->ejecutarPeticion("post",true);
-            // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-            // // destructurar producto
+            $respuesta=$curlController->ejecutarPeticion("post",true);
+            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
-            // $estadoDeProductos["productos_enviados"][]=[
-            //     "respuestaServidor" => $respuesta,
-            //     "estatuRespuestaApi" => $respuesta["estado"]
-            // ];
+            $estadoDeProductos["productos_enviados"][]=[
+                "respuestaServidor" => $respuesta,
+                "estatuRespuestaApi" => $respuesta["estado"]
+            ];
             $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);
