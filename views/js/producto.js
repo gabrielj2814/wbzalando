@@ -1374,7 +1374,7 @@ function insertarFotosModal(a){
                 <path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/>\
             </svg>\
             <label for='"+imagen.id_imagen+"-imagen' style='margin:0;'>\
-                <img id='"+imagen.id_imagen+"' src='"+imagen.url_imagen+"' alt='"+imagen.nombre_imagen+"' style='display:block;height: 240px;width: 200px;margin-bottom: 25px;'/>\
+                <img id='"+imagen.id_imagen+"' src='"+imagen.url_imagen+"' style='display:block;height: 240px;width: 200px;margin-bottom: 25px;'/>\
             </label>\
             <input type='checkbox' value='"+imagen.id_imagen+"' data-id-pais='"+idPais+"' data-id-producto='"+idProducto+"' id='"+imagen.id_imagen+"-imagen'  class='checkebox-imagen-galeria' onClick='capturarImagenGaleria(this)' hidden>\
         </div>\
