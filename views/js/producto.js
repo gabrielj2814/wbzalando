@@ -1127,7 +1127,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Categoria</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> Categoria</label>\
                             <select id="'+codigoIdPaisIdproducto+'_categoria" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="outline" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-categoria">\
                                 <option>Default select</option>\
                             </select>\
@@ -1135,7 +1135,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Categoria talla</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> Categoria talla</label>\
                             <select id="'+codigoIdPaisIdproducto+'_categoria_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="size_group" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-categoria-talla">\
                                 <option>Default select</option>\
                             </select>\
@@ -1143,7 +1143,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Talla Pais</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> Talla Pais</label>\
                             <select  id="'+codigoIdPaisIdproducto+'_pais_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="paisTalla" onBlur="consultarTallasPorPaisYCategoriaTalla(this)"  class="form-control margin-0 ">\
                                 <option value="null">Seleccione</option>\
                                 <option value="eu">Europa</option>\
@@ -1156,7 +1156,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >color</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> color</label>\
                             <select data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="color_code.primary" id="'+codigoIdPaisIdproducto+'_color" onBlur="consultarTallasPorPaisYCategoriaTalla(this)" class="form-control margin-0 campo-color-code">\
                                 <option>Default select</option>\
                             </select>\
@@ -1166,13 +1166,13 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label for="">supplier color</label>\
+                            <label for=""><span class="campo-obligatorio">(*)</span> supplier color</label>\
                             <input id="'+codigoIdPaisIdproducto+'_supplier_color" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="supplier_color" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Siglas Moneda</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> Siglas Moneda</label>\
                             <select id="'+codigoIdPaisIdproducto+'_moneda" class="form-control margin-0" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                                 <option value="null">Seccionar moneda</option>\
                                 <option value="EUR">EUR</option>\
@@ -1191,7 +1191,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label>Precio Regular</label>\
+                            <label><span class="campo-obligatorio">(*)</span> Precio Regular</label>\
                             <input id="'+codigoIdPaisIdproducto+'_precio_regular" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'"value="'+producto.precioRegular+'" data-campo="precioRegular" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
                             <span>Los decimales del precio se indican mediante el "."</span>\
                         </div>\
@@ -1235,7 +1235,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >target age groups</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> target age groups</label>\
                             <select id="'+codigoIdPaisIdproducto+'_target_age_groups" multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_age_groups" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-age-groups">\
                                 <option>Default select</option>\
                             </select>\
@@ -1243,7 +1243,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >target genders</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> target genders</label>\
                             <select id="'+codigoIdPaisIdproducto+'_target_genders" multiple data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="target_genders" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select m-0 form-control margin-0 campo-target-genders">\
                                 <option>Default select</option>\
                             </select>\
@@ -1251,7 +1251,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >brand</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> brand</label>\
                             <select id="'+codigoIdPaisIdproducto+'_brand" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="brand_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-brand-code">\
                                 <option>Default select</option>\
                             </select>\
@@ -1259,7 +1259,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >season code</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> season code</label>\
                             <select id="'+codigoIdPaisIdproducto+'_season" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="season_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-season-code">\
                                 <option>Default select</option>\
                             </select>\
@@ -1269,7 +1269,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >futter</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> futter</label>\
                             <select multiple id="'+codigoIdPaisIdproducto+'_futter" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="futter" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-futter">\
                                 <option>Default select</option>\
                             </select>\
@@ -1277,7 +1277,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >upper material</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> upper material</label>\
                             <select multiple id="'+codigoIdPaisIdproducto+'_upper_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="upper_material" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-upper-material">\
                                 <option>Default select</option>\
                             </select>\
@@ -1285,7 +1285,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >sole material</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> sole material</label>\
                             <select multiple id="'+codigoIdPaisIdproducto+'_sole_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="sole_material" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-sole-material">\
                                 <option>Default select</option>\
                             </select>\
@@ -1293,7 +1293,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                     </div>\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >decksohle</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> decksohle</label>\
                             <select multiple id="'+codigoIdPaisIdproducto+'_decksohle" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="decksohle" onBlur="insertarDatosDeEnvioDeProduct(this)" class="class-select form-control margin-0 campo-decksohle">\
                                 <option>Default select</option>\
                             </select>\
@@ -1303,7 +1303,7 @@ function insertarProductosVistaEnvio(idPais,productos){
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
                         <div class="form-group">\
-                            <label >Tallas</label>\
+                            <label ><span class="campo-obligatorio">(*)</span> Tallas</label>\
                                 <select multiple id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="tallas" id="'+codigoIdPaisIdproducto+'_talla" class="class-select form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                             </select>\
                         </div>\

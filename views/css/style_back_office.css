@@ -111,3 +111,7 @@
 .label-pais-activo{
     background-color: red !important;
 }
+
+.campo-obligatorio{
+    color:red
+}
