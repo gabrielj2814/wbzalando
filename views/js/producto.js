@@ -1027,14 +1027,14 @@ function duplicarDatos(){
                 if(datosProductosForm[pais]){
                     let idPaisMasProducto=pais+"_"+id
                     if(!datosProductosForm[pais][idPaisMasProducto]){
-                        datosProductosForm[pais][idPaisMasProducto]=copiarDatosPaises[idProductoCopia]
+                        datosProductosForm[pais][idPaisMasProducto]=JSON.parse(JSON.stringify(copiarDatosPaises[idProductoCopia]))
                     }
                 }
                 else{
                     datosProductosForm[pais]={}
                     let idPaisMasProducto=pais+"_"+id
                     if(!datosProductosForm[pais][idPaisMasProducto]){
-                        datosProductosForm[pais][idPaisMasProducto]=copiarDatosPaises[idProductoCopia]
+                        datosProductosForm[pais][idPaisMasProducto]=JSON.parse(JSON.stringify(copiarDatosPaises[idProductoCopia]))
                     }
                 }
             }
