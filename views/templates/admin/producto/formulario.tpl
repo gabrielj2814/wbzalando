@@ -174,7 +174,7 @@
     </button>
     <!-- radios paises productos -->
 
-    <div class="slider-pais-productos" id="slider-productos" style="width: 100%; position: relative;">
+    <div class="slider-pais-productos" id="slider-productos" style="width: 100%; position: relative; overflow: hidden;">
        
     </div>
     <div id="paisesFormularioProducto">
@@ -292,7 +292,7 @@
     -->
     
     <div class="panel" style="display: block;width: 100%;">    
-        <div class="slider-pais-borrar" id="slider-dos" style="width: 100%; position: relative;">
+        <div class="slider-pais-borrar" id="slider-dos" style="width: 100%; position: relative; overflow: hidden;">
             
         </div>
         <div id="paisesBorrarProducto">

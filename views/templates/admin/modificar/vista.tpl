@@ -5,7 +5,7 @@
 
 <div class="panel">
     
-    <div class="slider-pais" id="slider-paises" style="width: 100%; position: relative;">
+    <div class="slider-pais" id="slider-paises" style="width: 100%; position: relative; overflow: hidden;">
        
     </div>
     <div id="paisesRadio">
