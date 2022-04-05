@@ -315,14 +315,41 @@ class CategoriaController extends ModuleAdminController{
             $buscar=["'"];
             $remplazar=[""];
             $speceText=str_replace($buscar,$remplazar,json_encode($datos));
-            $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
-                id_propiedad_modelo,
-                json_datos_propiedad
-            )
-            VALUES(
-                ".$id_propiedad_modelo.",
-                '".$speceText."'
-            );";
+            $SQL="";
+            if(property_exists($datos,"value")){
+                if(property_exists($datos->value,"localized")){
+                    $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
+                        id_propiedad_modelo,
+                        json_datos_propiedad,
+                        traduccion_es
+                    )
+                    VALUES(
+                        ".$id_propiedad_modelo.",
+                        '".$speceText."',
+                        '".$datos->value->localized->en."'
+                    );";
+                }
+                else{
+                    $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
+                        id_propiedad_modelo,
+                        json_datos_propiedad
+                    )
+                    VALUES(
+                        ".$id_propiedad_modelo.",
+                        '".$speceText."'
+                    );";
+                }
+            }
+            else{
+                $SQL="INSERT INTO ps_wbzalando_datos_propiedad(
+                    id_propiedad_modelo,
+                    json_datos_propiedad
+                )
+                VALUES(
+                    ".$id_propiedad_modelo.",
+                    '".$speceText."'
+                );";
+            }
             Db::getInstance()->execute($SQL);
         }
     }

@@ -110,7 +110,7 @@ function consultarCategoriasTalla(){
         success: (respuesta) => {
             let datos=JSON.parse(JSON.stringify(respuesta));
             datos_categorias_tallas_zalando=datos.respuestaServidor
-            consultarMaterialesDeConstruccion()
+            cargarDatosfutter()
             // preloader.style.opacity="0"
         },
         error: () => {
@@ -121,30 +121,30 @@ function consultarCategoriasTalla(){
     });
 }
 
-function consultarMaterialesDeConstruccion(){
-    const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
-    $.ajax({
-        type: 'GET',
-        cache: false,
-        dataType: 'json',
-        url: linkDeControladorCategoria, 
-        data: {
-            ajax: true,
-            action: 'getconsultarinformacionpropiedadmaterial',
-        },
-        success: (respuesta) => {
-            let datos=JSON.parse(JSON.stringify(respuesta));
-            datos_materiales_contruccion=datos.respuestaServidor
-            cargarDatosfutter();
+// function consultarMaterialesDeConstruccion(){
+//     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
+//     $.ajax({
+//         type: 'GET',
+//         cache: false,
+//         dataType: 'json',
+//         url: linkDeControladorCategoria, 
+//         data: {
+//             ajax: true,
+//             action: 'getconsultarinformacionpropiedadmaterial',
+//         },
+//         success: (respuesta) => {
+//             let datos=JSON.parse(JSON.stringify(respuesta));
+//             datos_materiales_contruccion=datos.respuestaServidor
+//             cargarDatosfutter();
 
-        },
-        error: () => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
-            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
-        }
-    });
-}
+//         },
+//         error: () => {
+//             preloader.style.opacity="0"
+//             bodyPleloader.style.overflow="auto"
+//             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+//         }
+//     });
+// }
 
 function cargarDatosfutter(){
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
@@ -695,10 +695,10 @@ function irHaFormularioDeProductos(){
                     fechaFinalPromocion:"",
                     // datosTallas:{},
                     haEnviar:false,
-                    how_to_use:"null",
-                    warnings:"null",
-                    material_percentage:"null",
-                    material_code:"null",
+                    // how_to_use:"null",
+                    // warnings:"null",
+                    // material_percentage:"null",
+                    // material_code:"null",
                     atributos_producto:producto.atributos_producto,
                     //============
                     combinaciones:[],
@@ -961,10 +961,10 @@ function cargarDatosGuardados(pais){
                     document.getElementById(idProducto+"_fecha_inicio_promocion").value=datosProducto.fechaInicioPromocion
                     
                     document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
-                    if(document.getElementById(idProducto+"_material")){
-                        document.getElementById(idProducto+"_material").value=datosProducto.material_code
-                        document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
-                    }
+                    // if(document.getElementById(idProducto+"_material")){
+                    //     document.getElementById(idProducto+"_material").value=datosProducto.material_code
+                    //     document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
+                    // }
 
                     let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
                     seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
@@ -987,12 +987,12 @@ function cargarDatosGuardados(pais){
                     document.getElementById(idProducto+"_brand").value=datosProducto.brand_code
                     document.getElementById(idProducto+"_season").value=datosProducto.season_code
                     
-                    if(document.getElementById(idProducto+"_warnings")){
-                        document.getElementById(idProducto+"_warnings").value=(datosProducto.warnings!=="null")?datosProducto.warnings:""
-                    }
-                    if(document.getElementById(idProducto+"_how_to_use")){
-                        document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
-                    }
+                    // if(document.getElementById(idProducto+"_warnings")){
+                    //     document.getElementById(idProducto+"_warnings").value=(datosProducto.warnings!=="null")?datosProducto.warnings:""
+                    // }
+                    // if(document.getElementById(idProducto+"_how_to_use")){
+                    //     document.getElementById(idProducto+"_how_to_use").value=(datosProducto.how_to_use!=="null")?datosProducto.how_to_use:"";
+                    // }
                     let radioFormulario=document.getElementById(idProducto+"_check_envio")
                     radioFormulario.checked=datosProducto.haEnviar
                     cambiarEstadoDeEnvioDeProduct(radioFormulario)
@@ -1217,20 +1217,6 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <input id="'+codigoIdPaisIdproducto+'_fecha_final_promocion" type="date" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="fechaFinalPromocion"  class="form-control campo-fecha-fin-promo" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                         </div>\
                     </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >material</label>\
-                            <select disabled id="'+codigoIdPaisIdproducto+'_material" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_code" onBlur="insertarDatosDeEnvioDeProduct(this)" class="form-control margin-0 campo-material-code">\
-                                <option>Default select</option>\
-                            </select>\
-                        </div>\
-                    </div>\
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label >material percentage</label>\
-                            <input disabled id="'+codigoIdPaisIdproducto+'_material_precentage" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="material_percentage" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
-                        </div>\
-                    </div>\
                 </div>\
                 <div class="row">\
                     <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
@@ -1306,22 +1292,6 @@ function insertarProductosVistaEnvio(idPais,productos){
                             <label ><span class="campo-obligatorio">(*)</span> Tallas</label>\
                                 <select multiple id="'+codigoIdPaisIdproducto+'_talla" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="tallas" id="'+codigoIdPaisIdproducto+'_talla" class="class-select form-control margin-0 campo-talla" onBlur="insertarDatosDeEnvioDeProduct(this)">\
                             </select>\
-                        </div>\
-                    </div>\
-                </div>\
-                <div class="row">\
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
-                        <div class="form-group">\
-                            <label for="">warnings</label>\
-                            <textarea disabled id="'+codigoIdPaisIdproducto+'_warnings" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="warnings" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
-                        </div>\
-                    </div>\
-                </div>\
-                <div class="row">\
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">\
-                        <div class="form-group">\
-                            <label for="">how to use</label>\
-                            <textarea disabled id="'+codigoIdPaisIdproducto+'_how_to_use" class="form-control" data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="how_to_use" rows="3" onKeyup="insertarDatosDeEnvioDeProduct(this)"></textarea>\
                         </div>\
                     </div>\
                 </div>\
@@ -1503,19 +1473,19 @@ function insertarTargetGendersCodeSelect(){
     }
 }
 
-function insertarMaterialesContruccionCodeSelect(){
-    // datos_materiales_contruccion
-    let $camposMaterialCode=document.querySelectorAll(".campo-material-code")
-    for(let $campoMaterialCode of $camposMaterialCode){
-        $campoMaterialCode.innerHTML=""
-        let html="<option value='null'>Seleccione un material</option>"
-        for(let labelMaterialContruccion in datos_materiales_contruccion){
-            let option="<option value='"+labelMaterialContruccion+"'>"+datos_materiales_contruccion[labelMaterialContruccion]+"</option>"
-            html+=option
-        }
-        $campoMaterialCode.innerHTML=html
-    }
-}
+// function insertarMaterialesContruccionCodeSelect(){
+//     // datos_materiales_contruccion
+//     let $camposMaterialCode=document.querySelectorAll(".campo-material-code")
+//     for(let $campoMaterialCode of $camposMaterialCode){
+//         $campoMaterialCode.innerHTML=""
+//         let html="<option value='null'>Seleccione un material</option>"
+//         for(let labelMaterialContruccion in datos_materiales_contruccion){
+//             let option="<option value='"+labelMaterialContruccion+"'>"+datos_materiales_contruccion[labelMaterialContruccion]+"</option>"
+//             html+=option
+//         }
+//         $campoMaterialCode.innerHTML=html
+//     }
+// }
 
 function insertarFutter(){
     let $camposFutters=document.querySelectorAll(".campo-futter")
@@ -1761,7 +1731,7 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarCategoriasTallasZalando()
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
-                insertarMaterialesContruccionCodeSelect()
+                // insertarMaterialesContruccionCodeSelect()
                 insertarFutter()
                 insertarUpperMaterial()
                 insertarSoleMaterial()
@@ -1961,45 +1931,45 @@ function bloquearCampoPorCategoriaZalando(categoria,producto,idPais,idProducto){
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 console.log("propiedades categoria =>>> ",respuestaJson.datos);
                 // disabled
-                let busquedaConfig=respuestaJson.datos.config.mandatory_types.filter(propiedad => propiedad==="material.upper_material_clothing")
-                let busquedaModelo=respuestaJson.datos.model.mandatory_types.filter(propiedad =>  propiedad==="how_to_use" || propiedad==="warnings")
-                if(busquedaConfig.length>0){
-                    let campoMaterial=document.getElementById(idProducto+"_material")
-                    campoMaterial.removeAttribute("disabled")
-                    producto["material_code"]=""
-                    let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
-                    campoMaterialPrecentege.removeAttribute("disabled")
-                    producto["material_precentage"]=""
-                }
-                else{
-                    let campoMaterial=document.getElementById(idProducto+"_material")
-                    campoMaterial.setAttribute("disabled","disabled")
-                    campoMaterial.value=""
-                    producto["material_code"]="null"
-                    let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
-                    campoMaterialPrecentege.setAttribute("disabled","disabled")
-                    campoMaterialPrecentege.value=""
-                    producto["material_precentage"]="null"
-                }
-                if(busquedaModelo.length===2){
-                    alert("lo encontre en modelo")
-                    let campoWarning=document.getElementById(idProducto+"_warnings")
-                    campoWarning.removeAttribute("disabled")
-                    producto["warnings"]=""
-                    let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
-                    campoHowToUse.removeAttribute("disabled")
-                    producto["how_to_use"]=""
-                }
-                else{
-                    let campoWarning=document.getElementById(idProducto+"_warnings")
-                    campoWarning.setAttribute("disabled","disabled")
-                    campoWarning.value=""
-                    producto["warnings"]="null"
-                    let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
-                    campoHowToUse.setAttribute("disabled","disabled")
-                    campoHowToUse.value=""
-                    producto["how_to_use"]="null"
-                }
+                // let busquedaConfig=respuestaJson.datos.config.mandatory_types.filter(propiedad => propiedad==="material.upper_material_clothing")
+                // let busquedaModelo=respuestaJson.datos.model.mandatory_types.filter(propiedad =>  propiedad==="how_to_use" || propiedad==="warnings")
+                // if(busquedaConfig.length>0){
+                //     let campoMaterial=document.getElementById(idProducto+"_material")
+                //     campoMaterial.removeAttribute("disabled")
+                //     producto["material_code"]=""
+                //     let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
+                //     campoMaterialPrecentege.removeAttribute("disabled")
+                //     producto["material_precentage"]=""
+                // }
+                // else{
+                //     let campoMaterial=document.getElementById(idProducto+"_material")
+                //     campoMaterial.setAttribute("disabled","disabled")
+                //     campoMaterial.value=""
+                //     producto["material_code"]="null"
+                //     let campoMaterialPrecentege=document.getElementById(idProducto+"_material_precentage")
+                //     campoMaterialPrecentege.setAttribute("disabled","disabled")
+                //     campoMaterialPrecentege.value=""
+                //     producto["material_precentage"]="null"
+                // }
+                // if(busquedaModelo.length===2){
+                //     alert("lo encontre en modelo")
+                //     let campoWarning=document.getElementById(idProducto+"_warnings")
+                //     campoWarning.removeAttribute("disabled")
+                //     producto["warnings"]=""
+                //     let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
+                //     campoHowToUse.removeAttribute("disabled")
+                //     producto["how_to_use"]=""
+                // }
+                // else{
+                //     let campoWarning=document.getElementById(idProducto+"_warnings")
+                //     campoWarning.setAttribute("disabled","disabled")
+                //     campoWarning.value=""
+                //     producto["warnings"]="null"
+                //     let campoHowToUse=document.getElementById(idProducto+"_how_to_use")
+                //     campoHowToUse.setAttribute("disabled","disabled")
+                //     campoHowToUse.value=""
+                //     producto["how_to_use"]="null"
+                // }
             },
             error: () => {
                 // console.log("error al consultar las propiedades de la categoria")
@@ -2168,8 +2138,8 @@ function generarFormatoZalado(){
                 }
                 modelo["idPais"]=pais;
                 if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
-                    modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
-                    modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
+                    // modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
+                    // modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
                 }
                 let medias=[]
                 for(let imagenes of datosProductosForm[pais][producto].listIdImagenesGaleria){
@@ -2200,27 +2170,14 @@ function generarFormatoZalado(){
                 config.product_config_attributes.description["en"]=datosProductosForm[pais][producto].descripcion
                 config.product_config_attributes.season_code=datosProductosForm[pais][producto].season_code
                 config.product_config_attributes["color_code.primary"]=datosProductosForm[pais][producto]["color_code.primary"].split("-")[0]
-                if(datosProductosForm[pais][producto]["material_code"] !=="null" && datosProductosForm[pais][producto]["material_percentage"] !=="null"){
-                    // "material.upper_material_clothing":{"material_percentage":"DecimalDefinition","material_code":"LocalizedStringDefinition"}
-                    config.product_config_attributes["material.upper_material_clothing"]={
-                        material_percentage:datosProductosForm[pais][producto]["material_percentage"],
-                        material_code:{
-                            en:datosProductosForm[pais][producto]["material_code"]
-                        }
-                    }
-                }
                 
                 modelo.producto.product_model.product_configs.push(config)
                 let precio=[]
                 let stock=[]
                 for(let idAtributoTalla of datosProductosForm[pais][producto].tallas){
-                    // console.log("talla id  =>>>> ",idAtributoTalla)
                     let idTalla=idAtributoTalla.split("-")[1]
                     let tallaZalando=idAtributoTalla.split("-")[0]
-                    // console.log("talla =>>>> ",idTalla)
-                    // console.log("combinaciones del productos =>>>> ",datosProductosForm[pais][producto].combinaciones)
                     let combinacionTalla=datosProductosForm[pais][producto].combinaciones.filter(combinacion => combinacion.id_atributo_talla===idTalla)
-                    // console.log("filter talla =>>>>>>> ",combinacionTalla)
                     let simple= {
                         "merchant_product_simple_id": "simple-"+tallaZalando+"-"+id,
                         "product_simple_attributes": {

@@ -166,6 +166,7 @@ if (!class_exists("SetupWbZalando")) {
                     id_datos_propiedad int(11) NOT NULL AUTO_INCREMENT,
                     id_propiedad_modelo int(11) NOT NULL,
                     json_datos_propiedad LONGTEXT NOT NULL,
+                    traduccion_es VARCHAR(350) NULL,
                     PRIMARY KEY (`id_datos_propiedad`),
                     CONSTRAINT `FK_id_propiedad_modelo` FOREIGN KEY (id_propiedad_modelo) REFERENCES '.$prefijoTabla.'_propiedad_modelo(id_propiedad_modelo) ON UPDATE CASCADE ON DELETE CASCADE
                 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
