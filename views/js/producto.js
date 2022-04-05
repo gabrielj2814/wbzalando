@@ -293,7 +293,7 @@ function iniciarSlickTres(){
         $('#slider-productos').owlCarousel({
             margin: 10,
             nav: true,
-     		loop: true,
+            loop: ( $('.owl-carousel .items').length > 5 ),
             navText:["<div class='nav-btn prev-slide'><span class='prev-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg></span></div>","<div class='nav-btn next-slide'><span class='next-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg></span></div>"],
             responsive: {
                 0: {
@@ -344,7 +344,7 @@ function iniciarSlickDos(){
         $('#slider-dos').owlCarousel({
             margin: 10,
             nav: true,
-     		loop: true,
+            loop: ( $('.owl-carousel .items').length > 5 ),
             navText:["<div class='nav-btn prev-slide'><span class='prev-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg></span></div>","<div class='nav-btn next-slide'><span class='next-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg></span></div>"],
             responsive: {
                 0: {
@@ -829,36 +829,20 @@ function irHaVistaFormularioProductos(){
 }
 
 function cargarProductosPorPaisSeleccionado(a){
-    let quitar = document.querySelector(".wz-active")
+    let quitar = document.querySelector(".wz-input")
     if(quitar){
-        quitar.classList.remove("wz-active");
+        quitar.classList.remove("wz-input");
     }
-    a.classList.add("wz-active");
-
-    let id = document.querySelector('.wz-active');
-
-    // let idBer = document.querySelector('.043ec789-a3c7-4556-92df-bf1845c741ab');
-    // let idGer = document.querySelector('.01924c48-49bb-40c2-9c32-ab582e6db6f4');
-    // let idFra = document.querySelector('.733af55a-4133-4d7c-b5f3-d64d42c135fe');
-    // let idNet = document.querySelector('.00f2a393-6889-4fc0-8cd9-86e454e6dfa3');
-
-    // let idBer = document.querySelector('.paises-label label[value="043ec789-a3c7-4556-92df-bf1845c741ab"]');
-    // let idGer = document.querySelector('.paises-label label[value="01924c48-49bb-40c2-9c32-ab582e6db6f4"]');
-    // let idFran = document.querySelector('.paises-label label[value="733af55a-4133-4d7c-b5f3-d64d42c135fe"]');
-    // let idNet = document.querySelector('.paises-label label[value="00f2a393-6889-4fc0-8cd9-86e454e6dfa3"]');
-
-    // if(id['value'] == idBer){
-    //     idBer.classList.add("wz")
-    // }
-    // if(id['value'] == idGer){
-    //     idGer.classList.add("wz")
-    // }
-    // if(id['value'] == idFra){
-    //     idFra.classList.add("wz")
-    // }
-    // if(id['value'] == idNet){
-    //     ber.classList.add("wz")
-    // }
+    a.classList.add("wz-input");
+    // let id = document.querySelector('.wz-input');
+    console.log("hola ====>>>>>> ",a['value'])
+    console.log("bandera =>>>>> ",document.querySelector('div[class="'+a['value']+'"]'))
+    if(document.querySelector(".wz-active")){
+        document.querySelector(".wz-active").classList.remove("wz-active")
+    }
+    // document.querySelector('label[for="'+a['value']+'"]').classList.remove("wz-active")
+    let etiquetaDeMierda=document.querySelector('label[for="'+a['value']+'"]')
+    etiquetaDeMierda.classList.add("wz-active")
     let productos=datosResPaldoProductos[a.value]
     console.log("cargar porductos por pais seleccionado =>>>> ",productos)
     cargarDatosBrandCode();
