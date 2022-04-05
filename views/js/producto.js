@@ -269,14 +269,14 @@ function crearRadiosPaisTest(paises){
     listaDePaises={}
     for(let pais of paises){
         let htmlCheckbox="\
-            <div style='display:none;'>\
-                <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
-                "+pais.country_name+"\
-            </div>\
+        <div style='display:none;'>\
+            <input type='radio'  class='redio-paises-form' value='"+pais.sales_channel_id+"' id='"+pais.sales_channel_id+"' name='radio-form-producto' data-nombre-pais='"+pais.country_name+"' data-iso-code='"+pais.country_code+"' onChange='cargarProductosPorPaisSeleccionado(this)'/>\
+            "+pais.country_name+"\
+        </div>\
         ";
         listaDePaises[pais.sales_channel_id]=pais.country_name
         let htmlBotonPais="\
-            <div class=''>\
+            <div class='"+pais.sales_channel_id+"'>\
                 <label for='"+pais.sales_channel_id+"' class='btn btn-primary'>\
                 "+pais.country_name+"\
                 </label>\
@@ -290,47 +290,23 @@ function crearRadiosPaisTest(paises){
 function iniciarSlickTres(){
     var sliderProductos = document.querySelector('#slider-productos');
     if(sliderProductos.children.length > 0){
-        $('#slider-productos').slick({
-            infinite: true,
-            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
-            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            responsive: [
-                {
-                  breakpoint: 1920,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+        $('#slider-productos').owlCarousel({
+            margin: 10,
+            nav: true,
+     		loop: true,
+            navText:["<div class='nav-btn prev-slide'><span class='prev-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg></span></div>","<div class='nav-btn next-slide'><span class='next-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg></span></div>"],
+            responsive: {
+                0: {
+                    items: 1
                 },
-                {
-                  breakpoint: 1600,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+                1200: {
+                    items: 2
                 },
-                {
-                  breakpoint: 1280,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                      slidesToShow: 1,
-                      slidesToScroll: 1,
-                      infinite: true
-                    }
-                  }
-              ]
-        })
+                1600: {
+                    items: 3
+                }
+            }
+        });
     }else {
         iniciarSlickTres()
     }
@@ -365,47 +341,23 @@ function crearRadiosPaisTestBorrarProdcuto(paises){
 function iniciarSlickDos(){
     var sliderDos = document.querySelector('#slider-dos');
     if(sliderDos.children.length > 0){
-        $('#slider-dos').slick({
-            infinite: true,
-            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
-            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            responsive: [
-                {
-                  breakpoint: 1920,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+        $('#slider-dos').owlCarousel({
+            margin: 10,
+            nav: true,
+     		loop: true,
+            navText:["<div class='nav-btn prev-slide'><span class='prev-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg></span></div>","<div class='nav-btn next-slide'><span class='next-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg></span></div>"],
+            responsive: {
+                0: {
+                    items: 1
                 },
-                {
-                  breakpoint: 1600,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+                1200: {
+                    items: 2
                 },
-                {
-                  breakpoint: 1280,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                      slidesToShow: 1,
-                      slidesToScroll: 1,
-                      infinite: true
-                    }
-                  }
-              ]
-        })
+                1600: {
+                    items: 3
+                }
+            }
+        });
     }else {
         iniciarSlickDos()
     }
@@ -877,6 +829,36 @@ function irHaVistaFormularioProductos(){
 }
 
 function cargarProductosPorPaisSeleccionado(a){
+    let quitar = document.querySelector(".wz-active")
+    if(quitar){
+        quitar.classList.remove("wz-active");
+    }
+    a.classList.add("wz-active");
+
+    let id = document.querySelector('.wz-active');
+
+    // let idBer = document.querySelector('.043ec789-a3c7-4556-92df-bf1845c741ab');
+    // let idGer = document.querySelector('.01924c48-49bb-40c2-9c32-ab582e6db6f4');
+    // let idFra = document.querySelector('.733af55a-4133-4d7c-b5f3-d64d42c135fe');
+    // let idNet = document.querySelector('.00f2a393-6889-4fc0-8cd9-86e454e6dfa3');
+
+    // let idBer = document.querySelector('.paises-label label[value="043ec789-a3c7-4556-92df-bf1845c741ab"]');
+    // let idGer = document.querySelector('.paises-label label[value="01924c48-49bb-40c2-9c32-ab582e6db6f4"]');
+    // let idFran = document.querySelector('.paises-label label[value="733af55a-4133-4d7c-b5f3-d64d42c135fe"]');
+    // let idNet = document.querySelector('.paises-label label[value="00f2a393-6889-4fc0-8cd9-86e454e6dfa3"]');
+
+    // if(id['value'] == idBer){
+    //     idBer.classList.add("wz")
+    // }
+    // if(id['value'] == idGer){
+    //     idGer.classList.add("wz")
+    // }
+    // if(id['value'] == idFra){
+    //     idFra.classList.add("wz")
+    // }
+    // if(id['value'] == idNet){
+    //     ber.classList.add("wz")
+    // }
     let productos=datosResPaldoProductos[a.value]
     console.log("cargar porductos por pais seleccionado =>>>> ",productos)
     cargarDatosBrandCode();
