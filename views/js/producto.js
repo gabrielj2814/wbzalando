@@ -2091,6 +2091,11 @@ function generarFormatoZalado(){
         }
     }
     console.log("datos finales =>>>> ",productosConFormato)
+    let consoleHtml=document.getElementById("consoleHtml")
+    consoleHtml.innerHTML=""
+    for(let {producto} of productosConFormato ){
+        consoleHtml.innerHTML+=JSON.stringify(producto)+"</br></br></br></br>"
+    }
     enviarDatos(productosConFormato)
 }
 

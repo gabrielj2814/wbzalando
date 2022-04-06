@@ -337,6 +337,8 @@
         </div>
     </div>
 </div>
+
+<div id="consoleHtml"></div>
  
 <div id="preloader" class="col-12 fat-pre">
     <div class="pre-loader">
