@@ -331,7 +331,7 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessPostEnviarProductos(){
-       print(json_encode( $this->enviarProducto($_POST["productos"])));
+        print(json_encode( $this->enviarProducto($_POST["productos"])));
     }
 
     public function enviarProducto($productos){
@@ -351,7 +351,6 @@ class ProductoController extends ModuleAdminController{
         ];
         foreach($productos as $producto ){
             // re asignar tipos de datos a las propiedades
-            // $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][0]["media_sort_key"];
             if(array_key_exists("material.upper_material_clothing",$producto["producto"]["product_model"]["product_configs"][0])){
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"]=(float)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["material.upper_material_clothing"]["material_percentage"];
             }
@@ -374,14 +373,21 @@ class ProductoController extends ModuleAdminController{
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
             // enviar producto
-            $respuesta=$curlController->ejecutarPeticion("post",true);
-            error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+            if($producto["enviar"]==="true"){
+                // $respuesta=$curlController->ejecutarPeticion("post",true);
+                // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+                // $estadoDeProductos["productos_enviados"][]=[
+                //     "respuestaServidor" => $respuesta,
+                //     "estatuRespuestaApi" => $respuesta["estado"]
+                // ];
+                $estadoDeProductos["productos_enviados"][]=[
+                    "modeloProducto" => $producto["producto"]["product_model"]["merchant_product_model_id"],
+                    "respuestaServidor" => true,
+                    "estatuRespuestaApi" => true
+                ];
+            }
             // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
-            $estadoDeProductos["productos_enviados"][]=[
-                "respuestaServidor" => $respuesta,
-                "estatuRespuestaApi" => $respuesta["estado"]
-            ];
             $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
             $respuestaSimple=$this->guardarSimpleProducto($producto);

@@ -595,6 +595,7 @@ function irHaFormularioDeProductos(){
             let nombrePro=producto.name.split("'").join("")
             if(datosResPaldoProductos[pais.value]){
                 datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
+                    sales_channel_id:"",
                     paisTalla:"",
                     idProductoTienda:producto.id_product,
                     ean:producto.ean13,
@@ -620,7 +621,6 @@ function irHaFormularioDeProductos(){
                     precioPromocional:"",
                     fechaInicioPromocion:"",
                     fechaFinalPromocion:"",
-                    // datosTallas:{},
                     haEnviar:false,
                     atributos_producto:producto.atributos_producto,
                     //============
@@ -1951,7 +1951,10 @@ function generarFormatoZalado(){
             if(datosProductosForm[pais][producto].haEnviar===false){
                 
                 let modelo={
-                   "producto":{
+                    "enviar":false,
+                    "sales_channel_id": pais,
+                    "idProducto": datosProductosForm[pais][producto].idProductoTienda,
+                    "producto":{
                         "outline": datosProductosForm[pais][producto].outline,
                         "product_model": {
                             "merchant_product_model_id": "modelo-"+id,
@@ -1966,7 +1969,7 @@ function generarFormatoZalado(){
                             },
                             "product_configs":[]
                         }
-                   }
+                    }
                 }
                 modelo["idPais"]=pais;
                 if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
@@ -2090,13 +2093,96 @@ function generarFormatoZalado(){
             id+=1
         }
     }
-    console.log("datos finales =>>>> ",productosConFormato)
-    let consoleHtml=document.getElementById("consoleHtml")
-    consoleHtml.innerHTML=""
-    for(let {producto} of productosConFormato ){
-        consoleHtml.innerHTML+=JSON.stringify(producto)+"</br></br></br></br>"
+    console.clear()
+    let totalProductosPaises=obtenerCantidasDeProductosActivosPorPaises()
+    console.log("total de productos por pais activo =>>>>>>>>> ",totalProductosPaises)
+    let paisConMayorProductos=obtenerIdPaisConMayorProductos(totalProductosPaises)
+    let listaDeProductos=productosConFormato.filter(producto => producto.sales_channel_id===paisConMayorProductos.id)
+    console.log("fase 1 obtener todos los productos del pais mayor =>>>> ",listaDeProductos)
+    let listaDeProductosDelosPaisesConMenosProductos =obtenerCantidasDeProductosConMenosProductos(paisConMayorProductos.id)
+    console.log("fase 2 obtener todos los productos de los pais cons menos productos =>>>> ",listaDeProductosDelosPaisesConMenosProductos)
+    for(let productoDePaisConMenosProductos of listaDeProductosDelosPaisesConMenosProductos){
+        productoDePaisConMenosProductos=JSON.parse(JSON.stringify(productoDePaisConMenosProductos))
+        let productoEncontrado=listaDeProductos.filter(producto => producto.idProducto===productoDePaisConMenosProductos.idProductoTienda)
+        if(productoEncontrado.length===0){
+            listaDeProductos.push(productoDePaisConMenosProductos)
+        }
     }
+    console.log("lista final =>>>> ",listaDeProductos)
+    for(let producto of listaDeProductos){
+        for(let contador=0;contador<productosConFormato.length;contador++){
+            if(producto.idProductoTienda){
+                if(producto.idProductoTienda===productosConFormato[contador].idProducto && producto.sales_channel_id===productosConFormato[contador].sales_channel_id){
+                    productosConFormato[contador].enviar=true
+
+                }
+            }
+            else{
+                if(producto.idProducto===productosConFormato[contador].idProducto && producto.sales_channel_id===productosConFormato[contador].sales_channel_id){
+                    productosConFormato[contador].enviar=true
+                    
+                }
+            }
+            
+        }
+    }
+
+
+
+
+    // console.log("pais con mayor producto =>>>> ",paisConMayorProductos)
+    console.log("datos finales =>>>> ",productosConFormato)
+    // let consoleHtml=document.getElementById("consoleHtml")
+    // consoleHtml.innerHTML=""
+    // for(let {producto} of productosConFormato ){
+    //     consoleHtml.innerHTML+=JSON.stringify(producto)+"</br></br></br></br>"
+    // }
     enviarDatos(productosConFormato)
+}
+
+function obtenerCantidasDeProductosActivosPorPaises(){
+    let totalProductosPaises={}
+    for(let pais in listaDePaises){
+        totalProductosPaises[pais]=0
+        for(let idProducto in datosProductosForm[pais]){
+            if(datosProductosForm[pais][idProducto].haEnviar===false){
+                totalProductosPaises[pais]+=1
+            }
+        }
+    }
+    return totalProductosPaises
+}
+
+function obtenerCantidasDeProductosInactivosPorPaises(){
+    let totalProductosPaises={}
+    for(let pais in listaDePaises){
+        totalProductosPaises[pais]=0
+        for(let idProducto in datosProductosForm[pais]){
+            if(datosProductosForm[pais][idProducto].haEnviar===true){
+                totalProductosPaises[pais]+=1
+            }
+        }
+    }
+    return totalProductosPaises
+}
+
+function obtenerCantidasDeProductosConMenosProductos(NoBuscarPorEstePais){
+    let totalProductosPaises={}
+    let productos=[]
+    for(let pais in listaDePaises){
+        if(NoBuscarPorEstePais!==pais){
+            totalProductosPaises[pais]=0
+            for(let idProducto in datosProductosForm[pais]){
+                if(datosProductosForm[pais][idProducto].haEnviar===false){
+                    totalProductosPaises[pais]+=1
+                    let jsonProducto=JSON.parse(JSON.stringify(datosProductosForm[pais][idProducto]))
+                    jsonProducto.sales_channel_id=pais
+                    productos.push(jsonProducto)
+                }
+            }
+        }
+    }
+    return productos
 }
 
 function enviarDatos(productos){
