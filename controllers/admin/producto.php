@@ -402,17 +402,17 @@ class ProductoController extends ModuleAdminController{
             $curlController->setdatosCabezera($header);
             // enviar producto
             if($producto["enviar"]==="true"){
-                // $respuesta=$curlController->ejecutarPeticion("post",true);
-                // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-                // $estadoDeProductos["productos_enviados"][]=[
-                //     "respuestaServidor" => $respuesta,
-                //     "estatuRespuestaApi" => $respuesta["estado"]
-                // ];
+                $respuesta=$curlController->ejecutarPeticion("post",true);
+                error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
                 $estadoDeProductos["productos_enviados"][]=[
-                    "modeloProducto" => $producto["producto"]["product_model"]["merchant_product_model_id"],
-                    "respuestaServidor" => true,
-                    "estatuRespuestaApi" => true
+                    "respuestaServidor" => $respuesta,
+                    "estatuRespuestaApi" => $respuesta["estado"]
                 ];
+                // $estadoDeProductos["productos_enviados"][]=[
+                //     "modeloProducto" => $producto["producto"]["product_model"]["merchant_product_model_id"],
+                //     "respuestaServidor" => true,
+                //     "estatuRespuestaApi" => true
+                // ];
             }
             // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
