@@ -349,8 +349,9 @@
 </div>
 
 <script type="text/javascript" src="/modules/wbzalando/views/js/librerias/moment.js"></script>
+<script type="text/javascript" src="/modules/wbzalando/views/js/librerias/owl.carousel.js"></script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
 
 <script>
 /*

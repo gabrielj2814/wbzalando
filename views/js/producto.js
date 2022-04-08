@@ -595,9 +595,10 @@ function irHaFormularioDeProductos(){
             let nombrePro=producto.name.split("'").join("")
             if(datosResPaldoProductos[pais.value]){
                 let traducciones=producto.traduccionesProducto.map(traduccion => {
-                    let jsonTraduccion={}
-                    jsonTraduccion[traduccion.iso_code]=traduccion.description
-                    return jsonTraduccion
+                    return {
+                        idioma:traduccion.iso_code,
+                        descripcion:traduccion.description
+                    }
                 })
                 datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
                     sales_channel_id:"",
@@ -1999,10 +2000,10 @@ function generarFormatoZalado(){
                     }
                 }
                 modelo["idPais"]=pais;
-                if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
-                    // modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
-                    // modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
-                }
+                // if(datosProductosForm[pais][producto]["how_to_use"]!=="null" && datosProductosForm[pais][producto]["warnings"]!=="null"){
+                //     // modelo.producto.product_model_attributes["how_to_use"]=datosProductosForm[pais][producto]["how_to_use"]
+                //     // modelo.producto.product_model_attributes["warnings"]=datosProductosForm[pais][producto]["warnings"]
+                // }
                 let medias=[]
                 for(let imagenes of datosProductosForm[pais][producto].listIdImagenesGaleria){
                     let busquedaImagen=imagenesProductos.filter(magenFilter=> magenFilter.id_imagen===imagenes)
@@ -2029,7 +2030,10 @@ function generarFormatoZalado(){
                     },
                     "product_simples":[]
                 }
-                config.product_config_attributes.description=datosProductosForm[pais][producto].traduccionesProducto
+                for(let descripcionTraducida of datosProductosForm[pais][producto].traduccionesProducto){
+                    config.product_config_attributes.description[descripcionTraducida.idioma]=descripcionTraducida.descripcion
+                }
+                // config.product_config_attributes.description=datosProductosForm[pais][producto].traduccionesProducto
                 config.product_config_attributes.season_code=datosProductosForm[pais][producto].season_code
                 config.product_config_attributes["color_code.primary"]=datosProductosForm[pais][producto]["color_code.primary"].split("-")[0]
                 
