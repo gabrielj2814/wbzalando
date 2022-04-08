@@ -567,6 +567,7 @@ function iniciarSlick(){
 
 function consultarProductosPorPais(a=1){
     let checkboxsPaises=document.querySelector(".checkbox-paises:checked");
+    indicarPaisSeleccionado(checkboxsPaises)
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     controlesPaginacion.innerHTML="";
     let pagina=1;
@@ -743,6 +744,23 @@ function consultarProductosPorPais2(idPais){
             mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
+}
+
+function indicarPaisSeleccionado(a){
+    let quitar = document.querySelector(".wz-input")
+    if(quitar){
+        quitar.classList.remove("wz-input");
+    }
+    a.classList.add("wz-input");
+    // let id = document.querySelector('.wz-input');
+    console.log("hola ====>>>>>> ",a['value'])
+    console.log("bandera =>>>>> ",document.querySelector('div[class="'+a['value']+'"]'))
+    if(document.querySelector(".wz-active")){
+        document.querySelector(".wz-active").classList.remove("wz-active")
+    }
+    // document.querySelector('label[for="'+a['value']+'"]').classList.remove("wz-active")
+    let etiquetaDeMierda=document.querySelector('label[for="'+a['value']+'"]')
+    etiquetaDeMierda.classList.add("wz-active")
 }
 
 function mostrarAlerta(colorAlerta,mensaje,contenedorAlerta="contenedorAlerta"){

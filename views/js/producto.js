@@ -676,16 +676,36 @@ function irHaVistaBorrarProductos(e){
         let radioPaiseHaEliminar=document.querySelectorAll(".radio-form-producto-borrar:checked")
         if(radioPaiseHaEliminar.length===1){
             cargarProductosHaEliminarPorPais(radioPaiseHaEliminar[0])
+            indicarPaisSeleccionado(radioPaiseHaEliminar[0])
             duplicarDatos()
         }
         else{
             let radiosPaisesHaEliminar=document.querySelectorAll(".radio-form-producto-borrar")
-            radiosPaisesHaEliminar[0].setAttribute("checked",true)
+            // radiosPaisesHaEliminar[0].setAttribute("checked",true)
             cargarProductosHaEliminarPorPais(radiosPaisesHaEliminar[0])
+            indicarPaisSeleccionado(radiosPaisesHaEliminar[0])
             duplicarDatos()
         }
     }
 }
+
+function indicarPaisSeleccionado(a){
+    let quitar = document.querySelector(".wz-input-2")
+    if(quitar){
+        quitar.classList.remove("wz-input-2");
+    }
+    a.classList.add("wz-input-2");
+    // let id = document.querySelector('.wz-input');
+    console.log("hola ====>>>>>> ",a['value'])
+    console.log("bandera =>>>>> ",document.querySelector('div[class="'+a['value']+'"]'))
+    if(document.querySelector(".wz-active-2")){
+        document.querySelector(".wz-active-2").classList.remove("wz-active-2")
+    }
+    // document.querySelector('label[for="'+a['value']+'"]').classList.remove("wz-active")
+    let etiquetaDeMierda=document.querySelector('label[for="'+a['value']+'_paises_borrar"]')
+    etiquetaDeMierda.classList.add("wz-active-2")
+}
+
 // validar datos de productos antes de pasar a la ultima pagina
 function validarProducto(){
     let estado=true
@@ -1717,6 +1737,7 @@ function consultarTallasPorPaisYCategoriaTalla(a){
 }
 
 function cargarProductosHaEliminarPorPais(a){
+    indicarPaisSeleccionado(a)
     console.table("lista de productus a eliminar =>>>> ",datosProductosForm[a.value])
     insertarProductos(a.value,datosProductosForm[a.value])
 }

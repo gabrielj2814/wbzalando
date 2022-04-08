@@ -337,47 +337,23 @@ function eliminarProducto(a){
 function iniciarSlick(){
     var slider = document.querySelector('#slider-paises');
     if(slider.children.length > 0){
-        $('#slider-paises').slick({
-            infinite: true,
-            prevArrow: '<span class="prev-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span>',
-            nextArrow: '<span class="next-arrow btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></span>',
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            responsive: [
-                {
-                  breakpoint: 1920,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+        $('#slider-paises').owlCarousel({
+            margin: 10,
+            nav: true,
+            loop: ( $('.owl-carousel .items').length > 5 ),
+            navText:["<div class='nav-btn prev-slide'><span class='prev-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg></span></div>","<div class='nav-btn next-slide'><span class='next-arrow btn btn-primary'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg></span></div>"],
+            responsive: {
+                0: {
+                    items: 1
                 },
-                {
-                  breakpoint: 1600,
-                  settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
+                1200: {
+                    items: 2
                 },
-                {
-                  breakpoint: 1280,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true
-                  }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                      slidesToShow: 1,
-                      slidesToScroll: 1,
-                      infinite: true
-                    }
-                  }
-              ]
-        })
+                1600: {
+                    items: 3
+                }
+            }
+        });
     }else {
         iniciarSlick()
     }
@@ -385,6 +361,7 @@ function iniciarSlick(){
 
 function consultarProductosPorPais(a=1){
     let checkboxsPaises=document.querySelector(".checkbox-paises:checked");
+    indicarPaisSeleccionado(checkboxsPaises)
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     controlesPaginacion.innerHTML="";
     let pagina=1;
@@ -442,6 +419,23 @@ function consultarProductosPorPais(a=1){
             mostrarAlerta("alert-danger","conexion deficiente intente ota vez")
         }
     });
+}
+
+function indicarPaisSeleccionado(a){
+    let quitar = document.querySelector(".wz-input")
+    if(quitar){
+        quitar.classList.remove("wz-input");
+    }
+    a.classList.add("wz-input");
+    // let id = document.querySelector('.wz-input');
+    console.log("hola ====>>>>>> ",a['value'])
+    console.log("bandera =>>>>> ",document.querySelector('div[class="'+a['value']+'"]'))
+    if(document.querySelector(".wz-active")){
+        document.querySelector(".wz-active").classList.remove("wz-active")
+    }
+    // document.querySelector('label[for="'+a['value']+'"]').classList.remove("wz-active")
+    let etiquetaDeMierda=document.querySelector('label[for="'+a['value']+'"]')
+    etiquetaDeMierda.classList.add("wz-active")
 }
 
 function insertarControlesPaginacion(){

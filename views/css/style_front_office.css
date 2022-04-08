@@ -685,6 +685,12 @@ label.wz-active {
     background-color: #317f9d !important;
     border: 3px solid #317f9d !important;
 }
+
+label.wz-active-2 {
+    background-color: #317f9d !important;
+    border: 3px solid #317f9d !important;
+}
+
 label.btn-primary:hover{
     background-color: #008abd !important;
     border: 3px solid #008abd !important;
