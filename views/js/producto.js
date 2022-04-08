@@ -591,9 +591,14 @@ function irHaFormularioDeProductos(){
     for(let pais of radiosPaisesForm){
         datosResPaldoProductos[pais.value]={}
         for(let producto of productosFiltrados){
-            let descripcionProducto=producto.description.replace("<p>","").replace("</p>","").split("'").join("")
+            let descripcionProducto=producto.description
             let nombrePro=producto.name.split("'").join("")
             if(datosResPaldoProductos[pais.value]){
+                let traducciones=producto.traduccionesProducto.map(traduccion => {
+                    let jsonTraduccion={}
+                    jsonTraduccion[traduccion.iso_code]=traduccion.description
+                    return jsonTraduccion
+                })
                 datosResPaldoProductos[pais.value][pais.value+"_"+producto.id_product]={
                     sales_channel_id:"",
                     paisTalla:"",
@@ -603,6 +608,7 @@ function irHaFormularioDeProductos(){
                     urlImagen:producto.urlImagen,
                     idUrlImagen:producto.id_product,
                     descripcion:descripcionProducto,
+                    traduccionesProducto:traducciones,
                     brand_code:"null",
                     lenguaje:producto.iso_code,
                     outline:"null",
@@ -2002,7 +2008,7 @@ function generarFormatoZalado(){
                     },
                     "product_simples":[]
                 }
-                config.product_config_attributes.description["en"]=datosProductosForm[pais][producto].descripcion
+                config.product_config_attributes.description=datosProductosForm[pais][producto].traduccionesProducto
                 config.product_config_attributes.season_code=datosProductosForm[pais][producto].season_code
                 config.product_config_attributes["color_code.primary"]=datosProductosForm[pais][producto]["color_code.primary"].split("-")[0]
                 
@@ -2126,10 +2132,6 @@ function generarFormatoZalado(){
             
         }
     }
-
-
-
-
     // console.log("pais con mayor producto =>>>> ",paisConMayorProductos)
     console.log("datos finales =>>>> ",productosConFormato)
     // let consoleHtml=document.getElementById("consoleHtml")

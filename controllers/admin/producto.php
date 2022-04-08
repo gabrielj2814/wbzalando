@@ -248,12 +248,34 @@ class ProductoController extends ModuleAdminController{
             $productosPaginados[$contador]["atributos_producto"]=$this->consultarEansProductosCombinacion($productosPaginados[$contador]["id_product"]);
             $contador++;
         }
+        $contador2=0;
+        foreach($productosPaginados as $producto){
+            $buscar=["'","<p>","</p>","<\/p>"];
+            $remplazar=[""];
+            $speceText=str_replace($buscar,$remplazar,$productosPaginados[$contador2]["description"]);
+            $productosPaginados[$contador2]["description"]=$speceText;
+            $productosPaginados[$contador2]["traduccionesProducto"]=$this->consultarTraduccionesProducto($productosPaginados[$contador2]["id_product"]);
+            $contador2++;
+        }
         print(json_encode([
             // "datos" =>  $productos,
             "productosPaginados" =>  $productosPaginados,
             "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
             "totalRegistros" =>  count($productos),
         ]));
+    }
+
+    function consultarTraduccionesProducto($idProducto){
+        $SQL="
+        SELECT 
+        ps_product_lang.name,
+        ps_product_lang.description,
+        ps_lang.iso_code
+        FROM ps_product_lang,ps_lang
+        WHERE
+        ps_product_lang.id_product=$idProducto AND
+        ps_product_lang.id_lang=ps_lang.id_lang";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function consultarEansProductosCombinacion($idProducto){
@@ -368,6 +390,12 @@ class ProductoController extends ModuleAdminController{
             }
             for($contador3=0;$contador3<count($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"]);$contador3++){
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"];
+            }
+            foreach($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"] as $isoCode => $descripcion){
+                $buscar=["'","<p>","</p>","<\/p>"];
+                $remplazar=[""];
+                $speceText=str_replace($buscar,$remplazar,$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]);
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]=$speceText;
             }
             // set datos para el envio
             $curlController->setDatosPeticion($producto["producto"]);
