@@ -16,7 +16,8 @@ class ProductoController extends ModuleAdminController{
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
         $this->nombreTabla="ps_wbzalando_esquemas"; 
-        $this->modulo= EntityModule::getInstanceByName("wbzalando"); 
+        $this->modulo= EntityModule::getInstanceByName("wbzalando");
+        $this->name = 'wbzalando';
     }
 
     public function init()
@@ -357,6 +358,8 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function enviarProducto($productos){
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/utilidades.php');
+        $utilidades=new Utilidades();
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
         $endPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
@@ -392,11 +395,12 @@ class ProductoController extends ModuleAdminController{
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"];
             }
             foreach($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"] as $isoCode => $descripcion){
-                $buscar=["'","<p>","</p>","<\/p>","<br \/>"];
-                $remplazar=[""];
-                $speceText=str_replace($buscar,$remplazar,$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]);
-                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]=$speceText;
+                $texto=$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode];
+                $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]=$utilidades->removerElementos($utilidades->utf8_ansi($texto));
             }
+            $name=$producto["producto"]["product_model"]["product_model_attributes"]["name"];
+            $producto["producto"]["product_model"]["product_model_attributes"]["name"]=$utilidades->removerElementos($utilidades->utf8_ansi($name));
+            // ==============================================================
             // set datos para el envio
             $curlController->setDatosPeticion($producto["producto"]);
             $curlController->setdatosCabezera($header);
@@ -404,16 +408,16 @@ class ProductoController extends ModuleAdminController{
             if($producto["enviar"]==="true"){
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
-                $estadoDeProductos["productos_enviados"][]=[
-                    "respuestaServidor" => $respuesta,
-                    "estatuRespuestaApi" => $respuesta["estado"],
-                    "envio"=> true
-                ];
                 // $estadoDeProductos["productos_enviados"][]=[
-                //     "modeloProducto" => $producto["producto"]["product_model"]["merchant_product_model_id"],
-                //     "respuestaServidor" => true,
-                //     "estatuRespuestaApi" => true
+                //     "respuestaServidor" => $respuesta,
+                //     "estatuRespuestaApi" => $respuesta["estado"],
+                //     "envio"=> true
                 // ];
+                $estadoDeProductos["productos_enviados"][]=[
+                    "modeloProducto" => $producto["producto"]["product_model"]["merchant_product_model_id"],
+                    "respuestaServidor" => true,
+                    "estatuRespuestaApi" => true
+                ];
             }
             // destructurar producto
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
@@ -502,6 +506,8 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function guardarModeloProducto($producto){
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/utilidades.php');
+        $utilidades=new Utilidades();
         $SQL="
             INSERT INTO ps_wbzalando_modelo_producto(
                 id_modelo_producto, 
@@ -517,7 +523,7 @@ class ProductoController extends ModuleAdminController{
                 '".$producto["id_pais"]."',
                 '-',
                 '0',
-                '".json_encode($producto["product_model"])."'
+                '".$utilidades->removerElementos($utilidades->utf8_ansi(json_encode($producto["product_model"])))."'
             );
         ";
         return Db::getInstance()->execute($SQL);
@@ -530,6 +536,8 @@ class ProductoController extends ModuleAdminController{
     
     public function guardarConfigProducto($producto){
         $estado=true;
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/utilidades.php');
+        $utilidades=new Utilidades();
         foreach($producto["product_configs"] as $configuracionProducto){
             $SQL="
             INSERT INTO ps_wbzalando_configuracion_producto(
@@ -540,7 +548,7 @@ class ProductoController extends ModuleAdminController{
                 VALUES (
                     '". $configuracionProducto["datos_product_configs"]["merchant_product_config_id"]."',
                     '". $configuracionProducto["merchant_product_model_id"]."',
-                    '".json_encode($configuracionProducto["datos_product_configs"])."'
+                    '".$utilidades->removerElementos($utilidades->utf8_ansi(json_encode($configuracionProducto["datos_product_configs"])))."'
                 );
             ";
             if(!Db::getInstance()->execute($SQL)){
