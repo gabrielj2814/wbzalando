@@ -152,12 +152,44 @@ class ProductoController extends ModuleAdminController{
         $SQL2="";
         $productos=[];
         $fracmetoConsulta=[];
-        if($_POST["categoriaProducto"]!="null"){
-            $fracmetoConsulta[]="ps_category_product.id_category=".$_POST["categoriaProducto"];
+        if(array_key_exists("categoriaProducto",$_POST)){
+            if(count($_POST["categoriaProducto"])>0){
+                $textoSQLCategoria="";
+                $fracmentoCategoria=[];
+                if(count($_POST["categoriaProducto"])>1){
+                    foreach($_POST["categoriaProducto"] as $categoria){
+                        $fracmentoCategoria[]="ps_category_product.id_category=".$categoria;
+                    }
+                    $textoSQLCategoria=" ( ".join(" OR ",$fracmentoCategoria)." ) ";
+                }
+                else{
+                    $textoSQLCategoria=" ( "."ps_category_product.id_category=".$_POST["categoriaProducto"][0]." ) ";
+                }
+                $fracmetoConsulta[]=$textoSQLCategoria;
+                // $fracmetoConsulta[]="ps_category_product.id_category=".$_POST["categoriaProducto"];
+            }
         }
-        if($_POST["marcaProducto"]!="null"){
-            $fracmetoConsulta[]="ps_product.id_manufacturer=".$_POST["marcaProducto"];
+        // if($_POST["marcaProducto"]!="null"){
+        //     $fracmetoConsulta[]="ps_product.id_manufacturer=".$_POST["marcaProducto"];
+        // }
+        if(array_key_exists("marcaProducto",$_POST)){
+            if(count($_POST["marcaProducto"])>0){
+                $textoSQLMarca="";
+                $fracmentoMarca=[];
+                if(count($_POST["marcaProducto"])>1){
+                    foreach($_POST["marcaProducto"] as $marca){
+                        $fracmentoMarca[]="ps_product.id_manufacturer=".$marca;
+                    }
+                    $textoSQLMarca=" ( ".join(" OR ",$fracmentoMarca)." ) ";
+                }
+                else{
+                    $textoSQLMarca=" ( "."ps_product.id_manufacturer=".$_POST["marcaProducto"][0]." ) ";
+                }
+                $fracmetoConsulta[]=$textoSQLMarca;
+                // $fracmetoConsulta[]="ps_product.id_manufacturer=".$_POST["marcaProducto"];
+            }
         }
+        
         if($_POST["nombreProducto"]!=""){
             $fracmetoConsulta[]="ps_product_lang.name LIKE '%".$_POST["nombreProducto"]."%'";
         }
@@ -171,76 +203,157 @@ class ProductoController extends ModuleAdminController{
         $minimoRegistros=$_POST["minimo"];
         $pagina=$_POST["pagina"];
         $empezarPor=($pagina-1) * $minimoRegistros;
-        if($_POST["categoriaProducto"]!="null"){
+        if(array_key_exists("productosSeleccionados",$_POST)){
             
-            $SQL1="
-            SELECT 
-            ps_product_lang.name,
-            ps_product_lang.description,
-            ps_product.id_product,
-            ps_product.ean13,
-            ps_product.price,
-            ps_lang.iso_code
-            FROM 
-            ps_category_product,ps_product_lang,ps_product,ps_lang
-            WHERE
-            ".$condicion."
-            ps_product_lang.id_lang=".$this->id_idioma." AND
-            ps_product.id_product=ps_category_product.id_product AND
-            ps_product_lang.id_lang=ps_lang.id_lang AND
-            ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."
-            ";
-
-            $SQL2="
-            SELECT 
-            ps_product_lang.name,
-            ps_product_lang.description,
-            ps_product.id_product,
-            ps_product.ean13,
-            ps_product.price,
-            ps_lang.iso_code
-            FROM 
-            ps_category_product,ps_product_lang,ps_product,ps_lang
-            WHERE
-            ".$condicion."
-            ps_product_lang.id_lang=".$this->id_idioma." AND
-            ps_product.id_product=ps_category_product.id_product AND
-            ps_product_lang.id_lang=ps_lang.id_lang AND
-            ps_product_lang.id_product=ps_product.id_product";
         }
         else{
+            if(array_key_exists("categoriaProducto",$_POST)){
             
-            $SQL1="
-            SELECT 
-            ps_product_lang.name,
-            ps_product_lang.description,
-            ps_product.id_product,
-            ps_product.ean13,
-            ps_product.price,
-            ps_lang.iso_code
-            FROM ps_product_lang,ps_product,ps_lang
-            WHERE
-            ".$condicion."
-            ps_product_lang.id_lang=".$this->id_idioma." AND
-            ps_product_lang.id_lang=ps_lang.id_lang AND
-            ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
+                $SQL1="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM 
+                ps_category_product,ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$condicion."
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product.id_product=ps_category_product.id_product AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."
+                ";
 
-            $SQL2="
-            SELECT 
-            ps_product_lang.name,
-            ps_product_lang.description,
-            ps_product.id_product,
-            ps_product.ean13,
-            ps_product.price,
-            ps_lang.iso_code
-            FROM ps_product_lang,ps_product,ps_lang
-            WHERE
-            ".$condicion."
-            ps_product_lang.id_lang=".$this->id_idioma." AND
-            ps_product_lang.id_lang=ps_lang.id_lang AND
-            ps_product_lang.id_product=ps_product.id_product";
-            
+                $SQL2="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM 
+                ps_category_product,ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$condicion."
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product.id_product=ps_category_product.id_product AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product";
+            }
+            else{
+                
+                $SQL1="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$condicion."
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
+
+                $SQL2="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$condicion."
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product";
+                
+            }
         }
+
+
+
+
+
+
+        // if($_POST["categoriaProducto"]!="null"){
+            
+        //     $SQL1="
+        //     SELECT 
+        //     ps_product_lang.name,
+        //     ps_product_lang.description,
+        //     ps_product.id_product,
+        //     ps_product.ean13,
+        //     ps_product.price,
+        //     ps_lang.iso_code
+        //     FROM 
+        //     ps_category_product,ps_product_lang,ps_product,ps_lang
+        //     WHERE
+        //     ".$condicion."
+        //     ps_product_lang.id_lang=".$this->id_idioma." AND
+        //     ps_product.id_product=ps_category_product.id_product AND
+        //     ps_product_lang.id_lang=ps_lang.id_lang AND
+        //     ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."
+        //     ";
+
+        //     $SQL2="
+        //     SELECT 
+        //     ps_product_lang.name,
+        //     ps_product_lang.description,
+        //     ps_product.id_product,
+        //     ps_product.ean13,
+        //     ps_product.price,
+        //     ps_lang.iso_code
+        //     FROM 
+        //     ps_category_product,ps_product_lang,ps_product,ps_lang
+        //     WHERE
+        //     ".$condicion."
+        //     ps_product_lang.id_lang=".$this->id_idioma." AND
+        //     ps_product.id_product=ps_category_product.id_product AND
+        //     ps_product_lang.id_lang=ps_lang.id_lang AND
+        //     ps_product_lang.id_product=ps_product.id_product";
+        // }
+        // else{
+            
+        //     $SQL1="
+        //     SELECT 
+        //     ps_product_lang.name,
+        //     ps_product_lang.description,
+        //     ps_product.id_product,
+        //     ps_product.ean13,
+        //     ps_product.price,
+        //     ps_lang.iso_code
+        //     FROM ps_product_lang,ps_product,ps_lang
+        //     WHERE
+        //     ".$condicion."
+        //     ps_product_lang.id_lang=".$this->id_idioma." AND
+        //     ps_product_lang.id_lang=ps_lang.id_lang AND
+        //     ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
+
+        //     $SQL2="
+        //     SELECT 
+        //     ps_product_lang.name,
+        //     ps_product_lang.description,
+        //     ps_product.id_product,
+        //     ps_product.ean13,
+        //     ps_product.price,
+        //     ps_lang.iso_code
+        //     FROM ps_product_lang,ps_product,ps_lang
+        //     WHERE
+        //     ".$condicion."
+        //     ps_product_lang.id_lang=".$this->id_idioma." AND
+        //     ps_product_lang.id_lang=ps_lang.id_lang AND
+        //     ps_product_lang.id_product=ps_product.id_product";
+            
+        // }
         $productos=Db::getInstance()->executeS($SQL2);
         $productosPaginados=Db::getInstance()->executeS($SQL1);
         $productosPaginados=$this->generarUrlProducto($productosPaginados);
@@ -264,6 +377,9 @@ class ProductoController extends ModuleAdminController{
             "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
             "totalRegistros" =>  count($productos),
         ]));
+        // print(json_encode([
+        //     "datos" =>   $condicion,
+        // ]));
     }
 
     function consultarTraduccionesProducto($idProducto){
@@ -406,8 +522,8 @@ class ProductoController extends ModuleAdminController{
             $curlController->setdatosCabezera($header);
             // enviar producto
             if($producto["enviar"]==="true"){
-                $respuesta=$curlController->ejecutarPeticion("post",true);
-                error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
+                // $respuesta=$curlController->ejecutarPeticion("post",true);
+                // error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
                 // $estadoDeProductos["productos_enviados"][]=[
                 //     "respuestaServidor" => $respuesta,
                 //     "estatuRespuestaApi" => $respuesta["estado"],

@@ -48,15 +48,13 @@
 								<label class="control-label col-lg-12">
                                     Seleccione categoría de búsqueda
 								</label>
-                                <select id="categoriaProducto" name="categoriaProducto">
-                                    <span class="tree_categories_header margin-right">
+                                <select multiple class="class-select form-control" id="categoriaProducto" name="categoriaProducto">
                                     <option value="null">Seleccione Una Categoria</option>
                                     {foreach $categoriasProductos as $categoria}
                                         <option value="{$categoria["id_category"]}">{$categoria["name"]}</option>
                                     {/foreach}
                                 </select>
-                                </span>
-							</div>
+                            </div>
                             <div class="row">
                                 <label class="control-label col-lg-12">
                                     Total de resultados encontrados: <span id="totalResultados">0</span>
@@ -81,7 +79,7 @@
                                     Búsqueda por fabricante
 								</label>
 								<div class="col-xs-12">
-                                    <select id="marcaProducto" name="marcaProducto">
+                                    <select multiple class="class-select form-control" id="marcaProducto" name="marcaProducto">
                                         <option value="null">Seleccione Un Fabricante</option>
                                         {foreach $marcasProductos as $marca}
                                             <option value="{$marca["id_manufacturer"]}">{$marca["name"]}</option>

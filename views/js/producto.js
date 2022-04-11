@@ -366,13 +366,20 @@ function iniciarSlickDos(){
 function filtrarProductos(e){
     e.preventDefault()
     const linkControlador=document.getElementById("linkControlador").value;
-    let categoriaProducto=document.getElementById("categoriaProducto").value;
-    let marcaProducto=document.getElementById("marcaProducto").value;
+    let categoriaProducto=arrayOption(document.getElementById("categoriaProducto"));
+    let marcaProducto=arrayOption(document.getElementById("marcaProducto"));
     let $nombreProducto=document.getElementById("nombreProducto").value;
     let totalResultados=document.getElementById("totalResultados")
     let numeroDeProductos=document.getElementById("numeroDeProductos")
     $botonIrHaformulario.setAttribute("disabled","disabled")
     totalResultados.textContent="cargando... "
+    categoriaProducto=categoriaProducto.filter(option => option.selected===true)
+    marcaProducto=marcaProducto.filter(option => option.selected===true)
+    categoriaProducto=categoriaProducto.map(option => option.value)
+    marcaProducto=marcaProducto.map(option => option.value)
+    console.log("lista de categorias seleccionadas =>>>> ",categoriaProducto)
+    console.log("lista de mascas seleccionadas =>>>> ",marcaProducto)
+
     let pagina=1
     $.ajax({
         type: 'POST',
@@ -422,7 +429,6 @@ function filtrarProductos(e){
             else{
                 totalResultados.textContent="0"
             }
-            // insertarDatosTablaProducto(datos);
         },
         error: () => {
             totalResultados.textContent="0"
@@ -450,6 +456,14 @@ function insertarControlesPaginacion(){
         </svg>\
         </button></div>"
     controlesPaginacion.innerHTML=html;
+}
+
+function arrayOption(select){
+    let lista=[]
+    for(let option of select){
+        lista.push(option)
+    }
+    return lista
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
