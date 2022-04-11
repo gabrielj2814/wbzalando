@@ -372,7 +372,7 @@ class ProductoController extends ModuleAdminController{
             $contador2++;
         }
         print(json_encode([
-            // "datos" =>  $productos,
+            "todosLosProductos" =>  $productos,
             "productosPaginados" =>  $productosPaginados,
             "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
             "totalRegistros" =>  count($productos),
