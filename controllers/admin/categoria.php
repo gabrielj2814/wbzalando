@@ -3,6 +3,7 @@ include("curlController.php");
 include("logger.php");
 use Clases\CurlController;
 
+
 class CategoriaController extends ModuleAdminController{
 
     private $id_idioma;
@@ -12,6 +13,7 @@ class CategoriaController extends ModuleAdminController{
         parent::__construct();
         $this->bootstrap = true;
         $this->id_idioma = $this->context->language->id;
+        $this->name = 'wbzalando';
     }
 
     public function init()
@@ -311,10 +313,13 @@ class CategoriaController extends ModuleAdminController{
     }
     
     public function guardarDatosPropidad($id_propiedad_modelo,$datosPropiedad){
+        require_once(_PS_MODULE_DIR_.$this->name.'/libs/utilidades.php');
         foreach($datosPropiedad["response"]->items as $datos){
+            $utilidades=new Utilidades();
             $buscar=["'"];
             $remplazar=[""];
-            $speceText=str_replace($buscar,$remplazar,json_encode($datos));
+            // $speceText=str_replace($buscar,$remplazar,json_encode($datos));
+            $speceText=$utilidades->removerElementos($utilidades->utf8_ansi(json_encode($datos)));
             $SQL="";
             if(property_exists($datos,"value")){
                 if(property_exists($datos->value,"localized")){
