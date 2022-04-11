@@ -392,7 +392,7 @@ class ProductoController extends ModuleAdminController{
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"]=(int)$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["media"][$contador3]["media_sort_key"];
             }
             foreach($producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"] as $isoCode => $descripcion){
-                $buscar=["'","<p>","</p>","<\/p>"];
+                $buscar=["'","<p>","</p>","<\/p>","<br \/>"];
                 $remplazar=[""];
                 $speceText=str_replace($buscar,$remplazar,$producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]);
                 $producto["producto"]["product_model"]["product_configs"][0]["product_config_attributes"]["description"][$isoCode]=$speceText;
