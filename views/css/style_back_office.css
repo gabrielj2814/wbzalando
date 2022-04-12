@@ -18,7 +18,7 @@
     /* height: 100px; */
 }
 
-.preview-info-producto{
+.preview-info-producto,.preview-info-producto-filtrado{
     background-color: #fff;
     height: 130px;
 }
@@ -115,3 +115,7 @@
 .campo-obligatorio{
     color:red
 }
+
+/* css productos vista 1 envio de productos */
+
+

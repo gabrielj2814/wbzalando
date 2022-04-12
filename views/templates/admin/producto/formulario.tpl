@@ -135,7 +135,7 @@
                                     Buscar producto
                                 </button>
 
-                                <button style="margin-left:10px;" id="botonIrHaformulario" class="btn btn-success" disabled>
+                                <button style="margin-left:10px;" id="botonIrHaformulario" class="btn btn-success" onClick="filtrarProductosPaginar(1)" disabled>
                                     ir a formulario
                                 </button>
                             </div>
@@ -144,21 +144,40 @@
                 </div>
             </div>
         </div>
+        <div class="panel" id="panel-productos-filtrados" style="display:none">
+            <h3 class="margin-0 text-primary" style="margin-left: 15px !important;">Productos Filtrados</h3>
+             <div class="p-20">
+                <div class="modal-header" style="display: flex;">
+                    <div class="col-xs-1" style="font-size: 14px;"></div>
+                    <div class="col-xs-1" style="font-size: 14px;">Imagen</div>
+                    <div class="col-xs-1" style="font-size: 14px;">Nombre</div>
+                </div>
+            </div>
+            <div id="listaProductosFiltrados">
+                <!--
+                <div class="row preview-info-producto-filtrado">
+                    <div class="col-xs-1 contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">
+                        <label id="id_producto_filtro_check_true" class="ocultar" for="id_producto_filtro_check">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+                            </svg>
+                        </label>
+                        <label id="id_producto_filtro_check_false" class="" for="id_producto_filtro_check">
+                            <div class="checked-false"></div>
+                        </label>
+                        <input style="display:none;" id="id_producto_filtro_check" data-id-producto=""  onClick="cambiarEstadoDeSeleccionDeproductoFiltro(this)" type="checkbox" class="haEnviar"/>
+                    </div>
+                    <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <img class="col-xs-1 imagen-producto" src="https://th.bing.com/th/id/R.175180d2b0a42e8d7eeb9338ab543edd?rik=jLrs2hNjD%2b56pQ&pid=ImgRaw&r=0" alt=""/>
+                        <h3 class="margin-0 text-primary" style="margin-left: 15px !important;">nombre producto</h3>
+                    </div>
+                </div>
+                -->
+            
+            </div>
+        </div>
     </div>
 </div>
-
-
-<!--
-                    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">\
-                        <div class="form-group">\
-                            <label>Siglas Moneda</label>\
-                            <input id="'+codigoIdPaisIdproducto+'_moneda" type="text" class="form-control " data-id-producto="'+codigoIdPaisIdproducto+'" data-id-pais="'+idPais+'" data-campo="moneda" placeholder="" onKeyup="insertarDatosDeEnvioDeProduct(this)">\
-                        </div>\
-                    </div>\
--->
-
-
-
 
 
 

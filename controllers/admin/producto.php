@@ -190,8 +190,10 @@ class ProductoController extends ModuleAdminController{
             }
         }
         
-        if($_POST["nombreProducto"]!=""){
-            $fracmetoConsulta[]="ps_product_lang.name LIKE '%".$_POST["nombreProducto"]."%'";
+        if(array_key_exists("nombreProducto",$_POST)){
+            if($_POST["nombreProducto"]!=""){
+                $fracmetoConsulta[]="ps_product_lang.name LIKE '%".$_POST["nombreProducto"]."%'";
+            }
         }
         $condicion="";
         if(count($fracmetoConsulta)>1){
@@ -204,7 +206,49 @@ class ProductoController extends ModuleAdminController{
         $pagina=$_POST["pagina"];
         $empezarPor=($pagina-1) * $minimoRegistros;
         if(array_key_exists("productosSeleccionados",$_POST)){
-            
+            $textoSQLProducto="";
+            if(count($_POST["productosSeleccionados"])>0){
+                $fracmentoProducto=[];
+                if(count($_POST["productosSeleccionados"])>1){
+                    foreach($_POST["productosSeleccionados"] as $id_producto){
+                        $fracmentoProducto[]="ps_product.id_product=".$id_producto;
+                    }
+                    $textoSQLProducto=" ( ".join(" OR ",$fracmentoProducto)." ) ";
+                }
+                else{
+                    $textoSQLProducto=" ( "."ps_product.id_manufacturer=".$_POST["productosSeleccionados"][0]." ) ";
+                }
+            }
+
+            $SQL1="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$textoSQLProducto." AND
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
+
+                $SQL2="
+                SELECT 
+                ps_product_lang.name,
+                ps_product_lang.description,
+                ps_product.id_product,
+                ps_product.ean13,
+                ps_product.price,
+                ps_lang.iso_code
+                FROM ps_product_lang,ps_product,ps_lang
+                WHERE
+                ".$textoSQLProducto." AND
+                ps_product_lang.id_lang=".$this->id_idioma." AND
+                ps_product_lang.id_lang=ps_lang.id_lang AND
+                ps_product_lang.id_product=ps_product.id_product";
         }
         else{
             if(array_key_exists("categoriaProducto",$_POST)){
@@ -279,82 +323,8 @@ class ProductoController extends ModuleAdminController{
             }
         }
 
-
-
-
-
-
-        // if($_POST["categoriaProducto"]!="null"){
-            
-        //     $SQL1="
-        //     SELECT 
-        //     ps_product_lang.name,
-        //     ps_product_lang.description,
-        //     ps_product.id_product,
-        //     ps_product.ean13,
-        //     ps_product.price,
-        //     ps_lang.iso_code
-        //     FROM 
-        //     ps_category_product,ps_product_lang,ps_product,ps_lang
-        //     WHERE
-        //     ".$condicion."
-        //     ps_product_lang.id_lang=".$this->id_idioma." AND
-        //     ps_product.id_product=ps_category_product.id_product AND
-        //     ps_product_lang.id_lang=ps_lang.id_lang AND
-        //     ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."
-        //     ";
-
-        //     $SQL2="
-        //     SELECT 
-        //     ps_product_lang.name,
-        //     ps_product_lang.description,
-        //     ps_product.id_product,
-        //     ps_product.ean13,
-        //     ps_product.price,
-        //     ps_lang.iso_code
-        //     FROM 
-        //     ps_category_product,ps_product_lang,ps_product,ps_lang
-        //     WHERE
-        //     ".$condicion."
-        //     ps_product_lang.id_lang=".$this->id_idioma." AND
-        //     ps_product.id_product=ps_category_product.id_product AND
-        //     ps_product_lang.id_lang=ps_lang.id_lang AND
-        //     ps_product_lang.id_product=ps_product.id_product";
-        // }
-        // else{
-            
-        //     $SQL1="
-        //     SELECT 
-        //     ps_product_lang.name,
-        //     ps_product_lang.description,
-        //     ps_product.id_product,
-        //     ps_product.ean13,
-        //     ps_product.price,
-        //     ps_lang.iso_code
-        //     FROM ps_product_lang,ps_product,ps_lang
-        //     WHERE
-        //     ".$condicion."
-        //     ps_product_lang.id_lang=".$this->id_idioma." AND
-        //     ps_product_lang.id_lang=ps_lang.id_lang AND
-        //     ps_product_lang.id_product=ps_product.id_product LIMIT ".$empezarPor.",".$minimoRegistros."";
-
-        //     $SQL2="
-        //     SELECT 
-        //     ps_product_lang.name,
-        //     ps_product_lang.description,
-        //     ps_product.id_product,
-        //     ps_product.ean13,
-        //     ps_product.price,
-        //     ps_lang.iso_code
-        //     FROM ps_product_lang,ps_product,ps_lang
-        //     WHERE
-        //     ".$condicion."
-        //     ps_product_lang.id_lang=".$this->id_idioma." AND
-        //     ps_product_lang.id_lang=ps_lang.id_lang AND
-        //     ps_product_lang.id_product=ps_product.id_product";
-            
-        // }
         $productos=Db::getInstance()->executeS($SQL2);
+        $productos=$this->generarUrlProducto($productos);
         $productosPaginados=Db::getInstance()->executeS($SQL1);
         $productosPaginados=$this->generarUrlProducto($productosPaginados);
         $contador=0;
@@ -364,12 +334,21 @@ class ProductoController extends ModuleAdminController{
         }
         $contador2=0;
         foreach($productosPaginados as $producto){
-            $buscar=["'","<p>","</p>","<\/p>"];
+            $buscar=["'","<p>","</p>","<\/p>","<br \/>"];
             $remplazar=[""];
             $speceText=str_replace($buscar,$remplazar,$productosPaginados[$contador2]["description"]);
             $productosPaginados[$contador2]["description"]=$speceText;
             $productosPaginados[$contador2]["traduccionesProducto"]=$this->consultarTraduccionesProducto($productosPaginados[$contador2]["id_product"]);
             $contador2++;
+        }
+        $contador3=0;
+        foreach($productos as $producto){
+            $buscar=["'","<p>","</p>","<\/p>","<br \/>"];
+            $remplazar=[""];
+            $speceText=str_replace($buscar,$remplazar,$productos[$contador3]["description"]);
+            $productos[$contador3]["description"]=$speceText;
+            $productos[$contador3]["traduccionesProducto"]=$this->consultarTraduccionesProducto($productos[$contador3]["id_product"]);
+            $contador3++;
         }
         print(json_encode([
             "todosLosProductos" =>  $productos,
@@ -377,10 +356,8 @@ class ProductoController extends ModuleAdminController{
             "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
             "totalRegistros" =>  count($productos),
         ]));
-        // print(json_encode([
-        //     "datos" =>   $condicion,
-        // ]));
     }
+    
 
     function consultarTraduccionesProducto($idProducto){
         $SQL="

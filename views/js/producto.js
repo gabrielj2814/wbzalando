@@ -1,5 +1,6 @@
 // variables globales
 let listaProductos={};
+let listaDeProductosFiltro=[];
 let productosSeleccionados=[];
 let productosFiltrados=[];
 let datosResPaldoProductos={}
@@ -398,45 +399,81 @@ function filtrarProductos(e){
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta));
             totalResultados.textContent=respuestaJson.totalRegistros.toString()
-            console.log("datosssssssssssssssssssssssssssssssss =>>>>>>>>>>>>>>>>> ",respuestaJson)
+            console.log("datoss =>>>>>>>>>>>>>>>>> ",respuestaJson)
             if(respuestaJson.totalRegistros>0){
+                document.getElementById("panel-productos-filtrados").style.display="block"
                 $botonIrHaformulario.removeAttribute("disabled")
-                productosFiltrados=respuestaJson.productosPaginados
-                if(respuestaJson.totalRegistros>0){
-                    insertarControlesPaginacion();
-                    let paginaAnt=document.getElementById("pagina-ant")
-                    let paginaSig=document.getElementById("pagina-sig")
-                    paginaSig.style.display="block"
-                    paginaAnt.style.display="block"
-                    if(parseInt(pagina)===respuestaJson.totalDePagina){
-                        paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
-                        paginaSig.style.display="none"
-                    }
-                    else if(parseInt(pagina)<respuestaJson.totalDePagina){
-                        paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
-                    }
-                    if(parseInt(pagina)===1){
-                        paginaAnt.setAttribute("data-numero-pagina",1)
-                        paginaAnt.style.display="none"
-                    }
-                    else if(parseInt(pagina)<=respuestaJson.totalDePagina){
-                        paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
-                    }
-                    insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
-                }
+                // productosFiltrados=respuestaJson.productosPaginados
+                insertarProductosFiltrados(respuestaJson.todosLosProductos)
+                // if(respuestaJson.totalRegistros>0){
+                //     insertarControlesPaginacion();
+                //     let paginaAnt=document.getElementById("pagina-ant")
+                //     let paginaSig=document.getElementById("pagina-sig")
+                //     paginaSig.style.display="block"
+                //     paginaAnt.style.display="block"
+                //     if(parseInt(pagina)===respuestaJson.totalDePagina){
+                //         paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
+                //         paginaSig.style.display="none"
+                //     }
+                //     else if(parseInt(pagina)<respuestaJson.totalDePagina){
+                //         paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
+                //     }
+                //     if(parseInt(pagina)===1){
+                //         paginaAnt.setAttribute("data-numero-pagina",1)
+                //         paginaAnt.style.display="none"
+                //     }
+                //     else if(parseInt(pagina)<=respuestaJson.totalDePagina){
+                //         paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
+                //     }
+                //     insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
+                // }
                 
             }
             else{
+                document.getElementById("panel-productos-filtrados").style.display="none"
                 totalResultados.textContent="0"
             }
         },
         error: () => {
             totalResultados.textContent="0"
+            document.getElementById("panel-productos-filtrados").style.display="none"
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
     datosProductosForm={}
 
+}
+
+function insertarProductosFiltrados(todosLosProductos){
+    listaDeProductosFiltro=todosLosProductos
+    let html=""
+    let listaProductosFiltrados=document.getElementById("listaProductosFiltrados")
+    listaProductosFiltrados.innerHTML=""
+    for(let producto of listaDeProductosFiltro){
+        let buscarProducto=productosSeleccionados.filter(productoFiltrado => productoFiltrado.id_product===producto.id_product)
+        if(buscarProducto.length===0){
+            html+='\
+            <div class="row preview-info-producto-filtrado" id="fila_producto_'+producto.id_product+'">\
+                <div class="col-xs-1 contenedor-check-envio col-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">\
+                    <label id="'+producto.id_product+'_filtro_check_true" class="ocultar" for="'+producto.id_product+'_filtro_check">\
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16">\
+                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>\
+                        </svg>\
+                    </label>\
+                    <label id="'+producto.id_product+'_filtro_check_false" class="" for="'+producto.id_product+'_filtro_check">\
+                        <div class="checked-false"></div>\
+                    </label>\
+                    <input style="display:none;" id="'+producto.id_product+'_filtro_check"  value="'+producto.id_product+'" onClick="agregarProductoHaLaListaDeSeleccionados(this)" type="checkbox" class="haEnviar"/>\
+                </div>\
+                <div class="contenedor-nombre-producto col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">\
+                    <img class="col-xs-1 imagen-producto" src="'+producto.urlImagen+'" alt=""/>\
+                    <h3 class="margin-0 text-primary" style="margin-left: 15px !important;">'+producto.name+'</h3>\
+                </div>\
+            </div>\
+            '
+        }
+    }
+    listaProductosFiltrados.innerHTML=html
 }
 
 function insertarControlesPaginacion(){
@@ -521,13 +558,14 @@ function filtrarProductosPaginar(a){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
     }
     const linkControlador=document.getElementById("linkControlador").value;
-    let categoriaProducto=document.getElementById("categoriaProducto").value;
-    let marcaProducto=document.getElementById("marcaProducto").value;
-    let $nombreProducto=document.getElementById("nombreProducto").value;
-    let totalResultados=document.getElementById("totalResultados")
+    // let categoriaProducto=document.getElementById("categoriaProducto").value;
+    // let marcaProducto=document.getElementById("marcaProducto").value;
+    // let $nombreProducto=document.getElementById("nombreProducto").value;
+    // let totalResultados=document.getElementById("totalResultados")
     let numeroDeProductos=document.getElementById("numeroDeProductos")
-    $botonIrHaformulario.setAttribute("disabled","disabled")
-    totalResultados.textContent="cargando... "
+    // $botonIrHaformulario.setAttribute("disabled","disabled")
+    // totalResultados.textContent="cargando... "
+    let listaIdProductos=productosSeleccionados.map(producto => producto.id_product)
     $.ajax({
         type: 'POST',
         cache: false,
@@ -536,18 +574,19 @@ function filtrarProductosPaginar(a){
         data: {
             ajax: true,
             action: 'getconsultarproductoconfiltros',
-            categoriaProducto,
-            marcaProducto,
-            nombreProducto:$nombreProducto,
+            // categoriaProducto,
+            // marcaProducto,
+            // nombreProducto:$nombreProducto,
+            productosSeleccionados:listaIdProductos,
             minimo:numeroDeProductos.value,
             pagina
         },
         success: (respuesta) => {
             let respuestaJson=JSON.parse(JSON.stringify(respuesta));
-            totalResultados.textContent=respuestaJson.totalRegistros.toString()
+            // totalResultados.textContent=respuestaJson.totalRegistros.toString()
             console.log("datosssssssssssssssssssssssssssssssss =>>>>>>>>>>>>>>>>> ",respuestaJson)
             if(respuestaJson.totalRegistros>0){
-                $botonIrHaformulario.removeAttribute("disabled")
+                // $botonIrHaformulario.removeAttribute("disabled")
                 productosFiltrados=respuestaJson.productosPaginados
                 irHaFormularioDeProductos()
                 if(respuestaJson.totalRegistros>0){
@@ -579,7 +618,7 @@ function filtrarProductosPaginar(a){
             }
         },
         error: () => {
-            totalResultados.textContent="0"
+            // totalResultados.textContent="0"
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
@@ -893,24 +932,6 @@ function cargarProductosPorPaisSeleccionado(a){
 //  ====================================
 //  ====================================
 // cargar los datos de los productos que an sido ingresados en el formulario 
-
-function recurcibaMostrarTallas(idProducto,datosProducto){
-    if(document.getElementById(idProducto+"_talla").children.length>0){
-        let selectTallas=document.getElementById(idProducto+"_talla")
-        for(let talla of datosProducto.tallas){
-            for(let opcion of selectTallas){
-                console.log("que verga mano =>>>>> ",opcion)
-                if(opcion.value===talla){
-                    opcion.selected=true
-                }
-            }
-        }
-    }
-    else{
-        recurcibaMostrarTallas(idProducto,datosProducto)
-    }
-}
-
 function cargarDatosGuardados(pais){
     if(datosProductosForm[pais]){
         for(let idProducto in datosProductosForm[pais]){
@@ -927,11 +948,6 @@ function cargarDatosGuardados(pais){
                     consultarTallasPorPaisYCategoriaTalla(categoriaTalla);
                     datosProductosForm[pais][idProducto].tallas=tallasRespaldo
                     document.getElementById(idProducto+"_supplier_color").value=datosProducto.supplier_color
-                    // let selectTallas=document.getElementById(idProducto+"_talla")
-                    // console.log("select =>>>>> ",selectTallas)
-                    // recurcibaMostrarTallas(idProducto,datosProducto)
-
-                    
 
                     document.getElementById(idProducto+"_moneda").value=datosProducto.moneda
                     document.getElementById(idProducto+"_precio_regular").value=datosProducto.precioRegular
@@ -939,10 +955,6 @@ function cargarDatosGuardados(pais){
                     document.getElementById(idProducto+"_fecha_inicio_promocion").value=datosProducto.fechaInicioPromocion
                     
                     document.getElementById(idProducto+"_fecha_final_promocion").value=datosProducto.fechaFinalPromocion
-                    // if(document.getElementById(idProducto+"_material")){
-                    //     document.getElementById(idProducto+"_material").value=datosProducto.material_code
-                    //     document.getElementById(idProducto+"_material_precentage").value=(datosProducto.material_percentage!=="null")?datosProducto.material_percentage:""
-                    // }
 
                     let setelctTargetAgeGroups=document.getElementById(idProducto+"_target_age_groups")
                     seleccionarValoresSelectMultiples(setelctTargetAgeGroups,datosProducto.target_age_groups)
@@ -1288,7 +1300,7 @@ function capturarImagenGaleria(a){
     datosProductosForm[idPais][idProducto].listIdImagenesGaleria=listaIdImagenes
 }
 
-// insertar elementos html a los select de los formulario de prodcuto
+
 function insertarFotosModal(a){
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
@@ -1322,7 +1334,7 @@ function insertarFotosModal(a){
         }
     }
 }
-
+// insertar elementos html a los select de los formulario de prodcuto
 function insertarCategoriasSelect(){
     let $camposCategorias=document.querySelectorAll(".campo-categoria")
     for(let $campoCategorias of $camposCategorias){
@@ -1675,7 +1687,6 @@ function cargarDatosEdicionGlobalColor(pais){
                 insertarCategoriasTallasZalando()
                 insertarTargetGendersCodeSelect()
                 insertarTargetAgeGroupsCodeSelect()
-                // insertarMaterialesContruccionCodeSelect()
                 insertarFutter()
                 insertarUpperMaterial()
                 insertarSoleMaterial()
@@ -1750,7 +1761,7 @@ function consultarTallasPorPaisYCategoriaTalla(a){
         });
     }
 }
-
+// ==========================================
 function cargarProductosHaEliminarPorPais(a){
     indicarPaisSeleccionado(a)
     console.table("lista de productus a eliminar =>>>> ",datosProductosForm[a.value])
@@ -1829,6 +1840,23 @@ function cambiarEstadoDeEnvioDeProduct(a){
     datosProductosForm[idPais][idProducto][campo]=a.checked
 }
 
+function agregarProductoHaLaListaDeSeleccionados(a){
+    let buscarProducto=listaDeProductosFiltro.filter(producto => producto.id_product===a.value)
+    console.log("producto encontrado => ",buscarProducto)
+    if(a.checked===true){
+        productosSeleccionados.push(buscarProducto[0])
+        document.getElementById(a.value+"_filtro_check_true").classList.remove("ocultar")
+        document.getElementById(a.value+"_filtro_check_false").classList.add("ocultar")
+        document.getElementById("fila_producto_"+a.value).remove()
+    }
+    // else{
+    //     productosSeleccionados=productosSeleccionados.filter(producto => producto.id_product!==a.value)
+    //     document.getElementById(a.value+"_filtro_check_true").classList.add("ocultar")
+    //     document.getElementById(a.value+"_filtro_check_false").classList.remove("ocultar")
+    // }
+    console.log("productos selecionados ===>>>> ",productosSeleccionados)
+}
+
 function insertarDatosDeEnvioDeProduct(a){
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
@@ -1885,7 +1913,7 @@ function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
         combinaciones
     }
 }
-
+// aplicar edición global
 function aplicarEdicionGlobal(){
     let $edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
     let $edicionGlobalSeasonCode=document.getElementById("edicionGlobalSeasonCode")
@@ -2171,13 +2199,7 @@ function generarFormatoZalado(){
             
         }
     }
-    // console.log("pais con mayor producto =>>>> ",paisConMayorProductos)
     console.log("datos finales =>>>> ",productosConFormato)
-    // let consoleHtml=document.getElementById("consoleHtml")
-    // consoleHtml.innerHTML=""
-    // for(let {producto} of productosConFormato ){
-    //     consoleHtml.innerHTML+=JSON.stringify(producto)+"</br></br></br></br>"
-    // }
     enviarDatos(productosConFormato)
 }
 
@@ -2273,7 +2295,8 @@ function mostrarAlerta(colorAlerta,mensaje){
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);
 $nombreProducto.addEventListener("keyup", filtrarProductos);
-$botonIrHaformulario.addEventListener("click",irHaFormularioDeProductos)
+// $botonIrHaformulario.addEventListener("click",irHaFormularioDeProductos)
+// $botonIrHaformulario.addEventListener("click",filtrarProductosPaginar)
 $botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
 $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
