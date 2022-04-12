@@ -200,7 +200,7 @@ class TallaController extends ModuleAdminController{
         $categoriaGrupo=[];
         foreach($Categorias->items as $item){
             $categoriaGrupo[]=[
-                "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group,
+                "nombreGrupo" => $item->_meta->dimension->category." ".$item->_meta->dimension->group." - ".$item->_meta->descriptions->en,
                 "codigo_size_group" => $item->label
             ];
         }

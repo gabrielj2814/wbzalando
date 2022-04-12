@@ -1450,7 +1450,7 @@ function insertarFutter(){
         let html="<option value='null'>Seleccione</option>"
         for(let futter of datos_futter){
             futter=JSON.parse(futter)
-            let option='<option value="'+futter.label+'">'+futter.value.localized.es+'</option>'
+            let option='<option value="'+futter.label+'">'+futter.value.localized.en+'</option>'
             html+=option
         }
         $camposFutter.innerHTML=html
@@ -1464,7 +1464,7 @@ function insertarUpperMaterial(){
         let html="<option value='null'>Seleccione</option>"
         for(let upper_material of datos_upper_material){
             upper_material=JSON.parse(upper_material)
-            let option='<option value="'+upper_material.label+'">'+upper_material.value.localized.es+'</option>'
+            let option='<option value="'+upper_material.label+'">'+upper_material.value.localized.en+'</option>'
             html+=option
         }
         $camposUpperMaterial.innerHTML=html
@@ -1478,7 +1478,7 @@ function insertarSoleMaterial(){
         let html="<option value='null'>Seleccione</option>"
         for(let sole_material of datos_sole_material){
             sole_material=JSON.parse(sole_material)
-            let option='<option value="'+sole_material.label+'">'+sole_material.value.localized.es+'</option>'
+            let option='<option value="'+sole_material.label+'">'+sole_material.value.localized.en+'</option>'
             html+=option
         }
         $camposSoleMaterial.innerHTML=html
@@ -1492,7 +1492,7 @@ function insertarDecksohle(){
         let html="<option value='null'>Seleccione</option>"
         for(let decksohle of datos_decksohle){
             decksohle=JSON.parse(decksohle)
-            let option='<option value="'+decksohle.label+'">'+decksohle.value.localized.es+'</option>'
+            let option='<option value="'+decksohle.label+'">'+decksohle.value.localized.en+'</option>'
             html+=option
         }
         $camposDecksohle.innerHTML=html
