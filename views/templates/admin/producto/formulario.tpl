@@ -57,8 +57,51 @@
                             </div>
                             <div class="row">
                                 <label class="control-label col-lg-12">
-                                    Total de resultados encontrados: <span id="totalResultados">0</span>
+                                    Total de resultados encontrados: <span id="totalResultados" class="total-resultados">0</span>
                                 </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12"">
+                                    <div class="ventana-lista-de-productos">
+                                        <div class="encabezado-lista-productos-seleccionados">
+                                            <label class="control-label contendor-total-productos-seleccionados">
+                                                Total de productos seleccionados: <span id="totalDeProductosSeLeccionados" class="total-de-productos-seLeccionados">0</span>
+                                            </label>
+                                            <div class="contenedor-toggle-lista-productos">
+                                                <label for="checkboxVentana" id="arrowUpVentana" class="ocultar" >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="arrows-ventana bi bi-caret-up-square-fill" viewBox="0 0 16 16">
+                                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4 9h8a.5.5 0 0 0 .374-.832l-4-4.5a.5.5 0 0 0-.748 0l-4 4.5A.5.5 0 0 0 4 11z"/>
+                                                    </svg>
+                                                </label>
+                                                <label for="checkboxVentana"  id="arrowDownVentana" >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="arrows-ventana bi bi-caret-down-square-fill" viewBox="0 0 16 16">
+                                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6H4z"/>
+                                                    </svg>
+                                                </label>
+                                                <input type="checkbox" id="checkboxVentana" onClick="toggleVentanaListaDeProductos(this)" hidden/>
+                                            </div>
+                                        </div>
+                                        <div class="contenedor-lista-de-productos ocultar" id="contenedorListaDeProductos">
+                                            <!--
+                                            <div class="fila-producto-seleccionado" >
+                                                <div>
+                                                    <button class="btn btn-danger" style="margin-top: 0px;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="nombre-producto-seleccionado" style="margin-left: 20px;">
+                                                    nombre producto
+                                                </div>
+                                            </div>
+                                            -->
+                                            
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 						</div>
 

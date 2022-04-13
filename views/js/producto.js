@@ -366,6 +366,10 @@ function iniciarSlickDos(){
 // function para filtrar los productos de la primera vista
 function filtrarProductos(e){
     e.preventDefault()
+    consultarProductosProFiltros()
+}
+
+function consultarProductosProFiltros(){
     const linkControlador=document.getElementById("linkControlador").value;
     let categoriaProducto=arrayOption(document.getElementById("categoriaProducto"));
     let marcaProducto=arrayOption(document.getElementById("marcaProducto"));
@@ -403,31 +407,7 @@ function filtrarProductos(e){
             if(respuestaJson.totalRegistros>0){
                 document.getElementById("panel-productos-filtrados").style.display="block"
                 $botonIrHaformulario.removeAttribute("disabled")
-                // productosFiltrados=respuestaJson.productosPaginados
                 insertarProductosFiltrados(respuestaJson.todosLosProductos)
-                // if(respuestaJson.totalRegistros>0){
-                //     insertarControlesPaginacion();
-                //     let paginaAnt=document.getElementById("pagina-ant")
-                //     let paginaSig=document.getElementById("pagina-sig")
-                //     paginaSig.style.display="block"
-                //     paginaAnt.style.display="block"
-                //     if(parseInt(pagina)===respuestaJson.totalDePagina){
-                //         paginaSig.setAttribute("data-numero-pagina",respuestaJson.totalDePagina)
-                //         paginaSig.style.display="none"
-                //     }
-                //     else if(parseInt(pagina)<respuestaJson.totalDePagina){
-                //         paginaSig.setAttribute("data-numero-pagina",(parseInt(pagina)+1))
-                //     }
-                //     if(parseInt(pagina)===1){
-                //         paginaAnt.setAttribute("data-numero-pagina",1)
-                //         paginaAnt.style.display="none"
-                //     }
-                //     else if(parseInt(pagina)<=respuestaJson.totalDePagina){
-                //         paginaAnt.setAttribute("data-numero-pagina",(parseInt(pagina)-1))
-                //     }
-                //     insertarBotonesPaginasPaginacion(pagina,respuestaJson.totalDePagina)
-                // }
-                
             }
             else{
                 document.getElementById("panel-productos-filtrados").style.display="none"
@@ -441,7 +421,6 @@ function filtrarProductos(e){
         }
     });
     datosProductosForm={}
-
 }
 
 function insertarProductosFiltrados(todosLosProductos){
@@ -566,6 +545,7 @@ function filtrarProductosPaginar(a){
     // $botonIrHaformulario.setAttribute("disabled","disabled")
     // totalResultados.textContent="cargando... "
     let listaIdProductos=productosSeleccionados.map(producto => producto.id_product)
+    console.log("datos a enviar ",listaIdProductos)
     $.ajax({
         type: 'POST',
         cache: false,
@@ -1845,17 +1825,71 @@ function agregarProductoHaLaListaDeSeleccionados(a){
     console.log("producto encontrado => ",buscarProducto)
     if(a.checked===true){
         productosSeleccionados.push(buscarProducto[0])
+        agregarProductoListaDeProductosSeleccionados(buscarProducto[0])
         document.getElementById(a.value+"_filtro_check_true").classList.remove("ocultar")
         document.getElementById(a.value+"_filtro_check_false").classList.add("ocultar")
         document.getElementById("fila_producto_"+a.value).remove()
     }
-    // else{
-    //     productosSeleccionados=productosSeleccionados.filter(producto => producto.id_product!==a.value)
-    //     document.getElementById(a.value+"_filtro_check_true").classList.add("ocultar")
-    //     document.getElementById(a.value+"_filtro_check_false").classList.remove("ocultar")
-    // }
     console.log("productos selecionados ===>>>> ",productosSeleccionados)
+    document.getElementById("totalDeProductosSeLeccionados").textContent=productosSeleccionados.length.toString()
+    scrollVentanaProductos()
 }
+
+function agregarProductoListaDeProductosSeleccionados(producto){
+    let contenedorListaDeProductos=document.getElementById("contenedorListaDeProductos")
+    let html='\
+    <div class="fila-producto-seleccionado" id="producto_seleccionado_'+producto.id_product+'">\
+        <div>\
+            <button class="btn btn-danger" style="margin-top: 0px;" data-id-producto-seleccionado="'+producto.id_product+'" onClick="removerProductoDeLaListaDeSeleccionados(this)">\
+                <svg data-id-producto-seleccionado="'+producto.id_product+'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">\
+                    <path data-id-producto-seleccionado="'+producto.id_product+'" d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>\
+                    <path data-id-producto-seleccionado="'+producto.id_product+'" fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>\
+                </svg>\
+            </button>\
+        </div>\
+        <div class="nombre-producto-seleccionado" style="margin-left: 20px;">\
+            '+producto.name+'\
+        </div>\
+    </div>\
+    '
+    contenedorListaDeProductos.innerHTML+=html
+}
+
+function removerProductoDeLaListaDeSeleccionados(a){
+    let idProducto=a.getAttribute("data-id-producto-seleccionado")
+    document.getElementById("producto_seleccionado_"+idProducto).remove()
+    let capturarProdcuto=productosSeleccionados.filter(producto => producto.id_product===idProducto)
+    productosSeleccionados=productosSeleccionados.filter(producto => producto.id_product!==idProducto)
+    console.log("productos restantes  =>>> ",productosSeleccionados)
+    document.getElementById("totalDeProductosSeLeccionados").textContent=productosSeleccionados.length.toString()
+    scrollVentanaProductos()
+    consultarProductosProFiltros()
+}
+
+function toggleVentanaListaDeProductos(a){
+    let ventana=document.getElementById("contenedorListaDeProductos")
+    if(a.checked===true){
+        document.getElementById("arrowDownVentana").classList.toggle("ocultar")
+        document.getElementById("arrowUpVentana").classList.toggle("ocultar")
+        ventana.classList.remove("ocultar")
+    }
+    else{
+        ventana.classList.add("ocultar")
+        document.getElementById("arrowDownVentana").classList.toggle("ocultar")
+        document.getElementById("arrowUpVentana").classList.toggle("ocultar")
+    }
+}
+
+function scrollVentanaProductos(){
+    let minimo=3
+    let ventana=document.getElementById("contenedorListaDeProductos")
+    if(productosSeleccionados.length>minimo){
+        ventana.classList.add("scroll-ventana-productos")
+    }
+    else{
+        ventana.classList.remove("scroll-ventana-productos")
+    }
+} 
 
 function insertarDatosDeEnvioDeProduct(a){
     let idPais=a.getAttribute("data-id-pais")
@@ -2290,7 +2324,7 @@ function mostrarAlerta(colorAlerta,mensaje){
     </div>\
     '
     $contenedorAlerta.innerHTML+=htmlAlert
-}
+}  
 
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);

@@ -216,7 +216,7 @@ class ProductoController extends ModuleAdminController{
                     $textoSQLProducto=" ( ".join(" OR ",$fracmentoProducto)." ) ";
                 }
                 else{
-                    $textoSQLProducto=" ( "."ps_product.id_manufacturer=".$_POST["productosSeleccionados"][0]." ) ";
+                    $textoSQLProducto=" ( "."ps_product.id_product=".$_POST["productosSeleccionados"][0]." ) ";
                 }
             }
 
