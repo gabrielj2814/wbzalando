@@ -495,8 +495,8 @@ function consultarPaisesZalando(){
             if(datos.respuestaServidor.status && datos.respuestaServidor.status==401){
                 console.log("respuesta en 401 =>>>>> " ,datos.respuestaServidor);
             }
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
         },
         error: () => {
             // alert("error al conectar con el servidor");
