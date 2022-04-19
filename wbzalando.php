@@ -38,7 +38,7 @@ class WbZalando extends Module{
         return (
             parent::uninstall() &&
             SetupWbZalando::desintalarTabs() && 
-            SetupWbZalando::eliminarTablas($this->tablaModulo) &&
+            // SetupWbZalando::eliminarTablas($this->tablaModulo) &&
             $this->unregisterHook("displayBackOfficeHeader") && 
             SetupWbZalando::eliminarVariablesDeConfiguracion());
     }
