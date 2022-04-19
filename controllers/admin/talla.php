@@ -42,10 +42,22 @@ class TallaController extends ModuleAdminController{
         $respuesta_servidor=["respuestaServidor" => []];
         $tallaNoAsociadas=[];
         foreach($_POST["asociacion"] as $talla){
-            $respuestaDB=$this->registrar($talla["id_attribute"],$talla["codigo_size_group"],$talla["codigo_pais"],$talla["talla_zalando"]);
-            if(!$respuestaDB){
-                $tallaNoAsociadas[]=$talla;
+            $busqueda=$this->consultarPorIadAtributoPorGrupoYPorPais($talla["id_attribute"],$talla["codigo_size_group"],$talla["codigo_pais"]);
+            if(count($busqueda)>0){
+                if($talla["talla_zalando"]!==$busqueda[0]["talla_zalando"]){
+                    $respuestaDB=$this->actualizar($busqueda[0]["id_talla_asociacion"],$talla["id_attribute"],$talla["codigo_pais"],$talla["codigo_size_group"],$talla["talla_zalando"]);
+                    if(!$respuestaDB){
+                        $tallaNoAsociadas[]=$talla;
+                    }
+                }
             }
+            else{
+                $respuestaDB=$this->registrar($talla["id_attribute"],$talla["codigo_size_group"],$talla["codigo_pais"],$talla["talla_zalando"]);
+                if(!$respuestaDB){
+                    $tallaNoAsociadas[]=$talla;
+                }
+            }
+
         }
         $respuesta_servidor["respuestaServidor"]["tallaNoAsociadas"]=$tallaNoAsociadas;
         print(json_encode($respuesta_servidor));
@@ -65,6 +77,11 @@ class TallaController extends ModuleAdminController{
             '".$talla_zalando."'
         )";
         return Db::getInstance()->execute($SQL);
+    }
+
+    public function consultarPorIadAtributoPorGrupoYPorPais($idAtributo,$grupo,$pais){
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_talla,ps_attribute_lang WHERE ps_attribute_lang.id_lang=".$this->id_idioma." AND ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_talla.id_attribute AND ps_wbzalando_asociacion_talla.id_attribute=".$idAtributo." AND ps_wbzalando_asociacion_talla.codigo_size_group='".$grupo."' AND ps_wbzalando_asociacion_talla.codigo_pais='".$pais."';";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function ajaxProcessGetConsultarTodo(){

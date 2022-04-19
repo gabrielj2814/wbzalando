@@ -12,6 +12,7 @@ let datosTest=[
 let paises=[];
 let categoriaTallas=[];
 let tallas=[];
+let tallasAsociadas=[]
 
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
@@ -64,10 +65,11 @@ function registrar(){
             asociacion:arrayTallas
         },
         success: (respuesta) => {
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
             console.log(respuesta);
             mostrarAlerta("alert-success","Tallas registradas")
+            consultarTallasAsociadas()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
@@ -142,7 +144,14 @@ function crearElementosFormulario(tallasAtributos,codigoDeGrupoTallaZalando,tall
     for(let talla of tallasAtributos){
         let opciones="";
         for(let tallaZalando of tallasZalandoFiltrdas){
-            opciones+="<option value='"+tallaZalando+"'>"+tallaZalando+"</option>"
+            let busquedaCombinacion=tallasAsociadas.filter(combinacion => combinacion.id_attribute===talla.id_attribute && combinacion.codigo_pais===pais && combinacion.codigo_size_group===codigoDeGrupoTallaZalando && combinacion.talla_zalando===tallaZalando)
+            // console.log("talla encontrada =>>>>> ",busquedaCombinacion)
+            if(busquedaCombinacion.length>0){
+                opciones+="<option value='"+tallaZalando+"' selected >"+tallaZalando+"</option>"
+            }
+            else{
+                opciones+="<option value='"+tallaZalando+"'>"+tallaZalando+"</option>"
+            }
         }
         let selectTallaZalando="\
             <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'><div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'><h4>"+talla.name+"</h4></div>\
@@ -297,6 +306,39 @@ async function consultarCategoriasTalla(){
             categoriaTallas=datos.respuestaServidor;
             console.log("categorias de tallas filtrados =>>> ",categoriaTallas);
             cargarCategoriasTallasZalando(categoriaTallas)
+            consultarTallasAsociadas();
+            // consultarPaises();
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+    return categoriaTallas
+}
+
+
+async function consultarTallasAsociadas(){
+    preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
+    const linkControlador=document.getElementById("linkControlador").value;
+    let categoriaTallas=[];
+    await $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
+            console.log("tallas asociadas =>>> ",datos.datos)
+            tallasAsociadas=datos.datos
             // consultarPaises();
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
