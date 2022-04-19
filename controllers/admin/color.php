@@ -81,9 +81,20 @@ class ColorController extends ModuleAdminController{
         $respuesta_servidor=["respuestaServidor" => []];
         $colorNoAsociados=[];
         foreach($_POST["asociacion"] as $color){
-            $respuestaDB=$this->registrar($color["id_attribute"],$color["codigo_color"],$color["codigo_pais"],$color["color_zalando"]);
-            if(!$respuestaDB){
-                $colorNoAsociados[]=$color;
+            $busquedaAsociacion=$this->consultarExitenciaDeAtributoAsociadoPorAtributoPs($color["id_attribute"]);
+            if(count($busquedaAsociacion)>0){
+                if($color["codigo_color"]!==$busquedaAsociacion[0]["codigo_color"]){
+                    $respuestaDB=$this->actualizar($busquedaAsociacion[0]["id_color_asociacion"],$color["id_attribute"],$color["codigo_color"],$color["codigo_pais"],$color["color_zalando"]);
+                    if(!$respuestaDB){
+                        $colorNoAsociados[]=$color;
+                    }
+                }
+            }
+            else{
+                $respuestaDB=$this->registrar($color["id_attribute"],$color["codigo_color"],$color["codigo_pais"],$color["color_zalando"]);
+                if(!$respuestaDB){
+                    $colorNoAsociados[]=$color;
+                }
             }
         }
         $respuesta_servidor["respuestaServidor"]["colorNoAsociados"]=$colorNoAsociados;
@@ -111,6 +122,16 @@ class ColorController extends ModuleAdminController{
             return $respuesta;
         }
         return [];
+    }
+
+    public function consultarExitenciaDeAtributoAsociadoPorAtributoPs($idAtributo){
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_color,ps_attribute_lang WHERE ps_attribute_lang.id_lang=".$this->id_idioma." AND ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_color.id_attribute AND ps_wbzalando_asociacion_color.id_attribute=".$idAtributo.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
+    }
+
+    public function consultarExitenciaDeAtributoAsociadoPorCodigoColorZalando($codigoColorZalando){
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_color,ps_attribute_lang WHERE ps_attribute_lang.id_lang=".$this->id_idioma." AND ps_attribute_lang.id_attribute=ps_wbzalando_asociacion_color.id_attribute AND ps_wbzalando_asociacion_color.codigo_color=".$codigoColorZalando.";";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
     public function ajaxProcessGetConsultarTodo(){

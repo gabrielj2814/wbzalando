@@ -23,6 +23,7 @@ let datosTest=[
 ]
 
 let coloresZalandoDatos={}
+let coloresAsociados=[]
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
 let botonConsultarTodos=document.getElementById("botonConsultarTodos");
@@ -205,10 +206,6 @@ function actualizar(){
     });
 }
 
-
-
-
-
 function consultarAtributosPrestashop(){
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
@@ -226,6 +223,35 @@ function consultarAtributosPrestashop(){
             let datos=JSON.parse(JSON.stringify(respuesta))
             let colores=datos["respuestaServidor"]
             cargarAtributosPrestashop(colores);
+            // consultarPaises();
+            consultarTodoLosColoresAsociados()
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
+            
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+function consultarTodoLosColoresAsociados(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            let datos=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            console.log("datos =>>> ",datos)
+            coloresAsociados=datos.datos
             // consultarPaises();
             preloader.style.opacity="0"
             bodyPleloader.style.overflow="auto"
@@ -386,8 +412,16 @@ function crearElementosFormulario(colores,coloresZalando,pais){
     for(let color of colores){
         let opciones="";
         for(let codigoColorZalando in coloresZalando){
+            let buscarCombinacion=coloresAsociados.filter(combinacion => codigoColorZalando===combinacion.codigo_color && color.id_attribute===combinacion.id_attribute)
+            console.log("selected =>>> ",buscarCombinacion)
             coloresZalandoDatos[codigoColorZalando]=coloresZalando[codigoColorZalando]
-            opciones+="<option value='"+codigoColorZalando+"'>"+coloresZalando[codigoColorZalando]+"</option>"
+            if(buscarCombinacion.length>0){
+                opciones+="<option value='"+codigoColorZalando+"' selected>"+coloresZalando[codigoColorZalando]+"</option>"
+            }
+            else{
+                opciones+="<option value='"+codigoColorZalando+"'>"+coloresZalando[codigoColorZalando]+"</option>"
+            }
+
         }
         let selectColoreZalando="\
             <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'><div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'><h4>"+color.name+"</h4></div>\
