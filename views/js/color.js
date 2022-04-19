@@ -80,9 +80,10 @@ function registrar(){
         },
         success: (respuesta) => {
             console.log(respuesta);
-            preloader.style.opacity="0"
-            bodyPleloader.style.overflow="auto"
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
             mostrarAlerta("alert-success","Color asociado")
+            consultarTodoLosColoresAsociados()
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
         },
@@ -171,29 +172,6 @@ function eliminar(){
             ajax: true,
             action: 'posteliminar',
             id_color_asociacion:2
-
-        },
-        success: (respuesta) => {
-            console.log(respuesta);
-            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
-            // console.log("productos filtrados =>>> ",datos)
-        },
-        error: () => {
-        }
-    });
-}
-
-function actualizar(){
-    const linkControlador=document.getElementById("linkControlador").value;
-    $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: linkControlador, 
-        data: {
-            ajax: true,
-            action: 'postactualizar',
-            asociacion: datosTest
 
         },
         success: (respuesta) => {
@@ -413,7 +391,7 @@ function crearElementosFormulario(colores,coloresZalando,pais){
         let opciones="";
         for(let codigoColorZalando in coloresZalando){
             let buscarCombinacion=coloresAsociados.filter(combinacion => codigoColorZalando===combinacion.codigo_color && color.id_attribute===combinacion.id_attribute)
-            console.log("selected =>>> ",buscarCombinacion)
+            // console.log("selected =>>> ",buscarCombinacion)
             coloresZalandoDatos[codigoColorZalando]=coloresZalando[codigoColorZalando]
             if(buscarCombinacion.length>0){
                 opciones+="<option value='"+codigoColorZalando+"' selected>"+coloresZalando[codigoColorZalando]+"</option>"
