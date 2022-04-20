@@ -1,6 +1,7 @@
 
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
+let categoriasAsociadas=[]
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
 function registrar(){
@@ -51,8 +52,9 @@ function registrar(){
             success: (respuesta) => {
                 console.log(respuesta);
                 mostrarAlerta("alert-success","Asociación completada")
-                preloader.style.opacity="0"
-                bodyPleloader.style.overflow="auto"
+                // preloader.style.opacity="0"
+                // bodyPleloader.style.overflow="auto"
+                consultarTodos2()
                 // let datos=JSON.parse(JSON.stringify(respuesta.datos))
                 // console.log("productos filtrados =>>> ",datos)
             },
@@ -66,6 +68,8 @@ function registrar(){
 }
 function consultarTodos(){
     const linkControlador=document.getElementById("linkControlador").value;
+    preloader.style.opacity="1"
+    bodyPleloader.style.overflow="hidden"
     $.ajax({
         type: 'GET',
         cache: false,
@@ -77,10 +81,50 @@ function consultarTodos(){
         },
         success: (respuesta) => {
             console.log(respuesta);
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            console.log("datos =>>>>",json)
+            categoriasAsociadas=json.datos
             // let datos=JSON.parse(JSON.stringify(respuesta.datos))
             // console.log("productos filtrados =>>> ",datos)
+            consultarEsquemasYCategorias()
+            // preloader.style.opacity="0"
+            // bodyPleloader.style.overflow="auto"
         },
         error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
+        }
+    });
+}
+
+function consultarTodos2(){
+    const linkControlador=document.getElementById("linkControlador").value;
+    // preloader.style.opacity="1"
+    // bodyPleloader.style.overflow="hidden"
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        url: linkControlador, 
+        data: {
+            ajax: true,
+            action: 'getconsultartodo'
+        },
+        success: (respuesta) => {
+            console.log(respuesta);
+            let json=JSON.parse(JSON.stringify(respuesta.respuestaServidor))
+            console.log("datos =>>>>",json)
+            categoriasAsociadas=json.datos
+            // let datos=JSON.parse(JSON.stringify(respuesta.datos))
+            // console.log("productos filtrados =>>> ",datos)
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+        },
+        error: () => {
+            preloader.style.opacity="0"
+            bodyPleloader.style.overflow="auto"
+            mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
 }
@@ -236,7 +280,13 @@ function crearElementosFormulario(datos){
         for(let categoriaZalando of datos.esquemas){
             let label=categoriaZalando.split("-")[1];
             let name=categoriaZalando.split("-")[0];
-            opciones+="<option value='"+categoriaZalando+"'>"+name+"</option>"
+            let busquedaCombinacion=categoriasAsociadas.find(combinacion => combinacion.id_category===categoriasPrestashop.id_category && combinacion.outline===label)
+            if(busquedaCombinacion){
+                opciones+="<option value='"+categoriaZalando+"' selected>"+name+"</option>"
+            }
+            else{
+                opciones+="<option value='"+categoriaZalando+"'>"+name+"</option>"
+            }
         }
         let selectCategoriasZalando="\
             <div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xs-12 well-sm'><div class='col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xs-5'><h4>"+categoriasPrestashop.name+"</h4></div>\
@@ -299,5 +349,6 @@ function eliminar(){
         }
     });
 }
-consultarEsquemasYCategorias();
+// consultarEsquemasYCategorias();
+consultarTodos()
 botonRegistrar.addEventListener("click",registrar)

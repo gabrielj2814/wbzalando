@@ -105,21 +105,59 @@ class CategoriaController extends ModuleAdminController{
     public function ajaxProcessPostGuardarAsociacion(){
         $respuesta_servidor=["respuestaServidor" => []];
         foreach($_POST["asociacion"] as $categorias){
-            $datosEsquema=$this->consultarEsquema($categorias["outline"]);
-            $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
-            $repuestaDB=$this->registrar($categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
-            if( $repuestaDB){
-                $respuesta_servidor["respuestaServidor"][]=[
-                    "mensaje" => "registro completado",
-                    "estado" => 200
-                ];
+            $busqueda=$this->consultarAsociacionPorIdCategoriaPs($categorias["id_category"]);
+            if(count($busqueda)>0){
+                if($categorias["outline"]!==$busqueda[0]["outline"]){
+                    $datosEsquema=$this->consultarEsquema($categorias["outline"]);
+                    $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
+                    $repuestaDB=$this->actualizar($busqueda[0]["id_categoria_asociacion"],$categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
+                    if($repuestaDB){
+                        $respuesta_servidor["respuestaServidor"][]=[
+                            "mensaje" => "registro completado",
+                            "estado" => 200
+                        ];
+                    }
+                    else{
+                        $respuesta_servidor["respuestaServidor"][]=[
+                            "mensaje" => "error al registrar",
+                            "estado" => 500
+                        ];
+                    }
+                }
             }
             else{
-                $respuesta_servidor["respuestaServidor"][]=[
-                    "mensaje" => "error al registrar",
-                    "estado" => 500
-                ];
+                $datosEsquema=$this->consultarEsquema($categorias["outline"]);
+                $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
+                $repuestaDB=$this->registrar($categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
+                if($repuestaDB){
+                    $respuesta_servidor["respuestaServidor"][]=[
+                        "mensaje" => "registro completado",
+                        "estado" => 200
+                    ];
+                }
+                else{
+                    $respuesta_servidor["respuestaServidor"][]=[
+                        "mensaje" => "error al registrar",
+                        "estado" => 500
+                    ];
+                }
             }
+
+            // $datosEsquema=$this->consultarEsquema($categorias["outline"]);
+            // $modeloProducto=$this->creacionDeModelo($datosEsquema,$categorias["outline"]);
+            // $repuestaDB=$this->registrar($categorias["id_category"],$categorias["outline"],$categorias["outline_name"],$modeloProducto);
+            // if( $repuestaDB){
+            //     $respuesta_servidor["respuestaServidor"][]=[
+            //         "mensaje" => "registro completado",
+            //         "estado" => 200
+            //     ];
+            // }
+            // else{
+            //     $respuesta_servidor["respuestaServidor"][]=[
+            //         "mensaje" => "error al registrar",
+            //         "estado" => 500
+            //     ];
+            // }
         }
         print(json_encode($respuesta_servidor));
 
@@ -139,6 +177,11 @@ class CategoriaController extends ModuleAdminController{
             '".json_encode($modeloJson)."'
         )";
         return Db::getInstance()->execute($SQL);
+    }
+    public function consultarAsociacionPorIdCategoriaPs($id){
+        // $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria WHERE id_categoria_asociacion=".$id.";";
+        $SQL="SELECT * FROM ps_wbzalando_asociacion_categoria WHERE id_category=$id";
+        return $this->validarRespuestaBD(Db::getInstance()->executeS($SQL));
     }
 
 
