@@ -592,7 +592,7 @@ function consultarProductosPorPais(a=1){
             let respuestaJson=JSON.parse(JSON.stringify(respuesta))
             console.log("datos =>>>>>>>>>>>>>>>> ",respuestaJson)
             insertarProductos(respuestaJson.respuestaServidor.datos)
-            if(respuestaJson.respuestaServidor.totalRegistros>1){
+            if(respuestaJson.respuestaServidor.totalRegistros>20){
                 insertarControlesPaginacion();
                 let paginaAnt=document.getElementById("pagina-ant")
                 let paginaSig=document.getElementById("pagina-sig")

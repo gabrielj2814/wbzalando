@@ -281,7 +281,7 @@ function consultarColorPrestashop(a){
                 let colores=respuestaJson.datos
                 console.log("colores prestashop filtrados =>>> ",colores)
                 consultarColoresZalando(colores,campoPais.value);
-                if(respuestaJson.totalRegistros>2){
+                if(respuestaJson.totalRegistros>20){
                     insertarControlesPaginacion();
                     let paginaAnt=document.getElementById("pagina-ant")
                     let paginaSig=document.getElementById("pagina-sig")
