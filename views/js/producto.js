@@ -2324,17 +2324,95 @@ function mostrarAlerta(colorAlerta,mensaje){
     </div>\
     '
     $contenedorAlerta.innerHTML+=htmlAlert
-}  
+}
+
+function crearArbolCategoria(){
+    let arbolCategoria=[]
+    console.log(listaCategoriaPrestashop)
+    for(let categoria of listaCategoriaPrestashop){
+        let listaDeHijos=listaCategoriaPrestashop.filter(hijo => categoria.id_category===hijo.id_parent)
+        categoria["hijos"]=listaDeHijos.map( hijos => JSON.parse(JSON.stringify(hijos)))
+        arbolCategoria.push(categoria)
+    }
+    arbolCategoria=arbolCategoria.filter(datos => datos.hijos.length>0)
+    console.log("lista final =>>>> ",arbolCategoria)
+    let inicio= arbolCategoria.find(categoriaInicio => categoriaInicio.id_parent==='0')
+    console.log("inicio => ",inicio)
+    arbolSeccion(inicio)
+    for(let categoria2 of arbolCategoria){
+        console.log(categoria2)
+        if(categoria2.id_parent!=="0" ){
+            arbolSeccion(categoria2)
+        }
+    }
+
+}
+
+function arbolSeccion(arbolCategoria,papa=null){
+    // <li>test
+    //     <ul>
+    //         <li>test 1</li>
+    //         <li>test 1</li>
+    //         <li>test 1</li>
+    //         <li>test 1</li>
+    //     </ul>
+    // </li>
+
+    if(arbolCategoria.id_parent==="0"){
+        console.log(arbolCategoria.id_parent)
+        let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
+        let hijosFiltradosHtml=hijosFiltrados.map(hijosFiltrado => {
+            return "<li id='padre_categoria_"+hijosFiltrado.id_category+"' >"+hijosFiltrado.name+"</li>"
+        })
+        let html="\
+        <ul style='list-style: none;'>\
+            <li>\
+                <ul >\
+                "+hijosFiltradosHtml.join("")+"\
+                </ul>\
+            </li>\
+        </ul>\
+        "
+        document.getElementById("arbolCategoria").innerHTML=html
+    }
+    else{
+        if(arbolCategoria.id_parent!=="0" && arbolCategoria.id_parent!=="1"){
+            console.log(arbolCategoria.id_parent)
+            let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
+            let hijosFiltradosHtml=hijosFiltrados.map(hijosFiltrado => {
+                return "<li id='padre_categoria_"+hijosFiltrado.id_category+"' >"+hijosFiltrado.name+"</li>"
+            })
+           
+            console.log("padre_categoria_"+arbolCategoria.id_parent)
+            if(document.getElementById("padre_categoria_"+arbolCategoria.id_category)){
+                let html=""+arbolCategoria.name+""+((hijosFiltradosHtml.length>0)?"<ul>"+hijosFiltradosHtml.join("")+"</ul>":"")+""
+                document.getElementById("padre_categoria_"+arbolCategoria.id_category).innerHTML=html
+            }
+            else{
+                let html="\
+                <li id='padre_categoria_"+arbolCategoria.id_category+"'>"+arbolCategoria.name+"\
+                    "+((hijosFiltradosHtml.length>0)?"<ul>"+hijosFiltradosHtml.join("")+"</ul>":"")+"\
+                </li>"
+                document.getElementById("padre_categoria_"+arbolCategoria.id_parent).innerHTML+=html
+            }
+            
+        }
+        
+    }
+    
+
+}
+
 
 // asignadoles eventos a los elementos html
 $botonFiltroProducto.addEventListener("click", filtrarProductos);
 $nombreProducto.addEventListener("keyup", filtrarProductos);
-// $botonIrHaformulario.addEventListener("click",irHaFormularioDeProductos)
-// $botonIrHaformulario.addEventListener("click",filtrarProductosPaginar)
 $botonIrHaVistaInicial.addEventListener("click",irHaVistaInicial)
 $botonIrHaVistaFormularioProductos.addEventListener("click",irHaVistaFormularioProductos)
 $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos)
 $botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
 $botonEdicionGlobal.addEventListener("click",aplicarEdicionGlobal)
 // ejecuciones de funciones al cargar el archivo
-consultarPaisesZalando();
+// consultarPaisesZalando();
+// ======
+crearArbolCategoria()

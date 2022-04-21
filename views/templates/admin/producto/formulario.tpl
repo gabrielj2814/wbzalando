@@ -103,6 +103,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <form id="datosArbolCategoria">
+                                    <div id="arbolCategoria"></div>
+                                </form>
+                            </div>
+
 						</div>
 
 						<!-- search-products -->
@@ -408,6 +414,9 @@
     </div>
 </div>
 
+<script type="text/javascript">
+let listaCategoriaPrestashop={json_encode($categoriasProductos)}
+</script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/librerias/moment.js"></script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/librerias/owl.carousel.js"></script>
 <script type="text/javascript" src="/modules/wbzalando/views/js/producto.js"></script>

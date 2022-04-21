@@ -18,6 +18,7 @@ class ProductoController extends ModuleAdminController{
         $this->nombreTabla="ps_wbzalando_esquemas"; 
         $this->modulo= EntityModule::getInstanceByName("wbzalando");
         $this->name = 'wbzalando';
+        $this->context = Context::getContext();
     }
 
     public function init()
@@ -93,10 +94,15 @@ class ProductoController extends ModuleAdminController{
         return Db::getInstance()->executeS("
         SELECT 
         ps_category.id_category,
-        ps_category_lang.name  FROM ps_category,
+        ps_category.id_parent,
+        ps_category_lang.name 
+        FROM
+        ps_category,
         ps_category_lang,
         ps_lang 
-        WHERE ps_category_lang.id_lang=".$this->id_idioma." AND 
+        WHERE 
+        -- ps_category.id_parent<>0 AND 
+        ps_category_lang.id_lang=".$this->id_idioma." AND 
         ps_category_lang.id_category=ps_category.id_category AND 
         ps_category_lang.id_lang=ps_lang.id_lang");
     }
