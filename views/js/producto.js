@@ -2418,6 +2418,6 @@ $botonIrHaVistaBorrarProductos.addEventListener("click",irHaVistaBorrarProductos
 $botonEnviarPoductos.addEventListener("click",generarFormatoZalado)
 $botonEdicionGlobal.addEventListener("click",aplicarEdicionGlobal)
 // ejecuciones de funciones al cargar el archivo
-// consultarPaisesZalando();
+consultarPaisesZalando();
 // ======
 crearArbolCategoria()
