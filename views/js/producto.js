@@ -371,19 +371,20 @@ function filtrarProductos(e){
 
 function consultarProductosProFiltros(){
     const linkControlador=document.getElementById("linkControlador").value;
-    let categoriaProducto=arrayOption(document.getElementById("categoriaProducto"));
+    // let categoriaProducto=arrayOption(document.getElementById("categoriaProducto"));
     let marcaProducto=arrayOption(document.getElementById("marcaProducto"));
     let $nombreProducto=document.getElementById("nombreProducto").value;
     let totalResultados=document.getElementById("totalResultados")
     let numeroDeProductos=document.getElementById("numeroDeProductos")
     $botonIrHaformulario.setAttribute("disabled","disabled")
     totalResultados.textContent="cargando... "
-    categoriaProducto=categoriaProducto.filter(option => option.selected===true)
+    // categoriaProducto=categoriaProducto.filter(option => option.selected===true)
     marcaProducto=marcaProducto.filter(option => option.selected===true)
-    categoriaProducto=categoriaProducto.map(option => option.value)
+    // categoriaProducto=categoriaProducto.map(option => option.value)
     marcaProducto=marcaProducto.map(option => option.value)
-    console.log("lista de categorias seleccionadas =>>>> ",categoriaProducto)
+    // console.log("lista de categorias seleccionadas =>>>> ",categoriaProducto)
     console.log("lista de mascas seleccionadas =>>>> ",marcaProducto)
+    let categoriaProducto=obtenerIdCategoriasArbolFiltro()
 
     let pagina=1
     $.ajax({
@@ -2349,20 +2350,11 @@ function crearArbolCategoria(){
 }
 
 function arbolSeccion(arbolCategoria,papa=null){
-    // <li>test
-    //     <ul>
-    //         <li>test 1</li>
-    //         <li>test 1</li>
-    //         <li>test 1</li>
-    //         <li>test 1</li>
-    //     </ul>
-    // </li>
-
     if(arbolCategoria.id_parent==="0"){
-        console.log(arbolCategoria.id_parent)
+        // console.log(arbolCategoria.id_parent)
         let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
         let hijosFiltradosHtml=hijosFiltrados.map(hijosFiltrado => {
-            return "<li id='padre_categoria_"+hijosFiltrado.id_category+"' >"+hijosFiltrado.name+"</li>"
+            return "<li class='list-style-none' id='padre_categoria_"+hijosFiltrado.id_category+"' ><input type='checkbox' class='checkbox-categoria-filtro' value='"+hijosFiltrado.id_category+"'/>"+hijosFiltrado.name+"</li>"
         })
         let html="\
         <ul style='list-style: none;'>\
@@ -2377,20 +2369,24 @@ function arbolSeccion(arbolCategoria,papa=null){
     }
     else{
         if(arbolCategoria.id_parent!=="0" && arbolCategoria.id_parent!=="1"){
-            console.log(arbolCategoria.id_parent)
+            // console.log(arbolCategoria.id_parent)
             let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
             let hijosFiltradosHtml=hijosFiltrados.map(hijosFiltrado => {
-                return "<li id='padre_categoria_"+hijosFiltrado.id_category+"' >"+hijosFiltrado.name+"</li>"
+                return "<li class='list-style-none' id='padre_categoria_"+hijosFiltrado.id_category+"' >\
+                <input type='checkbox' class='checkbox-categoria-filtro' value='"+hijosFiltrado.id_category+"'/>\
+                "+hijosFiltrado.name+"</li>"
             })
            
-            console.log("padre_categoria_"+arbolCategoria.id_parent)
+            // console.log("padre_categoria_"+arbolCategoria.id_parent)
             if(document.getElementById("padre_categoria_"+arbolCategoria.id_category)){
-                let html=""+arbolCategoria.name+""+((hijosFiltradosHtml.length>0)?"<ul>"+hijosFiltradosHtml.join("")+"</ul>":"")+""
+                let html="<input type='checkbox' class='checkbox-categoria-filtro' value='"+arbolCategoria.id_category+"'/>"+arbolCategoria.name+""+((hijosFiltradosHtml.length>0)?"<ul>"+hijosFiltradosHtml.join("")+"</ul>":"")+""
                 document.getElementById("padre_categoria_"+arbolCategoria.id_category).innerHTML=html
             }
             else{
                 let html="\
-                <li id='padre_categoria_"+arbolCategoria.id_category+"'>"+arbolCategoria.name+"\
+                <li class='list-style-none' id='padre_categoria_"+arbolCategoria.id_category+"'>\
+                <input type='checkbox' class='checkbox-categoria-filtro' value='"+arbolCategoria.id_category+"'/>\
+                "+arbolCategoria.name+"\
                     "+((hijosFiltradosHtml.length>0)?"<ul>"+hijosFiltradosHtml.join("")+"</ul>":"")+"\
                 </li>"
                 document.getElementById("padre_categoria_"+arbolCategoria.id_parent).innerHTML+=html
@@ -2399,8 +2395,17 @@ function arbolSeccion(arbolCategoria,papa=null){
         }
         
     }
-    
+}
 
+function obtenerIdCategoriasArbolFiltro(){
+    let listaIdCategorias=[]
+    let listaDeCategoriasSeleccionadas=document.querySelectorAll(".checkbox-categoria-filtro:checked")
+    // console.log("categorias seleccionadas =>>> ",listaDeCategoriasSeleccionadas)
+    for(let categoria of listaDeCategoriasSeleccionadas){
+        listaIdCategorias.push(categoria.value)
+    }
+    console.log("categorias seleccionadas =>>> ",listaIdCategorias)
+    return listaIdCategorias
 }
 
 

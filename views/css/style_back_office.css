@@ -173,5 +173,13 @@
     font-weight: bold;
 }
 
+.list-style-none{
+    list-style: none;
+}
+
+.checkbox-categoria-filtro{
+    margin-right: 5px !important;
+}
+
 
 

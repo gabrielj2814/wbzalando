@@ -105,7 +105,7 @@
                             </div>
                             <div class="row">
                                 <form id="datosArbolCategoria">
-                                    <div id="arbolCategoria"></div>
+                                    <div id="arbolCategoria" class="arbolCategoria"></div>
                                 </form>
                             </div>
 

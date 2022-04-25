@@ -363,6 +363,23 @@ class ProductoController extends ModuleAdminController{
             "totalRegistros" =>  count($productos),
         ]));
     }
+
+    function borrarProductosDuplicados($productos){
+        // esta duncionse encargara de elimiarar los productos duplicados que 
+        // tendra todosLosProductos se ara dos copias para en donde una se utilizara para recorrer todo el array y uno en donde
+        // los productos duplicados seran poco a poco eliminados
+        // y habra otro array en donde se guardara las prociones de los productos duplicados que seran eliminados
+        // funciones a usar
+        // unset(); para eliminar
+        // array_values(); para ordenar el array por que el unset literalmente borrar la posicion del array
+        $productosHaRecorrer=$productos;
+        $productosFinal=$productos;
+        $listaDePosicionesHaEliminar=[];
+        // foreach($productosHaRecorrer as $productoHaRecorrer){
+
+        // }
+
+    }
     
 
     function consultarTraduccionesProducto($idProducto){
