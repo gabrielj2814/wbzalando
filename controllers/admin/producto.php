@@ -357,7 +357,7 @@ class ProductoController extends ModuleAdminController{
             $contador3++;
         }
         print(json_encode([
-            "todosLosProductos" =>  $productos,
+            "todosLosProductos" =>  $this->borrarProductosDuplicados($productos),
             "productosPaginados" =>  $productosPaginados,
             "totalDePagina" =>  ceil(count($productos)/$minimoRegistros),
             "totalRegistros" =>  count($productos),
@@ -375,10 +375,22 @@ class ProductoController extends ModuleAdminController{
         $productosHaRecorrer=$productos;
         $productosFinal=$productos;
         $listaDePosicionesHaEliminar=[];
-        // foreach($productosHaRecorrer as $productoHaRecorrer){
+        foreach($productosHaRecorrer as $productoHaRecorrer){
+            $listaDePosicionesHaEliminar=[];
+            foreach($productosFinal as $key => $productoFinal){
+                if($productoHaRecorrer["id_product"]===$productoFinal["id_product"]){
+                    $listaDePosicionesHaEliminar[]=$key;
+                }
+            }
+            if(count($listaDePosicionesHaEliminar)>1){
+                foreach($listaDePosicionesHaEliminar as $listaDePosicioneHaEliminar){
+                    unset($productosFinal[$listaDePosicioneHaEliminar]);
+                    $productosFinal=array_values($productosFinal);
+                }
+            }
 
-        // }
-
+        }
+        return $productosFinal;
     }
     
 
