@@ -2349,7 +2349,7 @@ function crearArbolCategoria(){
 
 }
 
-function arbolSeccion(arbolCategoria,papa=null){
+function arbolSeccion(arbolCategoria){
     if(arbolCategoria.id_parent==="0"){
         // console.log(arbolCategoria.id_parent)
         let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
@@ -2357,9 +2357,9 @@ function arbolSeccion(arbolCategoria,papa=null){
             return "<li class='list-style-none' id='padre_categoria_"+hijosFiltrado.id_category+"' ><input type='checkbox' class='checkbox-categoria-filtro' value='"+hijosFiltrado.id_category+"'/>"+hijosFiltrado.name+"</li>"
         })
         let html="\
-        <ul style='list-style: none;'>\
+        <ul style='list-style: none; padding-left: 0;'>\
             <li>\
-                <ul >\
+                <ul style='padding-left: 0;'>\
                 "+hijosFiltradosHtml.join("")+"\
                 </ul>\
             </li>\
