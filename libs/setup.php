@@ -1,4 +1,7 @@
 <?php
+// este archivo se utiliza para hacer todo lo relacionado 
+// con la instalción y desintalación de las variables de configuracion 
+// , tablas y creación del sub menu
 if (!class_exists("SetupWbZalando")) {
     class SetupWbZalando{
 

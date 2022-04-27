@@ -9,6 +9,7 @@ use Clases\CurlController;
 class WbZalando extends Module{
 
     public function __construct(){
+        // construcion de modulo
         $this->name = 'wbzalando';
         $this->version = '1.00.0';
         $this->author = 'wild branders';
@@ -65,6 +66,7 @@ class WbZalando extends Module{
     }
 
     public function alertasCron(){
+        // generar las alertas que indican la rutas para los cron
         $alertas="";
         $http="";
         if (array_key_exists("HTTPS",$_SERVER)) {
@@ -82,6 +84,7 @@ class WbZalando extends Module{
     }
 
     public function getFormulario(){
+        // creacion del formulario de la vista de configuración
         $helper = new HelperForm();
         $helper->module = $this;
         $helper->name_controller = $this->name;
@@ -161,13 +164,14 @@ class WbZalando extends Module{
                 ]
             ]
         ];
-
+        // generar  formulario
         return $helper->generateForm($this->form);
 
 
     }
 
     public function procesarFormulario(){
+        // procesar formulario
         $salida="";
         if(Tools::getValue("rutaZolando")){
             $clienteIdZolando=Tools::getValue("clienteIdZolando");
@@ -212,6 +216,7 @@ class WbZalando extends Module{
     }
 
     public function autenticarSesionZalando(){
+        // atenticación y guardar el token de sesion
         $token=Configuration::get("WB_ZALANDO_TOKEN_ACCESO");
         $rutaEndPoint=Configuration::get("WB_ZALANDO_END_POINT");
         $header = array('Authorization: '.'Bearer '. $token);
