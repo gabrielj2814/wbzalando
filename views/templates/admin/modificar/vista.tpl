@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div id="listaDeProductosHaEliminar" style="display: flex;">
+    <div id="listaDeProductosHaEliminar" class="row">
 
     </div>
 

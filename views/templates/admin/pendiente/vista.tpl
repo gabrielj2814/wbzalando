@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div id="listaDeProductosPendientes" style="display: flex;">
+    <div id="listaDeProductosPendientes" class="row">
 
     </div>
 
