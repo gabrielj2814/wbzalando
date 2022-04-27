@@ -3,6 +3,7 @@ let bodyPleloader=document.querySelector("body")
 
 
 function cargarImagenProducto(a){
+    //  con esta funcion cargamos todas las imagenes al servidor
     let $inputFile=document.getElementById("files_imagen")
     if($inputFile.files.length>=1){
         let imagensTmp=document.getElementById("imagensTmp")
@@ -20,6 +21,7 @@ function cargarImagenProducto(a){
 }
 
 function subirImagen(totalImagenes,indice){
+    // esta funcion es concurente, se llama asi misma y por cada llamada se sube una imagen y no para hasta que todas las imagenes se haya subido al servidor 
     if(indice<totalImagenes){
         let $inputFile=document.getElementById("files_imagen")
         let imagensTmp=document.getElementById("imagensTmp")
@@ -72,6 +74,7 @@ function subirImagen(totalImagenes,indice){
 }
 
 function guardarImagen(){
+    // en esta funcion ya guardamos todas las imagenes subida
     const linkControlador=document.getElementById("linkControlador").value;
     let $inputFile=document.getElementById("files_imagen")
     if($inputFile.files.length>=1){

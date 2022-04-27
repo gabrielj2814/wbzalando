@@ -8,6 +8,7 @@ let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
 
 function insertarProductos(productos){
+    // insertar producto en la lista de producto
     let listaDeProductosHaEliminar=document.getElementById("listaDeProductosHaEliminar");
     listaDeProductosHaEliminar.innerHTML="";
     let html="";
@@ -43,6 +44,7 @@ function insertarProductos(productos){
 }
 
 function mostrarModalDatosProducto(a){
+    // con esta funcion mostramos mostramo la modal y le insertamos los datos
     let idModelo=a.getAttribute("data-id-modelo")
     // alert(idModelo)
     let detalleProducto=null
@@ -343,6 +345,7 @@ function validarPrecioRegular(datosProducto){
 }
 
 function  guardarPrecioDeProducto(a){
+    // en esta función se guardar y se envia los prductos
     const linkControlador=document.getElementById("linkControlador").value;
     let idModelo=a.getAttribute("data-id-modelo")
     // alert("id modelo "+idModelo)
@@ -516,6 +519,7 @@ function consultarPaisesZalando(){
 }
 
 function crearCheckboxPaisTest(paises){
+    // insertamos los botones de los paises 
     let contenedorBanderas=document.getElementById("paisesRadio");
     let sliderPaises=document.getElementById("slider-paises");
     sliderPaises.innerHTML=""
@@ -549,6 +553,7 @@ function activarBoton(a){
 }
 
 function iniciarSlick(){
+    // insertar slider
     var slider = document.querySelector('#slider-paises');
     if(slider.children.length > 0){
         $('#slider-paises').owlCarousel({
@@ -783,5 +788,4 @@ function mostrarAlerta(colorAlerta,mensaje,contenedorAlerta="contenedorAlerta"){
     '
     $contenedorAlerta.innerHTML+=htmlAlert
 }
-
 consultarPaisesZalando();
