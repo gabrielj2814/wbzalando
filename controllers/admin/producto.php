@@ -27,6 +27,7 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function initContent(){
+        // aqui se inicializa el controlador
         parent::initContent();
         $this->borrarImagenesBasuraReciduos();
         $esquemasDB=$this->chequearEsquemasDeHoyDB();
@@ -36,6 +37,7 @@ class ProductoController extends ModuleAdminController{
                 $respuestaResgistro=$this->registrarEsquemasDB($datosEsquemas);
             }
         }
+        // generamos los links de los controladores 
         $linkDeControlador=$this->context->link->getAdminLink("Producto",true);
         $linkDeControladorTalla=$this->context->link->getAdminLink("Talla",true);
         $linkDeControladorCategoria=$this->context->link->getAdminLink("Categoria",true);
@@ -48,9 +50,12 @@ class ProductoController extends ModuleAdminController{
             "linkDeControladorTalla" => $linkDeControladorTalla,
             "linkDeControladorGaleria" => $linkDeControladorGaleria
         ];
+        // cargar mos marcas y categorias
         $variablesSmarty["categoriasProductos"]=$this->validarRespuestaBD($this->consultarCategoriasPrestashop());
         $variablesSmarty["marcasProductos"]=$this->validarRespuestaBD($this->consultarMarcasPrestashop());
+        // asignamos las varibles que vamos a enviar
         $this->context->smarty->assign($variablesSmarty);
+        // cargar plantilla
         $this->setTemplate('/producto/formulario.tpl');
     }
 
@@ -154,6 +159,10 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function ajaxProcessGetConsultarProductoConFiltros(){
+        // en esta funcion se consulta los productos filtrado 
+        // pero esta se divide en dos
+        //  en una se se consulta por lo que seleccionaste en los filtros
+        // pero tambien se puede filtrar por los productos que el usuario a seleccionado e
         $SQL1="";
         $SQL2="";
         $productos=[];
@@ -479,6 +488,8 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function enviarProducto($productos){
+        // esta funcion se utiliza para enviar los datos a zalando pero tambien se utliliza para registrar los 
+        // datos en la base de datos
         require_once(_PS_MODULE_DIR_.$this->name.'/libs/utilidades.php');
         $utilidades=new Utilidades();
         $idComerciante=Configuration::get("WB_ZALANDO_ID_COMERCIANTE");
@@ -527,6 +538,7 @@ class ProductoController extends ModuleAdminController{
             $curlController->setdatosCabezera($header);
             // enviar producto
             if($producto["enviar"]==="true"){
+                // si es true se envia este producto a zalando
                 $respuesta=$curlController->ejecutarPeticion("post",true);
                 error_log("respuesta de zalando al subir el producto =>>>>  " . var_export($estadoDeProductos, true));
                 $estadoDeProductos["productos_enviados"][]=[
@@ -540,7 +552,7 @@ class ProductoController extends ModuleAdminController{
                 //     "estatuRespuestaApi" => true
                 // ];
             }
-            // destructurar producto
+            // se destructurar producto para luego guardarlo 
             $producto=$this->destructurarModeloDeProductoZalando($producto); 
             $respuestaModelo=$this->guardarModeloProducto($producto);
             $respuestaConfig=$this->guardarConfigProducto($producto);
@@ -752,6 +764,7 @@ class ProductoController extends ModuleAdminController{
     }
 
     public function destructurarModeloDeProductoZalando($modeloProducto){
+        // en esta funcion se desglosa el modelo de producto para acceder a los datod de forma mas comoda
         $merchant_product_model_id=null;
         $datosProducto=[
             "outline"=> null,
