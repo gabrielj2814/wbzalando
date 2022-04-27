@@ -36,6 +36,7 @@ let $botonEdicionGlobal=document.getElementById("botonEdicionGlobal")
 // functiones
 // funciones anidadas peticiones al servidor consultarPaisesZalando,consultarCategoraisAsociadas,consultarCategoriasTalla,consultarMaterialesDeConstruccion
 function consultarPaisesZalando(){
+    // esta función se encargar de consultar los pais que el cliente tiene configurado en zalando 
     const linkControlador=document.getElementById("linkControlador").value;
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
@@ -72,6 +73,7 @@ function consultarPaisesZalando(){
 }
 
 function consultarCategoraisAsociadas(){
+    // esta función consulta las categoria asociadas por el cliente
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     datos_categorias=[]
     $.ajax({
@@ -98,6 +100,7 @@ function consultarCategoraisAsociadas(){
 }
 
 function consultarCategoriasTalla(){
+    // consultar categorias de tallas que le a asignado zalando al cliente
     const linkDeControladorTalla=document.getElementById("linkDeControladorTalla").value;
     $.ajax({
         type: 'GET',
@@ -123,6 +126,7 @@ function consultarCategoriasTalla(){
 }
 
 function cargarDatosfutter(){
+    // consultar los futter 
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let propiedad="futter"
     $.ajax({
@@ -149,6 +153,7 @@ function cargarDatosfutter(){
     });
 }
 function cargarDatosUpperMaterial(){
+    // consultar los upper material
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let propiedad="upper_material"
     $.ajax({
@@ -177,6 +182,7 @@ function cargarDatosUpperMaterial(){
 }
 
 function cargarDatosSoleMaterial(){
+    // consultar los sole material
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let propiedad="sole_material"
     $.ajax({
@@ -204,6 +210,7 @@ function cargarDatosSoleMaterial(){
 }
 
 function cargarDatosdecksohle(){
+    // consultar los desckshole
     const linkDeControladorCategoria=document.getElementById("linkDeControladorCategoria").value;
     let propiedad="decksohle"
     $.ajax({
@@ -232,6 +239,7 @@ function cargarDatosdecksohle(){
 }
 
 function consultarTodasLasImagenes(){
+    // consultar las imagenes de los producto que se muestra en la modal de imagenes
     const linkControlador=document.getElementById("linkDeControladorGaleria").value;
 
     $.ajax({
@@ -263,6 +271,8 @@ function consultarTodasLasImagenes(){
 // =====================
 // =====================
 function crearRadiosPaisTest(paises){
+    // inserta los paises consultados anteriormente en el slider de botones 
+    // en la vista del formulario de producto
     let contenedorBanderasProductos=document.getElementById("paisesFormularioProducto");
     let sliderPaisesProductos=document.getElementById("slider-productos");
     sliderPaisesProductos.innerHTML=""
@@ -314,7 +324,8 @@ function iniciarSlickTres(){
 }
 
 function crearRadiosPaisTestBorrarProdcuto(paises){
-    // paisesBorrarProducto
+    // inserta los paises consultados anteriormente en el slider de botones 
+    // en la tercera vista
     let contenedorBanderasBorrar=document.getElementById("paisesBorrarProducto");
     let sliderPaisesBorrar=document.getElementById("slider-dos");
     sliderPaisesBorrar.innerHTML=""
@@ -370,6 +381,8 @@ function filtrarProductos(e){
 }
 
 function consultarProductosProFiltros(){
+    // con esta funcion consultamos los productos mediante los filtros que
+    // se ven en la primera vista
     const linkControlador=document.getElementById("linkControlador").value;
     // let categoriaProducto=arrayOption(document.getElementById("categoriaProducto"));
     let marcaProducto=arrayOption(document.getElementById("marcaProducto"));
@@ -421,10 +434,12 @@ function consultarProductosProFiltros(){
             mostrarAlerta("alert-danger","conexion deficiente intente otra vez")
         }
     });
+    // borra los datos de los productos guardados
     datosProductosForm={}
 }
 
 function insertarProductosFiltrados(todosLosProductos){
+    // insertatr productos filtrador
     listaDeProductosFiltro=todosLosProductos
     let html=""
     let listaProductosFiltrados=document.getElementById("listaProductosFiltrados")
@@ -457,6 +472,7 @@ function insertarProductosFiltrados(todosLosProductos){
 }
 
 function insertarControlesPaginacion(){
+    // esta funcion inserta la base en donde se montara mas adelantes el numero de pagina
     let controlesPaginacion=document.getElementById("controlesPaginacion")
     // controlesPaginacion.innerHTML="";
     let html="\
@@ -484,6 +500,7 @@ function arrayOption(select){
 }
 
 function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
+    // esta funcion inserta los controles de la paginacion de las vista formulario de producto
     let minimoPagina=5
     pagina=parseInt(pagina)
     let listaPaginas=document.getElementById("lista-paginas")
@@ -531,6 +548,7 @@ function insertarBotonesPaginasPaginacion(pagina,totalDePagina){
 }
 
 function filtrarProductosPaginar(a){
+    // esta funcion se usa para filtrar los productos seleccionado de la primera vista
     preloader.style.opacity="1"
     bodyPleloader.style.overflow="hidden"
     let pagina=1;
@@ -538,13 +556,7 @@ function filtrarProductosPaginar(a){
         pagina=(a.getAttribute("data-numero-pagina"))?a.getAttribute("data-numero-pagina"):1
     }
     const linkControlador=document.getElementById("linkControlador").value;
-    // let categoriaProducto=document.getElementById("categoriaProducto").value;
-    // let marcaProducto=document.getElementById("marcaProducto").value;
-    // let $nombreProducto=document.getElementById("nombreProducto").value;
-    // let totalResultados=document.getElementById("totalResultados")
     let numeroDeProductos=document.getElementById("numeroDeProductos")
-    // $botonIrHaformulario.setAttribute("disabled","disabled")
-    // totalResultados.textContent="cargando... "
     let listaIdProductos=productosSeleccionados.map(producto => producto.id_product)
     console.log("datos a enviar ",listaIdProductos)
     $.ajax({
@@ -555,9 +567,6 @@ function filtrarProductosPaginar(a){
         data: {
             ajax: true,
             action: 'getconsultarproductoconfiltros',
-            // categoriaProducto,
-            // marcaProducto,
-            // nombreProducto:$nombreProducto,
             productosSeleccionados:listaIdProductos,
             minimo:numeroDeProductos.value,
             pagina
@@ -616,6 +625,8 @@ let $vistaBorrarProductos=document.getElementById("vista-borrar-productos")
 let $vistaInicial=document.getElementById("vista-inicial")
 
 function irHaFormularioDeProductos(){
+    // esta funcion se encarga de crear una memoria que se puede usar de forma global
+    // simulando el comportamiento de react
     datosResPaldoProductos={}
     // datosProductosForm={}
     $vistaInicial.style.display="none"
@@ -725,6 +736,8 @@ function irHaVistaBorrarProductos(e){
 }
 
 function indicarPaisSeleccionado(a){
+    // esta funcion se encargar de indicarle al usuario en que pais esta ubicado en el slider 
+    // esta funcion es para el slider 2 de la tercera vista 
     let quitar = document.querySelector(".wz-input-2")
     if(quitar){
         quitar.classList.remove("wz-input-2");
@@ -890,6 +903,8 @@ function irHaVistaFormularioProductos(){
 }
 
 function cargarProductosPorPaisSeleccionado(a){
+    // esta funcion se encargar de indicarle al usuario en que pais esta ubicado en el slider 
+    // esta funcion es para el slider 1 de la segunda vista 
     let quitar = document.querySelector(".wz-input")
     if(quitar){
         quitar.classList.remove("wz-input");
@@ -912,7 +927,7 @@ function cargarProductosPorPaisSeleccionado(a){
 //  ====================================
 //  ====================================
 //  ====================================
-// cargar los datos de los productos que an sido ingresados en el formulario 
+// cargar los datos de los productos que han sido ingresados en el formulario 
 function cargarDatosGuardados(pais){
     if(datosProductosForm[pais]){
         for(let idProducto in datosProductosForm[pais]){
@@ -973,7 +988,8 @@ function cargarDatosGuardados(pais){
 }
 
 function duplicarDatos(){
-    // primero tener el paises que tiene el numero mayor de productos
+    // esta funcion lo que hace es en caso de que el usario cabie de pais dusplicar los datos del mismo producto pero para ese mismo pais 
+    // primero tener el paise que tiene el numero mayor de productos
     let totalProductosPaises={}
     for(let pais in listaDePaises){
         totalProductosPaises[pais]=0
@@ -1011,6 +1027,7 @@ function duplicarDatos(){
 }
 
 function obtenerIdPaisConMayorProductos(totalProductosPaises){
+    // con esta funcion obtenemos el pais con el mayor nuemro de productos
     let paisMayor={id:"",total:0}
     let mayor=-1
     for(let pais in totalProductosPaises){
@@ -1257,6 +1274,9 @@ function insertarProductosVistaEnvio(idPais,productos){
 }
 
 function capturarImagenGaleria(a){
+    // esta función se encargar de capturar las imagenes seleccionadas por el usuario 
+    // y las guarda en la variable datosProductosForm
+    // esta variable almacena todos los datos de los productos que el usuario ha tipiado 
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
     if(!datosProductosForm[idPais]){
@@ -1283,6 +1303,7 @@ function capturarImagenGaleria(a){
 
 
 function insertarFotosModal(a){
+    // esta funcion se encargar de insertar las fotos de los productos en la modal de fotos
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
     let galeriaFotosProductos=document.getElementById("galeriaFotosProductos")
@@ -1661,6 +1682,7 @@ function cargarDatosEdicionGlobalColor(pais){
                     option+="<option value='"+datos.codigo_color+"'>"+datos.name+"</option>"
                 }
                 edicionGlobalColor.innerHTML=option
+                // en estas funciones se inserta los datos anteriormente consultados en los inputs de formulario
                 insertarCategoriasSelect()
                 insertarBrandCodeSelect()
                 insertarSeasonCodeSelect()
@@ -1750,6 +1772,10 @@ function cargarProductosHaEliminarPorPais(a){
 }
 
 function insertarProductos(idPais,productos){
+    // insertar productos en la tabla de la tercera vista 
+    // los productos que se muestra en esa vista
+    // son los productos que el usuario enviara a zalando pero
+    // en esta vista si el usuario lo desea puede quitar los productos que no quiere enviar a zalando
     let listaDeProductosHaBorrar=document.getElementById("listaDeProductosHaBorrar");
     listaDeProductosHaBorrar.innerHTML="";
     let html="";
@@ -1801,6 +1827,8 @@ function cerrarFormularioProducto(a){
 }
 
 function cambiarEstadoDeEnvioDeProduct(a){
+    // en esta funcion se cambio los estados de los productos 
+    // de la segunda vista 
     let idPais=a.getAttribute("data-id-pais")
     let idProducto=a.getAttribute("data-id-producto")
     let campo=a.getAttribute("data-campo")
@@ -1822,6 +1850,7 @@ function cambiarEstadoDeEnvioDeProduct(a){
 }
 
 function agregarProductoHaLaListaDeSeleccionados(a){
+    // agregar el producto a la lista de producto seleccionado
     let buscarProducto=listaDeProductosFiltro.filter(producto => producto.id_product===a.value)
     console.log("producto encontrado => ",buscarProducto)
     if(a.checked===true){
@@ -1837,6 +1866,7 @@ function agregarProductoHaLaListaDeSeleccionados(a){
 }
 
 function agregarProductoListaDeProductosSeleccionados(producto){
+    // aqui se inserta el html del producto seleccionado
     let contenedorListaDeProductos=document.getElementById("contenedorListaDeProductos")
     let html='\
     <div class="fila-producto-seleccionado" id="producto_seleccionado_'+producto.id_product+'">\
@@ -1857,6 +1887,7 @@ function agregarProductoListaDeProductosSeleccionados(producto){
 }
 
 function removerProductoDeLaListaDeSeleccionados(a){
+    // aqui se remuve los productos de la lista
     let idProducto=a.getAttribute("data-id-producto-seleccionado")
     document.getElementById("producto_seleccionado_"+idProducto).remove()
     let capturarProdcuto=productosSeleccionados.filter(producto => producto.id_product===idProducto)
@@ -1864,6 +1895,7 @@ function removerProductoDeLaListaDeSeleccionados(a){
     console.log("productos restantes  =>>> ",productosSeleccionados)
     document.getElementById("totalDeProductosSeLeccionados").textContent=productosSeleccionados.length.toString()
     scrollVentanaProductos()
+    // aqui se puede filtra despues de remover el producto para refrescar el contenido 
     consultarProductosProFiltros()
 }
 
@@ -1918,7 +1950,7 @@ function insertarDatosDeEnvioDeProduct(a){
 }
 
 function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
-
+    // mcapturar las combinaciones de las talla en base color, pais y id producto
     colorCliente=colorCliente.split("-")[1]
     let combinaciones=[]
     let listaTallas=[]
@@ -1950,6 +1982,9 @@ function capturasDeTallasProducto(colorCliente,misTallas,idPais,idProducto){
 }
 // aplicar edición global
 function aplicarEdicionGlobal(){
+    // aqui se hace la edicion global 
+    // se captura los datos de los campos de edición global
+    // y se le aplican a los productos que estan actualmente paginados
     let $edicionGlobalBrandCode=document.getElementById("edicionGlobalBrandCode")
     let $edicionGlobalSeasonCode=document.getElementById("edicionGlobalSeasonCode")
     let $edicionGlobalColor=document.getElementById("edicionGlobalColor")
@@ -2048,6 +2083,8 @@ function seleccionSeleccionMultipleEdicionGlobal(selects,selectEdicion){
 //============================
 
 function generarFormatoZalado(){
+    // aqui seleda formado a los datos 
+    // de los productos
     let productosConFormato=[]
     let id=parseInt(moment().format("x"))
     for(let pais in datosProductosForm){
@@ -2201,6 +2238,8 @@ function generarFormatoZalado(){
             id+=1
         }
     }
+    // aqui se hace es evitar que en ves de enviar las 4 variaciones del producto solo se envie 1
+    // pero de todas manera se guarda
     console.clear()
     let totalProductosPaises=obtenerCantidasDeProductosActivosPorPaises()
     console.log("total de productos por pais activo =>>>>>>>>> ",totalProductosPaises)
@@ -2239,6 +2278,7 @@ function generarFormatoZalado(){
 }
 
 function obtenerCantidasDeProductosActivosPorPaises(){
+    // esta funcion se encarga de solo obtener los productos que se van enviar
     let totalProductosPaises={}
     for(let pais in listaDePaises){
         totalProductosPaises[pais]=0
@@ -2252,6 +2292,7 @@ function obtenerCantidasDeProductosActivosPorPaises(){
 }
 
 function obtenerCantidasDeProductosInactivosPorPaises(){
+     // esta funcion se encarga de solo obtener los productos que no se van a enviar
     let totalProductosPaises={}
     for(let pais in listaDePaises){
         totalProductosPaises[pais]=0
@@ -2265,6 +2306,7 @@ function obtenerCantidasDeProductosInactivosPorPaises(){
 }
 
 function obtenerCantidasDeProductosConMenosProductos(NoBuscarPorEstePais){
+    // aqui se captura los productos de los paises con menos productos
     let totalProductosPaises={}
     let productos=[]
     for(let pais in listaDePaises){
@@ -2328,6 +2370,8 @@ function mostrarAlerta(colorAlerta,mensaje){
 }
 
 function crearArbolCategoria(){
+    // esta funcion se encarga de crear 
+    // el arbol de categoria
     let arbolCategoria=[]
     console.log(listaCategoriaPrestashop)
     for(let categoria of listaCategoriaPrestashop){
@@ -2350,6 +2394,7 @@ function crearArbolCategoria(){
 }
 
 function arbolSeccion(arbolCategoria){
+    // aqui se construlle el arbol de categoria
     if(arbolCategoria.id_parent==="0"){
         // console.log(arbolCategoria.id_parent)
         let hijosFiltrados=arbolCategoria.hijos.filter(hijos => hijos.id_parent===arbolCategoria.id_category)
@@ -2398,6 +2443,7 @@ function arbolSeccion(arbolCategoria){
 }
 
 function obtenerIdCategoriasArbolFiltro(){
+    // capturar categoria seleccionada 
     let listaIdCategorias=[]
     let listaDeCategoriasSeleccionadas=document.querySelectorAll(".checkbox-categoria-filtro:checked")
     // console.log("categorias seleccionadas =>>> ",listaDeCategoriasSeleccionadas)

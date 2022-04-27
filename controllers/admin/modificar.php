@@ -93,8 +93,8 @@ class ModificarController extends ModuleAdminController{
             "mensaje" => "consulta completada",
             "datos" => $respuestaProductoModelo
         ];
-        $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($respuestaProductoModelo)/$minimoRegistros);
-        $respuesta_servidor["respuestaServidor"]["totalRegistros"]=count($respuestaProductoModelo);
+        $respuesta_servidor["respuestaServidor"]["totalDePagina"]=ceil(count($respuestaProductoModeloFull)/$minimoRegistros);
+        $respuesta_servidor["respuestaServidor"]["totalRegistros"]=count($respuestaProductoModeloFull);
         echo json_encode($respuesta_servidor);
     }
 
