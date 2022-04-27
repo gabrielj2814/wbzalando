@@ -186,6 +186,15 @@ class CategoriaController extends ModuleAdminController{
 
 
     public function consultarEsquema($outline){
+        // en esta funcion consultamos los esquemas
+        // los esquemas por dicirlo de laguna forma 
+        // son las categoria de productos\
+        // y consultamos las propiedades opcionales y obligatorias de las tre secciones
+        // module
+        // config
+        // simple
+        // se consulta las propiedades obligatorias u obciones de las categoria de producto y de pendiendo de la categoria
+        // las propiedades cambian
         $capturaEsquema=null;
         $resultEsquemas=$this->chequearEsquemasDeHoyDB();
         if(count($resultEsquemas)>0){
@@ -217,6 +226,11 @@ class CategoriaController extends ModuleAdminController{
     }
 
     public function creacionDeModelo($esquema,$label_outline){
+        // aqui se crea el modelo base del producto
+        // y tambien se consulta y se guardar los datos de las propiedades de cada una con el objetido de usar las 
+        // mas adelante en el formulario de producto como lo que es sole materia, upper material o season code
+        // el codigo comentado 
+        // se encargar de consultar los datos y guardarlos de las propiedades opcionales
         $modeloBase=[
             "outline" => $label_outline,
             "product_model" =>[

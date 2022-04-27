@@ -119,22 +119,6 @@ class GaleriaController extends ModuleAdminController{
 
 
     public function ajaxProcessPostGuardarImagen(){
-        // $respuesta_servidor=["respuestaServidor" => []];
-        // $pathUrlImagen=$this->copiarImagen($_POST["nombre_tmp"]);
-        // $resultImagen=$this->registrarImagen($_POST,$pathUrlImagen);
-        // if($resultImagen){
-        //     $respuesta_servidor["respuestaServidor"]=[
-        //         "mensaje" => "imagen guardada con existo",
-        //         "estado" => true
-        //     ];
-        // }
-        // else{
-        //     $respuesta_servidor["respuestaServidor"]=[
-        //         "mensaje" => "error al guardar la imagen",
-        //         "estado" => false
-        //     ];
-        // }
-        // print_r(json_encode($respuesta_servidor));
         $respuesta_servidor=["respuestaServidor" => []];
         foreach($_POST["listaJsonImagenes"] as $imagen){
             $imagen=json_decode($imagen);
