@@ -16,11 +16,6 @@ let tallasAsociadas=[]
 
 // botones
 let botonRegistrar=document.getElementById("botonRegistrar");
-// let botonConsultarTodos=document.getElementById("botonConsultarTodos");
-// let botonConsultar=document.getElementById("botonConsultar");
-// let botonActualizar=document.getElementById("botonActualizar");
-// let botonEliminar=document.getElementById("botonEliminar");
-// let botonConsultarTallas=document.getElementById("botonConsultarTallas");
 let preloader=document.getElementById("preloader")
 let bodyPleloader=document.querySelector("body")
 function registrar(){
