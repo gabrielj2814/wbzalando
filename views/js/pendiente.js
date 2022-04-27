@@ -83,6 +83,7 @@ function insertarProductos(productos){
         let producto=listaProducutosPorPais[idModeloProducto]
         let infoModelo=JSON.parse(producto.json_modelo_producto)
         console.log("datos productos =>>> ",producto)
+        producto.config.json_configuracion_producto=producto.config.json_configuracion_producto.replace(/\n/g,"")
         let configJsonProducto=JSON.parse(producto.config.json_configuracion_producto)
         console.log("datos productos config =>>> ",configJsonProducto)
         let imagen=configJsonProducto.product_config_attributes.media[0]
