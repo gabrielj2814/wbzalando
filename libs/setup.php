@@ -81,11 +81,11 @@ if (!class_exists("SetupWbZalando")) {
                     "nombreControladorFull" => "ModificarController",
                     "nombreControlador" => "Modificar",
                 ],
-                [
-                    "nombre" => "Precios & Stock en espera",
-                    "nombreControladorFull" => "PendienteController",
-                    "nombreControlador" => "Pendiente",
-                ],
+                // [
+                //     "nombre" => "Precios & Stock en espera",
+                //     "nombreControladorFull" => "PendienteController",
+                //     "nombreControlador" => "Pendiente",
+                // ],
             ];
         }
 

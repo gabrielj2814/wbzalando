@@ -424,6 +424,7 @@ function  guardarPrecioDeProducto(a){
                 let respuestaJson=JSON.parse(JSON.stringify(respuesta.respuestaServidor));
                 console.log("precios de producto modificado =>>>>> ",respuestaJson)
                 preloader.style.opacity="0"
+                bodyPleloader.style.overflow="auto"
                 mostrarAlerta("alert-success","El precio a sido enviado correctamente")
             },
             error: () => {
